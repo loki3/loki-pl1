@@ -7,8 +7,8 @@
     <ProjectGuid>{7142A634-0C0F-4C49-A917-95B97D3CD42F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>loki_pl1</RootNamespace>
-    <AssemblyName>loki-pl1</AssemblyName>
+    <RootNamespace>loki3</RootNamespace>
+    <AssemblyName>loki3</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,8 +33,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Delimiter.cs" />
+    <Compile Include="DelimiterNode.cs" />
+    <Compile Include="DelimiterTree.cs" />
+    <Compile Include="ParseLine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Token.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
