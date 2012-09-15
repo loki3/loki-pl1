@@ -42,7 +42,7 @@ namespace loki3
 		/// <param name="delims">used to ask questions about delimiters</param>
 		internal static DelimiterTree Do(string str, IParseLineDelimiters delims)
 		{
-			return Do(str, null);
+			return Do(str, delims, null);
 		}
 
 		/// <summary>

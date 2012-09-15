@@ -4,6 +4,7 @@ namespace loki3
 {
 	internal abstract class DelimiterNode
 	{
+		abstract internal string Value { get; }
 	}
 
 	internal class DelimiterNodeToken : DelimiterNode
@@ -14,6 +15,7 @@ namespace loki3
 		}
 
 		internal Token Token { get { return m_token; } }
+		internal override string Value { get { return m_token.Value; } }
 
 		private Token m_token;
 	}
@@ -26,6 +28,7 @@ namespace loki3
 		}
 
 		internal DelimiterTree Tree { get { return m_tree; } }
+		internal override string Value { get { return ""; } }
 
 		private DelimiterTree m_tree;
 	}
