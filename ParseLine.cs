@@ -33,14 +33,14 @@ namespace loki3
 	/// <summary>
 	/// Parses a single line
 	/// </summary>
-	class ParseLine
+	internal class ParseLine
 	{
 		/// <summary>
 		/// Creates delimiter tree from string.  All delimiters must be closed.
 		/// </summary>
 		/// <param name="str">line to parse</param>
 		/// <param name="delims">used to ask questions about delimiters</param>
-		static DelimiterTree Do(string str, IParseLineDelimiters delims)
+		internal static DelimiterTree Do(string str, IParseLineDelimiters delims)
 		{
 			return Do(str, null);
 		}
@@ -52,9 +52,19 @@ namespace loki3
 		/// <param name="str">line to parse</param>
 		/// <param name="requestor">used to ask for additional lines if needed, may be null</param>
 		/// <param name="delims">used to ask questions about delimiters</param>
-		static DelimiterTree Do(string str, IParseLineDelimiters delims, ILineRequestor requestor)
+		internal static DelimiterTree Do(string str, IParseLineDelimiters delims, ILineRequestor requestor)
 		{
-			return null;
+			char[] separators = { ' ', '\n', '\r', '\t' };
+			string[] strs = str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+			List<DelimiterNode> nodes = new List<DelimiterNode>();
+			foreach (string s in strs)
+			{
+				Token token = new Token(s);
+				DelimiterNode node = new DelimiterNodeToken(token);
+				nodes.Add(node);
+			}
+			return new DelimiterTree(Delimiter.Basic, nodes);
 		}
 	}
 }

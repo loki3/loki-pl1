@@ -5,14 +5,14 @@ namespace loki3
 	/// <summary>
 	/// Unevaluated string
 	/// </summary>
-	class Token
+	internal class Token
 	{
-		Token(string token)
+		internal Token(string token)
 		{
 			m_token = token;
 		}
 
-		string Value { get { return m_token; } }
+		internal string Value { get { return m_token; } }
 
 		private string m_token;
 	}

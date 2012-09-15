@@ -2,30 +2,30 @@ using System;
 
 namespace loki3
 {
-	abstract class DelimiterNode
+	internal abstract class DelimiterNode
 	{
 	}
 
-	class DelimiterNodeToken
+	internal class DelimiterNodeToken : DelimiterNode
 	{
-		DelimiterNodeToken(Token token)
+		internal DelimiterNodeToken(Token token)
 		{
 			m_token = token;
 		}
 
-		Token Token { get { return m_token; } }
+		internal Token Token { get { return m_token; } }
 
 		private Token m_token;
 	}
 
-	class DelimiterNodeTree
+	internal class DelimiterNodeTree : DelimiterNode
 	{
-		DelimiterNodeTree(DelimiterTree tree)
+		internal DelimiterNodeTree(DelimiterTree tree)
 		{
 			m_tree = tree;
 		}
 
-		DelimiterTree Tree { get { return m_tree; } }
+		internal DelimiterTree Tree { get { return m_tree; } }
 
 		private DelimiterTree m_tree;
 	}
