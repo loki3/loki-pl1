@@ -9,16 +9,14 @@ namespace loki3
 	interface IParseLineDelimiters
 	{
 		/// <summary>
-		/// If 'start' is a starting delimiter, returns ending delimiter
-		/// else returns Char.MinValue
+		/// If 'start' is a starting delimiter, returns delimiter, else null
 		/// </summary>
-		char GetEndDelim(char start);
+		Delimiter GetDelim(char start);
 
 		/// <summary>
-		/// If 'start' is a starting delimiter, returns ending delimiter
-		/// else returns null
+		/// If 'start' is a starting delimiter, returns delimiter, else null
 		/// </summary>
-		string GetEndDelim(string start);
+		Delimiter GetDelim(string start);
 	}
 
 	/// <summary>
@@ -31,7 +29,9 @@ namespace loki3
 
 
 	/// <summary>
-	/// Parses a single line
+	/// Parses a single line of tokens separated by white space.
+	/// Single char delimiters can be part of a token.
+	/// Multiple char delimiters must be stand alone tokens.
 	/// </summary>
 	internal class ParseLine
 	{
@@ -56,15 +56,49 @@ namespace loki3
 		{
 			char[] separators = { ' ', '\n', '\r', '\t' };
 			string[] strs = str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+			int end;
+			return Do(strs, 0, Delimiter.Line, delims, requestor, out end);
+		}
 
+		private static DelimiterTree Do(string[] strs, int iStart, Delimiter thisDelim,
+			IParseLineDelimiters delims, ILineRequestor requestor, out int iEnd)
+		{
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
-			foreach (string s in strs)
+			for (int i = iStart; i < strs.Length; i++)
 			{
-				Token token = new Token(s);
-				DelimiterNode node = new DelimiterNodeToken(token);
-				nodes.Add(node);
+				string s = strs[i];
+
+				// is this the end of current set of delimited tokens?
+				if (s == thisDelim.End)
+				{	// end delimiter
+					iEnd = i;
+					return new DelimiterTree(thisDelim, nodes);
+				}
+
+				// is it a stand alone starting delimiter?
+				Delimiter subDelim = (delims == null ? null : delims.GetDelim(s));
+				if (subDelim != null)
+				{	// start delimiter
+					int end;
+					DelimiterTree subtree = Do(strs, i + 1, subDelim, delims, requestor, out end);
+					DelimiterNodeTree node = new DelimiterNodeTree(subtree);
+					nodes.Add(node);
+					i = end;	// skip past the subtree
+				}
+				else
+				{	// stand alone token
+					Token token = new Token(s);
+					DelimiterNode node = new DelimiterNodeToken(token);
+					nodes.Add(node);
+				}
 			}
-			return new DelimiterTree(Delimiter.Basic, nodes);
+
+			// didn't find closing delimiter, eventually we'll request the next line
+			if (thisDelim != Delimiter.Line)
+				throw new UndelimitedException(thisDelim);
+
+			iEnd = strs.Length;
+			return new DelimiterTree(thisDelim, nodes);
 		}
 	}
 }

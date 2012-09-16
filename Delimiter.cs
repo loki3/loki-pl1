@@ -3,8 +3,7 @@ using System;
 namespace loki3
 {
 	/// <summary>
-	/// A pair of strings that start & end a list of tokens,
-	/// has an associated function
+	/// A pair of strings that start & end a list of tokens
 	/// </summary>
 	internal class Delimiter
 	{
@@ -21,6 +20,8 @@ namespace loki3
 		private string m_end;
 
 
+		/// <summary>Represents an entire line</summary>
+		static internal Delimiter Line { get { return m_line; } }
 		/// <summary>Basic "don't eval yet" delimiters</summary>
 		static internal Delimiter Basic { get { return m_basic; } }
 		/// <summary>String delimiters, variation 1</summary>
@@ -28,6 +29,7 @@ namespace loki3
 		/// <summary>String delimiters, variation 2</summary>
 		static internal Delimiter String2 { get { return m_string2; } }
 
+		static private Delimiter m_line = new Delimiter("", "");
 		static private Delimiter m_basic = new Delimiter("(", ")");
 		static private Delimiter m_string1 = new Delimiter("\"", "\"");
 		static private Delimiter m_string2 = new Delimiter("'", "'");
