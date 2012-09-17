@@ -28,6 +28,22 @@ namespace loki3
 		internal virtual int AsInt { get { throw new WrongTypeException(ValueType.Int, Type); } }
 		internal virtual double AsFloat { get { throw new WrongTypeException(ValueType.Float, Type); } }
 		internal virtual string AsString { get { throw new WrongTypeException(ValueType.String, Type); } }
+
+		/// <summary>Get this value's metadata.  May be null.</summary>
+		internal Dictionary<string, Value> Metadata { get { return m_metadata; } }
+
+		/// <summary>Get this value's metadata, creating it if it doesn't already exist</summary>
+		internal Dictionary<string, Value> WritableMetadata
+		{
+			get
+			{
+				if (m_metadata == null)
+					m_metadata = new Dictionary<string, Value>();
+				return m_metadata;
+			}
+		}
+
+		private Dictionary<string, Value> m_metadata = null;
 	}
 
 	/// <summary>

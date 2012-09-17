@@ -11,8 +11,9 @@ namespace loki3
 	{
 		internal ValueFunction(bool bNeedsPrevious, bool bNeedsNext)
 		{
-			m_bNeedsPrevious = bNeedsPrevious;
-			m_bNeedsNext = bNeedsNext;
+			Dictionary<string, Value> meta = WritableMetadata;
+			meta[needsPrevious] = new ValueBool(bNeedsPrevious);
+			meta[needsNext] = new ValueBool(bNeedsNext);
 		}
 
 		#region Value
@@ -22,15 +23,17 @@ namespace loki3
 		}
 		#endregion
 
-		internal bool NeedsPrevious { get { return m_bNeedsPrevious; } }
-		internal bool NeedsNext { get { return m_bNeedsNext; } }
+		#region Keys
+		internal static string needsPrevious = "needs-previous";
+		internal static string needsNext = "needs-next";
+		#endregion
+
+		internal bool NeedsPrevious { get { return Metadata[needsPrevious].AsBool; } }
+		internal bool NeedsNext { get { return Metadata[needsNext].AsBool; } }
 
 		internal virtual Value Eval(Value prev, Value next)
 		{
 			return null;
 		}
-
-		private bool m_bNeedsPrevious;
-		private bool m_bNeedsNext;
 	}
 }
