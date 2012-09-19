@@ -14,8 +14,8 @@ namespace loki3
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 			{
-				Value value1 = EvalToken.Do(prev.Token, functions, null);
-				Value value2 = EvalToken.Do(next.Token, functions, null);
+				Value value1 = EvalNode.Do(prev, functions, null);
+				Value value2 = EvalNode.Do(next, functions, null);
 				int sum = value1.AsInt + value2.AsInt;
 				return new ValueInt(sum);
 			}
@@ -28,7 +28,7 @@ namespace loki3
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 			{
-				Value value = EvalToken.Do(prev.Token, functions, null);
+				Value value = EvalNode.Do(prev, functions, null);
 				int sum = value.AsInt + 1;
 				return new ValueInt(sum);
 			}
@@ -41,7 +41,7 @@ namespace loki3
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 			{
-				Value value = EvalToken.Do(next.Token, functions, null);
+				Value value = EvalNode.Do(next, functions, null);
 				int sum = 1 + value.AsInt;
 				return new ValueInt(sum);
 			}
@@ -69,6 +69,11 @@ namespace loki3
 			public DelimiterNode GetNext() { return new DelimiterNodeToken(new Token("7")); }
 		}
 
+		static DelimiterNode ToNode(string s)
+		{
+			return new DelimiterNodeToken(new Token(s));
+		}
+
 
 		[Test]
 		public void TestBuiltin()
@@ -76,7 +81,7 @@ namespace loki3
 			IFunctionRequestor functions = new TestFunctionRequestor();
 			INodeRequestor values = new TestValueRequestor();
 
-			Value result = EvalToken.Do(new Token("1234"), functions, values);
+			Value result = EvalNode.Do(ToNode("1234"), functions, values);
 			Assert.AreEqual(1234, result.AsInt);
 		}
 
@@ -87,15 +92,15 @@ namespace loki3
 			INodeRequestor values = new TestValueRequestor();
 
 			// infix
-			Value result = EvalToken.Do(new Token("sum"), functions, values);
+			Value result = EvalNode.Do(ToNode("sum"), functions, values);
 			Assert.AreEqual(10, result.AsInt);
 
 			// only uses previous token
-			result = EvalToken.Do(new Token("prev1"), functions, values);
+			result = EvalNode.Do(ToNode("prev1"), functions, values);
 			Assert.AreEqual(4, result.AsInt);
 
 			// only uses next token
-			result = EvalToken.Do(new Token("next1"), functions, values);
+			result = EvalNode.Do(ToNode("next1"), functions, values);
 			Assert.AreEqual(8, result.AsInt);
 		}
 
@@ -108,7 +113,7 @@ namespace loki3
 			bool bCatch = false;
 			try
 			{
-				Value result = EvalToken.Do(new Token("qwer"), functions, values);
+				Value result = EvalNode.Do(ToNode("qwer"), functions, values);
 			}
 			catch (UnrecognizedTokenException)
 			{

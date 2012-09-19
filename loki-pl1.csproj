@@ -38,7 +38,7 @@
     <Compile Include="DelimiterNode.cs" />
     <Compile Include="DelimiterTree.cs" />
     <Compile Include="EvalBuiltin.cs" />
-    <Compile Include="EvalToken.cs" />
+    <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="ValueFunction.cs" />
