@@ -12,9 +12,11 @@ namespace loki3
 		{
 			internal TestSum() : base(true, true) {}
 
-			internal override Value Eval(Value prev, Value next)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 			{
-				int sum = prev.AsInt + next.AsInt;
+				Value value1 = EvalToken.Do(prev.Token, functions, null);
+				Value value2 = EvalToken.Do(next.Token, functions, null);
+				int sum = value1.AsInt + value2.AsInt;
 				return new ValueInt(sum);
 			}
 		}
@@ -24,9 +26,10 @@ namespace loki3
 		{
 			internal TestPrevious1() : base(true, false) { }
 
-			internal override Value Eval(Value prev, Value next)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 			{
-				int sum = prev.AsInt + 1;
+				Value value = EvalToken.Do(prev.Token, functions, null);
+				int sum = value.AsInt + 1;
 				return new ValueInt(sum);
 			}
 		}
@@ -36,9 +39,10 @@ namespace loki3
 		{
 			internal TestNext1() : base(false, true) { }
 
-			internal override Value Eval(Value prev, Value next)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 			{
-				int sum = 1 + next.AsInt;
+				Value value = EvalToken.Do(next.Token, functions, null);
+				int sum = 1 + value.AsInt;
 				return new ValueInt(sum);
 			}
 		}
@@ -59,17 +63,28 @@ namespace loki3
 		}
 
 		/// <summary>Returns previous and next values as ints</summary>
-		class TestValueRequestor : IValueRequestor
+		class TestValueRequestor : INodeRequestor
 		{
-			public Value GetPrevious() { return new ValueInt(3); }
-			public Value GetNext() { return new ValueInt(7); }
+			public DelimiterNode GetPrevious() { return new DelimiterNodeToken(new Token("3")); }
+			public DelimiterNode GetNext() { return new DelimiterNodeToken(new Token("7")); }
+		}
+
+
+		[Test]
+		public void TestBuiltin()
+		{
+			IFunctionRequestor functions = new TestFunctionRequestor();
+			INodeRequestor values = new TestValueRequestor();
+
+			Value result = EvalToken.Do(new Token("1234"), functions, values);
+			Assert.AreEqual(1234, result.AsInt);
 		}
 
 		[Test]
-		public void Test()
+		public void TestFunctions()
 		{
 			IFunctionRequestor functions = new TestFunctionRequestor();
-			IValueRequestor values = new TestValueRequestor();
+			INodeRequestor values = new TestValueRequestor();
 
 			// infix
 			Value result = EvalToken.Do(new Token("sum"), functions, values);
@@ -82,6 +97,24 @@ namespace loki3
 			// only uses next token
 			result = EvalToken.Do(new Token("next1"), functions, values);
 			Assert.AreEqual(8, result.AsInt);
+		}
+
+		[Test]
+		public void TestFailure()
+		{
+			IFunctionRequestor functions = new TestFunctionRequestor();
+			INodeRequestor values = new TestValueRequestor();
+
+			bool bCatch = false;
+			try
+			{
+				Value result = EvalToken.Do(new Token("qwer"), functions, values);
+			}
+			catch (UnrecognizedTokenException)
+			{
+				bCatch = true;
+			}
+			Assert.True(bCatch);
 		}
 	}
 }

@@ -10,13 +10,13 @@ namespace loki3
 		ValueFunction Get(Token token);
 	}
 
-	/// <summary>Used to request the previous or next values</summary>
-	interface IValueRequestor
+	/// <summary>Used to request the previous or next nodes</summary>
+	interface INodeRequestor
 	{
 		/// <summary>Returns null if previous value doesn't exist</summary>
-		Value GetPrevious();
+		DelimiterNode GetPrevious();
 		/// <summary>Returns null if next value doesn't exist</summary>
-		Value GetNext();
+		DelimiterNode GetNext();
 	}
 
 	/// <summary>
@@ -32,30 +32,34 @@ namespace loki3
 		/// <param name="token">token representing a function or variable</param>
 		/// <param name="functions">used to request a function</param>
 		/// <param name="values">used to request previous and next values</param>
-		internal static Value Do(Token token, IFunctionRequestor functions, IValueRequestor values)
+		internal static Value Do(Token token, IFunctionRequestor functions, INodeRequestor values)
 		{
 			ValueFunction function = functions.Get(token);
-			if (function == null)
-				throw new MissingFunctionException(token);
-
-			// get previous & next values if needed
-			Value previous = null;
-			if (function.NeedsPrevious)
+			if (function != null)
 			{
-				previous = values.GetPrevious();
-				if (previous == null)
-					throw new MissingAdjacentValueException(token, true/*bPrevious*/);
-			}
-			Value next = null;
-			if (function.NeedsNext)
-			{
-				next = values.GetNext();
-				if (next == null)
-					throw new MissingAdjacentValueException(token, false/*bPrevious*/);
-			}
+				// get previous & next nodes if needed
+				DelimiterNode previous = null;
+				if (function.ConsumesPrevious)
+				{
+					previous = values.GetPrevious();
+					if (previous == null)
+						throw new MissingAdjacentValueException(token, true/*bPrevious*/);
+				}
+				DelimiterNode next = null;
+				if (function.ConsumesNext)
+				{
+					next = values.GetNext();
+					if (next == null)
+						throw new MissingAdjacentValueException(token, false/*bPrevious*/);
+				}
 
-			// evaluate
-			return function.Eval(previous, next);
+				// evaluate
+				return function.Eval(previous, next, functions);
+			}
+			else
+			{
+				return EvalBuiltin.Do(token);
+			}
 		}
 	}
 }

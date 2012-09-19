@@ -3,17 +3,34 @@ using System.Collections.Generic;
 
 namespace loki3
 {
+	internal enum Precedence
+	{
+		Low,
+		Medium,
+		High,
+	}
+
 	/// <summary>
 	/// Represents a constant value
 	/// or a function that may take one or two values and returns a value
 	/// </summary>
 	internal class ValueFunction : Value
 	{
-		internal ValueFunction(bool bNeedsPrevious, bool bNeedsNext)
+		internal ValueFunction(bool bConsumesPrevious, bool bConsumesNext)
+		{
+			Init(bConsumesPrevious, bConsumesNext, Precedence.Medium);
+		}
+		internal ValueFunction(bool bConsumesPrevious, bool bConsumesNext, Precedence precedence)
+		{
+			Init(bConsumesPrevious, bConsumesNext, precedence);
+		}
+
+		private void Init(bool bConsumesPrevious, bool bConsumesNext, Precedence precedence)
 		{
 			Dictionary<string, Value> meta = WritableMetadata;
-			meta[needsPrevious] = new ValueBool(bNeedsPrevious);
-			meta[needsNext] = new ValueBool(bNeedsNext);
+			meta[keyConsumesPrevious] = new ValueBool(bConsumesPrevious);
+			meta[keyConsumesNext] = new ValueBool(bConsumesNext);
+			meta[keyPrecedence] = new ValueInt((int)precedence);
 		}
 
 		#region Value
@@ -24,14 +41,14 @@ namespace loki3
 		#endregion
 
 		#region Keys
-		internal static string needsPrevious = "needs-previous";
-		internal static string needsNext = "needs-next";
+		internal static string keyConsumesPrevious = "l3.func.consumes-previous?";
+		internal static string keyConsumesNext = "l3.func.consumes-next?";
 		#endregion
 
-		internal bool NeedsPrevious { get { return Metadata[needsPrevious].AsBool; } }
-		internal bool NeedsNext { get { return Metadata[needsNext].AsBool; } }
+		internal bool ConsumesPrevious { get { return Metadata[keyConsumesPrevious].AsBool; } }
+		internal bool ConsumesNext { get { return Metadata[keyConsumesNext].AsBool; } }
 
-		internal virtual Value Eval(Value prev, Value next)
+		internal virtual Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 		{
 			return null;
 		}

@@ -19,21 +19,6 @@ namespace loki3
 	}
 
 	/// <summary>
-	/// Token isn't a function or variable
-	/// </summary>
-	internal class MissingFunctionException : Exception
-	{
-		internal MissingFunctionException(Token token)
-		{
-			m_token = token;
-		}
-
-		public Token Token { get { return m_token; } }
-
-		private Token m_token;
-	}
-
-	/// <summary>
 	/// Evaluating a token would require an adjacent token that doesn't exist
 	/// </summary>
 	internal class MissingAdjacentValueException : Exception
@@ -54,23 +39,19 @@ namespace loki3
 	}
 
 	/// <summary>
-	/// A value was requested, but token represents a function
+	/// Could not parse token
 	/// </summary>
-	internal class NotValueException : Exception
+	internal class UnrecognizedTokenException : Exception
 	{
-		internal NotValueException(Token token, bool bPrevious)
+		internal UnrecognizedTokenException(Token token)
 		{
 			m_token = token;
-			m_bPrevious = bPrevious;
 		}
 
 		/// <summary>Token that required an adjacent value</summary>
 		public Token Token { get { return m_token; } }
-		/// <summary>True if previous value was requested, false if it was next one</summary>
-		public bool Previous { get { return m_bPrevious; } }
 
 		private Token m_token;
-		private bool m_bPrevious;
 	}
 
 	/// <summary>

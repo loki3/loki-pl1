@@ -43,6 +43,21 @@ namespace loki3
 			}
 		}
 
+		#region Keys
+		internal static string keyPrecedence = "l3.value.precedence";
+		#endregion
+
+		/// <summary>Evaluation precedence of this token</summary>
+		internal Precedence Precedence
+		{
+			get
+			{
+				if (!m_metadata.ContainsKey(keyPrecedence))
+					return Precedence.Low;
+				return (Precedence)m_metadata[keyPrecedence].AsInt;
+			}
+		}
+
 		private Dictionary<string, Value> m_metadata = null;
 	}
 
