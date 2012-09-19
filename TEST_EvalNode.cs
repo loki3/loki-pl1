@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace loki3
 {
 	[TestFixture]
-	class TEST_EvalToken
+	class TEST_EvalNode
 	{
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
