@@ -23,16 +23,19 @@ namespace loki3
 			{
 				if (start.Length == 1)
 					return GetDelim(start[0]);
-				if (start == "{{")
-					return m_double;
 				if (start == "<[")
 					return m_fancy;
+				if (start == "{{")
+					return m_double;
+				if (start == "/*")
+					return m_comment;
 				return null;
 			}
 
 			private ValueDelimiter m_square = new ValueDelimiter("[", "]");
-			private ValueDelimiter m_double = new ValueDelimiter("{{", "}}", false/*tokenize*/);
 			private ValueDelimiter m_fancy = new ValueDelimiter("<[", "]>");
+			private ValueDelimiter m_double = new ValueDelimiter("{{", "}}", false/*tokenize*/, false/*comment*/);
+			private ValueDelimiter m_comment = new ValueDelimiter("/*", "*/", false/*tokenize*/, true/*comment*/);
 		}
 
 		[Test]
@@ -137,6 +140,14 @@ namespace loki3
 				Assert.AreEqual("{{", subtree.Delimiter.Start);
 				Assert.AreEqual(1, subtree.Nodes.Count);
 				Assert.AreEqual("qwert ( yuiop", subtree.Nodes[0].Token.Value);
+			}
+
+			{	// everything inside /* */ is a comment and is ignored
+				DelimiterTree tree = ParseLine.Do("asdf /* qwert ( yuiop */ ghjkl", delims);
+				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
+				Assert.AreEqual(2, tree.Nodes.Count);
+				Assert.AreEqual("asdf", tree.Nodes[0].Token.Value);
+				Assert.AreEqual("ghjkl", tree.Nodes[1].Token.Value);
 			}
 		}
 	}

@@ -84,8 +84,11 @@ namespace loki3
 					{	// start delimiter
 						int end;
 						DelimiterTree subtree = Do(strs, i + 1, subDelim, delims, requestor, out end);
-						DelimiterNodeTree node = new DelimiterNodeTree(subtree);
-						nodes.Add(node);
+						if (subtree != null)
+						{
+							DelimiterNodeTree node = new DelimiterNodeTree(subtree);
+							nodes.Add(node);
+						}
 						i = end;	// skip past the subtree
 					}
 					else
@@ -93,6 +96,17 @@ namespace loki3
 						Token token = new Token(s);
 						DelimiterNode node = new DelimiterNodeToken(token);
 						nodes.Add(node);
+					}
+				}
+			}
+			else if (thisDelim.Comment)
+			{	// ignore everything up to the end delimiter
+				for (int i = iStart; i < strs.Length; i++)
+				{
+					if (strs[i] == thisDelim.End)
+					{
+						iEnd = i;
+						return null;
 					}
 				}
 			}
