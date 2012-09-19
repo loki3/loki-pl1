@@ -9,17 +9,17 @@ namespace loki3
 	{
 		class TestParseLineDelimiter : IParseLineDelimiters
 		{
-			public Delimiter GetDelim(char start)
+			public ValueDelimiter GetDelim(char start)
 			{
 				switch (start)
 				{
-					case '(': return Delimiter.Basic;
+					case '(': return ValueDelimiter.Basic;
 					case '[': return m_square;
 				}
 				return null;
 			}
 
-			public Delimiter GetDelim(string start)
+			public ValueDelimiter GetDelim(string start)
 			{
 				if (start.Length == 1)
 					return GetDelim(start[0]);
@@ -30,9 +30,9 @@ namespace loki3
 				return null;
 			}
 
-			private Delimiter m_square = new Delimiter("[", "]");
-			private Delimiter m_double = new Delimiter("{{", "}}");
-			private Delimiter m_fancy = new Delimiter("<[", "]>");
+			private ValueDelimiter m_square = new ValueDelimiter("[", "]");
+			private ValueDelimiter m_double = new ValueDelimiter("{{", "}}", false/*tokenize*/);
+			private ValueDelimiter m_fancy = new ValueDelimiter("<[", "]>");
 		}
 
 		[Test]
@@ -40,13 +40,13 @@ namespace loki3
 		{
 			{	// empty string
 				DelimiterTree tree = ParseLine.Do("", null);
-				Assert.AreEqual(Delimiter.Line, tree.Delimiter);
+				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
 				Assert.AreEqual(0, tree.Nodes.Count);
 			}
 
 			{	// one item
 				DelimiterTree tree = ParseLine.Do("asdf", null);
-				Assert.AreEqual(Delimiter.Line, tree.Delimiter);
+				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
 				Assert.AreEqual(1, tree.Nodes.Count);
 				Assert.IsTrue(tree.Nodes[0] is DelimiterNodeToken);
 				DelimiterNodeToken node = tree.Nodes[0] as DelimiterNodeToken;
@@ -55,7 +55,7 @@ namespace loki3
 
 			{	// multiple
 				DelimiterTree tree = ParseLine.Do("asdf  qwert\t yuiop", null);
-				Assert.AreEqual(Delimiter.Line, tree.Delimiter);
+				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
 				Assert.AreEqual(3, tree.Nodes.Count);
 				Assert.AreEqual("asdf", tree.Nodes[0].Token.Value);
 				Assert.AreEqual("qwert", tree.Nodes[1].Token.Value);
@@ -70,7 +70,7 @@ namespace loki3
 
 			{	// delimiters are separate tokens
 				DelimiterTree tree = ParseLine.Do("asdf ( qwert yuiop ) ghjkl", delims);
-				Assert.AreEqual(Delimiter.Line, tree.Delimiter);
+				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
 				Assert.AreEqual(3, tree.Nodes.Count);
 				Assert.AreEqual("asdf", tree.Nodes[0].Token.Value);
 				Assert.AreEqual("ghjkl", tree.Nodes[2].Token.Value);
@@ -84,7 +84,7 @@ namespace loki3
 
 			{	// nested different delimiters
 				DelimiterTree tree = ParseLine.Do("a ( b <[ c ]> d ) e", delims);
-				Assert.AreEqual(Delimiter.Line, tree.Delimiter);
+				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
 				Assert.AreEqual(3, tree.Nodes.Count);
 				Assert.AreEqual("a", tree.Nodes[0].Token.Value);
 				Assert.AreEqual("e", tree.Nodes[2].Token.Value);
@@ -103,7 +103,7 @@ namespace loki3
 
 			{	// nested same delimiters
 				DelimiterTree tree = ParseLine.Do("a ( b ( c ) d ) e", delims);
-				Assert.AreEqual(Delimiter.Line, tree.Delimiter);
+				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
 				Assert.AreEqual(3, tree.Nodes.Count);
 				Assert.AreEqual("a", tree.Nodes[0].Token.Value);
 				Assert.AreEqual("e", tree.Nodes[2].Token.Value);
@@ -118,6 +118,25 @@ namespace loki3
 				Assert.AreEqual("(", subsubtree.Delimiter.Start);
 				Assert.AreEqual(1, subsubtree.Nodes.Count);
 				Assert.AreEqual("c", subsubtree.Nodes[0].Token.Value);
+			}
+		}
+
+		[Test]
+		public void DontTokenize()
+		{
+			TestParseLineDelimiter delims = new TestParseLineDelimiter();
+
+			{	// everything inside {{ }} gets passed through as-is
+				DelimiterTree tree = ParseLine.Do("asdf {{ qwert ( yuiop }} ghjkl", delims);
+				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
+				Assert.AreEqual(3, tree.Nodes.Count);
+				Assert.AreEqual("asdf", tree.Nodes[0].Token.Value);
+				Assert.AreEqual("ghjkl", tree.Nodes[2].Token.Value);
+
+				DelimiterTree subtree = tree.Nodes[1].Tree;
+				Assert.AreEqual("{{", subtree.Delimiter.Start);
+				Assert.AreEqual(1, subtree.Nodes.Count);
+				Assert.AreEqual("qwert ( yuiop", subtree.Nodes[0].Token.Value);
 			}
 		}
 	}

@@ -11,12 +11,12 @@ namespace loki3
 		/// <summary>
 		/// If 'start' is a starting delimiter, returns delimiter, else null
 		/// </summary>
-		Delimiter GetDelim(char start);
+		ValueDelimiter GetDelim(char start);
 
 		/// <summary>
 		/// If 'start' is a starting delimiter, returns delimiter, else null
 		/// </summary>
-		Delimiter GetDelim(string start);
+		ValueDelimiter GetDelim(string start);
 	}
 
 	/// <summary>
@@ -57,44 +57,67 @@ namespace loki3
 			char[] separators = { ' ', '\n', '\r', '\t' };
 			string[] strs = str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 			int end;
-			return Do(strs, 0, Delimiter.Line, delims, requestor, out end);
+			return Do(strs, 0, ValueDelimiter.Line, delims, requestor, out end);
 		}
 
-		private static DelimiterTree Do(string[] strs, int iStart, Delimiter thisDelim,
+		private static DelimiterTree Do(string[] strs, int iStart, ValueDelimiter thisDelim,
 			IParseLineDelimiters delims, ILineRequestor requestor, out int iEnd)
 		{
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
-			for (int i = iStart; i < strs.Length; i++)
-			{
-				string s = strs[i];
 
-				// is this the end of current set of delimited tokens?
-				if (s == thisDelim.End)
-				{	// end delimiter
-					iEnd = i;
-					return new DelimiterTree(thisDelim, nodes);
-				}
+			if (thisDelim.Tokenize)
+			{	// handle as individual tokens and nested trees
+				for (int i = iStart; i < strs.Length; i++)
+				{
+					string s = strs[i];
 
-				// is it a stand alone starting delimiter?
-				Delimiter subDelim = (delims == null ? null : delims.GetDelim(s));
-				if (subDelim != null)
-				{	// start delimiter
-					int end;
-					DelimiterTree subtree = Do(strs, i + 1, subDelim, delims, requestor, out end);
-					DelimiterNodeTree node = new DelimiterNodeTree(subtree);
-					nodes.Add(node);
-					i = end;	// skip past the subtree
+					// is this the end of current set of delimited tokens?
+					if (s == thisDelim.End)
+					{	// end delimiter
+						iEnd = i;
+						return new DelimiterTree(thisDelim, nodes);
+					}
+
+					// is it a stand alone starting delimiter?
+					ValueDelimiter subDelim = (delims == null ? null : delims.GetDelim(s));
+					if (subDelim != null)
+					{	// start delimiter
+						int end;
+						DelimiterTree subtree = Do(strs, i + 1, subDelim, delims, requestor, out end);
+						DelimiterNodeTree node = new DelimiterNodeTree(subtree);
+						nodes.Add(node);
+						i = end;	// skip past the subtree
+					}
+					else
+					{	// stand alone token
+						Token token = new Token(s);
+						DelimiterNode node = new DelimiterNodeToken(token);
+						nodes.Add(node);
+					}
 				}
-				else
-				{	// stand alone token
-					Token token = new Token(s);
-					DelimiterNode node = new DelimiterNodeToken(token);
-					nodes.Add(node);
+			}
+			else
+			{	// simply search for end and stuff everything in the middle into a single token
+				string all = "";
+				for (int i = iStart; i < strs.Length; i++)
+				{
+					string s = strs[i];
+					if (s == thisDelim.End)
+					{	// end - wrap entire string in a single node
+						iEnd = i;
+						Token token = new Token(all);
+						DelimiterNode node = new DelimiterNodeToken(token);
+						nodes.Add(node);
+						return new DelimiterTree(thisDelim, nodes);
+					}
+					if (i != iStart)
+						all += " ";
+					all += s;
 				}
 			}
 
-			// didn't find closing delimiter, eventually we'll request the next line
-			if (thisDelim != Delimiter.Line)
+			// didn't find closing delimiter, TODO request the next line
+			if (thisDelim != ValueDelimiter.Line)
 				throw new UndelimitedException(thisDelim);
 
 			iEnd = strs.Length;

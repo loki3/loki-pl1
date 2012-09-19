@@ -34,13 +34,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Delimiter.cs" />
     <Compile Include="DelimiterNode.cs" />
     <Compile Include="DelimiterTree.cs" />
     <Compile Include="EvalBuiltin.cs" />
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
+    <Compile Include="ValueDelimiter.cs" />
     <Compile Include="ValueFunction.cs" />
     <Compile Include="ParseLine.cs" />
     <Compile Include="Program.cs" />

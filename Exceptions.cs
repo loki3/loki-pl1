@@ -7,15 +7,15 @@ namespace loki3
 	/// </summary>
 	internal class UndelimitedException : Exception
 	{
-		internal UndelimitedException(Delimiter delim)
+		internal UndelimitedException(ValueDelimiter delim)
 		{
 			m_delim = delim;
 		}
 
 		/// <summary>Delimiter that was missing ending</summary>
-		public Delimiter Delimiter { get { return m_delim; } }
+		public ValueDelimiter Delimiter { get { return m_delim; } }
 
-		private Delimiter m_delim;
+		private ValueDelimiter m_delim;
 	}
 
 	/// <summary>

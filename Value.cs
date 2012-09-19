@@ -13,6 +13,7 @@ namespace loki3
 		Array,
 		Map,
 		Function,
+		Delimiter,
 	}
 
 	/// <summary>

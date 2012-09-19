@@ -8,16 +8,16 @@ namespace loki3
 	/// </summary>
 	internal class DelimiterTree
 	{
-		internal DelimiterTree(Delimiter delim, List<DelimiterNode> nodes)
+		internal DelimiterTree(ValueDelimiter delim, List<DelimiterNode> nodes)
 		{
 			m_delimiter = delim;
 			m_nodes = nodes;
 		}
 
-		internal Delimiter Delimiter { get { return m_delimiter; } }
+		internal ValueDelimiter Delimiter { get { return m_delimiter; } }
 		internal List<DelimiterNode> Nodes { get { return m_nodes; } }
 
-		private Delimiter m_delimiter;
+		private ValueDelimiter m_delimiter;
 		private List<DelimiterNode> m_nodes;
 	}
 }
