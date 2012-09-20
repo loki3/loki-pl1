@@ -10,7 +10,7 @@ namespace loki3
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
 		{
-			internal TestSum() : base(true, true) {}
+			internal TestSum() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/) {}
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 			{
@@ -24,7 +24,7 @@ namespace loki3
 		/// <summary>Function that adds 1 to previous</summary>
 		class TestPrevious1 : ValueFunction
 		{
-			internal TestPrevious1() : base(true, false) { }
+			internal TestPrevious1() : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/) { }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 			{
@@ -37,13 +37,26 @@ namespace loki3
 		/// <summary>Function that adds 1 to next</summary>
 		class TestNext1 : ValueFunction
 		{
-			internal TestNext1() : base(false, true) { }
+			internal TestNext1() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
 			{
 				Value value = EvalNode.Do(next, functions, null);
 				int sum = 1 + value.AsInt;
 				return new ValueInt(sum);
+			}
+		}
+
+		/// <summary>Function that makes next ALL CAPS</summary>
+		class TestCaps : ValueFunction
+		{
+			internal TestCaps() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
+
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
+			{
+				Value value = EvalNode.Do(next, functions, null);
+				string caps = value.AsString.ToUpper();
+				return new ValueString(caps);
 			}
 		}
 
@@ -58,17 +71,29 @@ namespace loki3
 					return new TestPrevious1();
 				if (token.Value == "next1")
 					return new TestNext1();
+				if (token.Value == "caps")
+					return new TestCaps();
 				return null;
 			}
 		}
 
 		/// <summary>Returns previous and next values as ints</summary>
-		class TestValueRequestor : INodeRequestor
+		class TestValueIntRequestor : INodeRequestor
 		{
 			public DelimiterNode GetPrevious() { return new DelimiterNodeToken(new Token("3")); }
 			public DelimiterNode GetNext() { return new DelimiterNodeToken(new Token("7")); }
 		}
 
+		/// <summary>Returns given next node</summary>
+		class TestValueNodeRequestor : INodeRequestor
+		{
+			internal TestValueNodeRequestor(DelimiterNode next) { m_next = next; }
+			public DelimiterNode GetPrevious() { return null; }
+			public DelimiterNode GetNext() { return m_next; }
+			private DelimiterNode m_next;
+		}
+
+		// convenience method
 		static DelimiterNode ToNode(string s)
 		{
 			return new DelimiterNodeToken(new Token(s));
@@ -79,7 +104,7 @@ namespace loki3
 		public void TestBuiltin()
 		{
 			IFunctionRequestor functions = new TestFunctionRequestor();
-			INodeRequestor values = new TestValueRequestor();
+			INodeRequestor values = new TestValueIntRequestor();
 
 			Value result = EvalNode.Do(ToNode("1234"), functions, values);
 			Assert.AreEqual(1234, result.AsInt);
@@ -89,7 +114,7 @@ namespace loki3
 		public void TestFunctions()
 		{
 			IFunctionRequestor functions = new TestFunctionRequestor();
-			INodeRequestor values = new TestValueRequestor();
+			INodeRequestor values = new TestValueIntRequestor();
 
 			// infix
 			Value result = EvalNode.Do(ToNode("sum"), functions, values);
@@ -108,7 +133,7 @@ namespace loki3
 		public void TestFailure()
 		{
 			IFunctionRequestor functions = new TestFunctionRequestor();
-			INodeRequestor values = new TestValueRequestor();
+			INodeRequestor values = new TestValueIntRequestor();
 
 			bool bCatch = false;
 			try
@@ -120,6 +145,29 @@ namespace loki3
 				bCatch = true;
 			}
 			Assert.True(bCatch);
+		}
+
+		[Test]
+		public void TestDelimitedString()
+		{
+			ValueDelimiter delim = new ValueDelimiter("'", "'", DelimiterType.AsString);
+			List<DelimiterNode> nodes = new List<DelimiterNode>();
+			nodes.Add(ToNode("this is a test"));
+			DelimiterTree tree = new DelimiterTree(delim, nodes);
+			DelimiterNodeTree nodetree = new DelimiterNodeTree(tree);
+
+			IFunctionRequestor functions = new TestFunctionRequestor();
+			INodeRequestor values = new TestValueNodeRequestor(nodetree);
+
+			{	// delimited string
+				Value result = EvalNode.Do(nodetree, functions, values);
+				Assert.AreEqual("this is a test", result.AsString);
+			}
+
+			{	// function that takes a delimited string
+				Value result = EvalNode.Do(ToNode("caps"), functions, values);
+				Assert.AreEqual("THIS IS A TEST", result.AsString);
+			}
 		}
 	}
 }

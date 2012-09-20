@@ -32,8 +32,8 @@ namespace loki3
 		/// </summary>
 		/// <param name="token">token representing a function or variable</param>
 		/// <param name="functions">used to request a function</param>
-		/// <param name="values">used to request previous and next values</param>
-		internal static Value Do(DelimiterNode node, IFunctionRequestor functions, INodeRequestor values)
+		/// <param name="nodes">used to request previous and next nodes</param>
+		internal static Value Do(DelimiterNode node, IFunctionRequestor functions, INodeRequestor nodes)
 		{
 			Token token = node.Token;
 			if (token != null)
@@ -45,14 +45,14 @@ namespace loki3
 					DelimiterNode previous = null;
 					if (function.ConsumesPrevious)
 					{
-						previous = values.GetPrevious();
+						previous = nodes.GetPrevious();
 						if (previous == null)
 							throw new MissingAdjacentValueException(token, true/*bPrevious*/);
 					}
 					DelimiterNode next = null;
 					if (function.ConsumesNext)
 					{
-						next = values.GetNext();
+						next = nodes.GetNext();
 						if (next == null)
 							throw new MissingAdjacentValueException(token, false/*bPrevious*/);
 					}
@@ -67,7 +67,18 @@ namespace loki3
 			}
 			else
 			{	// delimited list of nodes
-				return new ValueNil();	// NYI
+				ValueDelimiter delimiter = node.Tree.Delimiter;
+				DelimiterType type = delimiter.DelimiterType;
+				switch (type)
+				{
+					case DelimiterType.AsString:
+						return new ValueString(node.Tree.Nodes[0].Token.Value);
+					case DelimiterType.AsValue:
+						break;
+					case DelimiterType.AsArray:
+						break;
+				}
+				return new ValueNil();
 			}
 		}
 	}
