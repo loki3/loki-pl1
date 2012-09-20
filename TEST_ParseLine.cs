@@ -34,8 +34,8 @@ namespace loki3
 
 			private ValueDelimiter m_square = new ValueDelimiter("[", "]");
 			private ValueDelimiter m_fancy = new ValueDelimiter("<[", "]>");
-			private ValueDelimiter m_double = new ValueDelimiter("{{", "}}", false/*tokenize*/, false/*comment*/);
-			private ValueDelimiter m_comment = new ValueDelimiter("/*", "*/", false/*tokenize*/, true/*comment*/);
+			private ValueDelimiter m_double = new ValueDelimiter("{{", "}}", DelimiterType.AsString);
+			private ValueDelimiter m_comment = new ValueDelimiter("/*", "*/", DelimiterType.AsComment);
 		}
 
 		[Test]

@@ -65,7 +65,38 @@ namespace loki3
 		{
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
 
-			if (thisDelim.Tokenize)
+			DelimiterType type = thisDelim.DelimiterType;
+			if (type == DelimiterType.AsComment)
+			{	// ignore everything up to the end delimiter
+				for (int i = iStart; i < strs.Length; i++)
+				{
+					if (strs[i] == thisDelim.End)
+					{
+						iEnd = i;
+						return null;
+					}
+				}
+			}
+			else if (type == DelimiterType.AsString)
+			{	// simply search for end and stuff everything in the middle into a single token
+				string all = "";
+				for (int i = iStart; i < strs.Length; i++)
+				{
+					string s = strs[i];
+					if (s == thisDelim.End)
+					{	// end - wrap entire string in a single node
+						iEnd = i;
+						Token token = new Token(all);
+						DelimiterNode node = new DelimiterNodeToken(token);
+						nodes.Add(node);
+						return new DelimiterTree(thisDelim, nodes);
+					}
+					if (i != iStart)
+						all += " ";
+					all += s;
+				}
+			}
+			else
 			{	// handle as individual tokens and nested trees
 				for (int i = iStart; i < strs.Length; i++)
 				{
@@ -97,36 +128,6 @@ namespace loki3
 						DelimiterNode node = new DelimiterNodeToken(token);
 						nodes.Add(node);
 					}
-				}
-			}
-			else if (thisDelim.Comment)
-			{	// ignore everything up to the end delimiter
-				for (int i = iStart; i < strs.Length; i++)
-				{
-					if (strs[i] == thisDelim.End)
-					{
-						iEnd = i;
-						return null;
-					}
-				}
-			}
-			else
-			{	// simply search for end and stuff everything in the middle into a single token
-				string all = "";
-				for (int i = iStart; i < strs.Length; i++)
-				{
-					string s = strs[i];
-					if (s == thisDelim.End)
-					{	// end - wrap entire string in a single node
-						iEnd = i;
-						Token token = new Token(all);
-						DelimiterNode node = new DelimiterNodeToken(token);
-						nodes.Add(node);
-						return new DelimiterTree(thisDelim, nodes);
-					}
-					if (i != iStart)
-						all += " ";
-					all += s;
 				}
 			}
 
