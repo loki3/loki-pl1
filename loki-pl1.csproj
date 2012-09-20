@@ -40,6 +40,7 @@
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
+    <Compile Include="ValueArray.cs" />
     <Compile Include="ValueDelimiter.cs" />
     <Compile Include="ValueFunction.cs" />
     <Compile Include="ParseLine.cs" />

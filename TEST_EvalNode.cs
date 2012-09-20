@@ -169,5 +169,30 @@ namespace loki3
 				Assert.AreEqual("THIS IS A TEST", result.AsString);
 			}
 		}
+
+		[Test]
+		public void TestArray()
+		{
+			ValueDelimiter delim = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			List<DelimiterNode> nodes = new List<DelimiterNode>();
+			nodes.Add(ToNode("3"));
+			nodes.Add(ToNode("7"));
+			nodes.Add(ToNode("3"));
+			DelimiterTree tree = new DelimiterTree(delim, nodes);
+			DelimiterNodeTree nodetree = new DelimiterNodeTree(tree);
+
+			IFunctionRequestor functions = new TestFunctionRequestor();
+			INodeRequestor values = new TestValueNodeRequestor(nodetree);
+
+			{	// [3 7 3]
+				Value result = EvalNode.Do(nodetree, functions, values);
+				Assert.AreEqual(result.Type, ValueType.Array);
+				List<Value> array = result.AsArray;
+				Assert.AreEqual(3, array.Count);
+				Assert.AreEqual(3, array[0].AsInt);
+				Assert.AreEqual(7, array[1].AsInt);
+				Assert.AreEqual(3, array[2].AsInt);
+			}
+		}
 	}
 }
