@@ -35,9 +35,13 @@ namespace loki3
 		/// <param name="nodes">used to request previous and next nodes</param>
 		internal static Value Do(DelimiterNode node, IFunctionRequestor functions, INodeRequestor nodes)
 		{
-			Token token = node.Token;
-			if (token != null)
+			if (node.Value != null)
+			{	// node has already been evaluated
+				return node.Value;
+			}
+			else if (node.Token != null)
 			{	// function/variable or built-in
+				Token token = node.Token;
 				ValueFunction function = functions.Get(token);
 				if (function != null)
 				{
@@ -65,7 +69,7 @@ namespace loki3
 					return EvalBuiltin.Do(token);
 				}
 			}
-			else
+			else if (node.List != null)
 			{	// delimited list of nodes
 				DelimiterList list = node.List;
 				DelimiterType type = list.Delimiter.DelimiterType;

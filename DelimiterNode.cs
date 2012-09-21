@@ -6,8 +6,10 @@ namespace loki3
 	{
 		internal virtual Token Token { get { return null; } }
 		internal virtual DelimiterList List { get { return null; } }
+		internal virtual Value Value { get { return null; } }
 	}
 
+	/// <summary>Unevaluated token</summary>
 	internal class DelimiterNodeToken : DelimiterNode
 	{
 		internal DelimiterNodeToken(Token token)
@@ -20,6 +22,7 @@ namespace loki3
 		private Token m_token;
 	}
 
+	/// <summary>Unevaluated list of nodes</summary>
 	internal class DelimiterNodeList : DelimiterNode
 	{
 		internal DelimiterNodeList(DelimiterList tree)
@@ -30,5 +33,18 @@ namespace loki3
 		internal override DelimiterList List { get { return m_list; } }
 
 		private DelimiterList m_list;
+	}
+
+	/// <summary>Value that's already been evaluated</summary>
+	internal class DelimiterNodeValue : DelimiterNode
+	{
+		internal DelimiterNodeValue(Value value)
+		{
+			m_value = value;
+		}
+
+		internal override Value Value { get { return m_value; } }
+
+		private Value m_value;
 	}
 }
