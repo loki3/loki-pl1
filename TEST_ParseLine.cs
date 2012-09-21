@@ -42,27 +42,27 @@ namespace loki3
 		public void NoDelimiters()
 		{
 			{	// empty string
-				DelimiterTree tree = ParseLine.Do("", null);
-				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
-				Assert.AreEqual(0, tree.Nodes.Count);
+				DelimiterList list = ParseLine.Do("", null);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(0, list.Nodes.Count);
 			}
 
 			{	// one item
-				DelimiterTree tree = ParseLine.Do("asdf", null);
-				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
-				Assert.AreEqual(1, tree.Nodes.Count);
-				Assert.IsTrue(tree.Nodes[0] is DelimiterNodeToken);
-				DelimiterNodeToken node = tree.Nodes[0] as DelimiterNodeToken;
+				DelimiterList list = ParseLine.Do("asdf", null);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(1, list.Nodes.Count);
+				Assert.IsTrue(list.Nodes[0] is DelimiterNodeToken);
+				DelimiterNodeToken node = list.Nodes[0] as DelimiterNodeToken;
 				Assert.AreEqual("asdf", node.Token.Value);
 			}
 
 			{	// multiple
-				DelimiterTree tree = ParseLine.Do("asdf  qwert\t yuiop", null);
-				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
-				Assert.AreEqual(3, tree.Nodes.Count);
-				Assert.AreEqual("asdf", tree.Nodes[0].Token.Value);
-				Assert.AreEqual("qwert", tree.Nodes[1].Token.Value);
-				Assert.AreEqual("yuiop", tree.Nodes[2].Token.Value);
+				DelimiterList list = ParseLine.Do("asdf  qwert\t yuiop", null);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual("asdf", list.Nodes[0].Token.Value);
+				Assert.AreEqual("qwert", list.Nodes[1].Token.Value);
+				Assert.AreEqual("yuiop", list.Nodes[2].Token.Value);
 			}
 		}
 
@@ -72,55 +72,55 @@ namespace loki3
 			TestParseLineDelimiter delims = new TestParseLineDelimiter();
 
 			{	// delimiters are separate tokens
-				DelimiterTree tree = ParseLine.Do("asdf ( qwert yuiop ) ghjkl", delims);
-				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
-				Assert.AreEqual(3, tree.Nodes.Count);
-				Assert.AreEqual("asdf", tree.Nodes[0].Token.Value);
-				Assert.AreEqual("ghjkl", tree.Nodes[2].Token.Value);
+				DelimiterList list = ParseLine.Do("asdf ( qwert yuiop ) ghjkl", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual("asdf", list.Nodes[0].Token.Value);
+				Assert.AreEqual("ghjkl", list.Nodes[2].Token.Value);
 
-				DelimiterTree subtree = tree.Nodes[1].Tree;
-				Assert.AreEqual("(", subtree.Delimiter.Start);
-				Assert.AreEqual(2, subtree.Nodes.Count);
-				Assert.AreEqual("qwert", subtree.Nodes[0].Token.Value);
-				Assert.AreEqual("yuiop", subtree.Nodes[1].Token.Value);
+				DelimiterList sublist = list.Nodes[1].List;
+				Assert.AreEqual("(", sublist.Delimiter.Start);
+				Assert.AreEqual(2, sublist.Nodes.Count);
+				Assert.AreEqual("qwert", sublist.Nodes[0].Token.Value);
+				Assert.AreEqual("yuiop", sublist.Nodes[1].Token.Value);
 			}
 
 			{	// nested different delimiters
-				DelimiterTree tree = ParseLine.Do("a ( b <[ c ]> d ) e", delims);
-				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
-				Assert.AreEqual(3, tree.Nodes.Count);
-				Assert.AreEqual("a", tree.Nodes[0].Token.Value);
-				Assert.AreEqual("e", tree.Nodes[2].Token.Value);
+				DelimiterList list = ParseLine.Do("a ( b <[ c ]> d ) e", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual("a", list.Nodes[0].Token.Value);
+				Assert.AreEqual("e", list.Nodes[2].Token.Value);
 
-				DelimiterTree subtree = tree.Nodes[1].Tree;
-				Assert.AreEqual("(", subtree.Delimiter.Start);
-				Assert.AreEqual(3, subtree.Nodes.Count);
-				Assert.AreEqual("b", subtree.Nodes[0].Token.Value);
-				Assert.AreEqual("d", subtree.Nodes[2].Token.Value);
+				DelimiterList sublist = list.Nodes[1].List;
+				Assert.AreEqual("(", sublist.Delimiter.Start);
+				Assert.AreEqual(3, sublist.Nodes.Count);
+				Assert.AreEqual("b", sublist.Nodes[0].Token.Value);
+				Assert.AreEqual("d", sublist.Nodes[2].Token.Value);
 
-				DelimiterTree subsubtree = subtree.Nodes[1].Tree;
-				Assert.AreEqual("<[", subsubtree.Delimiter.Start);
-				Assert.AreEqual(1, subsubtree.Nodes.Count);
-				Assert.AreEqual("c", subsubtree.Nodes[0].Token.Value);
+				DelimiterList subsublist = sublist.Nodes[1].List;
+				Assert.AreEqual("<[", subsublist.Delimiter.Start);
+				Assert.AreEqual(1, subsublist.Nodes.Count);
+				Assert.AreEqual("c", subsublist.Nodes[0].Token.Value);
 			}
 
 			{	// nested same delimiters
-				DelimiterTree tree = ParseLine.Do("a ( b ( c ) d ) e", delims);
-				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
-				Assert.AreEqual(3, tree.Nodes.Count);
-				Assert.AreEqual("a", tree.Nodes[0].Token.Value);
-				Assert.AreEqual("e", tree.Nodes[2].Token.Value);
+				DelimiterList list = ParseLine.Do("a ( b ( c ) d ) e", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual("a", list.Nodes[0].Token.Value);
+				Assert.AreEqual("e", list.Nodes[2].Token.Value);
 
-				DelimiterTree subtree = tree.Nodes[1].Tree;
-				Assert.AreEqual("(", subtree.Delimiter.Start);
-				Assert.AreEqual(3, subtree.Nodes.Count);
-				Assert.AreEqual("b", subtree.Nodes[0].Token.Value);
-				Assert.AreEqual("d", subtree.Nodes[2].Token.Value);
+				DelimiterList sublist = list.Nodes[1].List;
+				Assert.AreEqual("(", sublist.Delimiter.Start);
+				Assert.AreEqual(3, sublist.Nodes.Count);
+				Assert.AreEqual("b", sublist.Nodes[0].Token.Value);
+				Assert.AreEqual("d", sublist.Nodes[2].Token.Value);
 
-				DelimiterTree subsubtree = subtree.Nodes[1].Tree;
-				Assert.AreEqual("(", subsubtree.Delimiter.Start);
-				Assert.AreEqual(1, subsubtree.Nodes.Count);
-				Assert.AreEqual("c", subsubtree.Nodes[0].Token.Value);
+				DelimiterList subsublist = sublist.Nodes[1].List;
+				Assert.AreEqual("(", subsublist.Delimiter.Start);
+				Assert.AreEqual(1, subsublist.Nodes.Count);
+				Assert.AreEqual("c", subsublist.Nodes[0].Token.Value);
 			}
 		}
 
@@ -130,24 +130,24 @@ namespace loki3
 			TestParseLineDelimiter delims = new TestParseLineDelimiter();
 
 			{	// everything inside {{ }} gets passed through as-is
-				DelimiterTree tree = ParseLine.Do("asdf {{ qwert ( yuiop }} ghjkl", delims);
-				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
-				Assert.AreEqual(3, tree.Nodes.Count);
-				Assert.AreEqual("asdf", tree.Nodes[0].Token.Value);
-				Assert.AreEqual("ghjkl", tree.Nodes[2].Token.Value);
+				DelimiterList list = ParseLine.Do("asdf {{ qwert ( yuiop }} ghjkl", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual("asdf", list.Nodes[0].Token.Value);
+				Assert.AreEqual("ghjkl", list.Nodes[2].Token.Value);
 
-				DelimiterTree subtree = tree.Nodes[1].Tree;
-				Assert.AreEqual("{{", subtree.Delimiter.Start);
-				Assert.AreEqual(1, subtree.Nodes.Count);
-				Assert.AreEqual("qwert ( yuiop", subtree.Nodes[0].Token.Value);
+				DelimiterList sublist = list.Nodes[1].List;
+				Assert.AreEqual("{{", sublist.Delimiter.Start);
+				Assert.AreEqual(1, sublist.Nodes.Count);
+				Assert.AreEqual("qwert ( yuiop", sublist.Nodes[0].Token.Value);
 			}
 
 			{	// everything inside /* */ is a comment and is ignored
-				DelimiterTree tree = ParseLine.Do("asdf /* qwert ( yuiop */ ghjkl", delims);
-				Assert.AreEqual(ValueDelimiter.Line, tree.Delimiter);
-				Assert.AreEqual(2, tree.Nodes.Count);
-				Assert.AreEqual("asdf", tree.Nodes[0].Token.Value);
-				Assert.AreEqual("ghjkl", tree.Nodes[1].Token.Value);
+				DelimiterList list = ParseLine.Do("asdf /* qwert ( yuiop */ ghjkl", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(2, list.Nodes.Count);
+				Assert.AreEqual("asdf", list.Nodes[0].Token.Value);
+				Assert.AreEqual("ghjkl", list.Nodes[1].Token.Value);
 			}
 		}
 	}

@@ -36,23 +36,23 @@ namespace loki3
 	internal class ParseLine
 	{
 		/// <summary>
-		/// Creates delimiter tree from string.  All delimiters must be closed.
+		/// Creates delimiter list from string.  All delimiters must be closed.
 		/// </summary>
 		/// <param name="str">line to parse</param>
 		/// <param name="delims">used to ask questions about delimiters</param>
-		internal static DelimiterTree Do(string str, IParseLineDelimiters delims)
+		internal static DelimiterList Do(string str, IParseLineDelimiters delims)
 		{
 			return Do(str, delims, null);
 		}
 
 		/// <summary>
-		/// Creates delimiter tree from string,
+		/// Creates delimiter list from string,
 		/// can request lines if missing closing delimiter
 		/// </summary>
 		/// <param name="str">line to parse</param>
 		/// <param name="requestor">used to ask for additional lines if needed, may be null</param>
 		/// <param name="delims">used to ask questions about delimiters</param>
-		internal static DelimiterTree Do(string str, IParseLineDelimiters delims, ILineRequestor requestor)
+		internal static DelimiterList Do(string str, IParseLineDelimiters delims, ILineRequestor requestor)
 		{
 			char[] separators = { ' ', '\n', '\r', '\t' };
 			string[] strs = str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
@@ -60,7 +60,7 @@ namespace loki3
 			return Do(strs, 0, ValueDelimiter.Line, delims, requestor, out end);
 		}
 
-		private static DelimiterTree Do(string[] strs, int iStart, ValueDelimiter thisDelim,
+		private static DelimiterList Do(string[] strs, int iStart, ValueDelimiter thisDelim,
 			IParseLineDelimiters delims, ILineRequestor requestor, out int iEnd)
 		{
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
@@ -89,7 +89,7 @@ namespace loki3
 						Token token = new Token(all);
 						DelimiterNode node = new DelimiterNodeToken(token);
 						nodes.Add(node);
-						return new DelimiterTree(thisDelim, nodes);
+						return new DelimiterList(thisDelim, nodes);
 					}
 					if (i != iStart)
 						all += " ";
@@ -97,7 +97,7 @@ namespace loki3
 				}
 			}
 			else
-			{	// handle as individual tokens and nested trees
+			{	// handle as individual tokens and nested lists
 				for (int i = iStart; i < strs.Length; i++)
 				{
 					string s = strs[i];
@@ -106,7 +106,7 @@ namespace loki3
 					if (s == thisDelim.End)
 					{	// end delimiter
 						iEnd = i;
-						return new DelimiterTree(thisDelim, nodes);
+						return new DelimiterList(thisDelim, nodes);
 					}
 
 					// is it a stand alone starting delimiter?
@@ -114,13 +114,13 @@ namespace loki3
 					if (subDelim != null)
 					{	// start delimiter
 						int end;
-						DelimiterTree subtree = Do(strs, i + 1, subDelim, delims, requestor, out end);
-						if (subtree != null)
+						DelimiterList sublist = Do(strs, i + 1, subDelim, delims, requestor, out end);
+						if (sublist != null)
 						{
-							DelimiterNodeTree node = new DelimiterNodeTree(subtree);
+							DelimiterNodeList node = new DelimiterNodeList(sublist);
 							nodes.Add(node);
 						}
-						i = end;	// skip past the subtree
+						i = end;	// skip past the sublist
 					}
 					else
 					{	// stand alone token
@@ -136,7 +136,7 @@ namespace loki3
 				throw new UndelimitedException(thisDelim);
 
 			iEnd = strs.Length;
-			return new DelimiterTree(thisDelim, nodes);
+			return new DelimiterList(thisDelim, nodes);
 		}
 	}
 }

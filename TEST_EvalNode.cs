@@ -153,14 +153,14 @@ namespace loki3
 			ValueDelimiter delim = new ValueDelimiter("'", "'", DelimiterType.AsString);
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
 			nodes.Add(ToNode("this is a test"));
-			DelimiterTree tree = new DelimiterTree(delim, nodes);
-			DelimiterNodeTree nodetree = new DelimiterNodeTree(tree);
+			DelimiterList list = new DelimiterList(delim, nodes);
+			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
 			IFunctionRequestor functions = new TestFunctionRequestor();
-			INodeRequestor values = new TestValueNodeRequestor(nodetree);
+			INodeRequestor values = new TestValueNodeRequestor(nodelist);
 
 			{	// delimited string
-				Value result = EvalNode.Do(nodetree, functions, values);
+				Value result = EvalNode.Do(nodelist, functions, values);
 				Assert.AreEqual("this is a test", result.AsString);
 			}
 
@@ -178,14 +178,14 @@ namespace loki3
 			nodes.Add(ToNode("3"));
 			nodes.Add(ToNode("7"));
 			nodes.Add(ToNode("3"));
-			DelimiterTree tree = new DelimiterTree(delim, nodes);
-			DelimiterNodeTree nodetree = new DelimiterNodeTree(tree);
+			DelimiterList list = new DelimiterList(delim, nodes);
+			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
 			IFunctionRequestor functions = new TestFunctionRequestor();
-			INodeRequestor values = new TestValueNodeRequestor(nodetree);
+			INodeRequestor values = new TestValueNodeRequestor(nodelist);
 
 			{	// [3 7 3]
-				Value result = EvalNode.Do(nodetree, functions, values);
+				Value result = EvalNode.Do(nodelist, functions, values);
 				Assert.AreEqual(result.Type, ValueType.Array);
 				List<Value> array = result.AsArray;
 				Assert.AreEqual(3, array.Count);

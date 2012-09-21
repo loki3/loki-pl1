@@ -67,25 +67,25 @@ namespace loki3
 			}
 			else
 			{	// delimited list of nodes
-				DelimiterTree tree = node.Tree;
-				DelimiterType type = tree.Delimiter.DelimiterType;
+				DelimiterList list = node.List;
+				DelimiterType type = list.Delimiter.DelimiterType;
 				switch (type)
 				{
 					case DelimiterType.AsString:
-						return new ValueString(tree.Nodes[0].Token.Value);
+						return new ValueString(list.Nodes[0].Token.Value);
 					case DelimiterType.AsValue:
 						break;
 					case DelimiterType.AsArray:
-						List<Value> values = new List<Value>(tree.Nodes.Count);
-						foreach (DelimiterNode subnode in tree.Nodes)
+						List<Value> values = new List<Value>(list.Nodes.Count);
+						foreach (DelimiterNode subnode in list.Nodes)
 						{
 							Value value = Do(subnode, functions, nodes);
 							values.Add(value);
 						}
 						return new ValueArray(values);
 				}
-				return new ValueNil();
 			}
+			return new ValueNil();
 		}
 	}
 }

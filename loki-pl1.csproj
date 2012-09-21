@@ -35,7 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DelimiterNode.cs" />
-    <Compile Include="DelimiterTree.cs" />
+    <Compile Include="DelimiterList.cs" />
     <Compile Include="EvalBuiltin.cs" />
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
