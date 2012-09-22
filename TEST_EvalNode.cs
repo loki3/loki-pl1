@@ -8,10 +8,8 @@ namespace loki3.core.test
 	class TEST_EvalNode
 	{
 		/// <summary>Function that adds previous and next ints</summary>
-		class TestSum : ValueFunction
+		class TestSum : ValueFunctionIn
 		{
-			internal TestSum() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/) {}
-
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value1 = EvalNode.Do(prev, stack, nodes);
@@ -22,10 +20,8 @@ namespace loki3.core.test
 		}
 
 		/// <summary>Function that adds 1 to previous</summary>
-		class TestPrevious1 : ValueFunction
+		class TestPrevious1 : ValueFunctionPost
 		{
-			internal TestPrevious1() : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/) { }
-
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(prev, stack, nodes);
@@ -35,10 +31,8 @@ namespace loki3.core.test
 		}
 
 		/// <summary>Function that adds 1 to next</summary>
-		class TestNext1 : ValueFunction
+		class TestNext1 : ValueFunctionPre
 		{
-			internal TestNext1() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
-
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, stack, nodes);
@@ -48,10 +42,8 @@ namespace loki3.core.test
 		}
 
 		/// <summary>Function that makes next ALL CAPS</summary>
-		class TestCaps : ValueFunction
+		class TestCaps : ValueFunctionPre
 		{
-			internal TestCaps() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
-
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, stack, nodes);

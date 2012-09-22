@@ -18,10 +18,8 @@ namespace loki3.core.test
 		}
 
 		/// <summary>Function that adds previous and next ints</summary>
-		class TestSum : ValueFunction
+		class TestSum : ValueFunctionIn
 		{
-			internal TestSum() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.Medium) { }
-
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value1 = EvalNode.Do(prev, stack, nodes);
@@ -32,9 +30,9 @@ namespace loki3.core.test
 		}
 
 		/// <summary>Function that multiplies previous and next ints</summary>
-		class TestProduct : ValueFunction
+		class TestProduct : ValueFunctionIn
 		{
-			internal TestProduct() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.High) { }
+			internal TestProduct() : base(Precedence.High) { }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
@@ -46,9 +44,9 @@ namespace loki3.core.test
 		}
 
 		/// <summary>Function that doubles the previous value</summary>
-		class TestDoubled : ValueFunction
+		class TestDoubled : ValueFunctionPost
 		{
-			internal TestDoubled() : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/, Precedence.High) { }
+			internal TestDoubled() : base(Precedence.High) { }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
@@ -58,9 +56,9 @@ namespace loki3.core.test
 		}
 
 		/// <summary>Function that multiplies the next value by a canned value</summary>
-		class TestMultiplier : ValueFunction
+		class TestMultiplier : ValueFunctionPre
 		{
-			internal TestMultiplier(int f) : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.High) { m_f = f; }
+			internal TestMultiplier(int f) : base(Precedence.High) { m_f = f; }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
@@ -72,9 +70,9 @@ namespace loki3.core.test
 		}
 
 		/// <summary>Function that creates a TestMultiplier function based on a passed in int</summary>
-		class TestCreateMultiplier : ValueFunction
+		class TestCreateMultiplier : ValueFunctionPre
 		{
-			internal TestCreateMultiplier() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.High) { }
+			internal TestCreateMultiplier() : base(Precedence.High) { }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{

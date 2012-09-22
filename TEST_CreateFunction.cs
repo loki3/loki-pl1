@@ -8,10 +8,8 @@ namespace loki3.core.test
 	class TEST_CreateFunction
 	{
 		/// <summary>Function that adds previous and next ints</summary>
-		class TestSum : ValueFunction
+		class TestSum : ValueFunctionIn
 		{
-			internal TestSum() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.Medium) { }
-
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value1 = EvalNode.Do(prev, stack, nodes);
@@ -30,7 +28,7 @@ namespace loki3.core.test
 			{	// create postfix function
 				List<string> body = new List<string>();
 				body.Add("x + 5");
-				CreateFunction.Do(stack, "5+", null, new ValueString("x"), body, Precedence.Medium);
+				CreateFunction.Do(stack, "5+", null, new ValueString("x"), body);
 			}
 			{
 				DelimiterList list = ParseLine.Do("5+ 3", stack);
@@ -41,7 +39,7 @@ namespace loki3.core.test
 			{	// create prefix function
 				List<string> body = new List<string>();
 				body.Add("5 + x");
-				CreateFunction.Do(stack, "+5", new ValueString("x"), null, body, Precedence.Medium);
+				CreateFunction.Do(stack, "+5", new ValueString("x"), null, body);
 			}
 			{
 				DelimiterList list = ParseLine.Do("4 +5", stack);

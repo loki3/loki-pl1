@@ -83,6 +83,10 @@ namespace loki3.core
 		{
 			new UserFunction(pattern1, pattern2, rawLines, precedence);
 		}
+		internal static void Do(Value pattern1, Value pattern2, List<string> rawLines)
+		{
+			new UserFunction(pattern1, pattern2, rawLines, Precedence.Medium);
+		}
 
 		/// <summary>
 		/// Add a new function (prefix, postfix or infix), to the stack
@@ -98,6 +102,11 @@ namespace loki3.core
 		{
 			ValueFunction func = new UserFunction(pattern1, pattern2, rawLines, precedence);
 			stack.SetValue(name, func);
+		}
+		internal static void Do(IStack stack, string name,
+			Value pattern1, Value pattern2, List<string> rawLines)
+		{
+			Do(stack, name, pattern1, pattern2, rawLines, Precedence.Medium);
 		}
 	}
 }

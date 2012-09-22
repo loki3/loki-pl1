@@ -53,4 +53,31 @@ namespace loki3.core
 			return null;
 		}
 	}
+
+	/// <summary>
+	/// Prefix function: _ func args
+	/// </summary>
+	internal class ValueFunctionPre : ValueFunction
+	{
+		internal ValueFunctionPre() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
+		internal ValueFunctionPre(Precedence precedence) : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, precedence) { }
+	}
+
+	/// <summary>
+	/// Postfix function: args func _
+	/// </summary>
+	internal class ValueFunctionPost : ValueFunction
+	{
+		internal ValueFunctionPost() : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/) { }
+		internal ValueFunctionPost(Precedence precedence) : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/, precedence) { }
+	}
+
+	/// <summary>
+	/// Infix function: args1 func args2
+	/// </summary>
+	internal class ValueFunctionIn : ValueFunction
+	{
+		internal ValueFunctionIn() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
+		internal ValueFunctionIn(Precedence precedence) : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/, precedence) { }
+	}
 }
