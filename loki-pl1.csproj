@@ -34,12 +34,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateFunction.cs" />
     <Compile Include="DelimiterNode.cs" />
     <Compile Include="DelimiterList.cs" />
     <Compile Include="EvalBuiltin.cs" />
     <Compile Include="EvalList.cs" />
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="StateStack.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="TEST_EvalList.cs" />
     <Compile Include="ValueArray.cs" />

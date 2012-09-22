@@ -59,7 +59,7 @@ namespace loki3
 		/// <summary>true if section should be tokenized, false for as-is</summary>
 		internal DelimiterType DelimiterType { get { return (DelimiterType)Metadata[keyDelimType].AsInt; } }
 
-		internal virtual Value Eval(List<DelimiterNode> nodes, IFunctionRequestor functions)
+		internal virtual Value Eval(List<DelimiterNode> nodes, IStack stack)
 		{
 			return null;
 		}

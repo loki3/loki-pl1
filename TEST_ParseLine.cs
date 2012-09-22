@@ -9,20 +9,12 @@ namespace loki3
 	{
 		class TestParseLineDelimiter : IParseLineDelimiters
 		{
-			public ValueDelimiter GetDelim(char start)
-			{
-				switch (start)
-				{
-					case '(': return ValueDelimiter.Basic;
-					case '[': return m_square;
-				}
-				return null;
-			}
-
 			public ValueDelimiter GetDelim(string start)
 			{
-				if (start.Length == 1)
-					return GetDelim(start[0]);
+				if (start == "(")
+					return ValueDelimiter.Basic;
+				if (start == "[")
+					return m_square;
 				if (start == "<[")
 					return m_fancy;
 				if (start == "{{")

@@ -22,14 +22,14 @@ namespace loki3
 		/// </summary>
 		internal class NodeEval
 		{
-			internal NodeEval(DelimiterNode node, IFunctionRequestor functions)
+			internal NodeEval(DelimiterNode node, IStack stack)
 			{
 				m_node = node;
 
 				Token token = node.Token;
 				if (token != null)
 				{
-					m_func = functions.Get(token);
+					m_func = stack.GetValue(token) as ValueFunction;
 					if (m_func != null)
 					{
 						m_state = NodeState.Node;
@@ -50,7 +50,7 @@ namespace loki3
 			internal DelimiterNode Node { get { return m_node; } }
 
 			/// <summary>Evaluate this node, possibly consuming adjacent nodes</summary>
-			internal void Eval(IFunctionRequestor functions, INodeRequestor nodes)
+			internal void Eval(IStack stack, INodeRequestor nodes)
 			{
 				if (m_state != NodeState.Node && m_state != NodeState.Function)
 					return;
@@ -58,13 +58,13 @@ namespace loki3
 				// get new value
 				if (m_state == NodeState.Node)
 				{	// hasn't been evaled at all
-					m_value = EvalNode.Do(m_node, functions, nodes);
+					m_value = EvalNode.Do(m_node, stack, nodes);
 				}
 				else if (m_state == NodeState.Function)
 				{	// previously resolved to a function
 					DelimiterNode previous = (m_func.ConsumesPrevious ? previous = nodes.GetPrevious() : null);
 					DelimiterNode next = (m_func.ConsumesNext ? next = nodes.GetNext() : null);
-					m_value = m_func.Eval(previous, next, functions, nodes);
+					m_value = m_func.Eval(previous, next, stack, nodes);
 				}
 
 				// store new info about this node
@@ -101,12 +101,12 @@ namespace loki3
 		/// </summary>
 		internal class ListEval : INodeRequestor
 		{
-			internal ListEval(List<DelimiterNode> nodes, IFunctionRequestor functions)
+			internal ListEval(List<DelimiterNode> nodes, IStack stack)
 			{
 				m_nodes = new List<NodeEval>(nodes.Count);
 				foreach (DelimiterNode node in nodes)
-					m_nodes.Add(new NodeEval(node, functions));
-				m_functions = functions;
+					m_nodes.Add(new NodeEval(node, stack));
+				m_stack = stack;
 			}
 
 			/// <summary>
@@ -136,7 +136,7 @@ namespace loki3
 				if (max == -2)
 					return false;
 				// eval the one we found
-				m_nodes[m_evalIndex].Eval(m_functions, this);
+				m_nodes[m_evalIndex].Eval(m_stack, this);
 				return true;
 			}
 
@@ -193,16 +193,16 @@ namespace loki3
 			#endregion
 
 			private List<NodeEval> m_nodes;
-			private IFunctionRequestor m_functions;
+			private IStack m_stack;
 			private int m_evalIndex;
 		}
 
 		/// <summary>
 		/// Eval a list of DelimiterNodes and return a Value
 		/// </summary>
-		internal static Value Do(List<DelimiterNode> nodes, IFunctionRequestor functions)
+		internal static Value Do(List<DelimiterNode> nodes, IStack stack)
 		{
-			ListEval eval = new ListEval(nodes, functions);
+			ListEval eval = new ListEval(nodes, stack);
 			while (eval.EvalNext())
 				;
 			return eval.GetValue();

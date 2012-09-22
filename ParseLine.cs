@@ -11,11 +11,6 @@ namespace loki3
 		/// <summary>
 		/// If 'start' is a starting delimiter, returns delimiter, else null
 		/// </summary>
-		ValueDelimiter GetDelim(char start);
-
-		/// <summary>
-		/// If 'start' is a starting delimiter, returns delimiter, else null
-		/// </summary>
 		ValueDelimiter GetDelim(string start);
 	}
 

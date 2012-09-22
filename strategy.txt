@@ -1,0 +1,70 @@
+Nouns
+	token			unevaluated string
+	delimiter		a pair of strings that start & end a list of tokens, has an associated function
+	delimiter tree	tree where every node is a token or subtree with an associated delimiter
+	scope			map that contains functions, delimiters, variables, metadata
+	value			evaluated value, which could be a number, string, etc.
+
+Verbs
+	Parse
+		line		creates delimiter tree from string, can request lines if missing closing delimiter
+		lines
+	Eval
+		token		can consume adjacent tokens, gets value or runs associated function
+		line		evals delimiter tree using a scope
+		lines
+
+
+/////////////////////////
+// Eval line
+// 
+// Input:	scope
+// 			delimiter tree
+// Output:	object or array of objects
+/////////////////////////
+
+* list of tokens, stuff wrapped in a delimiter is a single blob
+* figure out precedence for every top level token
+	vars (funcs w/ no parameters) and ( ) have 0 precedence
+* loop
+	* if every token has been evaled or consumed, return item or collection as result
+	* eval the right-most token w/ the highest precedence
+		e.g. a = b = 2, or 2^3^4
+	* replace it & any tokens it consumes w/ the result & note this token's precedence
+		it may consume the tokens to its immediate left and/or right
+		note that the function decides whether or not to eval tokens it consumes
+
+	params	precedence	returns
+a	 - -		0
+b	 * *		2		  h
+c	 - -		0
+(x)	 - -		0
+d	 * -		1		  j
+e	 - -		0
+f
+g	 - -		0
+h	 - *		2		  i
+i	 - -		0
+k	 - -		0		  l
+j	 - -		0		  m
+l	 - *		1		  n
+
+	a b c (x) d e f g
+	0 2 0  0  1 0 2 0
+
+	  h   (x) d e f g
+	  2    0  1 0 2 0
+
+	  i       d e f g
+	  0       1 0 2 0
+
+	  i       d   j
+	  0       1   0
+	  
+	          k   j
+	          0   0
+	          
+	          l   j
+	          1   0
+	          
+	          n

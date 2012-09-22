@@ -3,13 +3,6 @@ using System.Collections.Generic;
 
 namespace loki3
 {
-	/// <summary>Used to get a named function</summary>
-	interface IFunctionRequestor
-	{
-		/// <summary>Returns null if requested token doesn't exist</summary>
-		ValueFunction Get(Token token);
-	}
-
 	/// <summary>Used to request the previous or next nodes</summary>
 	interface INodeRequestor
 	{
@@ -31,9 +24,9 @@ namespace loki3
 		/// Returns a value.
 		/// </summary>
 		/// <param name="token">token representing a function or variable</param>
-		/// <param name="functions">used to request a function</param>
+		/// <param name="stack">used to request functions, variables, and delimiters</param>
 		/// <param name="nodes">used to request previous and next nodes</param>
-		internal static Value Do(DelimiterNode node, IFunctionRequestor functions, INodeRequestor nodes)
+		internal static Value Do(DelimiterNode node, IStack stack, INodeRequestor nodes)
 		{
 			if (node.Value != null)
 			{	// node has already been evaluated
@@ -42,9 +35,10 @@ namespace loki3
 			else if (node.Token != null)
 			{	// function/variable or built-in
 				Token token = node.Token;
-				ValueFunction function = functions.Get(token);
-				if (function != null)
+				Value value = stack.GetValue(token);
+				if (value is ValueFunction)
 				{
+					ValueFunction function = value as ValueFunction;
 					// get previous & next nodes if needed
 					DelimiterNode previous = null;
 					if (function.ConsumesPrevious)
@@ -62,7 +56,7 @@ namespace loki3
 					}
 
 					// evaluate
-					return function.Eval(previous, next, functions, nodes);
+					return function.Eval(previous, next, stack, nodes);
 				}
 				else
 				{
@@ -78,12 +72,12 @@ namespace loki3
 					case DelimiterType.AsString:
 						return new ValueString(list.Nodes[0].Token.Value);
 					case DelimiterType.AsValue:
-						return EvalList.Do(list.Nodes, functions);
+						return EvalList.Do(list.Nodes, stack);
 					case DelimiterType.AsArray:
 						List<Value> values = new List<Value>(list.Nodes.Count);
 						foreach (DelimiterNode subnode in list.Nodes)
 						{
-							Value value = Do(subnode, functions, nodes);
+							Value value = Do(subnode, stack, nodes);
 							values.Add(value);
 						}
 						return new ValueArray(values);

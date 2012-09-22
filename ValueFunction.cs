@@ -48,7 +48,7 @@ namespace loki3
 		internal bool ConsumesPrevious { get { return Metadata[keyConsumesPrevious].AsBool; } }
 		internal bool ConsumesNext { get { return Metadata[keyConsumesNext].AsBool; } }
 
-		internal virtual Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
+		internal virtual Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
 		{
 			return null;
 		}
