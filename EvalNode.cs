@@ -78,7 +78,7 @@ namespace loki3
 					case DelimiterType.AsString:
 						return new ValueString(list.Nodes[0].Token.Value);
 					case DelimiterType.AsValue:
-						break;
+						return EvalList.Do(list.Nodes, functions);
 					case DelimiterType.AsArray:
 						List<Value> values = new List<Value>(list.Nodes.Count);
 						foreach (DelimiterNode subnode in list.Nodes)

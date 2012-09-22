@@ -7,9 +7,8 @@ namespace loki3
 	[TestFixture]
 	class TEST_EvalList
 	{
-		internal class TestDelims : IParseLineDelimiters
+		class TestDelims : IParseLineDelimiters
 		{
-			#region IParseLineDelimiters Members
 			public ValueDelimiter GetDelim(char start)
 			{
 				return null;
@@ -17,9 +16,10 @@ namespace loki3
 
 			public ValueDelimiter GetDelim(string start)
 			{
+				if (start == "(")
+					return ValueDelimiter.Basic;
 				return null;
 			}
-			#endregion
 		}
 
 		/// <summary>Function that adds previous and next ints</summary>
@@ -169,6 +169,25 @@ namespace loki3
 				DelimiterList list = ParseLine.Do("triple 2 + 3 doubled", pld);
 				Value value = EvalList.Do(list.Nodes, functions);
 				Assert.AreEqual(12, value.AsInt);
+			}
+		}
+
+		[Test]
+		public void TestNested()
+		{
+			IParseLineDelimiters pld = new TestDelims();
+			IFunctionRequestor functions = new TestFunctions();
+
+			{
+				DelimiterList list = ParseLine.Do("2 * ( 3 + 4 )", pld);
+				Value value = EvalList.Do(list.Nodes, functions);
+				Assert.AreEqual(14, value.AsInt);
+			}
+
+			{
+				DelimiterList list = ParseLine.Do("2 * ( 3 + ( 2 * 4 ) doubled + triple ( 2 + 3 ) )", pld);
+				Value value = EvalList.Do(list.Nodes, functions);
+				Assert.AreEqual(68, value.AsInt);
 			}
 		}
 	}
