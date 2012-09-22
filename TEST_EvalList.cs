@@ -48,7 +48,7 @@ namespace loki3.core.test
 		{
 			internal TestDoubled() : base(Precedence.High) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, IStack stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(prev, stack, nodes);
 				return new ValueInt(value.AsInt * 2);
@@ -60,7 +60,7 @@ namespace loki3.core.test
 		{
 			internal TestMultiplier(int f) : base(Precedence.High) { m_f = f; }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, stack, nodes);
 				return new ValueInt(value.AsInt * m_f);
@@ -74,7 +74,7 @@ namespace loki3.core.test
 		{
 			internal TestCreateMultiplier() : base(Precedence.High) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, stack, nodes);
 				return new TestMultiplier(value.AsInt);

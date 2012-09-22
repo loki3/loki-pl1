@@ -28,6 +28,7 @@ namespace loki3.core
 		internal virtual bool AsBool { get { throw new WrongTypeException(ValueType.Bool, Type); } }
 		internal virtual int AsInt { get { throw new WrongTypeException(ValueType.Int, Type); } }
 		internal virtual double AsFloat { get { throw new WrongTypeException(ValueType.Float, Type); } }
+		internal virtual double AsForcedFloat { get { throw new WrongTypeException(ValueType.Float, Type); } }
 		internal virtual string AsString { get { throw new WrongTypeException(ValueType.String, Type); } }
 		internal virtual List<Value> AsArray { get { throw new WrongTypeException(ValueType.Array, Type); } }
 
@@ -115,6 +116,7 @@ namespace loki3.core
 		}
 
 		internal override int AsInt { get { return m_val; } }
+		internal override double AsForcedFloat { get { return m_val; } }
 		#endregion
 
 		int m_val;
@@ -137,6 +139,7 @@ namespace loki3.core
 		}
 
 		internal override double AsFloat { get { return m_val; } }
+		internal override double AsForcedFloat { get { return m_val; } }
 		#endregion
 
 		double m_val;

@@ -48,7 +48,7 @@ namespace loki3.core
 			m_token = token;
 		}
 
-		/// <summary>Token that required an adjacent value</summary>
+		/// <summary>Token that couldn't be parsed</summary>
 		public Token Token { get { return m_token; } }
 
 		private Token m_token;
@@ -59,18 +59,38 @@ namespace loki3.core
 	/// </summary>
 	internal class WrongTypeException : Exception
 	{
-		internal WrongTypeException(ValueType requested, ValueType actual)
+		internal WrongTypeException(ValueType expected, ValueType actual)
 		{
-			m_requested = requested;
+			m_expected = expected;
 			m_actual = actual;
 		}
 
-		/// <summary>Requested type</summary>
-		public ValueType Requested { get { return m_requested; } }
+		/// <summary>Expected type</summary>
+		public ValueType Expected { get { return m_expected; } }
 		/// <summary>Actual type</summary>
 		public ValueType Actual { get { return m_actual; } }
 
-		private ValueType m_requested;
+		private ValueType m_expected;
 		private ValueType m_actual;
+	}
+
+	/// <summary>
+	/// Function requires a different number of items in array
+	/// </summary>
+	internal class WrongSizeArray : Exception
+	{
+		internal WrongSizeArray(int expected, int actual)
+		{
+			m_expected = expected;
+			m_actual = actual;
+		}
+
+		/// <summary>Expected number</summary>
+		public int Expected { get { return m_expected; } }
+		/// <summary>Actual number</summary>
+		public int Actual { get { return m_actual; } }
+
+		private int m_expected;
+		private int m_actual;
 	}
 }

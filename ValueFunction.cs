@@ -14,7 +14,7 @@ namespace loki3.core
 	/// Represents a constant value
 	/// or a function that may take one or two values and returns a value
 	/// </summary>
-	internal class ValueFunction : Value
+	internal abstract class ValueFunction : Value
 	{
 		internal ValueFunction(bool bConsumesPrevious, bool bConsumesNext)
 		{
@@ -48,34 +48,43 @@ namespace loki3.core
 		internal bool ConsumesPrevious { get { return Metadata[keyConsumesPrevious].AsBool; } }
 		internal bool ConsumesNext { get { return Metadata[keyConsumesNext].AsBool; } }
 
-		internal virtual Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
-		{
-			return null;
-		}
+		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes);
 	}
 
 	/// <summary>
 	/// Prefix function: _ func args
 	/// </summary>
-	internal class ValueFunctionPre : ValueFunction
+	internal abstract class ValueFunctionPre : ValueFunction
 	{
 		internal ValueFunctionPre() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
 		internal ValueFunctionPre(Precedence precedence) : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, precedence) { }
+
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+		{
+			return Eval(next, stack, nodes);
+		}
+		internal abstract Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes);
 	}
 
 	/// <summary>
 	/// Postfix function: args func _
 	/// </summary>
-	internal class ValueFunctionPost : ValueFunction
+	internal abstract class ValueFunctionPost : ValueFunction
 	{
 		internal ValueFunctionPost() : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/) { }
 		internal ValueFunctionPost(Precedence precedence) : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/, precedence) { }
+
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+		{
+			return Eval(prev, stack, nodes);
+		}
+		internal abstract Value Eval(DelimiterNode prev, IStack stack, INodeRequestor nodes);
 	}
 
 	/// <summary>
 	/// Infix function: args1 func args2
 	/// </summary>
-	internal class ValueFunctionIn : ValueFunction
+	internal abstract class ValueFunctionIn : ValueFunction
 	{
 		internal ValueFunctionIn() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
 		internal ValueFunctionIn(Precedence precedence) : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/, precedence) { }

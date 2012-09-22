@@ -22,7 +22,7 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to previous</summary>
 		class TestPrevious1 : ValueFunctionPost
 		{
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, IStack stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(prev, stack, nodes);
 				int sum = value.AsInt + 1;
@@ -33,7 +33,7 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to next</summary>
 		class TestNext1 : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, stack, nodes);
 				int sum = 1 + value.AsInt;
@@ -44,7 +44,7 @@ namespace loki3.core.test
 		/// <summary>Function that makes next ALL CAPS</summary>
 		class TestCaps : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, stack, nodes);
 				string caps = value.AsString.ToUpper();
