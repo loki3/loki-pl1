@@ -48,6 +48,7 @@
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="TEST_EvalList.cs" />
     <Compile Include="TEST_Math.cs" />
+    <Compile Include="TEST_Values.cs" />
     <Compile Include="ValueArray.cs" />
     <Compile Include="ValueDelimiter.cs" />
     <Compile Include="ValueFunction.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="TEST_ParseLine.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Value.cs" />
+    <Compile Include="Values.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
