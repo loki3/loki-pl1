@@ -4,6 +4,9 @@ using loki3.core;
 
 namespace loki3.builtin
 {
+	/// <summary>
+	/// Built-in math functions
+	/// </summary>
 	class Math
 	{
 		/// <summary>

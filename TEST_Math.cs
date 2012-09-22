@@ -19,28 +19,30 @@ namespace loki3.builtin.test
 			return stack;
 		}
 
+		static Value ToValue(string s, IStack stack)
+		{
+			DelimiterList list = ParseLine.Do(s, stack);
+			return EvalList.Do(list.Nodes, stack);
+		}
+
 		[Test]
 		public void TestAdd()
 		{
 			IStack stack = CreateMathStack();
 			{	// 3
-				DelimiterList list = ParseLine.Do("l3.add [ 3 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.add [ 3 ]", stack);
 				Assert.AreEqual(3, value.AsInt);
 			}
 			{	// 3.0
-				DelimiterList list = ParseLine.Do("l3.add [ 3.0 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.add [ 3.0 ]", stack);
 				Assert.AreEqual(3.0, value.AsFloat);
 			}
 			{	// 3 + 2 + 1
-				DelimiterList list = ParseLine.Do("l3.add [ 3 2 1 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.add [ 3 2 1 ]", stack);
 				Assert.AreEqual(6, value.AsInt);
 			}
 			{	// 3 + 2.5 + 1
-				DelimiterList list = ParseLine.Do("l3.add [ 3 2.5 1 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.add [ 3 2.5 1 ]", stack);
 				Assert.AreEqual(6.5, value.AsFloat);
 			}
 
@@ -48,8 +50,7 @@ namespace loki3.builtin.test
 			bool bException = false;
 			try
 			{
-				DelimiterList list = ParseLine.Do("l3.add [ 3 true 1 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				ToValue("l3.add [ 3 true 1 ]", stack);
 			}
 			catch (WrongTypeException e)
 			{
@@ -65,13 +66,11 @@ namespace loki3.builtin.test
 		{
 			IStack stack = CreateMathStack();
 			{	// 42 - 31
-				DelimiterList list = ParseLine.Do("l3.subtract [ 42 31 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.subtract [ 42 31 ]", stack);
 				Assert.AreEqual(11, value.AsInt);
 			}
 			{	// 42 - 31.0
-				DelimiterList list = ParseLine.Do("l3.subtract [ 42 31.0 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.subtract [ 42 31.0 ]", stack);
 				Assert.AreEqual(11.0, value.AsFloat);
 			}
 
@@ -79,8 +78,7 @@ namespace loki3.builtin.test
 			bool bException = false;
 			try
 			{
-				DelimiterList list = ParseLine.Do("l3.subtract [ 3 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				ToValue("l3.subtract [ 3 ]", stack);
 			}
 			catch (WrongSizeArray e)
 			{
@@ -96,13 +94,11 @@ namespace loki3.builtin.test
 		{
 			IStack stack = CreateMathStack();
 			{	// 2 * 3 * 4
-				DelimiterList list = ParseLine.Do("l3.multiply [ 2 3 4 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.multiply [ 2 3 4 ]", stack);
 				Assert.AreEqual(24, value.AsInt);
 			}
 			{	// 1.5 2
-				DelimiterList list = ParseLine.Do("l3.multiply [ 1.5 2 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.multiply [ 1.5 2 ]", stack);
 				Assert.AreEqual(3.0, value.AsFloat);
 			}
 		}
@@ -112,13 +108,11 @@ namespace loki3.builtin.test
 		{
 			IStack stack = CreateMathStack();
 			{	// 6 / 2
-				DelimiterList list = ParseLine.Do("l3.divide [ 6 2 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.divide [ 6 2 ]", stack);
 				Assert.AreEqual(3, value.AsInt);
 			}
 			{	// 1.5 / 3
-				DelimiterList list = ParseLine.Do("l3.divide [ 1.5 3 ]", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = ToValue("l3.divide [ 1.5 3 ]", stack);
 				Assert.AreEqual(0.5, value.AsFloat);
 			}
 		}
@@ -127,9 +121,8 @@ namespace loki3.builtin.test
 		public void TestSquareRoot()
 		{
 			IStack stack = CreateMathStack();
-			{	// 
-				DelimiterList list = ParseLine.Do("l3.sqrt 16", stack);
-				Value value = EvalList.Do(list.Nodes, stack);
+			{
+				Value value = ToValue("l3.sqrt 16", stack);
 				Assert.AreEqual(4, value.AsFloat);
 			}
 		}
