@@ -34,6 +34,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllBuiltins.cs" />
     <Compile Include="CreateFunction.cs" />
     <Compile Include="DelimiterNode.cs" />
     <Compile Include="DelimiterList.cs" />
@@ -41,10 +42,12 @@
     <Compile Include="EvalList.cs" />
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="Math.cs" />
     <Compile Include="StateStack.cs" />
     <Compile Include="TEST_CreateFunction.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="TEST_EvalList.cs" />
+    <Compile Include="TEST_Math.cs" />
     <Compile Include="ValueArray.cs" />
     <Compile Include="ValueDelimiter.cs" />
     <Compile Include="ValueFunction.cs" />
