@@ -12,10 +12,10 @@ namespace loki3
 		{
 			internal TestSum() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/) {}
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
 			{
-				Value value1 = EvalNode.Do(prev, functions, null);
-				Value value2 = EvalNode.Do(next, functions, null);
+				Value value1 = EvalNode.Do(prev, functions, nodes);
+				Value value2 = EvalNode.Do(next, functions, nodes);
 				int sum = value1.AsInt + value2.AsInt;
 				return new ValueInt(sum);
 			}
@@ -26,9 +26,9 @@ namespace loki3
 		{
 			internal TestPrevious1() : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(prev, functions, null);
+				Value value = EvalNode.Do(prev, functions, nodes);
 				int sum = value.AsInt + 1;
 				return new ValueInt(sum);
 			}
@@ -39,9 +39,9 @@ namespace loki3
 		{
 			internal TestNext1() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(next, functions, null);
+				Value value = EvalNode.Do(next, functions, nodes);
 				int sum = 1 + value.AsInt;
 				return new ValueInt(sum);
 			}
@@ -52,9 +52,9 @@ namespace loki3
 		{
 			internal TestCaps() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(next, functions, null);
+				Value value = EvalNode.Do(next, functions, nodes);
 				string caps = value.AsString.ToUpper();
 				return new ValueString(caps);
 			}

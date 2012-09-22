@@ -27,10 +27,10 @@ namespace loki3
 		{
 			internal TestSum() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.Medium) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
 			{
-				Value value1 = EvalNode.Do(prev, functions, null);
-				Value value2 = EvalNode.Do(next, functions, null);
+				Value value1 = EvalNode.Do(prev, functions, nodes);
+				Value value2 = EvalNode.Do(next, functions, nodes);
 				int sum = value1.AsInt + value2.AsInt;
 				return new ValueInt(sum);
 			}
@@ -41,10 +41,10 @@ namespace loki3
 		{
 			internal TestProduct() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.High) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
 			{
-				Value value1 = EvalNode.Do(prev, functions, null);
-				Value value2 = EvalNode.Do(next, functions, null);
+				Value value1 = EvalNode.Do(prev, functions, nodes);
+				Value value2 = EvalNode.Do(next, functions, nodes);
 				int product = value1.AsInt * value2.AsInt;
 				return new ValueInt(product);
 			}
@@ -55,9 +55,9 @@ namespace loki3
 		{
 			internal TestDoubled() : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/, Precedence.High) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(prev, functions, null);
+				Value value = EvalNode.Do(prev, functions, nodes);
 				return new ValueInt(value.AsInt * 2);
 			}
 		}
@@ -67,9 +67,9 @@ namespace loki3
 		{
 			internal TestTriple() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.High) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(next, functions, null);
+				Value value = EvalNode.Do(next, functions, nodes);
 				return new ValueInt(value.AsInt * 3);
 			}
 		}
@@ -155,8 +155,11 @@ namespace loki3
 				Value value = EvalList.Do(list.Nodes, functions);
 				Assert.AreEqual(8, value.AsInt);
 			}
-			// NOTE: "4 doubled doubled" doesn't work because it evals the
-			// second one first.  might need more complex eval rules
+			{
+				DelimiterList list = ParseLine.Do("4 doubled doubled", pld);
+				Value value = EvalList.Do(list.Nodes, functions);
+				Assert.AreEqual(16, value.AsInt);
+			}
 		}
 
 		[Test]

@@ -62,7 +62,7 @@ namespace loki3
 					}
 
 					// evaluate
-					return function.Eval(previous, next, functions);
+					return function.Eval(previous, next, functions, nodes);
 				}
 				else
 				{
