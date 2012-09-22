@@ -54,7 +54,7 @@ namespace loki3
 		{
 			get
 			{
-				if (!m_metadata.ContainsKey(keyPrecedence))
+				if (m_metadata == null || !m_metadata.ContainsKey(keyPrecedence))
 					return Precedence.Low;
 				return (Precedence)m_metadata[keyPrecedence].AsInt;
 			}

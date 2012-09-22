@@ -62,15 +62,29 @@ namespace loki3
 			}
 		}
 
-		/// <summary>Function that triples the next value</summary>
-		class TestTriple: ValueFunction
+		/// <summary>Function that multiplies the next value by a canned value</summary>
+		class TestMultiplier : ValueFunction
 		{
-			internal TestTriple() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.High) { }
+			internal TestMultiplier(int f) : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.High) { m_f = f; }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, functions, nodes);
-				return new ValueInt(value.AsInt * 3);
+				return new ValueInt(value.AsInt * m_f);
+			}
+
+			private int m_f;
+		}
+
+		/// <summary>Function that creates a TestMultiplier function based on a passed in int</summary>
+		class TestCreateMultiplier : ValueFunction
+		{
+			internal TestCreateMultiplier() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, Precedence.High) { }
+
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IFunctionRequestor functions, INodeRequestor nodes)
+			{
+				Value value = EvalNode.Do(next, functions, nodes);
+				return new TestMultiplier(value.AsInt);
 			}
 		}
 
@@ -82,7 +96,8 @@ namespace loki3
 				m_funcs["+"] = new TestSum();
 				m_funcs["*"] = new TestProduct();
 				m_funcs["doubled"] = new TestDoubled();
-				m_funcs["triple"] = new TestTriple();
+				m_funcs["triple"] = new TestMultiplier(3);
+				m_funcs["create-multiplier"] = new TestCreateMultiplier();
 			}
 
 			#region IFunctionRequestor Members
@@ -155,7 +170,7 @@ namespace loki3
 				Value value = EvalList.Do(list.Nodes, functions);
 				Assert.AreEqual(8, value.AsInt);
 			}
-			{
+			{	// last doubled runs first, asks for the previous value & triggers first doubled
 				DelimiterList list = ParseLine.Do("4 doubled doubled", pld);
 				Value value = EvalList.Do(list.Nodes, functions);
 				Assert.AreEqual(16, value.AsInt);
@@ -191,6 +206,19 @@ namespace loki3
 				DelimiterList list = ParseLine.Do("2 * ( 3 + ( 2 * 4 ) doubled + triple ( 2 + 3 ) )", pld);
 				Value value = EvalList.Do(list.Nodes, functions);
 				Assert.AreEqual(68, value.AsInt);
+			}
+		}
+
+		[Test]
+		public void TestFunction()
+		{
+			IParseLineDelimiters pld = new TestDelims();
+			IFunctionRequestor functions = new TestFunctions();
+
+			{	// 2 + 4 * 5
+				DelimiterList list = ParseLine.Do("2 + create-multiplier 4  5", pld);
+				Value value = EvalList.Do(list.Nodes, functions);
+				Assert.AreEqual(22, value.AsInt);
 			}
 		}
 	}

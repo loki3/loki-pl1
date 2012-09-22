@@ -13,6 +13,7 @@ namespace loki3
 			CantEval,	// not a function or sub-list
 			Node,		// function or list that hasn't been evaled
 			Value,		// fully resolved value
+			Function,	// fully resolve function
 			Empty,		// node has been consumed by adjacent function
 		}
 
@@ -51,10 +52,31 @@ namespace loki3
 			/// <summary>Evaluate this node, possibly consuming adjacent nodes</summary>
 			internal void Eval(IFunctionRequestor functions, INodeRequestor nodes)
 			{
+				if (m_state != NodeState.Node && m_state != NodeState.Function)
+					return;
+
+				// get new value
 				if (m_state == NodeState.Node)
-				{
+				{	// hasn't been evaled at all
 					m_value = EvalNode.Do(m_node, functions, nodes);
-					m_node = new DelimiterNodeValue(m_value);
+				}
+				else if (m_state == NodeState.Function)
+				{	// previously resolved to a function
+					DelimiterNode previous = (m_func.ConsumesPrevious ? previous = nodes.GetPrevious() : null);
+					DelimiterNode next = (m_func.ConsumesNext ? next = nodes.GetNext() : null);
+					m_value = m_func.Eval(previous, next, functions, nodes);
+				}
+
+				// store new info about this node
+				m_node = new DelimiterNodeValue(m_value);
+				m_precedence = (int)m_value.Precedence;
+				if (m_value.Type == ValueType.Function)
+				{
+					m_state = NodeState.Function;
+					m_func = m_value as ValueFunction;
+				}
+				else
+				{
 					m_state = NodeState.Value;
 				}
 			}
