@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace loki3
+namespace loki3.core.test
 {
 	[TestFixture]
 	class TEST_EvalBuiltin

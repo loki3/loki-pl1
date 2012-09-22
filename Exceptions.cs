@@ -1,6 +1,6 @@
 using System;
 
-namespace loki3
+namespace loki3.core
 {
 	/// <summary>
 	/// A start delimiter was found without an end delimiter

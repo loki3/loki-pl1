@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace loki3
+namespace loki3.core
 {
 	/// <summary>Used to request the previous or next nodes</summary>
 	interface INodeRequestor

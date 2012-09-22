@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace loki3
+namespace loki3.core
 {
 	/// <summary>
 	/// Tree where every node is a token or subtree with an associated delimiter

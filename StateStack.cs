@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace loki3
+namespace loki3.core
 {
 	/// <summary>Used to get a named function</summary>
 	interface IStack : IParseLineDelimiters

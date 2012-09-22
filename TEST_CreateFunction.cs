@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace loki3
+namespace loki3.core.test
 {
+	[TestFixture]
+	class TEST_CreateFunction
+	{
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
 		{
@@ -18,9 +21,6 @@ namespace loki3
 			}
 		}
 
-	[TestFixture]
-	class TEST_CreateFunction
-	{
 		[Test]
 		public void Test()
 		{

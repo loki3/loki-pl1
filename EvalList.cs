@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace loki3
+namespace loki3.core
 {
 	/// <summary>
 	/// Eval a list of DelimiterNodes and return a Value
