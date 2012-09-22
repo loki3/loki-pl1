@@ -73,6 +73,8 @@ namespace loki3
 					return new TestNext1();
 				if (token.Value == "caps")
 					return new TestCaps();
+				if (token.Value == "x")
+					return new ValueFloat(3.5);
 				return null;
 			}
 			public ValueDelimiter GetDelim(string start) { return null; }
@@ -109,6 +111,16 @@ namespace loki3
 
 			Value result = EvalNode.Do(ToNode("1234"), stack, values);
 			Assert.AreEqual(1234, result.AsInt);
+		}
+
+		[Test]
+		public void TestVariable()
+		{
+			IStack stack = new TestStack();
+			INodeRequestor values = new TestValueIntRequestor();
+
+			Value result = EvalNode.Do(ToNode("x"), stack, values);
+			Assert.AreEqual(3.5, result.AsFloat);
 		}
 
 		[Test]

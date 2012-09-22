@@ -33,17 +33,20 @@ namespace loki3
 			Value val;
 			if (m_values.TryGetValue(token.Value, out val))
 				return val;
-			return m_parent.GetValue(token);
+			return (m_parent != null ? m_parent.GetValue(token) : null);
 		}
 
 		public ValueDelimiter GetDelim(string start)
 		{
-			return null;
+			Value val;
+			if (m_values.TryGetValue(start, out val))
+				return val as ValueDelimiter;
+			return (m_parent != null ? m_parent.GetDelim(start) : null);
 		}
 
 		#endregion
 
 		private IStack m_parent;
-		private Dictionary<string, Value> m_values = null;
+		private Dictionary<string, Value> m_values = new Dictionary<string,Value>();
 	}
 }

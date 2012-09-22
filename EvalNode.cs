@@ -58,6 +58,10 @@ namespace loki3
 					// evaluate
 					return function.Eval(previous, next, stack, nodes);
 				}
+				else if (value != null)
+				{
+					return value;
+				}
 				else
 				{
 					return EvalBuiltin.Do(token);

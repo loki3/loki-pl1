@@ -84,29 +84,17 @@ namespace loki3
 		}
 
 		/// <summary>Registry of test functions</summary>
-		internal class TestStack : IStack
+		internal class TestStack : StateStack
 		{
-			internal TestStack()
+			internal TestStack() : base(null)
 			{
-				m_funcs["+"] = new TestSum();
-				m_funcs["*"] = new TestProduct();
-				m_funcs["doubled"] = new TestDoubled();
-				m_funcs["triple"] = new TestMultiplier(3);
-				m_funcs["create-multiplier"] = new TestCreateMultiplier();
+				AddValue("x", new ValueInt(6));
+				AddValue("+", new TestSum());
+				AddValue("*", new TestProduct());
+				AddValue("doubled", new TestDoubled());
+				AddValue("triple", new TestMultiplier(3));
+				AddValue("create-multiplier", new TestCreateMultiplier());
 			}
-
-			#region IStack Members
-			public Value GetValue(Token token)
-			{
-				Value val;
-				if (m_funcs.TryGetValue(token.Value, out val))
-					return val;
-				return null;
-			}
-			public ValueDelimiter GetDelim(string start) { return null; }
-			#endregion
-
-			private Dictionary<string, Value> m_funcs = new Dictionary<string, Value>();
 		}
 
 		[Test]
@@ -125,7 +113,7 @@ namespace loki3
 				Value value = EvalList.Do(list.Nodes, stack);
 				Assert.AreEqual(13, value.AsInt);
 			}
-			{
+			{	// precedence should work as expected
 				DelimiterList list = ParseLine.Do("4 + 2 * 7", pld);
 				Value value = EvalList.Do(list.Nodes, stack);
 				Assert.AreEqual(18, value.AsInt);
@@ -134,6 +122,11 @@ namespace loki3
 				DelimiterList list = ParseLine.Do("4 * 2 + 7", pld);
 				Value value = EvalList.Do(list.Nodes, stack);
 				Assert.AreEqual(15, value.AsInt);
+			}
+			{
+				DelimiterList list = ParseLine.Do("3 + x", pld);
+				Value value = EvalList.Do(list.Nodes, stack);
+				Assert.AreEqual(9, value.AsInt);
 			}
 		}
 
@@ -150,6 +143,11 @@ namespace loki3
 			}
 			{
 				DelimiterList list = ParseLine.Do("triple triple 2", pld);
+				Value value = EvalList.Do(list.Nodes, stack);
+				Assert.AreEqual(18, value.AsInt);
+			}
+			{
+				DelimiterList list = ParseLine.Do("triple x", pld);
 				Value value = EvalList.Do(list.Nodes, stack);
 				Assert.AreEqual(18, value.AsInt);
 			}
