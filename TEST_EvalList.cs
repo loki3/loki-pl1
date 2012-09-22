@@ -88,12 +88,12 @@ namespace loki3
 		{
 			internal TestStack() : base(null)
 			{
-				AddValue("x", new ValueInt(6));
-				AddValue("+", new TestSum());
-				AddValue("*", new TestProduct());
-				AddValue("doubled", new TestDoubled());
-				AddValue("triple", new TestMultiplier(3));
-				AddValue("create-multiplier", new TestCreateMultiplier());
+				SetValue("x", new ValueInt(6));
+				SetValue("+", new TestSum());
+				SetValue("*", new TestProduct());
+				SetValue("doubled", new TestDoubled());
+				SetValue("triple", new TestMultiplier(3));
+				SetValue("create-multiplier", new TestCreateMultiplier());
 			}
 		}
 

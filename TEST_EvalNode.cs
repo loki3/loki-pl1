@@ -77,6 +77,7 @@ namespace loki3
 					return new ValueFloat(3.5);
 				return null;
 			}
+			public void SetValue(string token, Value value) { }
 			public ValueDelimiter GetDelim(string start) { return null; }
 		}
 

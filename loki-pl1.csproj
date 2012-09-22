@@ -42,6 +42,7 @@
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="StateStack.cs" />
+    <Compile Include="TEST_CreateFunction.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="TEST_EvalList.cs" />
     <Compile Include="ValueArray.cs" />

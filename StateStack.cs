@@ -8,6 +8,9 @@ namespace loki3
 	{
 		/// <summary>Returns null if requested token doesn't exist</summary>
 		Value GetValue(Token token);
+
+		/// <summary>Stores a value on a token</summary>
+		void SetValue(string token, Value value);
 	}
 
 	/// <summary>
@@ -21,12 +24,12 @@ namespace loki3
 			m_parent = parent;
 		}
 
-		internal void AddValue(string name, Value v)
-		{
-			m_values[name] = v;
-		}
-
 		#region IStack Members
+
+		public void SetValue(string token, Value value)
+		{
+			m_values[token] = value;
+		}
 
 		public Value GetValue(Token token)
 		{
