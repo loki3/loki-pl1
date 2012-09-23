@@ -12,7 +12,6 @@ namespace loki3.builtin.test
 		{
 			StateStack stack = new StateStack(null);
 			Values.Register(stack);
-			Math.Register(stack);
 
 			ValueDelimiter paren = new ValueDelimiter("(", ")", DelimiterType.AsValue);
 			stack.SetValue("(", paren);
@@ -85,15 +84,53 @@ namespace loki3.builtin.test
 		public void TestCreateFunction()
 		{
 			IStack stack = CreateValueStack();
+			Math.Register(stack);
 
-			{
+			{	// prefix
+				Value value = ToValue("l3.createFunction l3.createMap [ :post :x :lines [ ' l3.add [ 3 x ] ' ] ]", stack);
+				ValueFunction func = value as ValueFunction;
+
+				List<DelimiterNode> nodes = new List<DelimiterNode>();
+				nodes.Add(new DelimiterNodeValue(func));
+				nodes.Add(new DelimiterNodeValue(new ValueInt(4)));
+
+				Value result = EvalList.Do(nodes, stack);
+				Assert.AreEqual(7, result.AsInt);
+			}
+
+			{	// postfix
+				Value value = ToValue("l3.createFunction l3.createMap [ :pre :x :lines [ ' l3.add [ 7 x ] ' ] ]", stack);
+				ValueFunction func = value as ValueFunction;
+
+				List<DelimiterNode> nodes = new List<DelimiterNode>();
+				nodes.Add(new DelimiterNodeValue(new ValueInt(2)));
+				nodes.Add(new DelimiterNodeValue(func));
+
+				Value result = EvalList.Do(nodes, stack);
+				Assert.AreEqual(9, result.AsInt);
+			}
+
+			{	// infix
 				// first add the + function to the current stack
 				Value value = ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :pre :x  :post :y :lines [ ' l3.add [ x y ] ' ] ] ) ]", stack);
-				ValueFunction func = value as ValueFunction;
+				ValueFunctionIn func = value as ValueFunctionIn;
 
 				// next, use it
 				Value result = ToValue("5 + 7", stack);
 				Assert.AreEqual(12, result.AsInt);
+			}
+
+			{	// missing pre & post
+				bool bError = false;
+				try
+				{
+					ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :lines [ ' l3.add [ x y ] ' ] ] ) ]", stack);
+				}
+				catch (MissingParameter)
+				{
+					bError = true;
+				}
+				Assert.True(bError);
 			}
 		}
 	}

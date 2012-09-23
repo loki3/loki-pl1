@@ -41,6 +41,13 @@ namespace loki3.core
 					m_state = NodeState.Node;
 					m_precedence = 0;
 				}
+				else if (node.Value != null)
+				{
+					m_value = node.Value;
+					m_precedence = (int)m_value.Precedence;
+					m_func = m_value as ValueFunction;
+					m_state = (m_func == null ? NodeState.Value : NodeState.Function);
+				}
 			}
 
 			internal int Precedence { get { return m_precedence; } }

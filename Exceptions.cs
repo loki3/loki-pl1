@@ -39,6 +39,21 @@ namespace loki3.core
 	}
 
 	/// <summary>
+	/// Missing an expected key in the parameter map
+	/// </summary>
+	internal class MissingParameter : Exception
+	{
+		internal MissingParameter(string key)
+		{
+			m_key = key;
+		}
+
+		public string Key { get { return m_key; } }
+
+		private string m_key;
+	}
+
+	/// <summary>
 	/// Could not parse token
 	/// </summary>
 	internal class UnrecognizedTokenException : Exception

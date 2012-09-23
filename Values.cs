@@ -72,6 +72,9 @@ namespace loki3.builtin
 				Value temp = map.GetOptional("order", null);
 				Precedence order = (temp == null ? Precedence.Medium : (Precedence)temp.AsInt);
 
+				if (pre == null && post == null)
+					throw new MissingParameter("pre");	// TODO: richer message
+
 				// need a list of strings, not values
 				List<string> lines = new List<string>(valueLines.Count);
 				foreach (Value v in valueLines)
