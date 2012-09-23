@@ -15,6 +15,7 @@ namespace loki3.builtin
 		internal static void Register(IStack stack)
 		{
 			stack.SetValue("l3.setValue", new SetValue());
+			stack.SetValue("l3.createMap", new CreateMap());
 		}
 
 
@@ -32,6 +33,26 @@ namespace loki3.builtin
 				Value value = list[1];
 				stack.SetValue(key, value);
 				return value;
+			}
+		}
+
+		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
+		class CreateMap : ValueFunctionPre
+		{
+			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			{
+				Value post = EvalNode.Do(next, stack, nodes);
+				List<Value> list = post.AsArray;
+
+				Dictionary<string, Value> map = new Dictionary<string, Value>();
+				int count = list.Count;
+				for (int i = 0; i < count; i += 2)
+				{
+					string key = list[i].AsString;
+					Value value = list[i+1];
+					map[key] = value;
+				}
+				return new ValueMap(map);
 			}
 		}
 	}

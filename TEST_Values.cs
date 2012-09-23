@@ -64,5 +64,18 @@ namespace loki3.builtin.test
 				Assert.AreEqual(false, fetchArray[2].AsBool);
 			}
 		}
+
+		[Test]
+		public void TestCreateMap()
+		{
+			IStack stack = CreateValueStack();
+
+			{
+				Value value = ToValue("l3.createMap [ ' a ' 5 ' key ' true ]", stack);
+				Dictionary<string, Value> map = value.AsMap;
+				Assert.AreEqual(5, map["a"].AsInt);
+				Assert.AreEqual(true, map["key"].AsBool);
+			}
+		}
 	}
 }
