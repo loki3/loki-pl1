@@ -10,10 +10,10 @@ namespace loki3.core.test
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunctionIn
 		{
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value value1 = EvalNode.Do(prev, stack, nodes);
-				Value value2 = EvalNode.Do(next, stack, nodes);
+				Value value1 = EvalNode.Do(prev, scope, nodes);
+				Value value2 = EvalNode.Do(next, scope, nodes);
 				int sum = value1.AsInt + value2.AsInt;
 				return new ValueInt(sum);
 			}
@@ -22,9 +22,9 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to previous</summary>
 		class TestPrevious1 : ValueFunctionPost
 		{
-			internal override Value Eval(DelimiterNode prev, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, IScope scope, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(prev, stack, nodes);
+				Value value = EvalNode.Do(prev, scope, nodes);
 				int sum = value.AsInt + 1;
 				return new ValueInt(sum);
 			}
@@ -33,9 +33,9 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to next</summary>
 		class TestNext1 : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(next, stack, nodes);
+				Value value = EvalNode.Do(next, scope, nodes);
 				int sum = 1 + value.AsInt;
 				return new ValueInt(sum);
 			}
@@ -44,16 +44,16 @@ namespace loki3.core.test
 		/// <summary>Function that makes next ALL CAPS</summary>
 		class TestCaps : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(next, stack, nodes);
+				Value value = EvalNode.Do(next, scope, nodes);
 				string caps = value.AsString.ToUpper();
 				return new ValueString(caps);
 			}
 		}
 
 		/// <summary>Simple function registry</summary>
-		class TestStack : IStack
+		class TestScope : IScope
 		{
 			public Value GetValue(Token token)
 			{
@@ -99,52 +99,52 @@ namespace loki3.core.test
 		[Test]
 		public void TestBuiltin()
 		{
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 			INodeRequestor values = new TestValueIntRequestor();
 
-			Value result = EvalNode.Do(ToNode("1234"), stack, values);
+			Value result = EvalNode.Do(ToNode("1234"), scope, values);
 			Assert.AreEqual(1234, result.AsInt);
 		}
 
 		[Test]
 		public void TestVariable()
 		{
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 			INodeRequestor values = new TestValueIntRequestor();
 
-			Value result = EvalNode.Do(ToNode("x"), stack, values);
+			Value result = EvalNode.Do(ToNode("x"), scope, values);
 			Assert.AreEqual(3.5, result.AsFloat);
 		}
 
 		[Test]
 		public void TestFunctions()
 		{
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 			INodeRequestor values = new TestValueIntRequestor();
 
 			// infix
-			Value result = EvalNode.Do(ToNode("sum"), stack, values);
+			Value result = EvalNode.Do(ToNode("sum"), scope, values);
 			Assert.AreEqual(10, result.AsInt);
 
 			// only uses previous token
-			result = EvalNode.Do(ToNode("prev1"), stack, values);
+			result = EvalNode.Do(ToNode("prev1"), scope, values);
 			Assert.AreEqual(4, result.AsInt);
 
 			// only uses next token
-			result = EvalNode.Do(ToNode("next1"), stack, values);
+			result = EvalNode.Do(ToNode("next1"), scope, values);
 			Assert.AreEqual(8, result.AsInt);
 		}
 
 		[Test]
 		public void TestFailure()
 		{
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 			INodeRequestor values = new TestValueIntRequestor();
 
 			bool bCatch = false;
 			try
 			{
-				Value result = EvalNode.Do(ToNode("qwer"), stack, values);
+				Value result = EvalNode.Do(ToNode("qwer"), scope, values);
 			}
 			catch (UnrecognizedTokenException)
 			{
@@ -162,16 +162,16 @@ namespace loki3.core.test
 			DelimiterList list = new DelimiterList(delim, nodes);
 			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 			INodeRequestor values = new TestValueNodeRequestor(nodelist);
 
 			{	// delimited string
-				Value result = EvalNode.Do(nodelist, stack, values);
+				Value result = EvalNode.Do(nodelist, scope, values);
 				Assert.AreEqual("this is a test", result.AsString);
 			}
 
 			{	// function that takes a delimited string
-				Value result = EvalNode.Do(ToNode("caps"), stack, values);
+				Value result = EvalNode.Do(ToNode("caps"), scope, values);
 				Assert.AreEqual("THIS IS A TEST", result.AsString);
 			}
 		}
@@ -187,11 +187,11 @@ namespace loki3.core.test
 			DelimiterList list = new DelimiterList(delim, nodes);
 			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 			INodeRequestor values = new TestValueNodeRequestor(nodelist);
 
 			{	// [3 7 3]
-				Value result = EvalNode.Do(nodelist, stack, values);
+				Value result = EvalNode.Do(nodelist, scope, values);
 				Assert.AreEqual(result.Type, ValueType.Array);
 				List<Value> array = result.AsArray;
 				Assert.AreEqual(3, array.Count);

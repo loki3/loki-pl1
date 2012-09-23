@@ -43,7 +43,7 @@
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Math.cs" />
-    <Compile Include="StateStack.cs" />
+    <Compile Include="ScopeChain.cs" />
     <Compile Include="TEST_CreateFunction.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="TEST_EvalList.cs" />

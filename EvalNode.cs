@@ -24,9 +24,9 @@ namespace loki3.core
 		/// Returns a value.
 		/// </summary>
 		/// <param name="token">token representing a function or variable</param>
-		/// <param name="stack">used to request functions, variables, and delimiters</param>
+		/// <param name="scope">used to request functions, variables, and delimiters</param>
 		/// <param name="nodes">used to request previous and next nodes</param>
-		internal static Value Do(DelimiterNode node, IStack stack, INodeRequestor nodes)
+		internal static Value Do(DelimiterNode node, IScope scope, INodeRequestor nodes)
 		{
 			if (node.Value != null)
 			{	// node has already been evaluated
@@ -35,7 +35,7 @@ namespace loki3.core
 			else if (node.Token != null)
 			{	// function/variable or built-in
 				Token token = node.Token;
-				Value value = stack.GetValue(token);
+				Value value = scope.GetValue(token);
 				if (value is ValueFunction)
 				{
 					ValueFunction function = value as ValueFunction;
@@ -56,7 +56,7 @@ namespace loki3.core
 					}
 
 					// evaluate
-					return function.Eval(previous, next, stack, nodes);
+					return function.Eval(previous, next, scope, nodes);
 				}
 				else if (value != null)
 				{
@@ -76,12 +76,12 @@ namespace loki3.core
 					case DelimiterType.AsString:
 						return new ValueString(list.Nodes[0].Token.Value);
 					case DelimiterType.AsValue:
-						return EvalList.Do(list.Nodes, stack);
+						return EvalList.Do(list.Nodes, scope);
 					case DelimiterType.AsArray:
 						List<Value> values = new List<Value>(list.Nodes.Count);
 						foreach (DelimiterNode subnode in list.Nodes)
 						{
-							Value value = Do(subnode, stack, nodes);
+							Value value = Do(subnode, scope, nodes);
 							values.Add(value);
 						}
 						return new ValueArray(values);

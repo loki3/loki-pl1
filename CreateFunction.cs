@@ -27,28 +27,28 @@ namespace loki3.core
 				m_rawLines = rawLines;
 			}
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack parent, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope parent, INodeRequestor nodes)
 			{
 				// lazily parse
 				EnsureParsed(parent);
 
 				// create a new scope and add passed in arguments
-				StateStack stack = new StateStack(parent);
+				ScopeChain scope = new ScopeChain(parent);
 				if (m_pattern1 != null)
 				{
-					Value value1 = EvalNode.Do(prev, stack, nodes);
-					stack.SetValue(m_pattern1.AsString, value1);
+					Value value1 = EvalNode.Do(prev, scope, nodes);
+					scope.SetValue(m_pattern1.AsString, value1);
 				}
 				if (m_pattern2 != null)
 				{
-					Value value2 = EvalNode.Do(next, stack, nodes);
-					stack.SetValue(m_pattern2.AsString, value2);
+					Value value2 = EvalNode.Do(next, scope, nodes);
+					scope.SetValue(m_pattern2.AsString, value2);
 				}
 
 				// eval each line using current scope
 				Value retval = null;
 				foreach (DelimiterList line in m_parsedLines)
-					retval = EvalList.Do(line.Nodes, stack);
+					retval = EvalList.Do(line.Nodes, scope);
 				return (retval == null ? new ValueNil() : retval);
 			}
 
@@ -89,24 +89,24 @@ namespace loki3.core
 		}
 
 		/// <summary>
-		/// Add a new function (prefix, postfix or infix), to the stack
+		/// Add a new function (prefix, postfix or infix), to the scope
 		/// </summary>
-		/// <param name="stack">stack to add function definition to</param>
+		/// <param name="scope">scope to add function definition to</param>
 		/// <param name="name">name of the new function</param>
 		/// <param name="pattern1">null, variable name, or pattern to match for previous token</param>
 		/// <param name="pattern2">null, variable name, or pattern to match for next token</param>
 		/// <param name="rawLines">lines to parse and run when function is invoked</param>
 		/// <param name="precedence">the order in which function should be evaled</param>
-		internal static void Do(IStack stack, string name,
+		internal static void Do(IScope scope, string name,
 			Value pattern1, Value pattern2, List<string> rawLines, Precedence precedence)
 		{
 			ValueFunction func = new UserFunction(pattern1, pattern2, rawLines, precedence);
-			stack.SetValue(name, func);
+			scope.SetValue(name, func);
 		}
-		internal static void Do(IStack stack, string name,
+		internal static void Do(IScope scope, string name,
 			Value pattern1, Value pattern2, List<string> rawLines)
 		{
-			Do(stack, name, pattern1, pattern2, rawLines, Precedence.Medium);
+			Do(scope, name, pattern1, pattern2, rawLines, Precedence.Medium);
 		}
 	}
 }

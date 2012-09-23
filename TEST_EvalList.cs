@@ -20,10 +20,10 @@ namespace loki3.core.test
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunctionIn
 		{
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value value1 = EvalNode.Do(prev, stack, nodes);
-				Value value2 = EvalNode.Do(next, stack, nodes);
+				Value value1 = EvalNode.Do(prev, scope, nodes);
+				Value value2 = EvalNode.Do(next, scope, nodes);
 				int sum = value1.AsInt + value2.AsInt;
 				return new ValueInt(sum);
 			}
@@ -34,10 +34,10 @@ namespace loki3.core.test
 		{
 			internal TestProduct() : base(Precedence.High) { }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value value1 = EvalNode.Do(prev, stack, nodes);
-				Value value2 = EvalNode.Do(next, stack, nodes);
+				Value value1 = EvalNode.Do(prev, scope, nodes);
+				Value value2 = EvalNode.Do(next, scope, nodes);
 				int product = value1.AsInt * value2.AsInt;
 				return new ValueInt(product);
 			}
@@ -48,9 +48,9 @@ namespace loki3.core.test
 		{
 			internal TestDoubled() : base(Precedence.High) { }
 
-			internal override Value Eval(DelimiterNode prev, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, IScope scope, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(prev, stack, nodes);
+				Value value = EvalNode.Do(prev, scope, nodes);
 				return new ValueInt(value.AsInt * 2);
 			}
 		}
@@ -60,9 +60,9 @@ namespace loki3.core.test
 		{
 			internal TestMultiplier(int f) : base(Precedence.High) { m_f = f; }
 
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(next, stack, nodes);
+				Value value = EvalNode.Do(next, scope, nodes);
 				return new ValueInt(value.AsInt * m_f);
 			}
 
@@ -74,17 +74,17 @@ namespace loki3.core.test
 		{
 			internal TestCreateMultiplier() : base(Precedence.High) { }
 
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value value = EvalNode.Do(next, stack, nodes);
+				Value value = EvalNode.Do(next, scope, nodes);
 				return new TestMultiplier(value.AsInt);
 			}
 		}
 
 		/// <summary>Registry of test functions</summary>
-		internal class TestStack : StateStack
+		internal class TestScope : ScopeChain
 		{
-			internal TestStack() : base(null)
+			internal TestScope() : base(null)
 			{
 				SetValue("x", new ValueInt(6));
 				SetValue("+", new TestSum());
@@ -99,31 +99,31 @@ namespace loki3.core.test
 		public void TestInfix()
 		{
 			IParseLineDelimiters pld = new TestDelims();
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 
 			{
 				DelimiterList list = ParseLine.Do("3 + 8", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(11, value.AsInt);
 			}
 			{
 				DelimiterList list = ParseLine.Do("4 + 2 + 7", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(13, value.AsInt);
 			}
 			{	// precedence should work as expected
 				DelimiterList list = ParseLine.Do("4 + 2 * 7", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(18, value.AsInt);
 			}
 			{	// precedence comes into play
 				DelimiterList list = ParseLine.Do("4 * 2 + 7", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(15, value.AsInt);
 			}
 			{
 				DelimiterList list = ParseLine.Do("3 + x", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(9, value.AsInt);
 			}
 		}
@@ -132,21 +132,21 @@ namespace loki3.core.test
 		public void TestPrefix()
 		{
 			IParseLineDelimiters pld = new TestDelims();
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 
 			{
 				DelimiterList list = ParseLine.Do("triple 3", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(9, value.AsInt);
 			}
 			{
 				DelimiterList list = ParseLine.Do("triple triple 2", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(18, value.AsInt);
 			}
 			{
 				DelimiterList list = ParseLine.Do("triple x", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(18, value.AsInt);
 			}
 		}
@@ -155,16 +155,16 @@ namespace loki3.core.test
 		public void TestPostfix()
 		{
 			IParseLineDelimiters pld = new TestDelims();
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 
 			{
 				DelimiterList list = ParseLine.Do("4 doubled", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(8, value.AsInt);
 			}
 			{	// last doubled runs first, asks for the previous value & triggers first doubled
 				DelimiterList list = ParseLine.Do("4 doubled doubled", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(16, value.AsInt);
 			}
 		}
@@ -173,11 +173,11 @@ namespace loki3.core.test
 		public void TestAllfix()
 		{
 			IParseLineDelimiters pld = new TestDelims();
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 
 			{
 				DelimiterList list = ParseLine.Do("triple 2 + 3 doubled", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(12, value.AsInt);
 			}
 		}
@@ -186,17 +186,17 @@ namespace loki3.core.test
 		public void TestNested()
 		{
 			IParseLineDelimiters pld = new TestDelims();
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 
 			{
 				DelimiterList list = ParseLine.Do("2 * ( 3 + 4 )", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(14, value.AsInt);
 			}
 
 			{
 				DelimiterList list = ParseLine.Do("2 * ( 3 + ( 2 * 4 ) doubled + triple ( 2 + 3 ) )", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(68, value.AsInt);
 			}
 		}
@@ -205,11 +205,11 @@ namespace loki3.core.test
 		public void TestFunction()
 		{
 			IParseLineDelimiters pld = new TestDelims();
-			IStack stack = new TestStack();
+			IScope scope = new TestScope();
 
 			{	// 2 + 4 * 5
 				DelimiterList list = ParseLine.Do("2 + create-multiplier 4  5", pld);
-				Value value = EvalList.Do(list.Nodes, stack);
+				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(22, value.AsInt);
 			}
 		}

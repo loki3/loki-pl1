@@ -12,7 +12,7 @@ namespace loki3.builtin
 		/// <summary>
 		/// Add built-in Value functions to the stack
 		/// </summary>
-		internal static void Register(IStack stack)
+		internal static void Register(IScope stack)
 		{
 			stack.SetValue("l3.setValue", new SetValue());
 			stack.SetValue("l3.createMap", new CreateMap());
@@ -23,7 +23,7 @@ namespace loki3.builtin
 		/// <summary>[key value] -> value  and stores the key value pair on the current stack</summary>
 		class SetValue : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope stack, INodeRequestor nodes)
 			{
 				Value post = EvalNode.Do(next, stack, nodes);
 				List<Value> list = post.AsArray;
@@ -40,7 +40,7 @@ namespace loki3.builtin
 		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
 		class CreateMap : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope stack, INodeRequestor nodes)
 			{
 				Value post = EvalNode.Do(next, stack, nodes);
 				List<Value> list = post.AsArray;
@@ -60,7 +60,7 @@ namespace loki3.builtin
 		/// <summary>{ [:pre] [:post] :lines [:order] } -> function</summary>
 		class CreateFunction : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope stack, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, stack, nodes);
 				ValueMap map = value.AsMap;

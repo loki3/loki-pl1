@@ -8,41 +8,41 @@ namespace loki3.builtin.test
 	[TestFixture]
 	class TEST_Math
 	{
-		static IStack CreateMathStack()
+		static IScope CreateMathScope()
 		{
-			StateStack stack = new StateStack(null);
-			Math.Register(stack);
+			ScopeChain scope = new ScopeChain(null);
+			Math.Register(scope);
 
 			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
-			stack.SetValue("[", square);
+			scope.SetValue("[", square);
 
-			return stack;
+			return scope;
 		}
 
-		static Value ToValue(string s, IStack stack)
+		static Value ToValue(string s, IScope scope)
 		{
-			DelimiterList list = ParseLine.Do(s, stack);
-			return EvalList.Do(list.Nodes, stack);
+			DelimiterList list = ParseLine.Do(s, scope);
+			return EvalList.Do(list.Nodes, scope);
 		}
 
 		[Test]
 		public void TestAdd()
 		{
-			IStack stack = CreateMathStack();
+			IScope scope = CreateMathScope();
 			{	// 3
-				Value value = ToValue("l3.add [ 3 ]", stack);
+				Value value = ToValue("l3.add [ 3 ]", scope);
 				Assert.AreEqual(3, value.AsInt);
 			}
 			{	// 3.0
-				Value value = ToValue("l3.add [ 3.0 ]", stack);
+				Value value = ToValue("l3.add [ 3.0 ]", scope);
 				Assert.AreEqual(3.0, value.AsFloat);
 			}
 			{	// 3 + 2 + 1
-				Value value = ToValue("l3.add [ 3 2 1 ]", stack);
+				Value value = ToValue("l3.add [ 3 2 1 ]", scope);
 				Assert.AreEqual(6, value.AsInt);
 			}
 			{	// 3 + 2.5 + 1
-				Value value = ToValue("l3.add [ 3 2.5 1 ]", stack);
+				Value value = ToValue("l3.add [ 3 2.5 1 ]", scope);
 				Assert.AreEqual(6.5, value.AsFloat);
 			}
 
@@ -50,7 +50,7 @@ namespace loki3.builtin.test
 			bool bException = false;
 			try
 			{
-				ToValue("l3.add [ 3 true 1 ]", stack);
+				ToValue("l3.add [ 3 true 1 ]", scope);
 			}
 			catch (WrongTypeException e)
 			{
@@ -64,13 +64,13 @@ namespace loki3.builtin.test
 		[Test]
 		public void TestSubtract()
 		{
-			IStack stack = CreateMathStack();
+			IScope scope = CreateMathScope();
 			{	// 42 - 31
-				Value value = ToValue("l3.subtract [ 42 31 ]", stack);
+				Value value = ToValue("l3.subtract [ 42 31 ]", scope);
 				Assert.AreEqual(11, value.AsInt);
 			}
 			{	// 42 - 31.0
-				Value value = ToValue("l3.subtract [ 42 31.0 ]", stack);
+				Value value = ToValue("l3.subtract [ 42 31.0 ]", scope);
 				Assert.AreEqual(11.0, value.AsFloat);
 			}
 
@@ -78,7 +78,7 @@ namespace loki3.builtin.test
 			bool bException = false;
 			try
 			{
-				ToValue("l3.subtract [ 3 ]", stack);
+				ToValue("l3.subtract [ 3 ]", scope);
 			}
 			catch (WrongSizeArray e)
 			{
@@ -92,13 +92,13 @@ namespace loki3.builtin.test
 		[Test]
 		public void TestMultiply()
 		{
-			IStack stack = CreateMathStack();
+			IScope scope = CreateMathScope();
 			{	// 2 * 3 * 4
-				Value value = ToValue("l3.multiply [ 2 3 4 ]", stack);
+				Value value = ToValue("l3.multiply [ 2 3 4 ]", scope);
 				Assert.AreEqual(24, value.AsInt);
 			}
 			{	// 1.5 2
-				Value value = ToValue("l3.multiply [ 1.5 2 ]", stack);
+				Value value = ToValue("l3.multiply [ 1.5 2 ]", scope);
 				Assert.AreEqual(3.0, value.AsFloat);
 			}
 		}
@@ -106,13 +106,13 @@ namespace loki3.builtin.test
 		[Test]
 		public void TestDivide()
 		{
-			IStack stack = CreateMathStack();
+			IScope scope = CreateMathScope();
 			{	// 6 / 2
-				Value value = ToValue("l3.divide [ 6 2 ]", stack);
+				Value value = ToValue("l3.divide [ 6 2 ]", scope);
 				Assert.AreEqual(3, value.AsInt);
 			}
 			{	// 1.5 / 3
-				Value value = ToValue("l3.divide [ 1.5 3 ]", stack);
+				Value value = ToValue("l3.divide [ 1.5 3 ]", scope);
 				Assert.AreEqual(0.5, value.AsFloat);
 			}
 		}
@@ -120,9 +120,9 @@ namespace loki3.builtin.test
 		[Test]
 		public void TestSquareRoot()
 		{
-			IStack stack = CreateMathStack();
+			IScope scope = CreateMathScope();
 			{
-				Value value = ToValue("l3.sqrt 16", stack);
+				Value value = ToValue("l3.sqrt 16", scope);
 				Assert.AreEqual(4, value.AsFloat);
 			}
 		}

@@ -10,24 +10,24 @@ namespace loki3.builtin
 	class Math
 	{
 		/// <summary>
-		/// Add built-in math functions to the stack
+		/// Add built-in math functions to the scope
 		/// </summary>
-		internal static void Register(IStack stack)
+		internal static void Register(IScope scope)
 		{
-			stack.SetValue("l3.add", new AddArray());
-			stack.SetValue("l3.subtract", new Subtract());
-			stack.SetValue("l3.multiply", new MultiplyArray());
-			stack.SetValue("l3.divide", new Divide());
-			stack.SetValue("l3.sqrt", new SquareRoot());
+			scope.SetValue("l3.add", new AddArray());
+			scope.SetValue("l3.subtract", new Subtract());
+			scope.SetValue("l3.multiply", new MultiplyArray());
+			scope.SetValue("l3.divide", new Divide());
+			scope.SetValue("l3.sqrt", new SquareRoot());
 		}
 
 
 		/// <summary>[a1 a2 ... an] -> a1 + a2 + ... + an</summary>
 		class AddArray : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value numbers = EvalNode.Do(next, stack, nodes);
+				Value numbers = EvalNode.Do(next, scope, nodes);
 				List<Value> list = numbers.AsArray;
 
 				bool isResultInt = true;
@@ -59,9 +59,9 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 - a2</summary>
 		class Subtract : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value numbers = EvalNode.Do(next, stack, nodes);
+				Value numbers = EvalNode.Do(next, scope, nodes);
 				List<Value> list = numbers.AsArray;
 				if (list.Count != 2)
 					throw new WrongSizeArray(2, list.Count);
@@ -81,9 +81,9 @@ namespace loki3.builtin
 		/// <summary>[a1 a2 ... an] -> a1 * a2 * ... * an</summary>
 		class MultiplyArray : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value numbers = EvalNode.Do(next, stack, nodes);
+				Value numbers = EvalNode.Do(next, scope, nodes);
 				List<Value> list = numbers.AsArray;
 
 				bool isResultInt = true;
@@ -115,9 +115,9 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 / a2</summary>
 		class Divide : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value numbers = EvalNode.Do(next, stack, nodes);
+				Value numbers = EvalNode.Do(next, scope, nodes);
 				List<Value> list = numbers.AsArray;
 				if (list.Count != 2)
 					throw new WrongSizeArray(2, list.Count);
@@ -137,9 +137,9 @@ namespace loki3.builtin
 		/// <summary>a -> sqrt(a)</summary>
 		class SquareRoot : ValueFunctionPre
 		{
-			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
-				Value number = EvalNode.Do(next, stack, nodes);
+				Value number = EvalNode.Do(next, scope, nodes);
 				double a = number.AsForcedFloat;
 				return new ValueFloat(System.Math.Sqrt(a));
 			}

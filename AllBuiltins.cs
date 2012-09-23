@@ -6,9 +6,9 @@ namespace loki3.builtin
 {
 	class AllBuiltins
 	{
-		static void RegisterAll(IStack stack)
+		static void RegisterAll(IScope scope)
 		{
-			Math.Register(stack);
+			Math.Register(scope);
 		}
 	}
 }
