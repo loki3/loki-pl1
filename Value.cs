@@ -31,7 +31,7 @@ namespace loki3.core
 		internal virtual double AsForcedFloat { get { throw new WrongTypeException(ValueType.Float, Type); } }
 		internal virtual string AsString { get { throw new WrongTypeException(ValueType.String, Type); } }
 		internal virtual List<Value> AsArray { get { throw new WrongTypeException(ValueType.Array, Type); } }
-		internal virtual Dictionary<string, Value> AsMap { get { throw new WrongTypeException(ValueType.Map, Type); } }
+		internal virtual ValueMap AsMap { get { throw new WrongTypeException(ValueType.Map, Type); } }
 
 		/// <summary>Get this value's metadata.  May be null.</summary>
 		internal Dictionary<string, Value> Metadata { get { return m_metadata; } }
@@ -97,7 +97,9 @@ namespace loki3.core
 		internal override bool AsBool { get { return m_val; } }
 		#endregion
 
-		bool m_val;
+		public override string ToString() { return m_val.ToString(); }
+
+		private bool m_val;
 	}
 
 	/// <summary>
@@ -120,7 +122,9 @@ namespace loki3.core
 		internal override double AsForcedFloat { get { return m_val; } }
 		#endregion
 
-		int m_val;
+		public override string ToString() { return m_val.ToString(); }
+
+		private int m_val;
 	}
 
 	/// <summary>
@@ -143,7 +147,9 @@ namespace loki3.core
 		internal override double AsForcedFloat { get { return m_val; } }
 		#endregion
 
-		double m_val;
+		public override string ToString() { return m_val.ToString(); }
+
+		private double m_val;
 	}
 
 	/// <summary>
@@ -165,7 +171,9 @@ namespace loki3.core
 		internal override string AsString { get { return m_val; } }
 		#endregion
 
-		string m_val;
+		public override string ToString() { return m_val; }
+
+		private string m_val;
 	}
 
 	/// <summary>
@@ -184,9 +192,32 @@ namespace loki3.core
 			get { return ValueType.Map; }
 		}
 
-		internal override Dictionary<string, Value> AsMap { get { return m_val; } }
+		internal override ValueMap AsMap { get { return this; } }
 		#endregion
 
-		Dictionary<string, Value> m_val;
+		/// <summary>Get a value by key</summary>
+		internal Value this[string key]
+		{
+			get { return m_val[key]; }
+		}
+
+		/// <summary>Return value if present, else return a default</summary>
+		internal Value GetOptional(string key, Value ifmissing)
+		{
+			Value value;
+			if (m_val.TryGetValue(key, out value))
+				return value;
+			return ifmissing;
+		}
+
+		/// <summary>Get underlying map</summary>
+		internal Dictionary<string, Value> Map
+		{
+			get { return m_val; }
+		}
+
+		public override string ToString() { return m_val.ToString(); }
+
+		private Dictionary<string, Value> m_val;
 	}
 }

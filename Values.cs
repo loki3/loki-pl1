@@ -16,6 +16,7 @@ namespace loki3.builtin
 		{
 			stack.SetValue("l3.setValue", new SetValue());
 			stack.SetValue("l3.createMap", new CreateMap());
+			stack.SetValue("l3.createFunction", new CreateFunction());
 		}
 
 
@@ -53,6 +54,30 @@ namespace loki3.builtin
 					map[key] = value;
 				}
 				return new ValueMap(map);
+			}
+		}
+
+		/// <summary>{ [:pre] [:post] :lines [:order] } -> function</summary>
+		class CreateFunction : ValueFunctionPre
+		{
+			internal override Value Eval(DelimiterNode next, IStack stack, INodeRequestor nodes)
+			{
+				Value value = EvalNode.Do(next, stack, nodes);
+				ValueMap map = value.AsMap;
+
+				// extract optional & required parameters
+				Value pre = map.GetOptional("pre", null);
+				Value post = map.GetOptional("post", null);
+				List<Value> valueLines = map["lines"].AsArray;
+				Value temp = map.GetOptional("order", null);
+				Precedence order = (temp == null ? Precedence.Medium : (Precedence)temp.AsInt);
+
+				// need a list of strings, not values
+				List<string> lines = new List<string>(valueLines.Count);
+				foreach (Value v in valueLines)
+					lines.Add(v.AsString);
+
+				return loki3.core.CreateFunction.Do(pre, post, lines, order);
 			}
 		}
 	}

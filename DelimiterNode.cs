@@ -19,6 +19,8 @@ namespace loki3.core
 
 		internal override Token Token { get { return m_token; } }
 
+		internal string ToString() { return m_token.Value; }
+
 		private Token m_token;
 	}
 

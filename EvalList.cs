@@ -13,7 +13,7 @@ namespace loki3.core
 			CantEval,	// not a function or sub-list
 			Node,		// function or list that hasn't been evaled
 			Value,		// fully resolved value
-			Function,	// fully resolve function
+			Function,	// fully resolved function
 			Empty,		// node has been consumed by adjacent function
 		}
 
@@ -45,6 +45,7 @@ namespace loki3.core
 
 			internal int Precedence { get { return m_precedence; } }
 			internal bool IsEmpty { get { return m_state == NodeState.Empty; } }
+			internal bool HasFunction { get { return m_state == NodeState.Function; } }
 			internal bool HasValue { get { return m_state == NodeState.Value; } }
 			internal Value Value { get { return m_value; } }
 			internal DelimiterNode Node { get { return m_node; } }
@@ -119,6 +120,7 @@ namespace loki3.core
 				m_evalIndex = -1;
 				int max = -2;
 				int count = m_nodes.Count;
+				int empties = 0;
 				for (int i = count - 1; i >= 0; --i)
 				{
 					NodeEval node = m_nodes[i];
@@ -131,10 +133,17 @@ namespace loki3.core
 							m_evalIndex = i;
 						}
 					}
+					if (node.IsEmpty)
+						empties++;
 				}
+
 				// we're done if we didn't find anything
 				if (max == -2)
 					return false;
+				// if the only thing left is a function, there's nothing further to do
+				if (empties == count - 1 && m_nodes[m_evalIndex].HasFunction)
+					return false;
+
 				// eval the one we found
 				m_nodes[m_evalIndex].Eval(m_stack, this);
 				return true;
@@ -149,7 +158,7 @@ namespace loki3.core
 				for (int i = count - 1; i >= 0; --i)
 				{
 					NodeEval node = m_nodes[i];
-					if (node.HasValue)
+					if (node.HasValue || node.HasFunction)
 						return node.Value;
 				}
 				return new ValueNil();

@@ -79,13 +79,13 @@ namespace loki3.core
 		/// <param name="pattern2">null, variable name, or pattern to match for next token</param>
 		/// <param name="rawLines">lines to parse and run when function is invoked</param>
 		/// <param name="precedence">the order in which function should be evaled</param>
-		internal static void Do(Value pattern1, Value pattern2, List<string> rawLines, Precedence precedence)
+		internal static ValueFunction Do(Value pattern1, Value pattern2, List<string> rawLines, Precedence precedence)
 		{
-			new UserFunction(pattern1, pattern2, rawLines, precedence);
+			return new UserFunction(pattern1, pattern2, rawLines, precedence);
 		}
-		internal static void Do(Value pattern1, Value pattern2, List<string> rawLines)
+		internal static ValueFunction Do(Value pattern1, Value pattern2, List<string> rawLines)
 		{
-			new UserFunction(pattern1, pattern2, rawLines, Precedence.Medium);
+			return new UserFunction(pattern1, pattern2, rawLines, Precedence.Medium);
 		}
 
 		/// <summary>

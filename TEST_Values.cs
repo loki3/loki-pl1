@@ -12,7 +12,10 @@ namespace loki3.builtin.test
 		{
 			StateStack stack = new StateStack(null);
 			Values.Register(stack);
+			Math.Register(stack);
 
+			ValueDelimiter paren = new ValueDelimiter("(", ")", DelimiterType.AsValue);
+			stack.SetValue("(", paren);
 			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
 			stack.SetValue("[", square);
 			ValueDelimiter quote = new ValueDelimiter("'", "'", DelimiterType.AsString);
@@ -33,7 +36,7 @@ namespace loki3.builtin.test
 			IStack stack = CreateValueStack();
 
 			{
-				Value value = ToValue("l3.setValue [ ' a ' 5 ]", stack);
+				Value value = ToValue("l3.setValue [ :a 5 ]", stack);
 				Assert.AreEqual(5, value.AsInt);
 
 				Value fetch = stack.GetValue(new Token("a"));
@@ -41,7 +44,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// change a
-				Value value = ToValue("l3.setValue [ ' a ' 7.5 ]", stack);
+				Value value = ToValue("l3.setValue [ :a 7.5 ]", stack);
 				Assert.AreEqual(7.5, value.AsFloat);
 
 				Value fetch = stack.GetValue(new Token("a"));
@@ -49,7 +52,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// set an array
-				Value value = ToValue("l3.setValue [ ' key ' [ a 2 false ] ]", stack);
+				Value value = ToValue("l3.setValue [ :key [ a 2 false ] ]", stack);
 				List<Value> array = value.AsArray;
 				Assert.AreEqual(3, array.Count);
 				Assert.AreEqual(7.5, array[0].AsFloat);
@@ -71,10 +74,26 @@ namespace loki3.builtin.test
 			IStack stack = CreateValueStack();
 
 			{
-				Value value = ToValue("l3.createMap [ ' a ' 5 ' key ' true ]", stack);
-				Dictionary<string, Value> map = value.AsMap;
+				Value value = ToValue("l3.createMap [ :a 5  :key true ]", stack);
+				ValueMap map = value.AsMap;
 				Assert.AreEqual(5, map["a"].AsInt);
 				Assert.AreEqual(true, map["key"].AsBool);
+			}
+		}
+
+		[Test]
+		public void TestCreateFunction()
+		{
+			IStack stack = CreateValueStack();
+
+			{
+				// first add the + function to the current stack
+				Value value = ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :pre :x  :post :y :lines [ ' l3.add [ x y ] ' ] ] ) ]", stack);
+				ValueFunction func = value as ValueFunction;
+
+				// next, use it
+				Value result = ToValue("5 + 7", stack);
+				Assert.AreEqual(12, result.AsInt);
 			}
 		}
 	}

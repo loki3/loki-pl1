@@ -23,20 +23,18 @@ namespace loki3.core
 				return new ValueBool(false);
 
 			// try as int
-			try
-			{
-				int i = Int32.Parse(s);
+			int i;
+			if (Int32.TryParse(s, out i))
 				return new ValueInt(i);
-			}
-			catch (Exception) { }
 
 			// try as float
-			try
-			{
-				double d = Double.Parse(s);
+			double d;
+			if (Double.TryParse(s, out d))
 				return new ValueFloat(d);
-			}
-			catch (Exception) { }
+
+			// try as string
+			if (s.StartsWith(":"))
+				return new ValueString(s.Substring(1));
 
 			// give up
 			throw new UnrecognizedTokenException(token);
