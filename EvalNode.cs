@@ -69,23 +69,36 @@ namespace loki3.core
 			}
 			else if (node.List != null)
 			{	// delimited list of nodes
+				Value value = null;
 				DelimiterList list = node.List;
 				DelimiterType type = list.Delimiter.DelimiterType;
+
+				// get contents as a Value
 				switch (type)
 				{
 					case DelimiterType.AsString:
-						return new ValueString(list.Nodes[0].Token.Value);
+						value = new ValueString(list.Nodes[0].Token.Value);
+						break;
 					case DelimiterType.AsValue:
-						return EvalList.Do(list.Nodes, scope);
+						value = EvalList.Do(list.Nodes, scope);
+						break;
 					case DelimiterType.AsArray:
 						List<Value> values = new List<Value>(list.Nodes.Count);
 						foreach (DelimiterNode subnode in list.Nodes)
 						{
-							Value value = Do(subnode, scope, nodes);
-							values.Add(value);
+							Value subvalue = Do(subnode, scope, nodes);
+							values.Add(subvalue);
 						}
-						return new ValueArray(values);
+						value = new ValueArray(values);
+						break;
 				}
+
+				// run contents through a function if specified
+				ValueFunction function = list.Delimiter.Function;
+				if (function == null)
+					return value;
+				DelimiterNode next = new DelimiterNodeValue(value);
+				return function.Eval(null, next, scope, nodes);
 			}
 			return new ValueNil();
 		}

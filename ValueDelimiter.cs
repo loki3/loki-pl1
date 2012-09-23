@@ -22,10 +22,7 @@ namespace loki3.core
 		/// </summary>
 		internal ValueDelimiter(string start, string end)
 		{
-			Dictionary<string, Value> meta = WritableMetadata;
-			meta[keyDelimStart] = new ValueString(start);
-			meta[keyDelimEnd] = new ValueString(end);
-			meta[keyDelimType] = new ValueInt((int)DelimiterType.AsValue);
+			Init(start, end, DelimiterType.AsValue, null);
 		}
 		/// <summary>
 		/// Specify the start and end strings for a delimiter
@@ -33,10 +30,25 @@ namespace loki3.core
 		/// </summary>
 		internal ValueDelimiter(string start, string end, DelimiterType type)
 		{
+			Init(start, end, type, null);
+		}
+		/// <summary>
+		/// Delimited contents will be passed off to function to be evaluated
+		/// </summary>
+		/// <param name="function">function must take a next parameter of specified type</param>
+		internal ValueDelimiter(string start, string end, DelimiterType type, ValueFunction function)
+		{
+			Init(start, end, type, function);
+		}
+
+		private void Init(string start, string end, DelimiterType type, ValueFunction function)
+		{
 			Dictionary<string, Value> meta = WritableMetadata;
 			meta[keyDelimStart] = new ValueString(start);
 			meta[keyDelimEnd] = new ValueString(end);
 			meta[keyDelimType] = new ValueInt((int)type);
+			if (function != null)
+				meta[keyDelimFunction] = function;
 		}
 
 		#region Value
@@ -50,6 +62,7 @@ namespace loki3.core
 		internal static string keyDelimStart = "l3.delim.start";
 		internal static string keyDelimEnd = "l3.delim.end";
 		internal static string keyDelimType = "l3.delim.type";
+		internal static string keyDelimFunction = "l3.delim.function";
 		#endregion
 
 		/// <summary>characters used to start delimited section</summary>
@@ -59,9 +72,16 @@ namespace loki3.core
 		/// <summary>true if section should be tokenized, false for as-is</summary>
 		internal DelimiterType DelimiterType { get { return (DelimiterType)Metadata[keyDelimType].AsInt; } }
 
-		internal virtual Value Eval(List<DelimiterNode> nodes, IScope stack)
+		/// <summary>optional function to run delimited value through</summary>
+		internal ValueFunction Function
 		{
-			return null;
+			get
+			{
+				Value value = null;
+				if (!Metadata.TryGetValue(keyDelimFunction, out value))
+					return null;
+				return value as ValueFunction;
+			}
 		}
 
 		/// <summary>Represents an entire line</summary>

@@ -200,5 +200,40 @@ namespace loki3.core.test
 				Assert.AreEqual(3, array[2].AsInt);
 			}
 		}
+
+		/// <summary>Simple function that adds an array of ints</summary>
+		class AddFunction : ValueFunctionPre
+		{
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			{
+				Value numbers = EvalNode.Do(next, scope, nodes);
+				List<Value> list = numbers.AsArray;
+
+				int sum = 0;
+				foreach (Value val in list)
+					sum += val.AsInt;
+
+				return new ValueInt(sum);
+			}
+		}
+
+		[Test]
+		public void TestDelimiterFunction()
+		{
+			ValueFunction function = new AddFunction();
+			ValueDelimiter delim = new ValueDelimiter("<", ">", DelimiterType.AsArray, function);
+			List<DelimiterNode> nodes = new List<DelimiterNode>();
+			nodes.Add(ToNode("3"));
+			nodes.Add(ToNode("6"));
+			nodes.Add(ToNode("9"));
+			DelimiterList list = new DelimiterList(delim, nodes);
+			DelimiterNodeList nodelist = new DelimiterNodeList(list);
+
+			IScope scope = new TestScope();
+			INodeRequestor values = new TestValueNodeRequestor(nodelist);
+
+			Value result = EvalNode.Do(nodelist, scope, values);
+			Assert.AreEqual(18, result.AsInt);
+		}
 	}
 }
