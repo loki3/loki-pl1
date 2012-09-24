@@ -48,7 +48,7 @@ namespace loki3.core
 		internal bool ConsumesPrevious { get { return Metadata[keyConsumesPrevious].AsBool; } }
 		internal bool ConsumesNext { get { return Metadata[keyConsumesNext].AsBool; } }
 
-		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope stack, INodeRequestor nodes);
+		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes);
 	}
 
 	/// <summary>
@@ -59,11 +59,11 @@ namespace loki3.core
 		internal ValueFunctionPre() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
 		internal ValueFunctionPre(Precedence precedence) : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, precedence) { }
 
-		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope stack, INodeRequestor nodes)
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
-			return Eval(next, stack, nodes);
+			return Eval(next, scope, nodes);
 		}
-		internal abstract Value Eval(DelimiterNode next, IScope stack, INodeRequestor nodes);
+		internal abstract Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes);
 	}
 
 	/// <summary>
@@ -74,11 +74,11 @@ namespace loki3.core
 		internal ValueFunctionPost() : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/) { }
 		internal ValueFunctionPost(Precedence precedence) : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/, precedence) { }
 
-		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope stack, INodeRequestor nodes)
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
-			return Eval(prev, stack, nodes);
+			return Eval(prev, scope, nodes);
 		}
-		internal abstract Value Eval(DelimiterNode prev, IScope stack, INodeRequestor nodes);
+		internal abstract Value Eval(DelimiterNode prev, IScope scope, INodeRequestor nodes);
 	}
 
 	/// <summary>
