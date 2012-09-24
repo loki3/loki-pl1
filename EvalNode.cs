@@ -36,7 +36,7 @@ namespace loki3.core
 			{	// function/variable or built-in
 				Token token = node.Token;
 				Value value = scope.GetValue(token);
-				if (value is ValueFunction)
+				if (value is ValueFunction && nodes != null)
 				{
 					ValueFunction function = value as ValueFunction;
 					// get previous & next nodes if needed
@@ -85,8 +85,8 @@ namespace loki3.core
 					case DelimiterType.AsArray:
 						List<Value> values = new List<Value>(list.Nodes.Count);
 						foreach (DelimiterNode subnode in list.Nodes)
-						{
-							Value subvalue = Do(subnode, scope, nodes);
+						{	// note: 'nodes' is null so functions don't get evaled
+							Value subvalue = Do(subnode, scope, null);
 							values.Add(subvalue);
 						}
 						value = new ValueArray(values);

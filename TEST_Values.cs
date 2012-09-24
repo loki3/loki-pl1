@@ -13,12 +13,9 @@ namespace loki3.builtin.test
 			ScopeChain scope = new ScopeChain(null);
 			Values.Register(scope);
 
-			ValueDelimiter paren = new ValueDelimiter("(", ")", DelimiterType.AsValue);
-			scope.SetValue("(", paren);
-			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
-			scope.SetValue("[", square);
-			ValueDelimiter quote = new ValueDelimiter("'", "'", DelimiterType.AsString);
-			scope.SetValue("'", quote);
+			scope.SetValue("(", new ValueDelimiter("(", ")", DelimiterType.AsValue));
+			scope.SetValue("[", new ValueDelimiter("[", "]", DelimiterType.AsArray));
+			scope.SetValue("'", new ValueDelimiter("'", "'", DelimiterType.AsString));
 
 			return scope;
 		}
@@ -131,6 +128,24 @@ namespace loki3.builtin.test
 					bError = true;
 				}
 				Assert.True(bError);
+			}
+		}
+
+		[Test]
+		public void TestCreateDelimiter()
+		{
+			IScope scope = CreateValueScope();
+
+			{	// {} should mean create a map from the contents
+				// first add the + function to the current scope
+				Value value = ToValue("l3.setValue [ :{ ( l3.createDelimiter l3.createMap [ :start :{  :end :} :type :asArray :function l3.createMap ] ) ]", scope);
+				ValueDelimiter delimi = value as ValueDelimiter;
+
+				// next, use it
+				Value result = ToValue("{ :key1 5 :key2 false }", scope);
+				ValueMap map = result as ValueMap;
+				Assert.AreEqual(5, map["key1"].AsInt);
+				Assert.AreEqual(false, map["key2"].AsBool);
 			}
 		}
 	}
