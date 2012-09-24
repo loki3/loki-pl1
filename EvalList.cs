@@ -29,11 +29,26 @@ namespace loki3.core
 				Token token = node.Token;
 				if (token != null)
 				{
-					m_func = scope.GetValue(token) as ValueFunction;
+					Value value = scope.GetValue(token);
+					m_func = value as ValueFunction;
 					if (m_func != null)
-					{
+					{	// function
 						m_state = NodeState.Node;
 						m_precedence = (int)m_func.Precedence;
+					}
+					else if (value != null)
+					{	// variable
+						m_value = value;
+						m_state = NodeState.Value;
+					}
+					else
+					{	// built-in
+						try
+						{
+							m_value = EvalBuiltin.Do(token);
+							m_state = NodeState.Value;
+						}
+						catch (Exception) { }
 					}
 				}
 				else if (node.List != null)

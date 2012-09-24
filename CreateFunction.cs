@@ -46,10 +46,7 @@ namespace loki3.core
 				}
 
 				// eval each line using current scope
-				Value retval = null;
-				foreach (DelimiterList line in m_parsedLines)
-					retval = EvalList.Do(line.Nodes, scope);
-				return (retval == null ? new ValueNil() : retval);
+				return EvalBody.Do(m_parsedLines, scope);
 			}
 
 			/// <summary>If we haven't already parsed our lines, do so now</summary>

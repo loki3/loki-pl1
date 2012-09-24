@@ -38,13 +38,16 @@
     <Compile Include="CreateFunction.cs" />
     <Compile Include="DelimiterNode.cs" />
     <Compile Include="DelimiterList.cs" />
+    <Compile Include="EvalBody.cs" />
     <Compile Include="EvalBuiltin.cs" />
     <Compile Include="EvalList.cs" />
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="Conditional.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="ScopeChain.cs" />
+    <Compile Include="TEST_Conditional.cs" />
     <Compile Include="TEST_CreateFunction.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="TEST_EvalList.cs" />

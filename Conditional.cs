@@ -1,0 +1,40 @@
+using System;
+using System.Collections.Generic;
+using loki3.core;
+
+namespace loki3.builtin
+{
+	/// <summary>
+	/// Built-in conditional functions
+	/// </summary>
+	class Conditional
+	{
+		/// <summary>
+		/// Add built-in If functions to the scope
+		/// </summary>
+		internal static void Register(IScope scope)
+		{
+			scope.SetValue("l3.if", new If());
+		}
+
+
+		/// <summary>{ :do? :body } -> if do?, last value of body, else false</summary>
+		class If : ValueFunctionPre
+		{
+			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			{
+				Value value = EvalNode.Do(next, scope, nodes);
+				ValueMap map = value.AsMap;
+
+				// if !do?, return
+				bool shouldDo = map["do?"].AsBool;
+				if (!shouldDo)
+					return new ValueBool(false);
+
+				// if do?, eval body
+				List<Value> valueBody = map["body"].AsArray;
+				return EvalBody.Do(valueBody, scope);
+			}
+		}
+	}
+}
