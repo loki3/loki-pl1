@@ -84,7 +84,7 @@ namespace loki3.builtin.test
 			Math.Register(scope);
 
 			{	// prefix
-				Value value = ToValue("l3.createFunction l3.createMap [ :post :x :lines [ ' l3.add [ 3 x ] ' ] ]", scope);
+				Value value = ToValue("l3.createFunction l3.createMap [ :post :x :body [ ' l3.add [ 3 x ] ' ] ]", scope);
 				ValueFunction func = value as ValueFunction;
 
 				List<DelimiterNode> nodes = new List<DelimiterNode>();
@@ -96,7 +96,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// postfix
-				Value value = ToValue("l3.createFunction l3.createMap [ :pre :x :lines [ ' l3.add [ 7 x ] ' ] ]", scope);
+				Value value = ToValue("l3.createFunction l3.createMap [ :pre :x :body [ ' l3.add [ 7 x ] ' ] ]", scope);
 				ValueFunction func = value as ValueFunction;
 
 				List<DelimiterNode> nodes = new List<DelimiterNode>();
@@ -109,7 +109,7 @@ namespace loki3.builtin.test
 
 			{	// infix
 				// first add the + function to the current scope
-				Value value = ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :pre :x  :post :y :lines [ ' l3.add [ x y ] ' ] ] ) ]", scope);
+				Value value = ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :pre :x  :post :y :body [ ' l3.add [ x y ] ' ] ] ) ]", scope);
 				ValueFunctionIn func = value as ValueFunctionIn;
 
 				// next, use it
@@ -121,7 +121,7 @@ namespace loki3.builtin.test
 				bool bError = false;
 				try
 				{
-					ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :lines [ ' l3.add [ x y ] ' ] ] ) ]", scope);
+					ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :body [ ' l3.add [ x y ] ' ] ] ) ]", scope);
 				}
 				catch (MissingParameter)
 				{

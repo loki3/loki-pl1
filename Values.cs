@@ -58,7 +58,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ [:pre] [:post] :lines [:order] } -> function</summary>
+		/// <summary>{ [:pre] [:post] :body [:order] } -> function</summary>
 		class CreateFunction : ValueFunctionPre
 		{
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
@@ -69,7 +69,7 @@ namespace loki3.builtin
 				// extract optional & required parameters
 				Value pre = map.GetOptional("pre", null);
 				Value post = map.GetOptional("post", null);
-				List<Value> valueLines = map["lines"].AsArray;
+				List<Value> valueBody = map["body"].AsArray;
 				Value temp = map.GetOptional("order", null);
 				Precedence order = (temp == null ? Precedence.Medium : (Precedence)temp.AsInt);
 
@@ -77,11 +77,11 @@ namespace loki3.builtin
 					throw new MissingParameter("pre");	// TODO: richer message
 
 				// need a list of strings, not values
-				List<string> lines = new List<string>(valueLines.Count);
-				foreach (Value v in valueLines)
-					lines.Add(v.AsString);
+				List<string> body = new List<string>(valueBody.Count);
+				foreach (Value v in valueBody)
+					body.Add(v.AsString);
 
-				return loki3.core.CreateFunction.Do(pre, post, lines, order);
+				return loki3.core.CreateFunction.Do(pre, post, body, order);
 			}
 		}
 
