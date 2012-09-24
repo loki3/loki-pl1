@@ -46,5 +46,41 @@ namespace loki3.builtin.test
 				Assert.False(value.AsBool);
 			}
 		}
+
+		[Test]
+		public void TestLogic()
+		{
+			IScope scope = CreateValueScope();
+
+			// AND
+			{
+				Value value = ToValue("l3.and? [ true true ]", scope);
+				Assert.True(value.AsBool);
+			}
+			{
+				Value value = ToValue("l3.and? [ true false ]", scope);
+				Assert.False(value.AsBool);
+			}
+
+			// OR
+			{
+				Value value = ToValue("l3.or? [ true false ]", scope);
+				Assert.True(value.AsBool);
+			}
+			{
+				Value value = ToValue("l3.or? [ false false ]", scope);
+				Assert.False(value.AsBool);
+			}
+
+			// NOT
+			{
+				Value value = ToValue("l3.not? false", scope);
+				Assert.True(value.AsBool);
+			}
+			{
+				Value value = ToValue("l3.not? true", scope);
+				Assert.False(value.AsBool);
+			}
+		}
 	}
 }
