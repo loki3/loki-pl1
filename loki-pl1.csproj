@@ -42,11 +42,13 @@
     <Compile Include="EvalList.cs" />
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="Logic.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="ScopeChain.cs" />
     <Compile Include="TEST_CreateFunction.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="TEST_EvalList.cs" />
+    <Compile Include="TEST_Logic.cs" />
     <Compile Include="TEST_Math.cs" />
     <Compile Include="TEST_Values.cs" />
     <Compile Include="ValueArray.cs" />

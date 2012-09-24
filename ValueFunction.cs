@@ -38,6 +38,12 @@ namespace loki3.core
 		{
 			get { return ValueType.Function; }
 		}
+
+		internal override bool Equals(Value v)
+		{
+			ValueFunction other = v as ValueFunction;
+			return (other == null ? false : this == other);
+		}
 		#endregion
 
 		#region Keys

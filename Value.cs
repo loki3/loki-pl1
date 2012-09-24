@@ -23,6 +23,7 @@ namespace loki3.core
 	internal abstract class Value
 	{
 		internal abstract ValueType Type { get; }
+		internal abstract bool Equals(Value v);
 
 		// request value as a particular type
 		internal virtual bool AsBool { get { throw new WrongTypeException(ValueType.Bool, Type); } }
@@ -75,6 +76,11 @@ namespace loki3.core
 		{
 			get { return ValueType.Nil; }
 		}
+
+		internal override bool Equals(Value v)
+		{
+			return v is ValueNil;
+		}
 		#endregion
 	}
 
@@ -92,6 +98,12 @@ namespace loki3.core
 		internal override ValueType Type
 		{
 			get { return ValueType.Bool; }
+		}
+
+		internal override bool Equals(Value v)
+		{
+			ValueBool other = v as ValueBool;
+			return (other == null ? false : m_val == other.m_val);
 		}
 
 		internal override bool AsBool { get { return m_val; } }
@@ -116,6 +128,12 @@ namespace loki3.core
 		internal override ValueType Type
 		{
 			get { return ValueType.Int; }
+		}
+
+		internal override bool Equals(Value v)
+		{
+			ValueInt other = v as ValueInt;
+			return (other == null ? false : m_val == other.m_val);
 		}
 
 		internal override int AsInt { get { return m_val; } }
@@ -143,6 +161,12 @@ namespace loki3.core
 			get { return ValueType.Float; }
 		}
 
+		internal override bool Equals(Value v)
+		{
+			ValueFloat other = v as ValueFloat;
+			return (other == null ? false : m_val == other.m_val);
+		}
+
 		internal override double AsFloat { get { return m_val; } }
 		internal override double AsForcedFloat { get { return m_val; } }
 		#endregion
@@ -168,6 +192,12 @@ namespace loki3.core
 			get { return ValueType.String; }
 		}
 
+		internal override bool Equals(Value v)
+		{
+			ValueString other = v as ValueString;
+			return (other == null ? false : m_val == other.m_val);
+		}
+
 		internal override string AsString { get { return m_val; } }
 		#endregion
 
@@ -190,6 +220,26 @@ namespace loki3.core
 		internal override ValueType Type
 		{
 			get { return ValueType.Map; }
+		}
+
+		internal override bool Equals(Value v)
+		{
+			ValueMap other = v as ValueMap;
+			if (other == null)
+				return false;
+			int count = m_val.Count;
+			if (count != other.m_val.Count)
+				return false;
+			Dictionary<string, Value>.KeyCollection keys = m_val.Keys;
+			foreach (string key in keys)
+			{
+				Value val;
+				if (!other.m_val.TryGetValue(key, out val))
+					return false;
+				if (!m_val[key].Equals(val))
+					return false;
+			}
+			return true;
 		}
 
 		internal override ValueMap AsMap { get { return this; } }

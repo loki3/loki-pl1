@@ -56,6 +56,12 @@ namespace loki3.core
 		{
 			get { return ValueType.Delimiter; }
 		}
+
+		internal override bool Equals(Value v)
+		{
+			ValueDelimiter other = v as ValueDelimiter;
+			return (other == null ? false : this == other);
+		}
 		#endregion
 
 		#region Keys
