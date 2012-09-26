@@ -43,7 +43,7 @@ namespace loki3.core
 
 		private void Init(string start, string end, DelimiterType type, ValueFunction function)
 		{
-			Dictionary<string, Value> meta = WritableMetadata;
+			Map meta = WritableMetadata;
 			meta[keyDelimStart] = new ValueString(start);
 			meta[keyDelimEnd] = new ValueString(end);
 			meta[keyDelimType] = new ValueInt((int)type);
@@ -83,10 +83,7 @@ namespace loki3.core
 		{
 			get
 			{
-				Value value = null;
-				if (!Metadata.TryGetValue(keyDelimFunction, out value))
-					return null;
-				return value as ValueFunction;
+				return Metadata == null ? null : Metadata.GetOptional(keyDelimFunction, null) as ValueFunction;
 			}
 		}
 

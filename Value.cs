@@ -35,21 +35,22 @@ namespace loki3.core
 		internal virtual ValueMap AsMap { get { throw new WrongTypeException(ValueType.Map, Type); } }
 
 		/// <summary>Get this value's metadata.  May be null.</summary>
-		internal Dictionary<string, Value> Metadata { get { return m_metadata; } }
+		internal Map Metadata { get { return m_metadata; } }
 
 		/// <summary>Get this value's metadata, creating it if it doesn't already exist</summary>
-		internal Dictionary<string, Value> WritableMetadata
+		internal Map WritableMetadata
 		{
 			get
 			{
 				if (m_metadata == null)
-					m_metadata = new Dictionary<string, Value>();
+					m_metadata = new Map();
 				return m_metadata;
 			}
 		}
 
 		#region Keys
 		internal static string keyPrecedence = "l3.value.precedence";
+		internal static string keyDoc = "l3.value.doc";
 		#endregion
 
 		/// <summary>Evaluation precedence of this token</summary>
@@ -57,13 +58,11 @@ namespace loki3.core
 		{
 			get
 			{
-				if (m_metadata == null || !m_metadata.ContainsKey(keyPrecedence))
-					return Precedence.Low;
-				return (Precedence)m_metadata[keyPrecedence].AsInt;
+				return m_metadata == null ? Precedence.Low : (Precedence)m_metadata.GetOptional<int>(keyPrecedence, (int)Precedence.Low);
 			}
 		}
 
-		private Dictionary<string, Value> m_metadata = null;
+		private Map m_metadata = null;
 	}
 
 	/// <summary>
@@ -84,10 +83,21 @@ namespace loki3.core
 		#endregion
 	}
 
+
+	/// <summary>
+	/// Generic base class for value of a specific type
+	/// </summary>
+	internal abstract class ValueBase<T> : Value
+	{
+		internal T GetValue() { return m_val; }
+
+		protected T m_val;
+	}
+
 	/// <summary>
 	/// Boolean value
 	/// </summary>
-	internal class ValueBool : Value
+	internal class ValueBool : ValueBase<bool>
 	{
 		internal ValueBool(bool val)
 		{
@@ -110,14 +120,12 @@ namespace loki3.core
 		#endregion
 
 		public override string ToString() { return m_val.ToString(); }
-
-		private bool m_val;
 	}
 
 	/// <summary>
 	/// Int value
 	/// </summary>
-	internal class ValueInt : Value
+	internal class ValueInt : ValueBase<int>
 	{
 		internal ValueInt(int val)
 		{
@@ -141,14 +149,12 @@ namespace loki3.core
 		#endregion
 
 		public override string ToString() { return m_val.ToString(); }
-
-		private int m_val;
 	}
 
 	/// <summary>
 	/// Float value
 	/// </summary>
-	internal class ValueFloat : Value
+	internal class ValueFloat : ValueBase<double>
 	{
 		internal ValueFloat(double val)
 		{
@@ -172,14 +178,12 @@ namespace loki3.core
 		#endregion
 
 		public override string ToString() { return m_val.ToString(); }
-
-		private double m_val;
 	}
 
 	/// <summary>
 	/// String value
 	/// </summary>
-	internal class ValueString : Value
+	internal class ValueString : ValueBase<string>
 	{
 		internal ValueString(string val)
 		{
@@ -202,16 +206,14 @@ namespace loki3.core
 		#endregion
 
 		public override string ToString() { return m_val; }
-
-		private string m_val;
 	}
 
 	/// <summary>
 	/// Map value
 	/// </summary>
-	internal class ValueMap : Value
+	internal class ValueMap : ValueBase<Map>
 	{
-		internal ValueMap(Dictionary<string, Value> val)
+		internal ValueMap(Map val)
 		{
 			m_val = val;
 		}
@@ -227,19 +229,7 @@ namespace loki3.core
 			ValueMap other = v as ValueMap;
 			if (other == null)
 				return false;
-			int count = m_val.Count;
-			if (count != other.m_val.Count)
-				return false;
-			Dictionary<string, Value>.KeyCollection keys = m_val.Keys;
-			foreach (string key in keys)
-			{
-				Value val;
-				if (!other.m_val.TryGetValue(key, out val))
-					return false;
-				if (!m_val[key].Equals(val))
-					return false;
-			}
-			return true;
+			return m_val.Equals(other.m_val);
 		}
 
 		internal override ValueMap AsMap { get { return this; } }
@@ -251,23 +241,12 @@ namespace loki3.core
 			get { return m_val[key]; }
 		}
 
-		/// <summary>Return value if present, else return a default</summary>
-		internal Value GetOptional(string key, Value ifmissing)
-		{
-			Value value;
-			if (m_val.TryGetValue(key, out value))
-				return value;
-			return ifmissing;
-		}
-
 		/// <summary>Get underlying map</summary>
-		internal Dictionary<string, Value> Map
+		internal Map Map
 		{
 			get { return m_val; }
 		}
 
 		public override string ToString() { return m_val.ToString(); }
-
-		private Dictionary<string, Value> m_val;
 	}
 }

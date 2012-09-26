@@ -27,7 +27,7 @@ namespace loki3.core
 
 		private void Init(bool bConsumesPrevious, bool bConsumesNext, Precedence precedence)
 		{
-			Dictionary<string, Value> meta = WritableMetadata;
+			Map meta = WritableMetadata;
 			meta[keyConsumesPrevious] = new ValueBool(bConsumesPrevious);
 			meta[keyConsumesNext] = new ValueBool(bConsumesNext);
 			meta[keyPrecedence] = new ValueInt((int)precedence);

@@ -46,7 +46,7 @@ namespace loki3.builtin
 				Value post = EvalNode.Do(next, scope, nodes);
 				List<Value> list = post.AsArray;
 
-				Dictionary<string, Value> map = new Dictionary<string, Value>();
+				Map map = new Map();
 				int count = list.Count;
 				for (int i = 0; i < count; i += 2)
 				{
@@ -67,11 +67,10 @@ namespace loki3.builtin
 				ValueMap map = value.AsMap;
 
 				// extract optional & required parameters
-				Value pre = map.GetOptional("pre", null);
-				Value post = map.GetOptional("post", null);
+				Value pre = map.Map.GetOptional("pre", null);
+				Value post = map.Map.GetOptional("post", null);
 				List<Value> valueBody = map["body"].AsArray;
-				Value temp = map.GetOptional("order", null);
-				Precedence order = (temp == null ? Precedence.Medium : (Precedence)temp.AsInt);
+				Precedence order = (Precedence)map.Map.GetOptional<int>("order", (int)Precedence.Medium);
 
 				if (pre == null && post == null)
 					throw new MissingParameter("pre");	// TODO: richer message
@@ -96,8 +95,8 @@ namespace loki3.builtin
 				// extract optional & required parameters
 				string start = map["start"].AsString;
 				string end = map["end"].AsString;
-				Value typeval = map.GetOptional("type", null);
-				Value funcval = map.GetOptional("function", null);
+				Value typeval = map.Map.GetOptional("type", null);
+				Value funcval = map.Map.GetOptional("function", null);
 				ValueFunction function = (funcval == null ? null : funcval as ValueFunction);
 
 				DelimiterType type = DelimiterType.AsValue;
