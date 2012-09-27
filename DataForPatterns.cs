@@ -8,6 +8,14 @@ namespace loki3.core
 	/// </summary>
 	internal class DataForPatterns
 	{
+		/// <summary>Parameter that's a single named value</summary>
+		internal static Value Single(string name)
+		{
+			ValueString vName = new ValueString(name);
+			DataForPatterns data = new DataForPatterns(vName);
+			return vName;
+		}
+
 		/// <summary>Parameter that's a single named value of the given type</summary>
 		internal static Value Single(string name, string type)
 		{
@@ -17,24 +25,8 @@ namespace loki3.core
 			return vName;
 		}
 
-		/// <summary>Two parameters listed in an array</summary>
-		internal static Value ArrayElements(string name1, string name2)
-		{
-			ValueString vName = new ValueString("a");
-			DataForPatterns data = new DataForPatterns(vName);
-			return vName;
-		}
-
-		/// <summary>Two parameters listed in an array of a single type</summary>
-		internal static Value ArrayElements(string name1, string name2, string type)
-		{
-			ValueString vName = new ValueString("a");
-			DataForPatterns data = new DataForPatterns(vName);
-			return vName;
-		}
-
-		/// <summary>Parameter that's an array</summary>
-		internal static Value Array(string name)
+		/// <summary>Parameter that's the remainder of an array</summary>
+		internal static Value ArrayEnd(string name)
 		{
 			ValueString vName = new ValueString(name);
 			DataForPatterns data = new DataForPatterns(vName);
@@ -42,8 +34,8 @@ namespace loki3.core
 			return vName;
 		}
 
-		/// <summary>Parameter that's an array of the given type</summary>
-		internal static Value Array(string name, string type)
+		/// <summary>Parameter that's the remainder of an array of a given type</summary>
+		internal static Value ArrayEnd(string name, string type)
 		{
 			ValueString vName = new ValueString(name);
 			DataForPatterns data = new DataForPatterns(vName);

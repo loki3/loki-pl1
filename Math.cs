@@ -25,7 +25,7 @@ namespace loki3.builtin
 		/// <summary>[a1 a2 ... an] -> a1 + a2 + ... + an</summary>
 		class AddArray : ValueFunctionPre
 		{
-			internal AddArray() { Init(DataForPatterns.Array("a", "ValueNumber")); }
+			internal AddArray() { Init(DataForPatterns.ArrayEnd("a", "ValueNumber")); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -61,7 +61,14 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 - a2</summary>
 		class Subtract : ValueFunctionPre
 		{
-			internal Subtract() { Init(DataForPatterns.ArrayElements("a", "b", "ValueNumber")); }
+			internal Subtract()
+			{
+				List<Value> list = new List<Value>();
+				list.Add(DataForPatterns.Single("a", "ValueNumber"));
+				list.Add(DataForPatterns.Single("b", "ValueNumber"));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -85,7 +92,7 @@ namespace loki3.builtin
 		/// <summary>[a1 a2 ... an] -> a1 * a2 * ... * an</summary>
 		class MultiplyArray : ValueFunctionPre
 		{
-			internal MultiplyArray() { Init(DataForPatterns.Array("a", "ValueNumber")); }
+			internal MultiplyArray() { Init(DataForPatterns.ArrayEnd("a", "ValueNumber")); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -121,7 +128,14 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 / a2</summary>
 		class Divide : ValueFunctionPre
 		{
-			internal Divide() { Init(DataForPatterns.ArrayElements("a", "b", "ValueNumber")); }
+			internal Divide()
+			{
+				List<Value> list = new List<Value>();
+				list.Add(DataForPatterns.Single("a", "ValueNumber"));
+				list.Add(DataForPatterns.Single("b", "ValueNumber"));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{

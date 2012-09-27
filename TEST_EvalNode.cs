@@ -212,7 +212,7 @@ namespace loki3.core.test
 		/// <summary>Simple function that adds an array of ints</summary>
 		class AddFunction : ValueFunctionPre
 		{
-			internal AddFunction() { Init(DataForPatterns.Array("a", "ValueInt")); }
+			internal AddFunction() { Init(DataForPatterns.ArrayEnd("a", "ValueInt")); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{

@@ -24,7 +24,14 @@ namespace loki3.builtin
 		/// <summary>[key value] -> value  and stores the key value pair on the current scope</summary>
 		class SetValue : ValueFunctionPre
 		{
-			internal SetValue() { Init(DataForPatterns.ArrayElements("key", "value")); }
+			internal SetValue()
+			{
+				List<Value> list = new List<Value>();
+				list.Add(DataForPatterns.Single("key", "ValueString"));
+				list.Add(DataForPatterns.Single("value"));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -43,7 +50,7 @@ namespace loki3.builtin
 		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
 		class CreateMap : ValueFunctionPre
 		{
-			internal CreateMap() { Init(DataForPatterns.Array("a")); }
+			internal CreateMap() { Init(DataForPatterns.ArrayEnd("a")); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{

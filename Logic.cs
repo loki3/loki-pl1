@@ -24,7 +24,14 @@ namespace loki3.builtin
 		/// <summary>[a b] -> bool,  depending on if a and b are equal</summary>
 		class IsEqual : ValueFunctionPre
 		{
-			internal IsEqual() { Init(DataForPatterns.ArrayElements("a", "b")); }
+			internal IsEqual()
+			{
+				List<Value> list = new List<Value>();
+				list.Add(DataForPatterns.Single("a"));
+				list.Add(DataForPatterns.Single("b"));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -42,7 +49,14 @@ namespace loki3.builtin
 		/// <summary>[bool bool] -> bool,  a AND b</summary>
 		class LogicalAnd : ValueFunctionPre
 		{
-			internal LogicalAnd() { Init(DataForPatterns.ArrayElements("a", "b", "ValueBool")); }
+			internal LogicalAnd()
+			{
+				List<Value> list = new List<Value>();
+				list.Add(DataForPatterns.Single("a", "ValueBool"));
+				list.Add(DataForPatterns.Single("b", "ValueBool"));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -58,7 +72,14 @@ namespace loki3.builtin
 		/// <summary>[bool bool] -> bool,  a OR b</summary>
 		class LogicalOr : ValueFunctionPre
 		{
-			internal LogicalOr() { Init(DataForPatterns.ArrayElements("a", "b", "ValueBool")); }
+			internal LogicalOr()
+			{
+				List<Value> list = new List<Value>();
+				list.Add(DataForPatterns.Single("a", "ValueBool"));
+				list.Add(DataForPatterns.Single("b", "ValueBool"));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
