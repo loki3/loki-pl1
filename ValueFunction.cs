@@ -16,21 +16,24 @@ namespace loki3.core
 	/// </summary>
 	internal abstract class ValueFunction : Value
 	{
-		internal ValueFunction(bool bConsumesPrevious, bool bConsumesNext)
-		{
-			Init(bConsumesPrevious, bConsumesNext, Precedence.Medium);
-		}
-		internal ValueFunction(bool bConsumesPrevious, bool bConsumesNext, Precedence precedence)
-		{
-			Init(bConsumesPrevious, bConsumesNext, precedence);
-		}
-
-		private void Init(bool bConsumesPrevious, bool bConsumesNext, Precedence precedence)
+		/// <summary>
+		/// Define info on the parameters and order the function will get run in
+		/// </summary>
+		/// <param name="previousPattern">if func consumes previous value, this describes the pattern</param>
+		/// <param name="nextPattern">if func consumes next value, this describes the pattern</param>
+		/// <param name="precedence">evaluation precedence of function within a list</param>
+		protected void Init(Value previousPattern, Value nextPattern, Precedence precedence)
 		{
 			Map meta = WritableMetadata;
-			meta[keyConsumesPrevious] = new ValueBool(bConsumesPrevious);
-			meta[keyConsumesNext] = new ValueBool(bConsumesNext);
+			if (previousPattern != null)
+				meta[keyPreviousPattern] = previousPattern;
+			if (nextPattern != null)
+				meta[keyNextPattern] = nextPattern;
 			meta[keyPrecedence] = new ValueInt((int)precedence);
+		}
+		protected void Init(Value previousPattern, Value nextPattern)
+		{
+			Init(previousPattern, nextPattern, Precedence.Medium);
 		}
 
 		#region Value
@@ -47,12 +50,12 @@ namespace loki3.core
 		#endregion
 
 		#region Keys
-		internal static string keyConsumesPrevious = "l3.func.consumes-previous?";
-		internal static string keyConsumesNext = "l3.func.consumes-next?";
+		internal static string keyPreviousPattern = "l3.func.previous";
+		internal static string keyNextPattern = "l3.func.next";
 		#endregion
 
-		internal bool ConsumesPrevious { get { return Metadata[keyConsumesPrevious].AsBool; } }
-		internal bool ConsumesNext { get { return Metadata[keyConsumesNext].AsBool; } }
+		internal bool ConsumesPrevious { get { return Metadata.ContainsKey(keyPreviousPattern); } }
+		internal bool ConsumesNext { get { return Metadata.ContainsKey(keyNextPattern); } }
 
 		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes);
 	}
@@ -62,8 +65,8 @@ namespace loki3.core
 	/// </summary>
 	internal abstract class ValueFunctionPre : ValueFunction
 	{
-		internal ValueFunctionPre() : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
-		internal ValueFunctionPre(Precedence precedence) : base(false/*bConsumesPrevious*/, true/*bConsumesNext*/, precedence) { }
+		internal void Init(Value pattern) { Init(null, pattern); }
+		internal void Init(Value pattern, Precedence precedence) { Init(null, pattern, precedence); }
 
 		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
@@ -77,22 +80,13 @@ namespace loki3.core
 	/// </summary>
 	internal abstract class ValueFunctionPost : ValueFunction
 	{
-		internal ValueFunctionPost() : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/) { }
-		internal ValueFunctionPost(Precedence precedence) : base(true/*bConsumesPrevious*/, false/*bConsumesNext*/, precedence) { }
+		internal void Init(Value pattern) { Init(pattern, null); }
+		internal void Init(Value pattern, Precedence precedence) { Init(pattern, null, precedence); }
 
 		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
 			return Eval(prev, scope, nodes);
 		}
 		internal abstract Value Eval(DelimiterNode prev, IScope scope, INodeRequestor nodes);
-	}
-
-	/// <summary>
-	/// Infix function: args1 func args2
-	/// </summary>
-	internal abstract class ValueFunctionIn : ValueFunction
-	{
-		internal ValueFunctionIn() : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/) { }
-		internal ValueFunctionIn(Precedence precedence) : base(true/*bConsumesPrevious*/, true/*bConsumesNext*/, precedence) { }
 	}
 }

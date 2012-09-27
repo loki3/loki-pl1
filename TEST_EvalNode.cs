@@ -8,8 +8,10 @@ namespace loki3.core.test
 	class TEST_EvalNode
 	{
 		/// <summary>Function that adds previous and next ints</summary>
-		class TestSum : ValueFunctionIn
+		class TestSum : ValueFunction
 		{
+			internal TestSum() { Init(DataForPatterns.Single("a", "ValueInt"), DataForPatterns.Single("b", "ValueInt")); }
+
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value value1 = EvalNode.Do(prev, scope, nodes);
@@ -22,6 +24,8 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to previous</summary>
 		class TestPrevious1 : ValueFunctionPost
 		{
+			internal TestPrevious1() { Init(DataForPatterns.Single("a", "ValueInt")); }
+			
 			internal override Value Eval(DelimiterNode prev, IScope scope, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(prev, scope, nodes);
@@ -33,6 +37,8 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to next</summary>
 		class TestNext1 : ValueFunctionPre
 		{
+			internal TestNext1() { Init(DataForPatterns.Single("a", "ValueInt")); }
+
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, scope, nodes);
@@ -44,6 +50,8 @@ namespace loki3.core.test
 		/// <summary>Function that makes next ALL CAPS</summary>
 		class TestCaps : ValueFunctionPre
 		{
+			internal TestCaps() { Init(DataForPatterns.Single("a", "ValueString")); }
+
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, scope, nodes);
@@ -204,6 +212,8 @@ namespace loki3.core.test
 		/// <summary>Simple function that adds an array of ints</summary>
 		class AddFunction : ValueFunctionPre
 		{
+			internal AddFunction() { Init(DataForPatterns.Array("a", "ValueInt")); }
+
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value numbers = EvalNode.Do(next, scope, nodes);

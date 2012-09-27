@@ -47,7 +47,7 @@
     <Compile Include="Logic.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Math.cs" />
-    <Compile Include="DataForParameter.cs" />
+    <Compile Include="DataForPatterns.cs" />
     <Compile Include="ScopeChain.cs" />
     <Compile Include="TEST_Conditional.cs" />
     <Compile Include="TEST_CreateFunction.cs" />

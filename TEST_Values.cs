@@ -110,7 +110,7 @@ namespace loki3.builtin.test
 			{	// infix
 				// first add the + function to the current scope
 				Value value = ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :pre :x  :post :y :body [ ' l3.add [ x y ] ' ] ] ) ]", scope);
-				ValueFunctionIn func = value as ValueFunctionIn;
+				ValueFunction func = value as ValueFunction;
 
 				// next, use it
 				Value result = ToValue("5 + 7", scope);

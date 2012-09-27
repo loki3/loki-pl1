@@ -15,8 +15,9 @@ namespace loki3.core
 		internal class UserFunction : ValueFunction
 		{
 			internal UserFunction(Value pattern1, Value pattern2, List<string> rawLines, Precedence precedence)
-				: base(pattern1 != null, pattern2 != null, precedence)
 			{
+				Init(pattern1, pattern2, precedence);
+
 				m_pattern1 = pattern1;
 				m_pattern2 = pattern2;
 				// these restrictions will go away

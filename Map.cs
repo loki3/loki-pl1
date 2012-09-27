@@ -5,6 +5,11 @@ namespace loki3.core
 {
 	internal class Map
 	{
+		internal bool ContainsKey(string key)
+		{
+			return m_val.ContainsKey(key);
+		}
+
 		/// <summary>Get a value by key</summary>
 		internal Value this[string key]
 		{

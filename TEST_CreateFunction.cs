@@ -8,8 +8,10 @@ namespace loki3.core.test
 	class TEST_CreateFunction
 	{
 		/// <summary>Function that adds previous and next ints</summary>
-		class TestSum : ValueFunctionIn
+		class TestSum : ValueFunction
 		{
+			internal TestSum() { Init(DataForPatterns.Single("a", "ValueInt"), DataForPatterns.Single("b", "ValueInt")); }
+
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value value1 = EvalNode.Do(prev, scope, nodes);

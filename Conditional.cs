@@ -21,6 +21,8 @@ namespace loki3.builtin
 		/// <summary>{ :do? :body } -> if do?, last value of body, else false</summary>
 		class If : ValueFunctionPre
 		{
+			internal If() { Init(DataForPatterns.Map("do?", "body")); }
+
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, scope, nodes);

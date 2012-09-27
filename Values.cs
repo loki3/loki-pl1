@@ -24,6 +24,8 @@ namespace loki3.builtin
 		/// <summary>[key value] -> value  and stores the key value pair on the current scope</summary>
 		class SetValue : ValueFunctionPre
 		{
+			internal SetValue() { Init(DataForPatterns.ArrayElements("key", "value")); }
+
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value post = EvalNode.Do(next, scope, nodes);
@@ -41,6 +43,8 @@ namespace loki3.builtin
 		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
 		class CreateMap : ValueFunctionPre
 		{
+			internal CreateMap() { Init(DataForPatterns.Array("a")); }
+
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value post = EvalNode.Do(next, scope, nodes);
@@ -61,6 +65,8 @@ namespace loki3.builtin
 		/// <summary>{ [:pre] [:post] :body [:order] } -> function</summary>
 		class CreateFunction : ValueFunctionPre
 		{
+			internal CreateFunction() { Init(DataForPatterns.Map("pre", "post", "body", "order")); }
+
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, scope, nodes);
@@ -87,6 +93,8 @@ namespace loki3.builtin
 		/// <summary>{ :start :end [:type] [function] } -> delimiter</summary>
 		class CreateDelimiter : ValueFunctionPre
 		{
+			internal CreateDelimiter() { Init(DataForPatterns.Map("start", "end", "type", "function")); }
+
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, scope, nodes);
