@@ -72,7 +72,16 @@ namespace loki3.builtin
 		/// <summary>{ [:pre] [:post] :body [:order] } -> function</summary>
 		class CreateFunction : ValueFunctionPre
 		{
-			internal CreateFunction() { Init(DataForPatterns.Map("pre", "post", "body", "order")); }
+			internal CreateFunction()
+			{
+				Map map = new Map();
+				map["pre"] = DataForPatterns.Single("pre", new ValueNil());
+				map["post"] = DataForPatterns.Single("post", new ValueNil());
+				map["order"] = DataForPatterns.Single("order", "ValueInt", new ValueInt((int)Precedence.Medium));
+				map["body"] = DataForPatterns.Body();
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
+			}
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -100,7 +109,16 @@ namespace loki3.builtin
 		/// <summary>{ :start :end [:type] [function] } -> delimiter</summary>
 		class CreateDelimiter : ValueFunctionPre
 		{
-			internal CreateDelimiter() { Init(DataForPatterns.Map("start", "end", "type", "function")); }
+			internal CreateDelimiter()
+			{
+				Map map = new Map();
+				map["start"] = DataForPatterns.Single("start", "ValueString");
+				map["end"] = DataForPatterns.Single("end", "ValueString");
+				map["type"] = DataForPatterns.Single("type", new ValueNil());
+				map["function"] = DataForPatterns.Single("function", "ValueFunction", new ValueNil());
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
+			}
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{

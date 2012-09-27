@@ -16,12 +16,31 @@ namespace loki3.core
 			return vName;
 		}
 
+		/// <summary>Parameter that's a single named value with a default</summary>
+		internal static Value Single(string name, Value theDefault)
+		{
+			ValueString vName = new ValueString(name);
+			DataForPatterns data = new DataForPatterns(vName);
+			data.Default = theDefault;
+			return vName;
+		}
+
 		/// <summary>Parameter that's a single named value of the given type</summary>
 		internal static Value Single(string name, string type)
 		{
 			ValueString vName = new ValueString(name);
 			DataForPatterns data = new DataForPatterns(vName);
 			data.TypeName = new ValueString(type);
+			return vName;
+		}
+
+		/// <summary>Parameter that's a single named value of the given type with a default</summary>
+		internal static Value Single(string name, string type, Value theDefault)
+		{
+			ValueString vName = new ValueString(name);
+			DataForPatterns data = new DataForPatterns(vName);
+			data.TypeName = new ValueString(type);
+			data.Default = theDefault;
 			return vName;
 		}
 
@@ -44,17 +63,13 @@ namespace loki3.core
 			return vName;
 		}
 
-		/// <summary>Parameter that's a map with the given keys</summary>
-		internal static Value Map(string a, string b)
+		/// <summary>Parameter that's the remainder of an array</summary>
+		internal static Value Body()
 		{
-			ValueString vName = new ValueString("map");
+			ValueString vName = new ValueString("l3.body");
 			DataForPatterns data = new DataForPatterns(vName);
-			return vName;
-		}
-		internal static Value Map(string a, string b, string c, string d)
-		{
-			ValueString vName = new ValueString("map");
-			DataForPatterns data = new DataForPatterns(vName);
+			data.TypeName = new ValueString("ValueString");
+			data.RestOfArray = true;
 			return vName;
 		}
 
@@ -76,6 +91,7 @@ namespace loki3.core
 		internal static string keyRequiredKeys = "l3.param.keys";
 		internal static string keyDefault = "l3.param.default";
 		internal static string keyRestOfArray = "l3.param.rest";
+		internal static string keyIsBody = "l3.param.body?";
 		#endregion
 
 		/// <summary>If present, required type of parameter</summary>
@@ -111,6 +127,13 @@ namespace loki3.core
 		{
 			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptional<bool>(keyRestOfArray, false); }
 			set { WritableMetadata[keyRestOfArray] = new ValueBool(value); }
+		}
+
+		/// <summary>If present, the parameter will contain the function body, i.e. an array of strings</summary>
+		internal bool IsBody
+		{
+			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptional<bool>(keyIsBody, false); }
+			set { WritableMetadata[keyIsBody] = new ValueBool(value); }
 		}
 
 		/// <summary>Make metadata writable if it isn't already</summary>
