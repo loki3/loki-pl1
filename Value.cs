@@ -9,6 +9,7 @@ namespace loki3.core
 		Bool,
 		Int,
 		Float,
+		Number,	// pseudo-type: Int or Float
 		String,
 		Array,
 		Map,

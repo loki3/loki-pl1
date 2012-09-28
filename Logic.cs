@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using loki3.core;
 
@@ -52,8 +51,8 @@ namespace loki3.builtin
 			internal LogicalAnd()
 			{
 				List<Value> list = new List<Value>();
-				list.Add(PatternData.Single("a", "ValueBool"));
-				list.Add(PatternData.Single("b", "ValueBool"));
+				list.Add(PatternData.Single("a", ValueType.Bool));
+				list.Add(PatternData.Single("b", ValueType.Bool));
 				ValueArray array = new ValueArray(list);
 				Init(array);
 			}
@@ -75,8 +74,8 @@ namespace loki3.builtin
 			internal LogicalOr()
 			{
 				List<Value> list = new List<Value>();
-				list.Add(PatternData.Single("a", "ValueBool"));
-				list.Add(PatternData.Single("b", "ValueBool"));
+				list.Add(PatternData.Single("a", ValueType.Bool));
+				list.Add(PatternData.Single("b", ValueType.Bool));
 				ValueArray array = new ValueArray(list);
 				Init(array);
 			}
@@ -95,7 +94,7 @@ namespace loki3.builtin
 		/// <summary>bool -> bool,  NOT a</summary>
 		class LogicalNot : ValueFunctionPre
 		{
-			internal LogicalNot() { Init(PatternData.Single("a", "ValueBool")); }
+			internal LogicalNot() { Init(PatternData.Single("a", ValueType.Bool)); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using loki3.core;
 
@@ -24,7 +23,7 @@ namespace loki3.builtin
 			internal If()
 			{
 				Map map = new Map();
-				map["do?"] = PatternData.Single("do?", "ValueBool");
+				map["do?"] = PatternData.Single("do?", ValueType.Bool);
 				map["body"] = PatternData.Body();
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);

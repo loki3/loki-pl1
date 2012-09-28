@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using loki3.core;
 
@@ -25,7 +24,7 @@ namespace loki3.builtin
 		/// <summary>[a1 a2 ... an] -> a1 + a2 + ... + an</summary>
 		class AddArray : ValueFunctionPre
 		{
-			internal AddArray() { Init(PatternData.ArrayEnd("a", "ValueNumber")); }
+			internal AddArray() { Init(PatternData.ArrayEnd("a", ValueType.Number)); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -64,8 +63,8 @@ namespace loki3.builtin
 			internal Subtract()
 			{
 				List<Value> list = new List<Value>();
-				list.Add(PatternData.Single("a", "ValueNumber"));
-				list.Add(PatternData.Single("b", "ValueNumber"));
+				list.Add(PatternData.Single("a", ValueType.Number));
+				list.Add(PatternData.Single("b", ValueType.Number));
 				ValueArray array = new ValueArray(list);
 				Init(array);
 			}
@@ -92,7 +91,7 @@ namespace loki3.builtin
 		/// <summary>[a1 a2 ... an] -> a1 * a2 * ... * an</summary>
 		class MultiplyArray : ValueFunctionPre
 		{
-			internal MultiplyArray() { Init(PatternData.ArrayEnd("a", "ValueNumber")); }
+			internal MultiplyArray() { Init(PatternData.ArrayEnd("a", ValueType.Number)); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -131,8 +130,8 @@ namespace loki3.builtin
 			internal Divide()
 			{
 				List<Value> list = new List<Value>();
-				list.Add(PatternData.Single("a", "ValueNumber"));
-				list.Add(PatternData.Single("b", "ValueNumber"));
+				list.Add(PatternData.Single("a", ValueType.Number));
+				list.Add(PatternData.Single("b", ValueType.Number));
 				ValueArray array = new ValueArray(list);
 				Init(array);
 			}
@@ -159,7 +158,7 @@ namespace loki3.builtin
 		/// <summary>a -> sqrt(a)</summary>
 		class SquareRoot : ValueFunctionPre
 		{
-			internal SquareRoot() { Init(PatternData.Single("a", "ValueNumber")); }
+			internal SquareRoot() { Init(PatternData.Single("a", ValueType.Number)); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{

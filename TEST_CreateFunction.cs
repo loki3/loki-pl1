@@ -10,7 +10,7 @@ namespace loki3.core.test
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
 		{
-			internal TestSum() { Init(PatternData.Single("a", "ValueInt"), PatternData.Single("b", "ValueInt")); }
+			internal TestSum() { Init(PatternData.Single("a", ValueType.Int), PatternData.Single("b", ValueType.Int)); }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{

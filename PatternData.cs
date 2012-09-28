@@ -26,20 +26,20 @@ namespace loki3.core
 		}
 
 		/// <summary>Parameter that's a single named value of the given type</summary>
-		internal static Value Single(string name, string type)
+		internal static Value Single(string name, ValueType type)
 		{
 			ValueString vName = new ValueString(name);
 			PatternData data = new PatternData(vName);
-			data.TypeName = type;
+			data.ValueType = type;
 			return vName;
 		}
 
 		/// <summary>Parameter that's a single named value of the given type with a default</summary>
-		internal static Value Single(string name, string type, Value theDefault)
+		internal static Value Single(string name, ValueType type, Value theDefault)
 		{
 			ValueString vName = new ValueString(name);
 			PatternData data = new PatternData(vName);
-			data.TypeName = type;
+			data.ValueType = type;
 			data.Default = theDefault;
 			return vName;
 		}
@@ -54,11 +54,11 @@ namespace loki3.core
 		}
 
 		/// <summary>Parameter that's the remainder of an array of a given type</summary>
-		internal static Value ArrayEnd(string name, string type)
+		internal static Value ArrayEnd(string name, ValueType type)
 		{
 			ValueString vName = new ValueString(name);
 			PatternData data = new PatternData(vName);
-			data.TypeName = type;
+			data.ValueType = type;
 			data.RestOfArray = true;
 			return vName;
 		}
@@ -68,7 +68,7 @@ namespace loki3.core
 		{
 			ValueString vName = new ValueString("l3.body");
 			PatternData data = new PatternData(vName);
-			data.TypeName = "ValueString";
+			data.ValueType = ValueType.String;
 			data.RestOfArray = true;
 			return vName;
 		}
@@ -95,10 +95,10 @@ namespace loki3.core
 		#endregion
 
 		/// <summary>If present, required type of parameter</summary>
-		internal string TypeName
+		internal ValueType ValueType
 		{
-			get { return m_readableMetadata == null ? null : m_readableMetadata.GetOptional<string>(keyType, null); }
-			set { WritableMetadata[keyType] = new ValueString(value); }
+			get { return m_readableMetadata == null ? ValueType.Nil : (ValueType)m_readableMetadata.GetOptional<int>(keyType, (int)ValueType.Nil); }
+			set { WritableMetadata[keyType] = new ValueInt((int)value); }
 		}
 
 		/// <summary>If present, value must be one of the values in the array</summary>

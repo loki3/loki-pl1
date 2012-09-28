@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using loki3.core;
 
@@ -27,7 +26,7 @@ namespace loki3.builtin
 			internal SetValue()
 			{
 				List<Value> list = new List<Value>();
-				list.Add(PatternData.Single("key", "ValueString"));
+				list.Add(PatternData.Single("key", ValueType.String));
 				list.Add(PatternData.Single("value"));
 				ValueArray array = new ValueArray(list);
 				Init(array);
@@ -77,7 +76,7 @@ namespace loki3.builtin
 				Map map = new Map();
 				map["pre"] = PatternData.Single("pre", new ValueNil());
 				map["post"] = PatternData.Single("post", new ValueNil());
-				map["order"] = PatternData.Single("order", "ValueInt", new ValueInt((int)Precedence.Medium));
+				map["order"] = PatternData.Single("order", ValueType.Int, new ValueInt((int)Precedence.Medium));
 				map["body"] = PatternData.Body();
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
@@ -112,10 +111,10 @@ namespace loki3.builtin
 			internal CreateDelimiter()
 			{
 				Map map = new Map();
-				map["start"] = PatternData.Single("start", "ValueString");
-				map["end"] = PatternData.Single("end", "ValueString");
+				map["start"] = PatternData.Single("start", ValueType.String);
+				map["end"] = PatternData.Single("end", ValueType.String);
 				map["type"] = PatternData.Single("type", new ValueNil());
-				map["function"] = PatternData.Single("function", "ValueFunction", new ValueNil());
+				map["function"] = PatternData.Single("function", ValueType.Function, new ValueNil());
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}

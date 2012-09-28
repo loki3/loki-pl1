@@ -21,14 +21,14 @@ namespace loki3.core.test
 			}
 
 			{	// single bool type - match
-				Value pattern = PatternData.Single("a", "ValueBool");
+				Value pattern = PatternData.Single("a", ValueType.Bool);
 				Assert.IsTrue(PatternChecker.Do(b, pattern, out match, out leftover));
 				Assert.IsTrue(match.AsBool);
 				Assert.AreEqual(null, leftover);
 			}
 
 			{	// single int type - not a match
-				Value pattern = PatternData.Single("a", "ValueInt");
+				Value pattern = PatternData.Single("a", ValueType.Int);
 				Assert.IsFalse(PatternChecker.Do(b, pattern, out match, out leftover));
 			}
 		}
@@ -47,14 +47,14 @@ namespace loki3.core.test
 			}
 
 			{	// single int type - match
-				Value pattern = PatternData.Single("a", "ValueInt");
+				Value pattern = PatternData.Single("a", ValueType.Int);
 				Assert.IsTrue(PatternChecker.Do(i, pattern, out match, out leftover));
 				Assert.AreEqual(42, match.AsInt);
 				Assert.AreEqual(null, leftover);
 			}
 
 			{	// single float type - not a match
-				Value pattern = PatternData.Single("a", "ValueFloat");
+				Value pattern = PatternData.Single("a", ValueType.Float);
 				Assert.IsFalse(PatternChecker.Do(i, pattern, out match, out leftover));
 			}
 		}

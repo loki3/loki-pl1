@@ -23,16 +23,16 @@ namespace loki3.core
 			switch (input.Type)
 			{
 				case ValueType.Nil:
-					return DoSingle(input as ValueNil, "ValueNil", pattern as ValueString, out match);
+					return DoSingle(input as ValueNil, ValueType.Nil, pattern as ValueString, out match);
 
 				case ValueType.Bool:
-					return DoSingle(input as ValueBool, "ValueBool", pattern as ValueString, out match);
+					return DoSingle(input as ValueBool, ValueType.Bool, pattern as ValueString, out match);
 				case ValueType.Int:
-					return DoSingle(input as ValueInt, "ValueInt", pattern as ValueString, out match);
+					return DoSingle(input as ValueInt, ValueType.Int, pattern as ValueString, out match);
 				case ValueType.Float:
-					return DoSingle(input as ValueFloat, "ValueFloat", pattern as ValueString, out match);
+					return DoSingle(input as ValueFloat, ValueType.Float, pattern as ValueString, out match);
 				case ValueType.String:
-					return DoSingle(input as ValueString, "ValueString", pattern as ValueString, out match);
+					return DoSingle(input as ValueString, ValueType.String, pattern as ValueString, out match);
 
 				case ValueType.Array:
 					return Do(input as ValueArray, pattern as ValueArray, out match, out leftover);
@@ -48,14 +48,14 @@ namespace loki3.core
 			return false;
 		}
 
-		private static bool DoSingle<T>(T input, string target, ValueString pattern, out Value match) where T : Value
+		private static bool DoSingle<T>(T input, ValueType target, ValueString pattern, out Value match) where T : Value
 		{
 			match = null;
 			if (pattern == null)
 				return false;	// this only matches against a single item
 			PatternData data = new PatternData(pattern);
-			string type = data.TypeName;
-			if (type != null && type != target)
+			ValueType type = data.ValueType;
+			if (type != ValueType.Nil && type != target)
 				return false;	// they asked for a different type
 			match = input;
 			return true;
