@@ -27,8 +27,8 @@ namespace loki3.builtin
 			internal SetValue()
 			{
 				List<Value> list = new List<Value>();
-				list.Add(DataForPatterns.Single("key", "ValueString"));
-				list.Add(DataForPatterns.Single("value"));
+				list.Add(PatternData.Single("key", "ValueString"));
+				list.Add(PatternData.Single("value"));
 				ValueArray array = new ValueArray(list);
 				Init(array);
 			}
@@ -50,7 +50,7 @@ namespace loki3.builtin
 		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
 		class CreateMap : ValueFunctionPre
 		{
-			internal CreateMap() { Init(DataForPatterns.ArrayEnd("a")); }
+			internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -75,10 +75,10 @@ namespace loki3.builtin
 			internal CreateFunction()
 			{
 				Map map = new Map();
-				map["pre"] = DataForPatterns.Single("pre", new ValueNil());
-				map["post"] = DataForPatterns.Single("post", new ValueNil());
-				map["order"] = DataForPatterns.Single("order", "ValueInt", new ValueInt((int)Precedence.Medium));
-				map["body"] = DataForPatterns.Body();
+				map["pre"] = PatternData.Single("pre", new ValueNil());
+				map["post"] = PatternData.Single("post", new ValueNil());
+				map["order"] = PatternData.Single("order", "ValueInt", new ValueInt((int)Precedence.Medium));
+				map["body"] = PatternData.Body();
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}
@@ -112,10 +112,10 @@ namespace loki3.builtin
 			internal CreateDelimiter()
 			{
 				Map map = new Map();
-				map["start"] = DataForPatterns.Single("start", "ValueString");
-				map["end"] = DataForPatterns.Single("end", "ValueString");
-				map["type"] = DataForPatterns.Single("type", new ValueNil());
-				map["function"] = DataForPatterns.Single("function", "ValueFunction", new ValueNil());
+				map["start"] = PatternData.Single("start", "ValueString");
+				map["end"] = PatternData.Single("end", "ValueString");
+				map["type"] = PatternData.Single("type", new ValueNil());
+				map["function"] = PatternData.Single("function", "ValueFunction", new ValueNil());
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}

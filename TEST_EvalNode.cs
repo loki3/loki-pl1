@@ -10,7 +10,7 @@ namespace loki3.core.test
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
 		{
-			internal TestSum() { Init(DataForPatterns.Single("a", "ValueInt"), DataForPatterns.Single("b", "ValueInt")); }
+			internal TestSum() { Init(PatternData.Single("a", "ValueInt"), PatternData.Single("b", "ValueInt")); }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -24,7 +24,7 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to previous</summary>
 		class TestPrevious1 : ValueFunctionPost
 		{
-			internal TestPrevious1() { Init(DataForPatterns.Single("a", "ValueInt")); }
+			internal TestPrevious1() { Init(PatternData.Single("a", "ValueInt")); }
 			
 			internal override Value Eval(DelimiterNode prev, IScope scope, INodeRequestor nodes)
 			{
@@ -37,7 +37,7 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to next</summary>
 		class TestNext1 : ValueFunctionPre
 		{
-			internal TestNext1() { Init(DataForPatterns.Single("a", "ValueInt")); }
+			internal TestNext1() { Init(PatternData.Single("a", "ValueInt")); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -50,7 +50,7 @@ namespace loki3.core.test
 		/// <summary>Function that makes next ALL CAPS</summary>
 		class TestCaps : ValueFunctionPre
 		{
-			internal TestCaps() { Init(DataForPatterns.Single("a", "ValueString")); }
+			internal TestCaps() { Init(PatternData.Single("a", "ValueString")); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -212,7 +212,7 @@ namespace loki3.core.test
 		/// <summary>Simple function that adds an array of ints</summary>
 		class AddFunction : ValueFunctionPre
 		{
-			internal AddFunction() { Init(DataForPatterns.ArrayEnd("a", "ValueInt")); }
+			internal AddFunction() { Init(PatternData.ArrayEnd("a", "ValueInt")); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{

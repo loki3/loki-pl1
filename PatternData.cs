@@ -6,13 +6,13 @@ namespace loki3.core
 	/// <summary>
 	/// Describes the metadata associated with a function parameter
 	/// </summary>
-	internal class DataForPatterns
+	internal class PatternData
 	{
 		/// <summary>Parameter that's a single named value</summary>
 		internal static Value Single(string name)
 		{
 			ValueString vName = new ValueString(name);
-			DataForPatterns data = new DataForPatterns(vName);
+			PatternData data = new PatternData(vName);
 			return vName;
 		}
 
@@ -20,7 +20,7 @@ namespace loki3.core
 		internal static Value Single(string name, Value theDefault)
 		{
 			ValueString vName = new ValueString(name);
-			DataForPatterns data = new DataForPatterns(vName);
+			PatternData data = new PatternData(vName);
 			data.Default = theDefault;
 			return vName;
 		}
@@ -29,7 +29,7 @@ namespace loki3.core
 		internal static Value Single(string name, string type)
 		{
 			ValueString vName = new ValueString(name);
-			DataForPatterns data = new DataForPatterns(vName);
+			PatternData data = new PatternData(vName);
 			data.TypeName = new ValueString(type);
 			return vName;
 		}
@@ -38,7 +38,7 @@ namespace loki3.core
 		internal static Value Single(string name, string type, Value theDefault)
 		{
 			ValueString vName = new ValueString(name);
-			DataForPatterns data = new DataForPatterns(vName);
+			PatternData data = new PatternData(vName);
 			data.TypeName = new ValueString(type);
 			data.Default = theDefault;
 			return vName;
@@ -48,7 +48,7 @@ namespace loki3.core
 		internal static Value ArrayEnd(string name)
 		{
 			ValueString vName = new ValueString(name);
-			DataForPatterns data = new DataForPatterns(vName);
+			PatternData data = new PatternData(vName);
 			data.RestOfArray = true;
 			return vName;
 		}
@@ -57,7 +57,7 @@ namespace loki3.core
 		internal static Value ArrayEnd(string name, string type)
 		{
 			ValueString vName = new ValueString(name);
-			DataForPatterns data = new DataForPatterns(vName);
+			PatternData data = new PatternData(vName);
 			data.TypeName = new ValueString(type);
 			data.RestOfArray = true;
 			return vName;
@@ -67,7 +67,7 @@ namespace loki3.core
 		internal static Value Body()
 		{
 			ValueString vName = new ValueString("l3.body");
-			DataForPatterns data = new DataForPatterns(vName);
+			PatternData data = new PatternData(vName);
 			data.TypeName = new ValueString("ValueString");
 			data.RestOfArray = true;
 			return vName;
@@ -78,7 +78,7 @@ namespace loki3.core
 		/// Gets the metadata from a parameter name value
 		/// </summary>
 		/// <param name="name">object representing name of parameter</param>
-		internal DataForPatterns(ValueString name)
+		internal PatternData(ValueString name)
 		{
 			m_object = name;
 			m_readableMetadata = name.Metadata;

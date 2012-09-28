@@ -20,7 +20,7 @@ namespace loki3.core.test
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
 		{
-			internal TestSum() { Init(DataForPatterns.Single("a", "ValueInt"), DataForPatterns.Single("b", "ValueInt")); }
+			internal TestSum() { Init(PatternData.Single("a", "ValueInt"), PatternData.Single("b", "ValueInt")); }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -34,7 +34,7 @@ namespace loki3.core.test
 		/// <summary>Function that multiplies previous and next ints</summary>
 		class TestProduct : ValueFunction
 		{
-			internal TestProduct() { Init(DataForPatterns.Single("a", "ValueInt"), DataForPatterns.Single("b", "ValueInt"), Precedence.High); }
+			internal TestProduct() { Init(PatternData.Single("a", "ValueInt"), PatternData.Single("b", "ValueInt"), Precedence.High); }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -48,7 +48,7 @@ namespace loki3.core.test
 		/// <summary>Function that doubles the previous value</summary>
 		class TestDoubled : ValueFunctionPost
 		{
-			internal TestDoubled() { Init(DataForPatterns.Single("a", "ValueInt"), Precedence.High); }
+			internal TestDoubled() { Init(PatternData.Single("a", "ValueInt"), Precedence.High); }
 
 			internal override Value Eval(DelimiterNode prev, IScope scope, INodeRequestor nodes)
 			{
@@ -60,7 +60,7 @@ namespace loki3.core.test
 		/// <summary>Function that multiplies the next value by a canned value</summary>
 		class TestMultiplier : ValueFunctionPre
 		{
-			internal TestMultiplier(int f) { Init(DataForPatterns.Single("a", "ValueInt"), Precedence.High);  m_f = f; }
+			internal TestMultiplier(int f) { Init(PatternData.Single("a", "ValueInt"), Precedence.High);  m_f = f; }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
@@ -74,7 +74,7 @@ namespace loki3.core.test
 		/// <summary>Function that creates a TestMultiplier function based on a passed in int</summary>
 		class TestCreateMultiplier : ValueFunctionPre
 		{
-			internal TestCreateMultiplier() { Init(DataForPatterns.Single("a", "ValueInt"), Precedence.High); }
+			internal TestCreateMultiplier() { Init(PatternData.Single("a", "ValueInt"), Precedence.High); }
 
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{

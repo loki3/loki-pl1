@@ -24,8 +24,8 @@ namespace loki3.builtin
 			internal If()
 			{
 				Map map = new Map();
-				map["do?"] = DataForPatterns.Single("do?", "ValueBool");
-				map["body"] = DataForPatterns.Body();
+				map["do?"] = PatternData.Single("do?", "ValueBool");
+				map["body"] = PatternData.Body();
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}
