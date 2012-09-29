@@ -74,12 +74,12 @@ namespace loki3.core
 			List<Value> patarray = pattern.AsArray;
 			int incount = inarray.Count;
 			int patcount = patarray.Count;
-			if (patcount > incount)
-				return false;	// pattern has more elements than input - not a match
+			if (patcount < incount)
+				return false;	// pattern has fewer elements than input - not a match
 
 			// matches
 			List<Value> matchlist = new List<Value>();
-			for (int i = 0; i < patcount; i++)
+			for (int i = 0; i < incount; i++)
 			{
 				Value submatch, subleftover;
 				if (!Do(inarray[i], patarray[i], out submatch, out subleftover))
@@ -89,11 +89,11 @@ namespace loki3.core
 			match = new ValueArray(matchlist);
 
 			// leftover
-			if (incount > patcount)
+			if (patcount > incount)
 			{
 				List<Value> leftoverlist = new List<Value>();
-				for (int i = patcount; i < incount; i++)
-					leftoverlist.Add(inarray[i]);
+				for (int i = incount; i < patcount; i++)
+					leftoverlist.Add(patarray[i]);
 				leftover = new ValueArray(leftoverlist);
 			}
 

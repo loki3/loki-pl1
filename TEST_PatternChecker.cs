@@ -8,27 +8,42 @@ namespace loki3.core.test
 	class TEST_PatternChecker
 	{
 		[Test]
-		public void TestBool()
+		public void TestSingleTypeless()
 		{
-			ValueBool input = new ValueBool(true);
+			Value pattern = PatternData.Single("a");
 			Value match = null, leftover = null;
 
-			{	// single unspecified type - match
-				Value pattern = PatternData.Single("a");
+			{	// single item - match
+				Value input = new ValueBool(true);
 				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
 				Assert.IsTrue(match.AsBool);
 				Assert.AreEqual(null, leftover);
 			}
 
+			{	// array - not a match
+				List<Value> one = new List<Value>();
+				one.Add(new ValueInt(5));
+				ValueArray input = new ValueArray(one);
+
+				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+			}
+		}
+
+		[Test]
+		public void TestBool()
+		{
+			Value pattern = PatternData.Single("a", ValueType.Bool);
+			Value match = null, leftover = null;
+
 			{	// single bool type - match
-				Value pattern = PatternData.Single("a", ValueType.Bool);
+				Value input = new ValueBool(true);
 				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
 				Assert.IsTrue(match.AsBool);
 				Assert.AreEqual(null, leftover);
 			}
 
 			{	// single int type - not a match
-				Value pattern = PatternData.Single("a", ValueType.Int);
+				Value input = new ValueInt(42);
 				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
 			}
 		}
@@ -36,25 +51,18 @@ namespace loki3.core.test
 		[Test]
 		public void TestInt()
 		{
-			ValueInt input = new ValueInt(42);
+			Value pattern = PatternData.Single("a", ValueType.Int);
 			Value match = null, leftover = null;
 
-			{	// single unspecified type - match
-				Value pattern = PatternData.Single("a");
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
-				Assert.AreEqual(42, match.AsInt);
-				Assert.AreEqual(null, leftover);
-			}
-
 			{	// single int type - match
-				Value pattern = PatternData.Single("a", ValueType.Int);
+				Value input = new ValueInt(42);
 				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
 				Assert.AreEqual(42, match.AsInt);
 				Assert.AreEqual(null, leftover);
 			}
 
 			{	// single float type - not a match
-				Value pattern = PatternData.Single("a", ValueType.Float);
+				Value input = new ValueFloat(3.14);
 				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
 			}
 		}
@@ -63,33 +71,33 @@ namespace loki3.core.test
 		public void TestArray()
 		{
 			List<Value> list = new List<Value>();
-			list.Add(new ValueInt(5));
-			list.Add(new ValueString("hello"));
-			ValueArray input = new ValueArray(list);
+			list.Add(PatternData.Single("a", ValueType.Int));
+			list.Add(PatternData.Single("b", ValueType.String));
+			ValueArray pattern = new ValueArray(list);
 			Value match = null, leftover = null;
 
 			{	// single object - not a match
-				Value pattern = PatternData.Single("a");
+				Value input = new ValueInt(37);
 				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
 			}
 
 			{	// array with one item - match with leftover
 				List<Value> one = new List<Value>();
-				one.Add(PatternData.Single("asdf"));
-				ValueArray pattern = new ValueArray(one);
+				one.Add(new ValueInt(5));
+				ValueArray input = new ValueArray(one);
 
 				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
 				Assert.AreEqual(1, match.AsArray.Count);
 				Assert.AreEqual(5, match.AsArray[0].AsInt);
 				Assert.AreEqual(1, leftover.AsArray.Count);
-				Assert.AreEqual("hello", leftover.AsArray[0].AsString);
+				Assert.AreEqual("b", leftover.AsArray[0].AsString);
 			}
 
-			{	// array with two items - match
+			{	// array with two items of proper type - match
 				List<Value> two = new List<Value>();
-				two.Add(PatternData.Single("asdf"));
-				two.Add(PatternData.Single("qwert"));
-				ValueArray pattern = new ValueArray(two);
+				two.Add(new ValueInt(5));
+				two.Add(new ValueString("hello"));
+				ValueArray input = new ValueArray(two);
 
 				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
 				Assert.AreEqual(2, match.AsArray.Count);
@@ -98,12 +106,21 @@ namespace loki3.core.test
 				Assert.AreEqual(null, leftover);
 			}
 
+			{	// array with two items of wrong type - not a match
+				List<Value> two = new List<Value>();
+				two.Add(new ValueInt(5));
+				two.Add(new ValueFloat(2.718));
+				ValueArray input = new ValueArray(two);
+
+				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+			}
+
 			{	// array with three items - not a match
 				List<Value> three = new List<Value>();
-				three.Add(PatternData.Single("asdf"));
-				three.Add(PatternData.Single("qwert"));
-				three.Add(PatternData.Single("yuiop"));
-				ValueArray pattern = new ValueArray(three);
+				three.Add(new ValueInt(5));
+				three.Add(new ValueString("hello"));
+				three.Add(new ValueString("goodbye"));
+				ValueArray input = new ValueArray(three);
 
 				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
 			}
