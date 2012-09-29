@@ -19,14 +19,6 @@ namespace loki3.core.test
 				Assert.IsTrue(match.AsBool);
 				Assert.AreEqual(null, leftover);
 			}
-
-			{	// array - not a match
-				List<Value> one = new List<Value>();
-				one.Add(new ValueInt(5));
-				ValueArray input = new ValueArray(one);
-
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
-			}
 		}
 
 		[Test]
@@ -153,6 +145,46 @@ namespace loki3.core.test
 		}
 
 		[Test]
+		public void TestArrayDefault()
+		{
+			List<Value> list = new List<Value>();
+			list.Add(PatternData.Single("a", ValueType.Int));
+			list.Add(PatternData.Single("b", new ValueInt(17)));
+			ValueArray pattern = new ValueArray(list);
+			Value match = null, leftover = null;
+
+			{	// single object - not a match
+				Value input = new ValueInt(37);
+				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+			}
+
+			{	// array with one item - match with default added
+				List<Value> one = new List<Value>();
+				one.Add(new ValueInt(5));
+				ValueArray input = new ValueArray(one);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.AreEqual(2, match.AsArray.Count);
+				Assert.AreEqual(5, match.AsArray[0].AsInt);
+				Assert.AreEqual(17, match.AsArray[1].AsInt);
+				Assert.AreEqual(null, leftover);
+			}
+
+			{	// array with two items of proper type - match
+				List<Value> two = new List<Value>();
+				two.Add(new ValueInt(5));
+				two.Add(new ValueString("hello"));
+				ValueArray input = new ValueArray(two);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.AreEqual(2, match.AsArray.Count);
+				Assert.AreEqual(5, match.AsArray[0].AsInt);
+				Assert.AreEqual("hello", match.AsArray[1].AsString);
+				Assert.AreEqual(null, leftover);
+			}
+		}
+
+		[Test]
 		public void TestMap()
 		{
 			Map map = new Map();
@@ -199,6 +231,40 @@ namespace loki3.core.test
 				ValueMap input = new ValueMap(map);
 
 				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+			}
+		}
+
+		[Test]
+		public void TestMapDefault()
+		{
+			Map map = new Map();
+			map["first"] = PatternData.Single("first", new ValueInt(156));	// default
+			map["second"] = PatternData.Single("second");
+			ValueMap pattern = new ValueMap(map);
+			Value match = null, leftover = null;
+
+			{	// input is missing key w/ default - full match
+				map = new Map();
+				map["second"] = new ValueInt(3);
+				ValueMap input = new ValueMap(map);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.AreEqual(2, match.AsMap.Count);
+				Assert.AreEqual(156, match.AsMap["first"].AsInt);
+				Assert.AreEqual(3, match.AsMap["second"].AsInt);
+				Assert.AreEqual(null, leftover);
+			}
+
+			{	// input is missing key w/out default - match w/ leftover
+				map = new Map();
+				map["first"] = new ValueInt(5);
+				ValueMap input = new ValueMap(map);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.AreEqual(1, match.AsMap.Count);
+				Assert.AreEqual(5, match.AsMap["first"].AsInt);
+				Assert.AreEqual(1, leftover.AsMap.Count);
+				Assert.AreEqual("second", leftover.AsMap["second"].AsString);
 			}
 		}
 	}

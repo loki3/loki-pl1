@@ -27,6 +27,7 @@ namespace loki3.core
 		internal abstract bool Equals(Value v);
 
 		// request value as a particular type
+		internal virtual bool IsNil { get { return false; } }
 		internal virtual bool AsBool { get { throw new WrongTypeException(ValueType.Bool, Type); } }
 		internal virtual int AsInt { get { throw new WrongTypeException(ValueType.Int, Type); } }
 		internal virtual double AsFloat { get { throw new WrongTypeException(ValueType.Float, Type); } }
@@ -71,6 +72,9 @@ namespace loki3.core
 	/// </summary>
 	internal class ValueNil : Value
 	{
+		internal static ValueNil Nil { get { return m_nil; } }
+		internal override bool IsNil { get { return true; } }
+
 		#region Value
 		internal override ValueType Type
 		{
@@ -82,6 +86,8 @@ namespace loki3.core
 			return v is ValueNil;
 		}
 		#endregion
+
+		private static ValueNil m_nil = new ValueNil();
 	}
 
 

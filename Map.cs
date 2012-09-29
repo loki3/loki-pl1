@@ -11,7 +11,7 @@ namespace loki3.core
 		}
 		internal int Count
 		{
-			get { return m_val.Count; }
+			get { return (m_val == null ? 0 : m_val.Count); }
 		}
 		internal Dictionary<string, Value> Raw
 		{

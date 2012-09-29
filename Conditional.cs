@@ -29,10 +29,9 @@ namespace loki3.builtin
 				Init(vMap);
 			}
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value value = EvalNode.Do(next, scope, nodes);
-				Map map = value.AsMap;
+				Map map = arg.AsMap;
 
 				// if !do?, return
 				bool shouldDo = map["do?"].AsBool;

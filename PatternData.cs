@@ -81,7 +81,7 @@ namespace loki3.core
 		internal PatternData(ValueString name)
 		{
 			m_object = name;
-			m_readableMetadata = name.Metadata;
+			m_readableMetadata = (name == null ? null : name.Metadata);
 			m_writableMetadata = null;
 		}
 

@@ -35,14 +35,14 @@ namespace loki3.core
 					return DoSingle(input as ValueString, ValueType.String, pattern as ValueString, out match);
 
 				case ValueType.Array:
-					return Do(input as ValueArray, pattern as ValueArray, out match, out leftover);
+					return Do(input as ValueArray, pattern, out match, out leftover);
 				case ValueType.Map:
 					return Do(input as ValueMap, pattern as ValueMap, out match, out leftover);
 
 				case ValueType.Function:
-					break;	// to do
+					return DoSingle(input as ValueFunction, ValueType.Function, pattern as ValueString, out match);
 				case ValueType.Delimiter:
-					break;	// to do
+					return DoSingle(input as ValueDelimiter, ValueType.Delimiter, pattern as ValueString, out match);
 			}
 
 			return false;
@@ -66,15 +66,26 @@ namespace loki3.core
 		}
 
 		/// <summary>Match against an array</summary>
-		private static bool Do(ValueArray input, ValueArray pattern, out Value match, out Value leftover)
+		private static bool Do(ValueArray input, Value pattern, out Value match, out Value leftover)
 		{
 			match = null;
 			leftover = null;
-			if (pattern == null)
+
+			// check if we asked for the entire array
+			ValueString patternString = pattern as ValueString;
+			if (patternString != null)
+			{
+				PatternData data = new PatternData(patternString);
+				match = input;
+				return true;
+			}
+
+			ValueArray patternArray = pattern as ValueArray;
+			if (patternArray == null)
 				return false;	// this only matches against another array
 
 			List<Value> inarray = input.AsArray;
-			List<Value> patarray = pattern.AsArray;
+			List<Value> patarray = patternArray.AsArray;
 			int incount = inarray.Count;
 			int patcount = patarray.Count;
 			if (patcount < incount)
@@ -89,16 +100,25 @@ namespace loki3.core
 					return false;
 				matchlist.Add(submatch);
 			}
-			match = new ValueArray(matchlist);
 
 			// leftover
 			if (patcount > incount)
 			{
 				List<Value> leftoverlist = new List<Value>();
 				for (int i = incount; i < patcount; i++)
-					leftoverlist.Add(patarray[i]);
-				leftover = new ValueArray(leftoverlist);
+				{
+					PatternData data = new PatternData(patarray[i] as ValueString);
+					if (data.Default != null)
+						matchlist.Add(data.Default);
+					else
+						leftoverlist.Add(patarray[i]);
+				}
+				if (leftoverlist.Count > 0)
+					leftover = new ValueArray(leftoverlist);
 			}
+
+			// matches + defaults
+			match = new ValueArray(matchlist);
 
 			return true;
 		}
@@ -127,17 +147,25 @@ namespace loki3.core
 					return false;	// input has key that pattern doesn't
 				matchmap[key] = submatch;
 			}
-			match = new ValueMap(matchmap);
 
 			// leftover
 			if (patcount > incount)
 			{
 				Map leftovermap = new Map();
 				foreach (string key in patmap.Raw.Keys)
-					if (!inmap.ContainsKey(key))
+				{
+					PatternData data = new PatternData(patmap[key] as ValueString);
+					if (!matchmap.ContainsKey(key) && data.Default != null)
+						matchmap[key] = data.Default;
+					else if (!inmap.ContainsKey(key))
 						leftovermap[key] = patmap[key];
-				leftover = new ValueMap(leftovermap);
+				}
+				if (leftovermap.Count > 0)
+					leftover = new ValueMap(leftovermap);
 			}
+
+			// matches + defaults
+			match = new ValueMap(matchmap);
 
 			return true;
 		}

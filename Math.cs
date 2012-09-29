@@ -26,10 +26,9 @@ namespace loki3.builtin
 		{
 			internal AddArray() { Init(PatternData.ArrayEnd("a", ValueType.Number)); }
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value numbers = EvalNode.Do(next, scope, nodes);
-				List<Value> list = numbers.AsArray;
+				List<Value> list = arg.AsArray;
 
 				bool isResultInt = true;
 				int iResult = 0;
@@ -69,13 +68,9 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value numbers = EvalNode.Do(next, scope, nodes);
-				List<Value> list = numbers.AsArray;
-				if (list.Count != 2)
-					throw new WrongSizeArray(2, list.Count);
-
+				List<Value> list = arg.AsArray;
 				Value v1 = list[0];
 				Value v2 = list[1];
 
@@ -93,10 +88,9 @@ namespace loki3.builtin
 		{
 			internal MultiplyArray() { Init(PatternData.ArrayEnd("a", ValueType.Number)); }
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value numbers = EvalNode.Do(next, scope, nodes);
-				List<Value> list = numbers.AsArray;
+				List<Value> list = arg.AsArray;
 
 				bool isResultInt = true;
 				int iResult = 1;
@@ -136,13 +130,9 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value numbers = EvalNode.Do(next, scope, nodes);
-				List<Value> list = numbers.AsArray;
-				if (list.Count != 2)
-					throw new WrongSizeArray(2, list.Count);
-
+				List<Value> list = arg.AsArray;
 				Value v1 = list[0];
 				Value v2 = list[1];
 
@@ -160,10 +150,9 @@ namespace loki3.builtin
 		{
 			internal SquareRoot() { Init(PatternData.Single("a", ValueType.Number)); }
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value number = EvalNode.Do(next, scope, nodes);
-				double a = number.AsForcedFloat;
+				double a = arg.AsForcedFloat;
 				return new ValueFloat(System.Math.Sqrt(a));
 			}
 		}

@@ -70,9 +70,16 @@ namespace loki3.core
 
 		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
-			return Eval(next, scope, nodes);
+			Value post = EvalNode.Do(next, scope, nodes);
+			Value match, leftover;
+			if (!PatternChecker.Do(post, Metadata[keyNextPattern], out match, out leftover))
+				throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
+			if (leftover != null)
+				throw new WrongSizeArray(2, 1);	// todo: if leftover, create partial function
+			return Eval(match, scope);
 		}
-		internal abstract Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes);
+
+		protected abstract Value Eval(Value arg, IScope scope);
 	}
 
 	/// <summary>
@@ -85,8 +92,14 @@ namespace loki3.core
 
 		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
-			return Eval(prev, scope, nodes);
+			Value pre = EvalNode.Do(prev, scope, nodes);
+			Value match, leftover;
+			if (!PatternChecker.Do(pre, Metadata[keyPreviousPattern], out match, out leftover))
+				throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
+			// todo: if leftover, create partial function
+			return Eval(match, scope);
 		}
-		internal abstract Value Eval(DelimiterNode prev, IScope scope, INodeRequestor nodes);
+
+		protected abstract Value Eval(Value arg, IScope scope);
 	}
 }

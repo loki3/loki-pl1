@@ -25,11 +25,10 @@ namespace loki3.core.test
 		class TestPrevious1 : ValueFunctionPost
 		{
 			internal TestPrevious1() { Init(PatternData.Single("a", ValueType.Int)); }
-			
-			internal override Value Eval(DelimiterNode prev, IScope scope, INodeRequestor nodes)
+
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value value = EvalNode.Do(prev, scope, nodes);
-				int sum = value.AsInt + 1;
+				int sum = arg.AsInt + 1;
 				return new ValueInt(sum);
 			}
 		}
@@ -39,10 +38,9 @@ namespace loki3.core.test
 		{
 			internal TestNext1() { Init(PatternData.Single("a", ValueType.Int)); }
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value value = EvalNode.Do(next, scope, nodes);
-				int sum = 1 + value.AsInt;
+				int sum = 1 + arg.AsInt;
 				return new ValueInt(sum);
 			}
 		}
@@ -52,10 +50,9 @@ namespace loki3.core.test
 		{
 			internal TestCaps() { Init(PatternData.Single("a", ValueType.String)); }
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value value = EvalNode.Do(next, scope, nodes);
-				string caps = value.AsString.ToUpper();
+				string caps = arg.AsString.ToUpper();
 				return new ValueString(caps);
 			}
 		}
@@ -214,10 +211,9 @@ namespace loki3.core.test
 		{
 			internal AddFunction() { Init(PatternData.ArrayEnd("a", ValueType.Int)); }
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value numbers = EvalNode.Do(next, scope, nodes);
-				List<Value> list = numbers.AsArray;
+				List<Value> list = arg.AsArray;
 
 				int sum = 0;
 				foreach (Value val in list)

@@ -32,13 +32,9 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value post = EvalNode.Do(next, scope, nodes);
-				List<Value> list = post.AsArray;
-				if (list.Count != 2)
-					throw new WrongSizeArray(2, list.Count);
-
+				List<Value> list = arg.AsArray;
 				string key = list[0].AsString;
 				Value value = list[1];
 				scope.SetValue(key, value);
@@ -51,10 +47,9 @@ namespace loki3.builtin
 		{
 			internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value post = EvalNode.Do(next, scope, nodes);
-				List<Value> list = post.AsArray;
+				List<Value> list = arg.AsArray;
 
 				Map map = new Map();
 				int count = list.Count;
@@ -82,18 +77,17 @@ namespace loki3.builtin
 				Init(vMap);
 			}
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value value = EvalNode.Do(next, scope, nodes);
-				Map map = value.AsMap;
+				Map map = arg.AsMap;
 
 				// extract optional & required parameters
-				Value pre = map.GetOptional("pre", null);
-				Value post = map.GetOptional("post", null);
+				Value pre = map["pre"];
+				Value post = map["post"];
 				List<Value> valueBody = map["body"].AsArray;
-				Precedence order = (Precedence)map.GetOptional<int>("order", (int)Precedence.Medium);
+				Precedence order = (Precedence)(map["order"].AsInt);
 
-				if (pre == null && post == null)
+				if (pre.IsNil && post.IsNil)
 					throw new MissingParameter("pre");	// TODO: richer message
 
 				// need a list of strings, not values
@@ -119,10 +113,9 @@ namespace loki3.builtin
 				Init(vMap);
 			}
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value value = EvalNode.Do(next, scope, nodes);
-				Map map = value.AsMap;
+				Map map = arg.AsMap;
 
 				// extract optional & required parameters
 				string start = map["start"].AsString;

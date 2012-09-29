@@ -21,9 +21,9 @@ namespace loki3.core
 				m_pattern1 = pattern1;
 				m_pattern2 = pattern2;
 				// these restrictions will go away
-				if (pattern1 != null)
+				if (pattern1 != null && !(pattern1 is ValueNil))
 					System.Diagnostics.Debug.Assert(pattern1.Type == ValueType.String);
-				if (pattern2 != null)
+				if (pattern2 != null && !(pattern2 is ValueNil))
 					System.Diagnostics.Debug.Assert(pattern2.Type == ValueType.String);
 				m_rawLines = rawLines;
 			}
@@ -35,12 +35,12 @@ namespace loki3.core
 
 				// create a new scope and add passed in arguments
 				ScopeChain scope = new ScopeChain(parent);
-				if (m_pattern1 != null)
+				if (m_pattern1 != null && !m_pattern1.IsNil)
 				{
 					Value value1 = EvalNode.Do(prev, scope, nodes);
 					scope.SetValue(m_pattern1.AsString, value1);
 				}
-				if (m_pattern2 != null)
+				if (m_pattern2 != null && !m_pattern2.IsNil)
 				{
 					Value value2 = EvalNode.Do(next, scope, nodes);
 					scope.SetValue(m_pattern2.AsString, value2);

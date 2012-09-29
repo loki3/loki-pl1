@@ -32,13 +32,9 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value post = EvalNode.Do(next, scope, nodes);
-				List<Value> list = post.AsArray;
-				if (list.Count != 2)
-					throw new WrongSizeArray(2, list.Count);
-
+				List<Value> list = arg.AsArray;
 				Value v1 = list[0];
 				Value v2 = list[1];
 				return new ValueBool(v1.Equals(v2));
@@ -57,13 +53,9 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value post = EvalNode.Do(next, scope, nodes);
-				List<Value> list = post.AsArray;
-				if (list.Count != 2)
-					throw new WrongSizeArray(2, list.Count);
-
+				List<Value> list = arg.AsArray;
 				return new ValueBool(list[0].AsBool && list[1].AsBool);
 			}
 		}
@@ -80,13 +72,9 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value post = EvalNode.Do(next, scope, nodes);
-				List<Value> list = post.AsArray;
-				if (list.Count != 2)
-					throw new WrongSizeArray(2, list.Count);
-
+				List<Value> list = arg.AsArray;
 				return new ValueBool(list[0].AsBool || list[1].AsBool);
 			}
 		}
@@ -96,10 +84,9 @@ namespace loki3.builtin
 		{
 			internal LogicalNot() { Init(PatternData.Single("a", ValueType.Bool)); }
 
-			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
+			protected override Value Eval(Value arg, IScope scope)
 			{
-				Value post = EvalNode.Do(next, scope, nodes);
-				return new ValueBool(!post.AsBool);
+				return new ValueBool(!arg.AsBool);
 			}
 		}
 	}
