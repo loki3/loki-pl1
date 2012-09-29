@@ -71,7 +71,7 @@ namespace loki3.builtin.test
 
 			{
 				Value value = ToValue("l3.createMap [ :a 5  :key true ]", scope);
-				ValueMap map = value.AsMap;
+				Map map = value.AsMap;
 				Assert.AreEqual(5, map["a"].AsInt);
 				Assert.AreEqual(true, map["key"].AsBool);
 			}

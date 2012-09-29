@@ -85,13 +85,13 @@ namespace loki3.builtin
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, scope, nodes);
-				ValueMap map = value.AsMap;
+				Map map = value.AsMap;
 
 				// extract optional & required parameters
-				Value pre = map.Map.GetOptional("pre", null);
-				Value post = map.Map.GetOptional("post", null);
+				Value pre = map.GetOptional("pre", null);
+				Value post = map.GetOptional("post", null);
 				List<Value> valueBody = map["body"].AsArray;
-				Precedence order = (Precedence)map.Map.GetOptional<int>("order", (int)Precedence.Medium);
+				Precedence order = (Precedence)map.GetOptional<int>("order", (int)Precedence.Medium);
 
 				if (pre == null && post == null)
 					throw new MissingParameter("pre");	// TODO: richer message
@@ -122,13 +122,13 @@ namespace loki3.builtin
 			internal override Value Eval(DelimiterNode next, IScope scope, INodeRequestor nodes)
 			{
 				Value value = EvalNode.Do(next, scope, nodes);
-				ValueMap map = value.AsMap;
+				Map map = value.AsMap;
 
 				// extract optional & required parameters
 				string start = map["start"].AsString;
 				string end = map["end"].AsString;
-				Value typeval = map.Map.GetOptional("type", null);
-				Value funcval = map.Map.GetOptional("function", null);
+				Value typeval = map.GetOptional("type", null);
+				Value funcval = map.GetOptional("function", null);
 				ValueFunction function = (funcval == null ? null : funcval as ValueFunction);
 
 				DelimiterType type = DelimiterType.AsValue;

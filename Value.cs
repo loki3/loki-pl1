@@ -33,7 +33,7 @@ namespace loki3.core
 		internal virtual double AsForcedFloat { get { throw new WrongTypeException(ValueType.Float, Type); } }
 		internal virtual string AsString { get { throw new WrongTypeException(ValueType.String, Type); } }
 		internal virtual List<Value> AsArray { get { throw new WrongTypeException(ValueType.Array, Type); } }
-		internal virtual ValueMap AsMap { get { throw new WrongTypeException(ValueType.Map, Type); } }
+		internal virtual Map AsMap { get { throw new WrongTypeException(ValueType.Map, Type); } }
 
 		/// <summary>Get this value's metadata.  May be null.</summary>
 		internal Map Metadata { get { return m_metadata; } }
@@ -233,19 +233,13 @@ namespace loki3.core
 			return m_val.Equals(other.m_val);
 		}
 
-		internal override ValueMap AsMap { get { return this; } }
+		internal override Map AsMap { get { return m_val; } }
 		#endregion
 
 		/// <summary>Get a value by key</summary>
 		internal Value this[string key]
 		{
 			get { return m_val[key]; }
-		}
-
-		/// <summary>Get underlying map</summary>
-		internal Map Map
-		{
-			get { return m_val; }
 		}
 
 		public override string ToString() { return m_val.ToString(); }

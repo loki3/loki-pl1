@@ -9,6 +9,14 @@ namespace loki3.core
 		{
 			return m_val.ContainsKey(key);
 		}
+		internal int Count
+		{
+			get { return m_val.Count; }
+		}
+		internal Dictionary<string, Value> Raw
+		{
+			get { return m_val; }
+		}
 
 		/// <summary>Get a value by key</summary>
 		internal Value this[string key]

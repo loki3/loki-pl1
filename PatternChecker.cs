@@ -48,6 +48,7 @@ namespace loki3.core
 			return false;
 		}
 
+		/// <summary>Match against a non-aggregate type</summary>
 		private static bool DoSingle<T>(T input, ValueType target, ValueString pattern, out Value match) where T : Value
 		{
 			match = null;
@@ -61,6 +62,7 @@ namespace loki3.core
 			return true;
 		}
 
+		/// <summary>Match against an array</summary>
 		private static bool Do(ValueArray input, ValueArray pattern, out Value match, out Value leftover)
 		{
 			match = null;
@@ -98,6 +100,7 @@ namespace loki3.core
 			return true;
 		}
 
+		/// <summary>Match against a map</summary>
 		private static bool Do(ValueMap input, ValueMap pattern, out Value match, out Value leftover)
 		{
 			match = null;
@@ -105,7 +108,35 @@ namespace loki3.core
 			if (pattern == null)
 				return false;	// this only matches against another map
 
-			return false;	// to do
+			Map inmap = input.AsMap;
+			Map patmap = pattern.AsMap;
+			int incount = inmap.Count;
+			int patcount = patmap.Count;
+			if (patcount < incount)
+				return false;	// pattern has fewer elements than input - not a match
+
+			// matches
+			Map matchmap = new Map();
+			foreach (string key in inmap.Raw.Keys)
+			{
+				Value submatch, subleftover;
+				if (!Do(inmap[key], patmap[key], out submatch, out subleftover))
+					return false;	// input has key that pattern doesn't
+				matchmap[key] = submatch;
+			}
+			match = new ValueMap(matchmap);
+
+			// leftover
+			if (patcount > incount)
+			{
+				Map leftovermap = new Map();
+				foreach (string key in patmap.Raw.Keys)
+					if (!inmap.ContainsKey(key))
+						leftovermap[key] = patmap[key];
+				leftover = new ValueMap(leftovermap);
+			}
+
+			return true;
 		}
 	}
 }
