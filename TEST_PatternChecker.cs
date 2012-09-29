@@ -68,6 +68,32 @@ namespace loki3.core.test
 		}
 
 		[Test]
+		public void TestNumber()
+		{
+			Value pattern = PatternData.Single("a", ValueType.Number);
+			Value match = null, leftover = null;
+
+			{	// single int type - match
+				Value input = new ValueInt(42);
+				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.AreEqual(42, match.AsInt);
+				Assert.AreEqual(null, leftover);
+			}
+
+			{	// single float type - match
+				Value input = new ValueFloat(3.5);
+				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.AreEqual(3.5, match.AsFloat);
+				Assert.AreEqual(null, leftover);
+			}
+
+			{	// single string type - not a match
+				Value input = new ValueString("hello");
+				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+			}
+		}
+
+		[Test]
 		public void TestArray()
 		{
 			List<Value> list = new List<Value>();

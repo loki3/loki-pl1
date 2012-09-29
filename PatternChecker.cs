@@ -57,7 +57,10 @@ namespace loki3.core
 			PatternData data = new PatternData(pattern);
 			ValueType type = data.ValueType;
 			if (type != ValueType.Nil && type != target)
-				return false;	// they asked for a different type
+			{
+				if (type != ValueType.Number || (target != ValueType.Int && target != ValueType.Float))
+					return false;	// they asked for a different type
+			}
 			match = input;
 			return true;
 		}
