@@ -21,17 +21,8 @@ namespace loki3.core
 
 		internal override Value Eval(Value arg, IScope scope)
 		{
-			if (arg is ValueArray)
-			{
-				ValueArray full = ValueArray.Combine(m_passed as ValueArray, arg as ValueArray);
-				return m_nested.Eval(full, scope);
-			}
-			else if (arg is ValueMap)
-			{
-				ValueMap full = ValueMap.Combine(m_passed as ValueMap, arg as ValueMap);
-				return m_nested.Eval(full, scope);
-			}
-			return null;
+			Value full = Utility.Combine(m_passed, arg);
+			return (full == null ? null : m_nested.Eval(full, scope));
 		}
 
 		private ValueFunctionPre m_nested;
@@ -57,17 +48,8 @@ namespace loki3.core
 
 		internal override Value Eval(Value arg, IScope scope)
 		{
-			if (arg is ValueArray)
-			{
-				ValueArray full = ValueArray.Combine(m_passed as ValueArray, arg as ValueArray);
-				return m_nested.Eval(full, scope);
-			}
-			else if (arg is ValueMap)
-			{
-				ValueMap full = ValueMap.Combine(m_passed as ValueMap, arg as ValueMap);
-				return m_nested.Eval(full, scope);
-			}
-			return null;
+			Value full = Utility.Combine(m_passed, arg);
+			return (full == null ? null : m_nested.Eval(full, scope));
 		}
 
 		private ValueFunctionPost m_nested;

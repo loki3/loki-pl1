@@ -37,7 +37,7 @@ namespace loki3.core
 					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], out match, out leftover))
 						throw new WrongPatternException(Metadata[keyPreviousPattern], value1);
 					// todo: create partial if leftover
-					AddToScope(m_pattern1, match, scope);
+					Utility.AddToScope(m_pattern1, match, scope);
 				}
 				if (m_pattern2 != null && !m_pattern2.IsNil)
 				{
@@ -46,32 +46,11 @@ namespace loki3.core
 					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], out match, out leftover))
 						throw new WrongPatternException(Metadata[keyNextPattern], value2);
 					// todo: create partial if leftover
-					AddToScope(m_pattern2, match, scope);
+					Utility.AddToScope(m_pattern2, match, scope);
 				}
 
 				// eval each line using current scope
 				return EvalBody.Do(m_parsedLines, scope);
-			}
-
-			/// <summary>Add the values from the matched pattern to the scope</summary>
-			private void AddToScope(Value pattern, Value match, IScope scope)
-			{
-				if (pattern is ValueString)
-				{
-					scope.SetValue(pattern.AsString, match);
-				}
-				else if (pattern is ValueArray)
-				{	// add matched array values to current scope
-					List<Value> patarray = pattern.AsArray;
-					List<Value> matcharray = match.AsArray;
-					for (int i = 0; i < patarray.Count; i++)
-						scope.SetValue(patarray[i].AsString, matcharray[i]);
-				}
-				else if (pattern is ValueMap)
-				{	// add matched dictionary to current scope
-					foreach (string key in match.AsMap.Raw.Keys)
-						scope.SetValue(key, match.AsMap[key]);
-				}
 			}
 
 			/// <summary>If we haven't already parsed our lines, do so now</summary>

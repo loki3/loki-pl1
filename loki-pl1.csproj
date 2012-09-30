@@ -60,6 +60,7 @@
     <Compile Include="TEST_PartialFunction.cs" />
     <Compile Include="TEST_PatternChecker.cs" />
     <Compile Include="TEST_Values.cs" />
+    <Compile Include="Utility.cs" />
     <Compile Include="ValueArray.cs" />
     <Compile Include="ValueDelimiter.cs" />
     <Compile Include="ValueFunction.cs" />
