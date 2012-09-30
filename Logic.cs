@@ -32,7 +32,7 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 				Value v1 = list[0];
@@ -53,7 +53,7 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 				return new ValueBool(list[0].AsBool && list[1].AsBool);
@@ -72,7 +72,7 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 				return new ValueBool(list[0].AsBool || list[1].AsBool);
@@ -84,7 +84,7 @@ namespace loki3.builtin
 		{
 			internal LogicalNot() { Init(PatternData.Single("a", ValueType.Bool)); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				return new ValueBool(!arg.AsBool);
 			}

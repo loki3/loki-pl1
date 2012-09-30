@@ -79,7 +79,7 @@ namespace loki3.core
 			return Eval(match, scope);
 		}
 
-		protected abstract Value Eval(Value arg, IScope scope);
+		internal abstract Value Eval(Value arg, IScope scope);
 	}
 
 	/// <summary>
@@ -100,6 +100,6 @@ namespace loki3.core
 			return Eval(match, scope);
 		}
 
-		protected abstract Value Eval(Value arg, IScope scope);
+		internal abstract Value Eval(Value arg, IScope scope);
 	}
 }

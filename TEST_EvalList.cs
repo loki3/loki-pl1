@@ -50,7 +50,7 @@ namespace loki3.core.test
 		{
 			internal TestDoubled() { Init(PatternData.Single("a", ValueType.Int), Precedence.High); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				return new ValueInt(arg.AsInt * 2);
 			}
@@ -61,7 +61,7 @@ namespace loki3.core.test
 		{
 			internal TestMultiplier(int f) { Init(PatternData.Single("a", ValueType.Int), Precedence.High);  m_f = f; }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				return new ValueInt(arg.AsInt * m_f);
 			}
@@ -74,7 +74,7 @@ namespace loki3.core.test
 		{
 			internal TestCreateMultiplier() { Init(PatternData.Single("a", ValueType.Int), Precedence.High); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				return new TestMultiplier(arg.AsInt);
 			}

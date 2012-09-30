@@ -26,7 +26,7 @@ namespace loki3.core.test
 		{
 			internal TestPrevious1() { Init(PatternData.Single("a", ValueType.Int)); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				int sum = arg.AsInt + 1;
 				return new ValueInt(sum);
@@ -38,7 +38,7 @@ namespace loki3.core.test
 		{
 			internal TestNext1() { Init(PatternData.Single("a", ValueType.Int)); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				int sum = 1 + arg.AsInt;
 				return new ValueInt(sum);
@@ -50,7 +50,7 @@ namespace loki3.core.test
 		{
 			internal TestCaps() { Init(PatternData.Single("a", ValueType.String)); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				string caps = arg.AsString.ToUpper();
 				return new ValueString(caps);
@@ -211,7 +211,7 @@ namespace loki3.core.test
 		{
 			internal AddFunction() { Init(PatternData.ArrayEnd("a", ValueType.Int)); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 

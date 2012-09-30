@@ -32,7 +32,7 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 				string key = list[0].AsString;
@@ -47,7 +47,7 @@ namespace loki3.builtin
 		{
 			internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 
@@ -77,7 +77,7 @@ namespace loki3.builtin
 				Init(vMap);
 			}
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				Map map = arg.AsMap;
 
@@ -113,7 +113,7 @@ namespace loki3.builtin
 				Init(vMap);
 			}
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				Map map = arg.AsMap;
 

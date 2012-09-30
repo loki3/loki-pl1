@@ -29,7 +29,7 @@ namespace loki3.builtin
 				Init(vMap);
 			}
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				Map map = arg.AsMap;
 

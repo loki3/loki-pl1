@@ -26,7 +26,7 @@ namespace loki3.builtin
 		{
 			internal AddArray() { Init(PatternData.ArrayEnd("a", ValueType.Number)); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 
@@ -68,7 +68,7 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 				Value v1 = list[0];
@@ -88,7 +88,7 @@ namespace loki3.builtin
 		{
 			internal MultiplyArray() { Init(PatternData.ArrayEnd("a", ValueType.Number)); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 
@@ -130,7 +130,7 @@ namespace loki3.builtin
 				Init(array);
 			}
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
 				Value v1 = list[0];
@@ -150,7 +150,7 @@ namespace loki3.builtin
 		{
 			internal SquareRoot() { Init(PatternData.Single("a", ValueType.Number)); }
 
-			protected override Value Eval(Value arg, IScope scope)
+			internal override Value Eval(Value arg, IScope scope)
 			{
 				double a = arg.AsForcedFloat;
 				return new ValueFloat(System.Math.Sqrt(a));
