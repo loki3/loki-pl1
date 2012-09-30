@@ -73,7 +73,7 @@ namespace loki3.core
 			Value post = EvalNode.Do(next, scope, nodes);
 			Value match, leftover;
 			if (!PatternChecker.Do(post, Metadata[keyNextPattern], out match, out leftover))
-				throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
+				throw new WrongPatternException(Metadata[keyNextPattern], post);
 			if (leftover != null)
 				// create a partial function that starts w/ match & still needs leftover
 				return new PartialFunctionPre(this, match, leftover);
@@ -96,7 +96,7 @@ namespace loki3.core
 			Value pre = EvalNode.Do(prev, scope, nodes);
 			Value match, leftover;
 			if (!PatternChecker.Do(pre, Metadata[keyPreviousPattern], out match, out leftover))
-				throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
+				throw new WrongPatternException(Metadata[keyPreviousPattern], pre);
 			if (leftover != null)
 				// create a partial function that starts w/ match & still needs leftover
 				return new PartialFunctionPost(this, match, leftover);

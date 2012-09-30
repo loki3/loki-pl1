@@ -79,7 +79,7 @@ namespace loki3.builtin.test
 			{
 				ToValue("l3.subtract [ true ]", scope);
 			}
-			catch (WrongTypeException)
+			catch (WrongPatternException)
 			{
 				bException = true;
 			}

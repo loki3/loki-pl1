@@ -39,21 +39,6 @@ namespace loki3.core
 	}
 
 	/// <summary>
-	/// Missing an expected key in the parameter map
-	/// </summary>
-	internal class MissingParameter : Exception
-	{
-		internal MissingParameter(string key)
-		{
-			m_key = key;
-		}
-
-		public string Key { get { return m_key; } }
-
-		private string m_key;
-	}
-
-	/// <summary>
 	/// Could not parse token
 	/// </summary>
 	internal class UnrecognizedTokenException : Exception
@@ -90,22 +75,22 @@ namespace loki3.core
 	}
 
 	/// <summary>
-	/// Function requires a different number of items in array
+	/// The passed-in value didn't match the expected pattern
 	/// </summary>
-	internal class WrongSizeArray : Exception
+	internal class WrongPatternException : Exception
 	{
-		internal WrongSizeArray(int expected, int actual)
+		internal WrongPatternException(Value expected, Value actual)
 		{
 			m_expected = expected;
 			m_actual = actual;
 		}
 
-		/// <summary>Expected number</summary>
-		public int Expected { get { return m_expected; } }
-		/// <summary>Actual number</summary>
-		public int Actual { get { return m_actual; } }
+		/// <summary>Expected pattern</summary>
+		public Value Expected { get { return m_expected; } }
+		/// <summary>Actual passed-in value</summary>
+		public Value Actual { get { return m_actual; } }
 
-		private int m_expected;
-		private int m_actual;
+		private Value m_expected;
+		private Value m_actual;
 	}
 }

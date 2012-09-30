@@ -35,7 +35,7 @@ namespace loki3.core
 					Value value1 = EvalNode.Do(prev, scope, nodes);
 					Value match, leftover;
 					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], out match, out leftover))
-						throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
+						throw new WrongPatternException(Metadata[keyPreviousPattern], value1);
 					// todo: create partial if leftover
 					AddToScope(m_pattern1, match, scope);
 				}
@@ -44,7 +44,7 @@ namespace loki3.core
 					Value value2 = EvalNode.Do(next, scope, nodes);
 					Value match, leftover;
 					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], out match, out leftover))
-						throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
+						throw new WrongPatternException(Metadata[keyNextPattern], value2);
 					// todo: create partial if leftover
 					AddToScope(m_pattern2, match, scope);
 				}

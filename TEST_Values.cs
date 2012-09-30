@@ -116,19 +116,6 @@ namespace loki3.builtin.test
 				Value result = ToValue("5 + 7", scope);
 				Assert.AreEqual(12, result.AsInt);
 			}
-
-			{	// missing pre & post
-				bool bError = false;
-				try
-				{
-					ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :body [ ' l3.add [ x y ] ' ] ] ) ]", scope);
-				}
-				catch (MissingParameter)
-				{
-					bError = true;
-				}
-				Assert.True(bError);
-			}
 		}
 
 		[Test]

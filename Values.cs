@@ -87,9 +87,6 @@ namespace loki3.builtin
 				List<Value> valueBody = map["body"].AsArray;
 				Precedence order = (Precedence)(map["order"].AsInt);
 
-				if (pre.IsNil && post.IsNil)
-					throw new MissingParameter("pre");	// TODO: richer message
-
 				// need a list of strings, not values
 				List<string> body = new List<string>(valueBody.Count);
 				foreach (Value v in valueBody)
