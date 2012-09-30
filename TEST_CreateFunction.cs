@@ -21,8 +21,29 @@ namespace loki3.core.test
 			}
 		}
 
+		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
+		class CreateMap : ValueFunctionPre
+		{
+			internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				List<Value> list = arg.AsArray;
+
+				Map map = new Map();
+				int count = list.Count;
+				for (int i = 0; i < count; i += 2)
+				{
+					string key = list[i].AsString;
+					Value value = list[i + 1];
+					map[key] = value;
+				}
+				return new ValueMap(map);
+			}
+		}
+
 		[Test]
-		public void Test()
+		public void TestSimple()
 		{
 			ScopeChain scope = new ScopeChain(null);
 			scope.SetValue("+", new TestSum());
@@ -53,6 +74,60 @@ namespace loki3.core.test
 				DelimiterList list = ParseLine.Do("5+ 2 +5", scope);
 				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(12, value.AsInt);
+			}
+		}
+
+		[Test]
+		public void TestArrayParams()
+		{
+			ScopeChain scope = new ScopeChain(null);
+			scope.SetValue("+", new TestSum());
+			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			scope.SetValue("[", square);
+
+			{	// create postfix function that takes [ a b ]
+				List<Value> list = new List<Value>();
+				list.Add(PatternData.Single("a", ValueType.Int));
+				list.Add(PatternData.Single("b", ValueType.Int));
+				ValueArray array = new ValueArray(list);
+
+				List<string> body = new List<string>();
+				body.Add("a + b");
+
+				CreateFunction.Do(scope, "add", null, array, body);
+			}
+			{	// try out the function
+				DelimiterList list = ParseLine.Do("add [ 2 5 ]", scope);
+				Value value = EvalList.Do(list.Nodes, scope);
+				Assert.AreEqual(7, value.AsInt);
+			}
+		}
+
+		[Test]
+		public void TestMapParams()
+		{
+			ScopeChain scope = new ScopeChain(null);
+			scope.SetValue("+", new TestSum());
+			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			scope.SetValue("[", square);
+			ValueDelimiter curly = new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap());
+			scope.SetValue("{", curly);
+
+			{	// create postfix function that takes { :a :b }
+				Map map = new Map();
+				map["a"] = PatternData.Single("a", ValueType.Int);
+				map["b"] = PatternData.Single("b", ValueType.Int);
+				ValueMap vMap = new ValueMap(map);
+
+				List<string> body = new List<string>();
+				body.Add("a + b");
+
+				CreateFunction.Do(scope, "add", null, vMap, body);
+			}
+			{	// try out the function
+				DelimiterList list = ParseLine.Do("add { :a 2 :b 5 }", scope);
+				Value value = EvalList.Do(list.Nodes, scope);
+				Assert.AreEqual(7, value.AsInt);
 			}
 		}
 	}

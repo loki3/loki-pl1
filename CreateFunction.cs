@@ -20,11 +20,6 @@ namespace loki3.core
 
 				m_pattern1 = pattern1;
 				m_pattern2 = pattern2;
-				// these restrictions will go away
-				if (pattern1 != null && !(pattern1 is ValueNil))
-					System.Diagnostics.Debug.Assert(pattern1.Type == ValueType.String);
-				if (pattern2 != null && !(pattern2 is ValueNil))
-					System.Diagnostics.Debug.Assert(pattern2.Type == ValueType.String);
 				m_rawLines = rawLines;
 			}
 
@@ -38,16 +33,45 @@ namespace loki3.core
 				if (m_pattern1 != null && !m_pattern1.IsNil)
 				{
 					Value value1 = EvalNode.Do(prev, scope, nodes);
-					scope.SetValue(m_pattern1.AsString, value1);
+					Value match, leftover;
+					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], out match, out leftover))
+						throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
+					// todo: create partial if leftover
+					AddToScope(m_pattern1, match, scope);
 				}
 				if (m_pattern2 != null && !m_pattern2.IsNil)
 				{
 					Value value2 = EvalNode.Do(next, scope, nodes);
-					scope.SetValue(m_pattern2.AsString, value2);
+					Value match, leftover;
+					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], out match, out leftover))
+						throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
+					// todo: create partial if leftover
+					AddToScope(m_pattern2, match, scope);
 				}
 
 				// eval each line using current scope
 				return EvalBody.Do(m_parsedLines, scope);
+			}
+
+			/// <summary>Add the values from the matched pattern to the scope</summary>
+			private void AddToScope(Value pattern, Value match, IScope scope)
+			{
+				if (pattern is ValueString)
+				{
+					scope.SetValue(pattern.AsString, match);
+				}
+				else if (pattern is ValueArray)
+				{	// add matched array values to current scope
+					List<Value> patarray = pattern.AsArray;
+					List<Value> matcharray = match.AsArray;
+					for (int i = 0; i < patarray.Count; i++)
+						scope.SetValue(patarray[i].AsString, matcharray[i]);
+				}
+				else if (pattern is ValueMap)
+				{	// add matched dictionary to current scope
+					foreach (string key in match.AsMap.Raw.Keys)
+						scope.SetValue(key, match.AsMap[key]);
+				}
 			}
 
 			/// <summary>If we haven't already parsed our lines, do so now</summary>
