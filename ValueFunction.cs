@@ -75,7 +75,8 @@ namespace loki3.core
 			if (!PatternChecker.Do(post, Metadata[keyNextPattern], out match, out leftover))
 				throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
 			if (leftover != null)
-				throw new WrongSizeArray(2, 1);	// todo: if leftover, create partial function
+				// create a partial function that starts w/ match & still needs leftover
+				return new PartialFunctionPre(this, match, leftover);
 			return Eval(match, scope);
 		}
 
@@ -96,7 +97,9 @@ namespace loki3.core
 			Value match, leftover;
 			if (!PatternChecker.Do(pre, Metadata[keyPreviousPattern], out match, out leftover))
 				throw new WrongTypeException(ValueType.Nil, ValueType.Nil);	// todo: something useful
-			// todo: if leftover, create partial function
+			if (leftover != null)
+				// create a partial function that starts w/ match & still needs leftover
+				return new PartialFunctionPost(this, match, leftover);
 			return Eval(match, scope);
 		}
 

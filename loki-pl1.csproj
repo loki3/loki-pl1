@@ -47,6 +47,7 @@
     <Compile Include="Logic.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Math.cs" />
+    <Compile Include="PartialFunction.cs" />
     <Compile Include="PatternData.cs" />
     <Compile Include="PatternChecker.cs" />
     <Compile Include="ScopeChain.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="TEST_EvalList.cs" />
     <Compile Include="TEST_Logic.cs" />
     <Compile Include="TEST_Math.cs" />
+    <Compile Include="TEST_PartialFunction.cs" />
     <Compile Include="TEST_PatternChecker.cs" />
     <Compile Include="TEST_Values.cs" />
     <Compile Include="ValueArray.cs" />

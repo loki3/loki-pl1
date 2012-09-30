@@ -248,6 +248,17 @@ namespace loki3.core
 			get { return m_val[key]; }
 		}
 
+		/// <summary>Combine a and b into a new map</summary>
+		internal static ValueMap Combine(ValueMap a, ValueMap b)
+		{
+			Map map = new Map();
+			foreach (string key in a.AsMap.Raw.Keys)
+				map[key] = a.AsMap[key];
+			foreach (string key in b.AsMap.Raw.Keys)
+				map[key] = b.AsMap[key];
+			return new ValueMap(map);
+		}
+
 		public override string ToString() { return m_val.ToString(); }
 	}
 }

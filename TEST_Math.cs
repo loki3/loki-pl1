@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using loki3.core;
 using NUnit.Framework;
@@ -78,12 +77,10 @@ namespace loki3.builtin.test
 			bool bException = false;
 			try
 			{
-				ToValue("l3.subtract [ 3 ]", scope);
+				ToValue("l3.subtract [ true ]", scope);
 			}
-			catch (WrongSizeArray e)
+			catch (WrongTypeException)
 			{
-				Assert.AreEqual(e.Expected, 2);
-				Assert.AreEqual(e.Actual, 1);
 				bException = true;
 			}
 			Assert.True(bException);
