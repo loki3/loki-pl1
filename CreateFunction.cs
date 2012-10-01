@@ -14,40 +14,94 @@ namespace loki3.core
 		/// </summary>
 		internal class UserFunction : ValueFunction
 		{
+			/// <summary>
+			/// Create a new user defined function
+			/// </summary>
+			/// <param name="pattern1">pattern for parameters that come before function name</param>
+			/// <param name="pattern2">pattern for parameters that come after function name</param>
+			/// <param name="rawLines">body of function that will be parsed when neede</param>
+			/// <param name="precedence">order that function should be evaled relative to other functions</param>
 			internal UserFunction(Value pattern1, Value pattern2, List<string> rawLines, Precedence precedence)
 			{
 				Init(pattern1, pattern2, precedence);
 
+				m_usePrevious = (pattern1 != null && !pattern1.IsNil);
+				m_useNext = (pattern2 != null && !pattern2.IsNil);
 				m_pattern1 = pattern1;
 				m_pattern2 = pattern2;
 				m_rawLines = rawLines;
+
+				m_passed = null;
+				m_fullPattern = null;
+			}
+
+			/// <summary>
+			/// Create a partial function based on another user defined function
+			/// </summary>
+			/// <param name="func">function to build off of</param>
+			/// <param name="passed">values that were passed to function already</param>
+			/// <param name="pattern1">values that still need to be passed if it uses previous</param>
+			/// <param name="pattern2">values that still need to be passed if it uses next</param>
+			internal UserFunction(UserFunction func, Value passed, Value pattern1, Value pattern2)
+			{
+				m_usePrevious = (pattern1 != null && !pattern1.IsNil);
+				m_useNext = (pattern2 != null && !pattern2.IsNil);
+				m_pattern1 = pattern1;
+				m_pattern2 = pattern2;
+				m_rawLines = func.m_rawLines;
+				m_parsedLines = func.m_parsedLines;
+				Init(pattern1, pattern2, func.Precedence);
+
+				m_passed = passed;
+				m_fullPattern = (m_usePrevious ? func.Metadata[keyPreviousPattern] : func.Metadata[keyNextPattern]);
 			}
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope parent, INodeRequestor nodes)
 			{
-				// lazily parse
-				EnsureParsed(parent);
-
 				// create a new scope and add passed in arguments
 				ScopeChain scope = new ScopeChain(parent);
-				if (m_pattern1 != null && !m_pattern1.IsNil)
+				if (m_fullPattern != null && m_passed != null)
+					Utility.AddToScope(m_fullPattern, m_passed, scope);
+
+				if (m_usePrevious)
 				{
 					Value value1 = EvalNode.Do(prev, scope, nodes);
 					Value match, leftover;
 					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], out match, out leftover))
 						throw new WrongPatternException(Metadata[keyPreviousPattern], value1);
-					// todo: create partial if leftover
+
+					if (leftover != null)
+					{
+						if (m_useNext)
+							// currently can't do partials for infix
+							throw new WrongPatternException(Metadata[keyPreviousPattern], value1);
+						// create a partial function that starts w/ match & still needs leftover
+						return new UserFunction(this, match, leftover, null);
+					}
+
 					Utility.AddToScope(m_pattern1, match, scope);
 				}
-				if (m_pattern2 != null && !m_pattern2.IsNil)
+				if (m_useNext)
 				{
 					Value value2 = EvalNode.Do(next, scope, nodes);
 					Value match, leftover;
 					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], out match, out leftover))
 						throw new WrongPatternException(Metadata[keyNextPattern], value2);
-					// todo: create partial if leftover
+
+					if (leftover != null)
+					{
+						if (m_usePrevious)
+							// currently can't do partials for infix
+							throw new WrongPatternException(Metadata[keyNextPattern], value2);
+						// create a partial function that starts w/ match & still needs leftover
+						return new UserFunction(this, match, null, leftover);
+					}
+
 					Utility.AddToScope(m_pattern2, match, scope);
 				}
+
+				// lazily parse
+				EnsureParsed(parent);
 
 				// eval each line using current scope
 				return EvalBody.Do(m_parsedLines, scope);
@@ -67,10 +121,15 @@ namespace loki3.core
 				m_rawLines = null;
 			}
 
+			private bool m_usePrevious;
+			private bool m_useNext;
 			private Value m_pattern1;
 			private Value m_pattern2;
 			private List<string> m_rawLines;
 			private List<DelimiterList> m_parsedLines = null;
+
+			private Value m_passed;
+			private Value m_fullPattern;
 		}
 
 		/// <summary>

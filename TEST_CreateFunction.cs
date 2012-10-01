@@ -129,6 +129,12 @@ namespace loki3.core.test
 				Value value = EvalList.Do(list.Nodes, scope);
 				Assert.AreEqual(7, value.AsInt);
 			}
+
+			{	// try it as a partial
+				DelimiterList list = ParseLine.Do("add { :a 2 } { :b 5 }", scope);
+				Value value = EvalList.Do(list.Nodes, scope);
+				Assert.AreEqual(7, value.AsInt);
+			}
 		}
 	}
 }
