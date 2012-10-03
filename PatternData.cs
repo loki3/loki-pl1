@@ -63,7 +63,7 @@ namespace loki3.core
 			return vName;
 		}
 
-		/// <summary>Parameter that's the remainder of an array</summary>
+		/// <summary>Parameter that indicates that a "body" is required, i.e. an array of strings</summary>
 		internal static Value Body()
 		{
 			ValueString vName = new ValueString("l3.body");

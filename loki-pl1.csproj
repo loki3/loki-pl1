@@ -40,6 +40,7 @@
     <Compile Include="DelimiterList.cs" />
     <Compile Include="EvalBody.cs" />
     <Compile Include="EvalBuiltin.cs" />
+    <Compile Include="EvalLines.cs" />
     <Compile Include="EvalList.cs" />
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="TEST_Conditional.cs" />
     <Compile Include="TEST_CreateFunction.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
+    <Compile Include="TEST_EvalLines.cs" />
     <Compile Include="TEST_EvalList.cs" />
     <Compile Include="TEST_Logic.cs" />
     <Compile Include="TEST_Math.cs" />

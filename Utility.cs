@@ -34,5 +34,17 @@ namespace loki3.core
 				return ValueMap.Combine(a as ValueMap, b as ValueMap);
 			return null;
 		}
+
+		/// <summary>Count the number of whitespace chars at the start of the line</summary>
+		internal static int CountIndent(string s)
+		{
+			int count = 0;
+			foreach (char c in s)
+				if (System.Char.IsWhiteSpace(c))
+					count++;
+				else
+					break;
+			return count;
+		}
 	}
 }

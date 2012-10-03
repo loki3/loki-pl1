@@ -40,20 +40,8 @@ namespace loki3.core
 				{
 					ValueFunction function = value as ValueFunction;
 					// get previous & next nodes if needed
-					DelimiterNode previous = null;
-					if (function.ConsumesPrevious)
-					{
-						previous = nodes.GetPrevious();
-						if (previous == null)
-							throw new MissingAdjacentValueException(token, true/*bPrevious*/);
-					}
-					DelimiterNode next = null;
-					if (function.ConsumesNext)
-					{
-						next = nodes.GetNext();
-						if (next == null)
-							throw new MissingAdjacentValueException(token, false/*bPrevious*/);
-					}
+					DelimiterNode previous = (function.ConsumesPrevious ? nodes.GetPrevious() : null);
+					DelimiterNode next = (function.ConsumesNext ? nodes.GetNext() : null);
 
 					// evaluate
 					return function.Eval(previous, next, scope, nodes);

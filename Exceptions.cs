@@ -39,6 +39,22 @@ namespace loki3.core
 	}
 
 	/// <summary>
+	/// A function required a body but a body wasn't provided
+	/// </summary>
+	internal class MissingBodyException : Exception
+	{
+		internal MissingBodyException(ValueFunction function)
+		{
+			m_function = function;
+		}
+
+		/// <summary>Function that needed a body</summary>
+		public ValueFunction Function { get { return m_function; } }
+
+		private ValueFunction m_function;
+	}
+
+	/// <summary>
 	/// Could not parse token
 	/// </summary>
 	internal class UnrecognizedTokenException : Exception

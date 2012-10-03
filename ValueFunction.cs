@@ -52,10 +52,20 @@ namespace loki3.core
 		#region Keys
 		internal static string keyPreviousPattern = "l3.func.previous";
 		internal static string keyNextPattern = "l3.func.next";
+		internal static string keyBody = "l3.func.body";
 		#endregion
 
 		internal bool ConsumesPrevious { get { return Metadata.ContainsKey(keyPreviousPattern); } }
 		internal bool ConsumesNext { get { return Metadata.ContainsKey(keyNextPattern); } }
+
+		/// <summary>Retrieve the body off the argument</summary>
+		internal static List<Value> GetBody(Value arg)
+		{
+			Map map = arg.AsMap;
+			if (map == null || !map.ContainsKey(keyBody))
+				return null;
+			return map[keyBody].AsArray;
+		}
 
 		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes);
 	}
@@ -70,6 +80,8 @@ namespace loki3.core
 
 		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
+			if (next == null)
+				return this;	// without parameters, it's still a function
 			Value post = EvalNode.Do(next, scope, nodes);
 			Value match, leftover;
 			if (!PatternChecker.Do(post, Metadata[keyNextPattern], out match, out leftover))
@@ -93,6 +105,8 @@ namespace loki3.core
 
 		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
+			if (prev == null)
+				return this;	// without parameters, it's still a function
 			Value pre = EvalNode.Do(prev, scope, nodes);
 			Value match, leftover;
 			if (!PatternChecker.Do(pre, Metadata[keyPreviousPattern], out match, out leftover))
