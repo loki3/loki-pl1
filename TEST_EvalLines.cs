@@ -6,24 +6,6 @@ namespace loki3.core.test
 	[TestFixture]
 	class TEST_EvalLines
 	{
-		/// <summary>provide interface for EvalLines consuming an array of strings</summary>
-		internal class HandOffLines : ILineRequestor
-		{
-			internal HandOffLines(string[] lines) { m_lines = lines; }
-
-			#region ILineRequestor Members
-			public string GetNextLine()
-			{
-				return (m_current >= m_lines.Length ? null : m_lines[m_current++]);
-			}
-
-
-			#endregion
-
-			private string[] m_lines;
-			private int m_current = 0;
-		}
-
 		/// <summary>[a1 a2] -> a1 - a2</summary>
 		class SubtractArray : ValueFunctionPre
 		{
@@ -44,9 +26,9 @@ namespace loki3.core.test
 		}
 
 		/// <summary>adds up everything in the body</summary>
-		class AddBody : ValueFunctionPre
+		class AddUpBody : ValueFunctionPre
 		{
-			internal AddBody()
+			internal AddUpBody()
 			{
 				Init(PatternData.Body());
 			}
@@ -54,11 +36,11 @@ namespace loki3.core.test
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> body = ValueFunction.GetBody(arg);
+				LineConsumer consumer = new LineConsumer(body);
 				int total = 0;
-				foreach (Value line in body)
+				while (consumer.HasCurrent())
 				{
-					DelimiterList list = ParseLine.Do(line.AsString, scope);
-					Value value = EvalList.Do(list.Nodes, scope);
+					Value value = EvalLines.DoOne(consumer, scope);
 					total += value.AsInt;
 				}
 				return new ValueInt(total);
@@ -69,7 +51,7 @@ namespace loki3.core.test
 		{
 			ScopeChain scope = new ScopeChain(null);
 			scope.SetValue("subtract", new SubtractArray());
-			scope.SetValue("add", new AddBody());
+			scope.SetValue("add", new AddUpBody());
 
 			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
 			scope.SetValue("[", square);
@@ -82,7 +64,7 @@ namespace loki3.core.test
 		{
 			{	// simple int
 				string[] strings = { "5" };
-				HandOffLines lines = new HandOffLines(strings);
+				LineConsumer lines = new LineConsumer(strings);
 				IScope scope = CreateScope();
 				Value value = EvalLines.Do(lines, scope);
 				Assert.AreEqual(5, value.AsInt);
@@ -90,7 +72,7 @@ namespace loki3.core.test
 
 			{	// function
 				string[] strings = { "subtract [ 7 4 ]" };
-				HandOffLines lines = new HandOffLines(strings);
+				LineConsumer lines = new LineConsumer(strings);
 				IScope scope = CreateScope();
 				Value value = EvalLines.Do(lines, scope);
 				Assert.AreEqual(3, value.AsInt);
@@ -99,7 +81,7 @@ namespace loki3.core.test
 #if false
 			{	// functions
 				string[] strings = { "subtract [ 7 subtract [ 15 11 ] ]" };
-				HandOffLines lines = new HandOffLines(strings);
+				LineConsumer lines = new LineConsumer(strings);
 				IScope scope = CreateScope();
 				Value value = EvalLines.Do(lines, scope);
 				Assert.AreEqual(3, value.AsInt);
@@ -113,10 +95,22 @@ namespace loki3.core.test
 		{
 			{
 				string[] strings = { "add", " 5", " 4" };
-				HandOffLines lines = new HandOffLines(strings);
+				LineConsumer lines = new LineConsumer(strings);
 				IScope scope = CreateScope();
 				Value value = EvalLines.Do(lines, scope);
 				Assert.AreEqual(9, value.AsInt);
+			}
+		}
+
+		[Test]
+		public void TestNestedBodies()
+		{
+			{	// 5 + (3 + 4) + 7
+				string[] strings = { "add", " 5", " add", "  3", "  4", " 7" };
+				LineConsumer lines = new LineConsumer(strings);
+				IScope scope = CreateScope();
+				Value value = EvalLines.Do(lines, scope);
+				Assert.AreEqual(19, value.AsInt);
 			}
 		}
 	}

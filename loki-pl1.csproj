@@ -45,6 +45,7 @@
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Conditional.cs" />
+    <Compile Include="ILineRequestor.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Math.cs" />

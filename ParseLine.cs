@@ -14,14 +14,6 @@ namespace loki3.core
 		ValueDelimiter GetDelim(string start);
 	}
 
-	/// <summary>
-	/// Interface for getting the following line(s) if needed
-	/// </summary>
-	interface ILineRequestor
-	{
-		string GetNextLine();
-	}
-
 
 	/// <summary>
 	/// Parses a single line of tokens separated by white space.
