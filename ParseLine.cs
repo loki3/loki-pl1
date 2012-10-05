@@ -119,7 +119,7 @@ namespace loki3.core
 			}
 
 			// didn't find closing delimiter, TODO request the next line
-			if (thisDelim != ValueDelimiter.Line)
+			if (thisDelim != ValueDelimiter.Line && thisDelim.End != "")
 				throw new UndelimitedException(thisDelim);
 
 			iEnd = strs.Length;

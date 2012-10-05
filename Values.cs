@@ -17,6 +17,8 @@ namespace loki3.builtin
 			scope.SetValue("l3.createMap", new CreateMap());
 			scope.SetValue("l3.createFunction", new CreateFunction());
 			scope.SetValue("l3.createDelimiter", new CreateDelimiter());
+			scope.SetValue("l3.createEvalDelimiter", new CreateEvalDelimiter());
+			scope.SetValue("l3.createArrayDelimiter", new CreateArrayDelimiter());
 		}
 
 
@@ -135,6 +137,45 @@ namespace loki3.builtin
 
 				return new ValueDelimiter(start, end, type, function);
 			}
+		}
+
+
+		/// <summary>
+		/// string -> delimiter
+		/// Special bootstrapping method that attaches a delimiter to current scope,
+		/// splitting single parameter to get the actual delimeters
+		/// </summary>
+		abstract class CreateSimpleDelimiter : ValueFunctionPre
+		{
+			internal CreateSimpleDelimiter()
+			{
+				Value delims = PatternData.Single("delims", ValueType.String);
+				Init(delims);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				// extract the delimiter strings
+				string delims = arg.AsString;
+				string start = delims.Substring(0, delims.Length / 2);
+				string end = delims.Substring(delims.Length / 2, delims.Length - delims.Length / 2);
+
+				// create the delimiter & store it on the current scope
+				ValueDelimiter value = new ValueDelimiter(start, end, DelimiterType);
+				scope.SetValue(start, value);
+				return value;
+			}
+
+			protected abstract DelimiterType DelimiterType { get; }
+		}
+
+		class CreateEvalDelimiter : CreateSimpleDelimiter
+		{
+			protected override DelimiterType DelimiterType { get { return DelimiterType.AsValue; } }
+		}
+		class CreateArrayDelimiter : CreateSimpleDelimiter
+		{
+			protected override DelimiterType DelimiterType { get { return DelimiterType.AsArray; } }
 		}
 	}
 }

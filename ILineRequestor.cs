@@ -29,6 +29,14 @@ namespace loki3.core
 			foreach (Value line in lines)
 				m_lines[i++] = line.AsString;
 		}
+		internal LineConsumer(List<string> lines)
+		{
+			m_count = lines.Count;
+			m_lines = new string[m_count];
+			int i = 0;
+			foreach (string line in lines)
+				m_lines[i++] = line;
+		}
 		internal LineConsumer(string[] lines)
 		{
 			m_count = lines.GetLength(0);

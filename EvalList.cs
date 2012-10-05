@@ -90,6 +90,12 @@ namespace loki3.core
 					m_value = m_func.Eval(previous, next, scope, nodes);
 				}
 
+				if (m_value == null)
+				{	// e.g. because node was a comment
+					m_state = NodeState.Empty;
+					return;
+				}
+
 				// store new info about this node
 				m_node = new DelimiterNodeValue(m_value);
 				m_precedence = (int)m_value.Precedence;

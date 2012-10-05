@@ -4,9 +4,9 @@ using loki3.core;
 
 namespace loki3.builtin
 {
-	class AllBuiltins
+	internal class AllBuiltins
 	{
-		static void RegisterAll(IScope scope)
+		internal static void RegisterAll(IScope scope)
 		{
 			Conditional.Register(scope);
 			Logic.Register(scope);

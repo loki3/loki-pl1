@@ -40,6 +40,7 @@
     <Compile Include="DelimiterList.cs" />
     <Compile Include="EvalBody.cs" />
     <Compile Include="EvalBuiltin.cs" />
+    <Compile Include="EvalFile.cs" />
     <Compile Include="EvalLines.cs" />
     <Compile Include="EvalList.cs" />
     <Compile Include="EvalNode.cs" />
@@ -80,6 +81,7 @@
     <Content Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="l3\bootstrap.l3" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
