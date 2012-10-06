@@ -66,6 +66,17 @@ namespace loki3.core
 				return null;
 			return map[keyBody].AsArray;
 		}
+		/// <summary>Does function require body?</summary>
+		internal bool RequiresBody()
+		{
+			if (!ConsumesNext)
+				return false;
+			Value next = Metadata[ValueFunction.keyNextPattern];
+			if (!(next is ValueMap))
+				return (next is ValueString && next.AsString == "l3.body");
+			Map map = next.AsMap;
+			return map.ContainsKey("body");
+		}
 
 		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes);
 	}

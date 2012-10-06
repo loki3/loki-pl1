@@ -24,9 +24,16 @@ namespace loki3.core
 			DelimiterList list = ParseLine.Do(line, scope, requestor);
 			Value value = EvalList.Do(list.Nodes, scope);
 
+			bool requiresBody = false;
+			if (value is ValueFunction)
+			{
+				ValueFunction func = value as ValueFunction;
+				requiresBody = func.RequiresBody();
+			}
+
 			// if line created a partial function that needs a body,
 			// eval all subsequent indented lines
-			if (value is ValueFunction /* && function requires body */)
+			if (requiresBody)
 			{
 				ValueFunctionPre function = value as ValueFunctionPre;
 				int parentIndent = Utility.CountIndent(line);

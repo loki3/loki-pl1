@@ -31,10 +31,8 @@ namespace loki3.core
 			return Do(parsedLines, parent);
 		}
 
-		internal static Value Do(List<DelimiterList> parsedLines, IScope parent)
+		internal static Value Do(List<DelimiterList> parsedLines, IScope scope)
 		{
-			ScopeChain scope = new ScopeChain(parent);
-
 			// run each line, returning value of last line
 			Value retval = null;
 			foreach (DelimiterList line in parsedLines)
