@@ -74,7 +74,22 @@ namespace loki3.core
 			return true;
 		}
 
-		public override string ToString() { return m_val.ToString(); }
+		public override string ToString()
+		{
+			string s = "{ ";
+			Dictionary<string, Value>.KeyCollection keys = m_val.Keys;
+			bool bFirst = true;
+			foreach (string key in keys)
+			{
+				if (bFirst)
+					bFirst = false;
+				else
+					s += " , ";
+				s += ":" + key + " " + m_val[key].ToString();
+			}
+			s += " }";
+			return s;
+		}
 
 		private Dictionary<string, Value> m_val = null;
 	}

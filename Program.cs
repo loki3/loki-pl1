@@ -8,7 +8,15 @@ namespace loki_pl1
 	{
 		static void Main(string[] args)
 		{
-			IScope scope = Bootstrap();
+			try
+			{
+				IScope scope = Bootstrap();
+			}
+			catch (Loki3Exception error)
+			{
+				string s = error.ToString();
+				System.Diagnostics.Debug.WriteLine(s);
+			}
 		}
 
 		static ScopeChain Bootstrap()
