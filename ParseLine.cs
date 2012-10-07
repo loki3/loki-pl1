@@ -66,6 +66,7 @@ namespace loki3.core
 			}
 			else if (type == DelimiterType.AsString)
 			{	// simply search for end and stuff everything in the middle into a single token
+				// todo: leave the whitespace alone
 				string all = "";
 				for (int i = iStart; i < strs.Length; i++)
 				{
@@ -83,7 +84,7 @@ namespace loki3.core
 					all += s;
 				}
 			}
-			else
+			else // Value, Array && Raw
 			{	// handle as individual tokens and nested lists
 				for (int i = iStart; i < strs.Length; i++)
 				{

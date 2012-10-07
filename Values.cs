@@ -86,13 +86,8 @@ namespace loki3.builtin
 				// extract optional & required parameters
 				Value pre = map["pre"];
 				Value post = map["post"];
-				List<Value> valueBody = map["body"].AsArray;
+				List<Value> body = map["body"].AsArray;
 				Precedence order = (Precedence)(map["order"].AsInt);
-
-				// need a list of strings, not values
-				List<string> body = new List<string>(valueBody.Count);
-				foreach (Value v in valueBody)
-					body.Add(v.AsString);
 
 				return loki3.core.CreateFunction.Do(pre, post, body, order);
 			}
@@ -133,6 +128,8 @@ namespace loki3.builtin
 						type = DelimiterType.AsString;
 					else if (typestr == "asComment")
 						type = DelimiterType.AsComment;
+					else if (typestr == "asRaw")
+						type = DelimiterType.AsRaw;
 				}
 
 				return new ValueDelimiter(start, end, type, function);

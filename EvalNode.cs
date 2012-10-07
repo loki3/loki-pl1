@@ -79,6 +79,9 @@ namespace loki3.core
 						}
 						value = new ValueArray(values);
 						break;
+					case DelimiterType.AsRaw:
+						value = new ValueRaw(list);
+						break;
 				}
 
 				// run contents through a function if specified

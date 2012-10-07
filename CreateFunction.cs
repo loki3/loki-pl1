@@ -19,9 +19,9 @@ namespace loki3.core
 			/// </summary>
 			/// <param name="pattern1">pattern for parameters that come before function name</param>
 			/// <param name="pattern2">pattern for parameters that come after function name</param>
-			/// <param name="rawLines">body of function that will be parsed when neede</param>
+			/// <param name="rawLines">body of function that will be parsed if needed</param>
 			/// <param name="precedence">order that function should be evaled relative to other functions</param>
-			internal UserFunction(Value pattern1, Value pattern2, List<string> rawLines, Precedence precedence)
+			internal UserFunction(Value pattern1, Value pattern2, List<Value> rawLines, Precedence precedence)
 			{
 				Init(pattern1, pattern2, precedence);
 
@@ -113,10 +113,16 @@ namespace loki3.core
 				if (m_rawLines == null)
 					return;
 				m_parsedLines = new List<DelimiterList>(m_rawLines.Count);
-				foreach (string s in m_rawLines)
+				foreach (Value v in m_rawLines)
 				{
-					DelimiterList line = ParseLine.Do(s, delims);
-					m_parsedLines.Add(line);
+					DelimiterList line = null;
+					if (v is ValueString)
+						line = ParseLine.Do(v.AsString, delims);
+					else if (v is ValueRaw)
+						line = (v as ValueRaw).GetValue();
+
+					if (line != null)
+						m_parsedLines.Add(line);
 				}
 				m_rawLines = null;
 			}
@@ -125,7 +131,7 @@ namespace loki3.core
 			private bool m_useNext;
 			private Value m_pattern1;
 			private Value m_pattern2;
-			private List<string> m_rawLines;
+			private List<Value> m_rawLines;
 			private List<DelimiterList> m_parsedLines = null;
 
 			private Value m_passed;
@@ -137,13 +143,13 @@ namespace loki3.core
 		/// </summary>
 		/// <param name="pattern1">null, variable name, or pattern to match for previous token</param>
 		/// <param name="pattern2">null, variable name, or pattern to match for next token</param>
-		/// <param name="rawLines">lines to parse and run when function is invoked</param>
+		/// <param name="rawLines">lines to parse (if string, not ValueRaw) and run when function is invoked</param>
 		/// <param name="precedence">the order in which function should be evaled</param>
-		internal static ValueFunction Do(Value pattern1, Value pattern2, List<string> rawLines, Precedence precedence)
+		internal static ValueFunction Do(Value pattern1, Value pattern2, List<Value> rawLines, Precedence precedence)
 		{
 			return new UserFunction(pattern1, pattern2, rawLines, precedence);
 		}
-		internal static ValueFunction Do(Value pattern1, Value pattern2, List<string> rawLines)
+		internal static ValueFunction Do(Value pattern1, Value pattern2, List<Value> rawLines)
 		{
 			return new UserFunction(pattern1, pattern2, rawLines, Precedence.Medium);
 		}
@@ -158,15 +164,24 @@ namespace loki3.core
 		/// <param name="rawLines">lines to parse and run when function is invoked</param>
 		/// <param name="precedence">the order in which function should be evaled</param>
 		internal static void Do(IScope scope, string name,
-			Value pattern1, Value pattern2, List<string> rawLines, Precedence precedence)
+			Value pattern1, Value pattern2, List<Value> rawLines, Precedence precedence)
 		{
 			ValueFunction func = new UserFunction(pattern1, pattern2, rawLines, precedence);
 			scope.SetValue(name, func);
 		}
 		internal static void Do(IScope scope, string name,
-			Value pattern1, Value pattern2, List<string> rawLines)
+			Value pattern1, Value pattern2, List<Value> rawLines)
 		{
 			Do(scope, name, pattern1, pattern2, rawLines, Precedence.Medium);
+		}
+
+		internal static void Do(IScope scope, string name,
+			Value pattern1, Value pattern2, List<string> rawLines)
+		{
+			List<Value> lines = new List<Value>();
+			foreach (string s in rawLines)
+				lines.Add(new ValueString(s));
+			Do(scope, name, pattern1, pattern2, lines, Precedence.Medium);
 		}
 	}
 }

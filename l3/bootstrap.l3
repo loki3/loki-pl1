@@ -3,9 +3,11 @@ l3.createArrayDelimiter :[]
 l3.setValue [ :{ ( l3.createDelimiter l3.createMap [ :start :{  :end :} :type :asArray :function l3.createMap ] ) ]
 l3.setValue [ :// ( l3.createDelimiter { :start ://  :end : :type :asComment } ) ]
 l3.setValue [ :" ( l3.createDelimiter { :start :"  :end :" :type :asString } ) ]
+l3.setValue [ :` ( l3.createDelimiter { :start :`  :end :` :type :asRaw } ) ]
 
 // the first lines created [] as the array delimiter, {} as the map delimeter,
-// " as a string delimiter and // as comment delimiters giving us some useful syntax
+// " as a string delimiter, ` as the raw delimiter
+// and // as comment delimiters giving us some useful syntax
 
 // assignment
-l3.setValue [ := ( l3.createFunction { :pre :key :post :value :order 0 :body [ " l3.setValue [ :key :value ] " ] } ) ]
+l3.setValue [ := ( l3.createFunction { :pre :key :post :value :order 0 :body [ ` l3.setValue [ key value ] ` ] } ) ]

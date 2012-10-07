@@ -15,6 +15,7 @@ namespace loki3.core
 		Map,
 		Function,
 		Delimiter,
+		Raw,	// DelimiterNode
 	}
 
 	/// <summary>
@@ -260,5 +261,31 @@ namespace loki3.core
 		}
 
 		public override string ToString() { return m_val.ToString(); }
+	}
+
+	/// <summary>
+	/// Unevaled nodes
+	/// </summary>
+	internal class ValueRaw : ValueBase<DelimiterList>
+	{
+		internal ValueRaw(DelimiterList val)
+		{
+			m_val = val;
+		}
+
+		#region Value
+		internal override ValueType Type
+		{
+			get { return ValueType.Raw; }
+		}
+
+		internal override bool Equals(Value v)
+		{
+			ValueRaw other = v as ValueRaw;
+			if (other == null)
+				return false;
+			return m_val.Equals(other.m_val);
+		}
+		#endregion
 	}
 }

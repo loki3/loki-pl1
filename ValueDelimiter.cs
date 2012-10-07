@@ -9,6 +9,7 @@ namespace loki3.core
 		AsString,	// leaves contents as a string
 		AsValue,	// eval contents into a single value
 		AsArray,	// eval each node, creating an array of values
+		AsRaw,		// don't eval yet
 	}
 
 	/// <summary>
