@@ -54,6 +54,7 @@
     <Compile Include="PatternData.cs" />
     <Compile Include="PatternChecker.cs" />
     <Compile Include="ScopeChain.cs" />
+    <Compile Include="TEST_Bootstrap.cs" />
     <Compile Include="TEST_Conditional.cs" />
     <Compile Include="TEST_CreateFunction.cs" />
     <Compile Include="TEST_EvalBuiltin.cs" />
