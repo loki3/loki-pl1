@@ -28,13 +28,13 @@ namespace loki3.core
 
 		// request value as a particular type
 		internal virtual bool IsNil { get { return false; } }
-		internal virtual bool AsBool { get { throw new WrongTypeException(ValueType.Bool, Type); } }
-		internal virtual int AsInt { get { throw new WrongTypeException(ValueType.Int, Type); } }
-		internal virtual double AsFloat { get { throw new WrongTypeException(ValueType.Float, Type); } }
-		internal virtual double AsForcedFloat { get { throw new WrongTypeException(ValueType.Float, Type); } }
-		internal virtual string AsString { get { throw new WrongTypeException(ValueType.String, Type); } }
-		internal virtual List<Value> AsArray { get { throw new WrongTypeException(ValueType.Array, Type); } }
-		internal virtual Map AsMap { get { throw new WrongTypeException(ValueType.Map, Type); } }
+		internal virtual bool AsBool { get { throw new Loki3Exception().AddWrongType(ValueType.Bool, Type); } }
+		internal virtual int AsInt { get { throw new Loki3Exception().AddWrongType(ValueType.Int, Type); } }
+		internal virtual double AsFloat { get { throw new Loki3Exception().AddWrongType(ValueType.Float, Type); } }
+		internal virtual double AsForcedFloat { get { throw new Loki3Exception().AddWrongType(ValueType.Float, Type); } }
+		internal virtual string AsString { get { throw new Loki3Exception().AddWrongType(ValueType.String, Type); } }
+		internal virtual List<Value> AsArray { get { throw new Loki3Exception().AddWrongType(ValueType.Array, Type); } }
+		internal virtual Map AsMap { get { throw new Loki3Exception().AddWrongType(ValueType.Map, Type); } }
 
 		/// <summary>Get this value's metadata.  May be null.</summary>
 		internal Map Metadata { get { return m_metadata; } }

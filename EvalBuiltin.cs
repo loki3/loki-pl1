@@ -37,7 +37,7 @@ namespace loki3.core
 				return new ValueString(s.Substring(1));
 
 			// give up
-			throw new UnrecognizedTokenException(token);
+			throw new Loki3Exception().AddBadToken(token);
 		}
 	}
 }

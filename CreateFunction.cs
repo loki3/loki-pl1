@@ -68,13 +68,13 @@ namespace loki3.core
 					Value value1 = EvalNode.Do(prev, scope, nodes);
 					Value match, leftover;
 					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], out match, out leftover))
-						throw new WrongPatternException(Metadata[keyPreviousPattern], value1);
+						throw new Loki3Exception().AddWrongPattern(Metadata[keyPreviousPattern], value1);
 
 					if (leftover != null)
 					{
 						if (m_useNext)
 							// currently can't do partials for infix
-							throw new WrongPatternException(Metadata[keyPreviousPattern], value1);
+							throw new Loki3Exception().AddWrongPattern(Metadata[keyPreviousPattern], value1);
 						// create a partial function that starts w/ match & still needs leftover
 						return new UserFunction(this, match, leftover, null);
 					}
@@ -86,13 +86,13 @@ namespace loki3.core
 					Value value2 = EvalNode.Do(next, scope, nodes);
 					Value match, leftover;
 					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], out match, out leftover))
-						throw new WrongPatternException(Metadata[keyNextPattern], value2);
+						throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], value2);
 
 					if (leftover != null)
 					{
 						if (m_usePrevious)
 							// currently can't do partials for infix
-							throw new WrongPatternException(Metadata[keyNextPattern], value2);
+							throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], value2);
 						// create a partial function that starts w/ match & still needs leftover
 						return new UserFunction(this, match, null, leftover);
 					}

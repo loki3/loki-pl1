@@ -51,10 +51,10 @@ namespace loki3.builtin.test
 			{
 				ToValue("l3.add [ 3 true 1 ]", scope);
 			}
-			catch (WrongTypeException e)
+			catch (Loki3Exception e)
 			{
-				Assert.AreEqual(loki3.core.ValueType.Float, e.Expected);
-				Assert.AreEqual(loki3.core.ValueType.Bool, e.Actual);
+				Assert.AreEqual(loki3.core.ValueType.Float, e.ExpectedType);
+				Assert.AreEqual(loki3.core.ValueType.Bool, e.ActualType);
 				bException = true;
 			}
 			Assert.True(bException);
@@ -79,7 +79,7 @@ namespace loki3.builtin.test
 			{
 				ToValue("l3.subtract [ true ]", scope);
 			}
-			catch (WrongPatternException)
+			catch (Loki3Exception)
 			{
 				bException = true;
 			}

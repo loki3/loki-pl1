@@ -151,8 +151,10 @@ namespace loki3.core.test
 			{
 				Value result = EvalNode.Do(ToNode("qwer"), scope, values);
 			}
-			catch (UnrecognizedTokenException)
+			catch (Loki3Exception e)
 			{
+				Assert.True(e.Errors.ContainsKey(Loki3Exception.keyBadToken));
+				Assert.AreEqual("qwer", e.Errors[Loki3Exception.keyBadToken].AsString);
 				bCatch = true;
 			}
 			Assert.True(bCatch);

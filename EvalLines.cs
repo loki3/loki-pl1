@@ -52,7 +52,7 @@ namespace loki3.core
 
 				// we've built the entire body - now pass it to function
 				if (body.Count == 0)
-					throw new MissingBodyException(function);
+					throw new Loki3Exception().AddMissingBody(function);
 				Map map = new Map();
 				map[ValueFunction.keyBody] = new ValueArray(body);
 				value = function.Eval(new ValueMap(map), new ScopeChain(scope));
