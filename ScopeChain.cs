@@ -11,6 +11,9 @@ namespace loki3.core
 
 		/// <summary>Stores a value on a token</summary>
 		void SetValue(string token, Value value);
+
+		/// <summary>Get parent scope, if any</summary>
+		IScope Parent { get; }
 	}
 
 	/// <summary>
@@ -45,6 +48,11 @@ namespace loki3.core
 			if (m_values.TryGetValue(start, out val))
 				return val as ValueDelimiter;
 			return (m_parent != null ? m_parent.GetDelim(start) : null);
+		}
+
+		public IScope Parent
+		{
+			get { return m_parent; }
 		}
 
 		#endregion

@@ -22,24 +22,33 @@ namespace loki3.builtin
 		}
 
 
-		/// <summary>[key value] -> value  and stores the key value pair on the current scope</summary>
+		/// <summary>{ :key :value [:scope] } -> value  and stores the key value pair on the current scope</summary>
 		class SetValue : ValueFunctionPre
 		{
 			internal SetValue()
 			{
-				List<Value> list = new List<Value>();
-				list.Add(PatternData.Single("key", ValueType.String));
-				list.Add(PatternData.Single("value"));
-				ValueArray array = new ValueArray(list);
-				Init(array);
+				Map map = new Map();
+				map["key"] = PatternData.Single("key", ValueType.String);
+				map["value"] = PatternData.Single("value");
+				map["scope"] = PatternData.Single("scope", ValueType.String, new ValueString("current"));
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
 			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
-				List<Value> list = arg.AsArray;
-				string key = list[0].AsString;
-				Value value = list[1];
-				scope.SetValue(key, value);
+				Map map = arg.AsMap;
+
+				// extract parameters
+				string key = map["key"].AsString;
+				Value value = map["value"];
+				// todo: turn this into an enum, at least "current" & "parent"
+				bool bParentScope = (map["scope"].AsString == "parent");
+
+				if (bParentScope && scope.Parent != null)
+					scope.Parent.SetValue(key, value);
+				else
+					scope.SetValue(key, value);
 				return value;
 			}
 		}

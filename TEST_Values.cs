@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using loki3.core;
+using loki3.builtin;
 using NUnit.Framework;
 
 namespace loki3.builtin.test
@@ -8,6 +9,27 @@ namespace loki3.builtin.test
 	[TestFixture]
 	class TEST_Values
 	{
+		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
+		class CreateMap : ValueFunctionPre
+		{
+			internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				List<Value> list = arg.AsArray;
+
+				Map map = new Map();
+				int count = list.Count;
+				for (int i = 0; i < count; i += 2)
+				{
+					string key = list[i].AsString;
+					Value value = list[i + 1];
+					map[key] = value;
+				}
+				return new ValueMap(map);
+			}
+		}
+
 		static IScope CreateValueScope()
 		{
 			ScopeChain scope = new ScopeChain(null);
@@ -16,6 +38,7 @@ namespace loki3.builtin.test
 			scope.SetValue("(", new ValueDelimiter("(", ")", DelimiterType.AsValue));
 			scope.SetValue("[", new ValueDelimiter("[", "]", DelimiterType.AsArray));
 			scope.SetValue("'", new ValueDelimiter("'", "'", DelimiterType.AsString));
+			scope.SetValue("{", new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap()));
 
 			return scope;
 		}
@@ -32,7 +55,7 @@ namespace loki3.builtin.test
 			IScope scope = CreateValueScope();
 
 			{
-				Value value = ToValue("l3.setValue [ :a 5 ]", scope);
+				Value value = ToValue("l3.setValue { :key :a :value 5 }", scope);
 				Assert.AreEqual(5, value.AsInt);
 
 				Value fetch = scope.GetValue(new Token("a"));
@@ -40,7 +63,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// change a
-				Value value = ToValue("l3.setValue [ :a 7.5 ]", scope);
+				Value value = ToValue("l3.setValue { :key :a :value 7.5 }", scope);
 				Assert.AreEqual(7.5, value.AsFloat);
 
 				Value fetch = scope.GetValue(new Token("a"));
@@ -48,7 +71,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// set an array
-				Value value = ToValue("l3.setValue [ :key [ a 2 false ] ]", scope);
+				Value value = ToValue("l3.setValue { :key :key :value [ a 2 false ] }", scope);
 				List<Value> array = value.AsArray;
 				Assert.AreEqual(3, array.Count);
 				Assert.AreEqual(7.5, array[0].AsFloat);
@@ -84,7 +107,7 @@ namespace loki3.builtin.test
 			Math.Register(scope);
 
 			{	// prefix
-				Value value = ToValue("l3.createFunction l3.createMap [ :post :x :body [ ' l3.add [ 3 x ] ' ] ]", scope);
+				Value value = ToValue("l3.createFunction { :post :x :body [ ' l3.add [ 3 x ] ' ] }", scope);
 				ValueFunction func = value as ValueFunction;
 
 				List<DelimiterNode> nodes = new List<DelimiterNode>();
@@ -96,7 +119,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// postfix
-				Value value = ToValue("l3.createFunction l3.createMap [ :pre :x :body [ ' l3.add [ 7 x ] ' ] ]", scope);
+				Value value = ToValue("l3.createFunction { :pre :x :body [ ' l3.add [ 7 x ] ' ] }", scope);
 				ValueFunction func = value as ValueFunction;
 
 				List<DelimiterNode> nodes = new List<DelimiterNode>();
@@ -109,7 +132,7 @@ namespace loki3.builtin.test
 
 			{	// infix
 				// first add the + function to the current scope
-				Value value = ToValue("l3.setValue [ :+ ( l3.createFunction l3.createMap [ :pre :x  :post :y :body [ ' l3.add [ x y ] ' ] ] ) ]", scope);
+				Value value = ToValue("l3.setValue { :key :+ :value ( l3.createFunction l3.createMap [ :pre :x  :post :y :body [ ' l3.add [ x y ] ' ] ] ) }", scope);
 				ValueFunction func = value as ValueFunction;
 
 				// next, use it
@@ -125,7 +148,7 @@ namespace loki3.builtin.test
 
 			{	// {} should mean create a map from the contents
 				// first add the + function to the current scope
-				Value value = ToValue("l3.setValue [ :{ ( l3.createDelimiter l3.createMap [ :start :{  :end :} :type :asArray :function l3.createMap ] ) ]", scope);
+				Value value = ToValue("l3.setValue { :key :{ :value ( l3.createDelimiter { :start :{  :end :} :type :asArray :function l3.createMap } ) }", scope);
 				ValueDelimiter delimi = value as ValueDelimiter;
 
 				// next, use it
