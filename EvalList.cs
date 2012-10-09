@@ -69,6 +69,7 @@ namespace loki3.core
 			internal bool IsEmpty { get { return m_state == NodeState.Empty; } }
 			internal bool HasFunction { get { return m_state == NodeState.Function; } }
 			internal bool HasValue { get { return m_state == NodeState.Value; } }
+			internal bool CantEval { get { return m_state == NodeState.CantEval; } }
 			internal Value Value { get { return m_value; } }
 			internal DelimiterNode Node { get { return m_node; } }
 
@@ -171,6 +172,9 @@ namespace loki3.core
 				// if the only thing left is a function, there's nothing further to do
 				if (empties == count - 1 && m_nodes[m_evalIndex].HasFunction)
 					return false;
+				// if we found something we can't eval, it's an error
+				if (m_nodes[m_evalIndex].CantEval)
+					throw new Loki3Exception().AddBadToken(m_nodes[m_evalIndex].Node.Token);
 
 				// eval the one we found
 				m_nodes[m_evalIndex].Eval(m_scope, this);
