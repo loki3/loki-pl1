@@ -11,11 +11,26 @@ namespace loki_pl1
 			try
 			{
 				IScope scope = Bootstrap();
+				string s = "";
+				do
+				{
+					Console.Write("loki3> ");
+					s = Console.ReadLine();
+					try
+					{
+						DelimiterList list = ParseLine.Do(s, scope);
+						Value v = EvalList.Do(list.Nodes, scope);
+						Console.WriteLine(v.ToString());
+					}
+					catch (Loki3Exception error)
+					{
+						Console.WriteLine(error.ToString());
+					}
+				} while (s != "");
 			}
 			catch (Loki3Exception error)
 			{
-				string s = error.ToString();
-				System.Diagnostics.Debug.WriteLine(s);
+				System.Diagnostics.Debug.WriteLine(error.ToString());
 			}
 		}
 
