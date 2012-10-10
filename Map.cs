@@ -77,15 +77,18 @@ namespace loki3.core
 		public override string ToString()
 		{
 			string s = "{ ";
-			Dictionary<string, Value>.KeyCollection keys = m_val.Keys;
-			bool bFirst = true;
-			foreach (string key in keys)
+			if (m_val != null)
 			{
-				if (bFirst)
-					bFirst = false;
-				else
-					s += " , ";
-				s += ":" + key + " " + m_val[key].ToString();
+				Dictionary<string, Value>.KeyCollection keys = m_val.Keys;
+				bool bFirst = true;
+				foreach (string key in keys)
+				{
+					if (bFirst)
+						bFirst = false;
+					else
+						s += " , ";
+					s += ":" + key + " " + m_val[key].ToString();
+				}
 			}
 			s += " }";
 			return s;

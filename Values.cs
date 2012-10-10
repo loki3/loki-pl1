@@ -19,6 +19,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.createDelimiter", new CreateDelimiter());
 			scope.SetValue("l3.createEvalDelimiter", new CreateEvalDelimiter());
 			scope.SetValue("l3.createArrayDelimiter", new CreateArrayDelimiter());
+			scope.SetValue("l3.getMetadata", new GetMetadata());
 		}
 
 
@@ -182,6 +183,53 @@ namespace loki3.builtin
 		class CreateArrayDelimiter : CreateSimpleDelimiter
 		{
 			protected override DelimiterType DelimiterType { get { return DelimiterType.AsArray; } }
+		}
+
+		/// <summary>
+		/// { [:key : string] [:value] [:writable? : bool] ] } -> map containing the metadata
+		/// Either pass key to do a lookup or a specific value.
+		/// If writable?, make sure metadata map exists before returning
+		/// </summary>
+		class GetMetadata : ValueFunctionPre
+		{
+			internal GetMetadata()
+			{
+				Map map = new Map();
+				map["key"] = PatternData.Single("key", ValueType.String, ValueNil.Nil);
+				map["value"] = PatternData.Single("value", ValueNil.Nil);
+				map["writable?"] = PatternData.Single("writable?", ValueType.Bool, ValueBool.False);
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+
+				// either lookup up value w/ specified key or just get specified value
+				Value value = null;
+				Value key = map["key"];
+				if (key != ValueNil.Nil)
+				{
+					Token token = new Token(map["key"].AsString);
+					value = scope.GetValue(token);
+					if (value == null)
+						throw new Loki3Exception().AddBadToken(token);
+				}
+				else if (map.ContainsKey("value"))
+				{
+					value = map["value"];
+				}
+
+				// return associated metadata
+				if (value == null)
+					return ValueNil.Nil;
+				bool writable = map["writable?"].AsBool;
+				Map meta = writable ? value.WritableMetadata : value.Metadata;
+				if (meta == null)
+					return ValueNil.Nil;
+				return new ValueMap(meta);
+			}
 		}
 	}
 }

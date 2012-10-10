@@ -112,6 +112,9 @@ namespace loki3.core
 			m_val = val;
 		}
 
+		internal static ValueBool True { get { return m_true; } }
+		internal static ValueBool False { get { return m_false; } }
+
 		#region Value
 		internal override ValueType Type
 		{
@@ -128,6 +131,9 @@ namespace loki3.core
 		#endregion
 
 		public override string ToString() { return m_val.ToString(); }
+
+		private static ValueBool m_true = new ValueBool(true);
+		private static ValueBool m_false = new ValueBool(false);
 	}
 
 	/// <summary>
