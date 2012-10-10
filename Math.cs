@@ -24,7 +24,11 @@ namespace loki3.builtin
 		/// <summary>[a1 a2 ... an] -> a1 + a2 + ... + an</summary>
 		class AddArray : ValueFunctionPre
 		{
-			internal AddArray() { Init(PatternData.ArrayEnd("a", ValueType.Number)); }
+			internal AddArray()
+			{
+				SetDocString("Return sum of the numbers in the array.");
+				Init(PatternData.ArrayEnd("a", ValueType.Number));
+			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
@@ -61,6 +65,7 @@ namespace loki3.builtin
 		{
 			internal Subtract()
 			{
+				SetDocString("Return [0] - [1].");
 				List<Value> list = new List<Value>();
 				list.Add(PatternData.Single("a", ValueType.Number));
 				list.Add(PatternData.Single("b", ValueType.Number));
@@ -86,7 +91,11 @@ namespace loki3.builtin
 		/// <summary>[a1 a2 ... an] -> a1 * a2 * ... * an</summary>
 		class MultiplyArray : ValueFunctionPre
 		{
-			internal MultiplyArray() { Init(PatternData.ArrayEnd("a", ValueType.Number)); }
+			internal MultiplyArray()
+			{
+				SetDocString("Return product of the numbers in the array.");
+				Init(PatternData.ArrayEnd("a", ValueType.Number));
+			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
@@ -123,6 +132,8 @@ namespace loki3.builtin
 		{
 			internal Divide()
 			{
+				SetDocString("Return [0] / [1].");
+
 				List<Value> list = new List<Value>();
 				list.Add(PatternData.Single("a", ValueType.Number));
 				list.Add(PatternData.Single("b", ValueType.Number));
@@ -148,7 +159,11 @@ namespace loki3.builtin
 		/// <summary>a -> sqrt(a)</summary>
 		class SquareRoot : ValueFunctionPre
 		{
-			internal SquareRoot() { Init(PatternData.Single("a", ValueType.Number)); }
+			internal SquareRoot()
+			{
+				SetDocString("Return square root of number.");
+				Init(PatternData.Single("a", ValueType.Number));
+			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{

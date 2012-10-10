@@ -51,6 +51,13 @@ namespace loki3.core
 			}
 		}
 
+		/// <summary>Add a description of this value</summary>
+		internal void SetDocString(string doc)
+		{
+			Map meta = WritableMetadata;
+			meta[keyDoc] = new ValueString(doc);
+		}
+
 		#region Keys
 		internal static string keyPrecedence = "l3.value.precedence";
 		internal static string keyDoc = "l3.value.doc";
@@ -219,7 +226,7 @@ namespace loki3.core
 		internal override string AsString { get { return m_val; } }
 		#endregion
 
-		public override string ToString() { return m_val; }
+		public override string ToString() { return "\"" + m_val + "\""; }
 	}
 
 	/// <summary>

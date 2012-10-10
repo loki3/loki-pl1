@@ -25,6 +25,8 @@ namespace loki3.builtin
 		{
 			internal IsEqual()
 			{
+				SetDocString("If both elements in array are equal, return true, else false.");
+
 				List<Value> list = new List<Value>();
 				list.Add(PatternData.Single("a"));
 				list.Add(PatternData.Single("b"));
@@ -46,6 +48,8 @@ namespace loki3.builtin
 		{
 			internal LogicalAnd()
 			{
+				SetDocString("Return true only if both values of array are true.");
+
 				List<Value> list = new List<Value>();
 				list.Add(PatternData.Single("a", ValueType.Bool));
 				list.Add(PatternData.Single("b", ValueType.Bool));
@@ -65,6 +69,8 @@ namespace loki3.builtin
 		{
 			internal LogicalOr()
 			{
+				SetDocString("Return true if either value in array are true.");
+
 				List<Value> list = new List<Value>();
 				list.Add(PatternData.Single("a", ValueType.Bool));
 				list.Add(PatternData.Single("b", ValueType.Bool));
@@ -82,7 +88,11 @@ namespace loki3.builtin
 		/// <summary>bool -> bool,  NOT a</summary>
 		class LogicalNot : ValueFunctionPre
 		{
-			internal LogicalNot() { Init(PatternData.Single("a", ValueType.Bool)); }
+			internal LogicalNot()
+			{
+				SetDocString("Return true if value is false, else false.");
+				Init(PatternData.Single("a", ValueType.Bool));
+			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{

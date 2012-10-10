@@ -22,6 +22,8 @@ namespace loki3.builtin
 		{
 			internal If()
 			{
+				SetDocString("If do?, evaluate body and return the last value in body.\nElse return false.");
+
 				Map map = new Map();
 				map["do?"] = PatternData.Single("do?", ValueType.Bool);
 				map["body"] = PatternData.Body();

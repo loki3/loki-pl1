@@ -28,6 +28,8 @@ namespace loki3.builtin
 		{
 			internal SetValue()
 			{
+				SetDocString("Set the value on given map key.\nCan be stored on current or parent scope.");
+
 				Map map = new Map();
 				map["key"] = PatternData.Single("key", ValueType.String);
 				map["value"] = PatternData.Single("value");
@@ -57,7 +59,12 @@ namespace loki3.builtin
 		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
 		class CreateMap : ValueFunctionPre
 		{
-			internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
+			internal CreateMap()
+			{
+				SetDocString("Create a map from an array, where the elements alternate between the key and the associated value.");
+
+				Init(PatternData.ArrayEnd("a"));
+			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
@@ -80,6 +87,8 @@ namespace loki3.builtin
 		{
 			internal CreateFunction()
 			{
+				SetDocString("Create a function.\nSpecify the previous and/or next parameter patterns and the body.\nCan optionally specify the evaluation precedence relative to other functions.");
+
 				Map map = new Map();
 				map["pre"] = PatternData.Single("pre", new ValueNil());
 				map["post"] = PatternData.Single("post", new ValueNil());
@@ -108,6 +117,8 @@ namespace loki3.builtin
 		{
 			internal CreateDelimiter()
 			{
+				SetDocString("Create a delimiter, with start and end strings.\nOptionally specify how the contents should be interpreted and/or a function to be run on the contents.");
+
 				Map map = new Map();
 				map["start"] = PatternData.Single("start", ValueType.String);
 				map["end"] = PatternData.Single("end", ValueType.String);
@@ -156,6 +167,8 @@ namespace loki3.builtin
 		{
 			internal CreateSimpleDelimiter()
 			{
+				SetDocString("Useful bootstrapping function for attaching a delimiter to the current scope.");
+
 				Value delims = PatternData.Single("delims", ValueType.String);
 				Init(delims);
 			}
@@ -185,15 +198,13 @@ namespace loki3.builtin
 			protected override DelimiterType DelimiterType { get { return DelimiterType.AsArray; } }
 		}
 
-		/// <summary>
-		/// { [:key : string] [:value] [:writable? : bool] ] } -> map containing the metadata
-		/// Either pass key to do a lookup or a specific value.
-		/// If writable?, make sure metadata map exists before returning
-		/// </summary>
+		/// <summary>{ [:key : string] [:value] [:writable? : bool] ] } -> map containing the metadata</summary>
 		class GetMetadata : ValueFunctionPre
 		{
 			internal GetMetadata()
 			{
+				SetDocString("Get metadata attached to a value.\nEither pass key to do a lookup of a specific value.\nIf writable?, make sure metadata map exists before returning.");
+
 				Map map = new Map();
 				map["key"] = PatternData.Single("key", ValueType.String, ValueNil.Nil);
 				map["value"] = PatternData.Single("value", ValueNil.Nil);
