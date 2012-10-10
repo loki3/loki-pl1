@@ -24,16 +24,17 @@ namespace loki3.builtin
 		}
 
 
-		/// <summary>{ :key :value [:scope] } -> value  and stores the key value pair on the current scope</summary>
+		/// <summary>{ :key :value [:create?] [:scope] } -> value  and stores the key value pair on the current scope</summary>
 		class SetValue : ValueFunctionPre
 		{
 			internal SetValue()
 			{
-				SetDocString("Set the value on given map key.\nCan be stored on current or parent scope.");
+				SetDocString("Set the value on given map key.\nEither creates new variable on active scope or stores value on existing variable.\nCan be stored on current or parent scope.");
 
 				Map map = new Map();
 				map["key"] = PatternData.Single("key", ValueType.String);
 				map["value"] = PatternData.Single("value");
+				map["create?"] = PatternData.Single("create?", ValueType.Bool, ValueBool.True);
 				map["scope"] = PatternData.Single("scope", ValueType.String, new ValueString("current"));
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
@@ -46,13 +47,22 @@ namespace loki3.builtin
 				// extract parameters
 				string key = map["key"].AsString;
 				Value value = map["value"];
+				bool bCreate = map["create?"].AsBool;
 				// todo: turn this into an enum, at least "current" & "parent"
 				bool bParentScope = (map["scope"].AsString == "parent");
 
-				if (bParentScope && scope.Parent != null)
-					scope.Parent.SetValue(key, value);
+				IScope active = (bParentScope && scope.Parent != null) ? scope.Parent : scope;
+				if (bCreate)
+				{	// store on active scope, creating if needed
+					active.SetValue(key, value);
+				}
 				else
-					scope.SetValue(key, value);
+				{	// var must exist somewhere up the scope chain
+					active = active.Exists(key);
+					if (active == null)
+						throw new Loki3Exception().AddBadToken(new Token(key));
+					active.SetValue(key, value);
+				}
 				return value;
 			}
 		}

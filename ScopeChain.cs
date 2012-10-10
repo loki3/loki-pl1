@@ -12,6 +12,9 @@ namespace loki3.core
 		/// <summary>Stores a value on a token</summary>
 		void SetValue(string token, Value value);
 
+		/// <summary>Returns scope token exists on in the scope chain, or null</summary>
+		IScope Exists(string token);
+
 		/// <summary>Get parent scope, if any</summary>
 		IScope Parent { get; }
 
@@ -51,6 +54,13 @@ namespace loki3.core
 			if (m_values.TryGetValue(start, out val))
 				return val as ValueDelimiter;
 			return (m_parent != null ? m_parent.GetDelim(start) : null);
+		}
+
+		public IScope Exists(string token)
+		{
+			if (m_values.ContainsKey(token))
+				return this;
+			return (m_parent == null ? null : m_parent.Exists(token));
 		}
 
 		public IScope Parent

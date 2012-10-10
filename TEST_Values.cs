@@ -85,6 +85,38 @@ namespace loki3.builtin.test
 				Assert.AreEqual(2, fetchArray[1].AsInt);
 				Assert.AreEqual(false, fetchArray[2].AsBool);
 			}
+
+			// create a nested scope
+			IScope nested = new ScopeChain(scope);
+
+			{	// explicitly say create-if-needed
+				ToValue("l3.setValue { :key :created :value 3 :create? true }", nested);
+				Value fetch = nested.GetValue(new Token("created"));
+				Assert.AreEqual(3, fetch.AsInt);
+			}
+
+			{	// asking to reuse non-existent var throws
+				bool bThrew = false;
+				try
+				{
+					Value value = ToValue("l3.setValue { :key :doesnt-exist :value 3 :create? false }", nested);
+				}
+				catch (Loki3Exception e)
+				{
+					bThrew = true;
+					Assert.AreEqual("doesnt-exist", e.Errors[Loki3Exception.keyBadToken].AsString);
+				}
+				Assert.IsTrue(bThrew);
+			}
+
+			{	// set var on parent scope & reuse on nested scope
+				ToValue("l3.setValue { :key :on-parent :value 5 :create? true }", scope);
+				Assert.AreEqual(5, scope.AsMap["on-parent"].AsInt);
+				ToValue("l3.setValue { :key :on-parent :value 4 :create? false }", nested);
+				Assert.AreEqual(4, scope.AsMap["on-parent"].AsInt);
+				Assert.AreNotEqual(null, nested.Exists("on-parent"));
+				Assert.IsFalse(nested.AsMap.ContainsKey("on-parent"));
+			}
 		}
 
 		[Test]

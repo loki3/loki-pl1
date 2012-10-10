@@ -76,6 +76,7 @@ namespace loki3.core.test
 			}
 			public void SetValue(string token, Value value) { }
 			public ValueDelimiter GetDelim(string start) { return null; }
+			public IScope Exists(string token) { return null; }
 			public IScope Parent { get { return null; } }
 			public Map AsMap { get { return null; } }
 		}
