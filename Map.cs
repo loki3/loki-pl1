@@ -30,6 +30,16 @@ namespace loki3.core
 			}
 		}
 
+		internal bool TryGetValue(string p, out Value val)
+		{
+			if (m_val == null)
+			{
+				val = null;
+				return false;
+			}
+			return m_val.TryGetValue(p, out val);
+		}
+
 		/// <summary>Return value if present, else return a default</summary>
 		internal Value GetOptional(string key, Value ifmissing)
 		{

@@ -77,6 +77,7 @@ namespace loki3.core.test
 			public void SetValue(string token, Value value) { }
 			public ValueDelimiter GetDelim(string start) { return null; }
 			public IScope Parent { get { return null; } }
+			public Map AsMap { get { return null; } }
 		}
 
 		/// <summary>Returns previous and next values as ints</summary>

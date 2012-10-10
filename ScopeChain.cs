@@ -14,6 +14,9 @@ namespace loki3.core
 
 		/// <summary>Get parent scope, if any</summary>
 		IScope Parent { get; }
+
+		/// <summary>Get current scope as a map</summary>
+		Map AsMap { get; }
 	}
 
 	/// <summary>
@@ -55,9 +58,14 @@ namespace loki3.core
 			get { return m_parent; }
 		}
 
+		public Map AsMap
+		{
+			get { return m_values; }
+		}
+
 		#endregion
 
 		private IScope m_parent;
-		private Dictionary<string, Value> m_values = new Dictionary<string,Value>();
+		private Map m_values = new Map();
 	}
 }
