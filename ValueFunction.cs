@@ -25,9 +25,9 @@ namespace loki3.core
 		protected void Init(Value previousPattern, Value nextPattern, Precedence precedence)
 		{
 			Map meta = WritableMetadata;
-			if (previousPattern != null)
+			if (previousPattern != null && !previousPattern.IsNil)
 				meta[keyPreviousPattern] = previousPattern;
-			if (nextPattern != null)
+			if (nextPattern != null && !nextPattern.IsNil)
 				meta[keyNextPattern] = nextPattern;
 			meta[keyPrecedence] = new ValueInt((int)precedence);
 		}
