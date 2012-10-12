@@ -153,7 +153,7 @@ namespace loki3.core
 				for (int i = count - 1; i >= 0; --i)
 				{
 					NodeEval node = m_nodes[i];
-					if (!node.HasValue && !node.HasFunction && !node.IsEmpty)
+					if (!node.HasValue /*&& !node.HasFunction*/ && !node.IsEmpty)
 					{	// node hasn't been evaled or consumed yet
 						int p = node.Precedence;
 						if (p > max)
