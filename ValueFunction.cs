@@ -5,6 +5,7 @@ namespace loki3.core
 {
 	internal enum Order
 	{
+		Lowest,
 		Low,
 		Medium,
 		High,
@@ -78,7 +79,7 @@ namespace loki3.core
 			return map.ContainsKey("body");
 		}
 
-		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes);
+		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor);
 	}
 
 	/// <summary>
@@ -89,11 +90,11 @@ namespace loki3.core
 		internal void Init(Value pattern) { Init(null, pattern); }
 		internal void Init(Value pattern, Order order) { Init(null, pattern, order); }
 
-		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 		{
 			if (next == null)
 				return this;	// without parameters, it's still a function
-			Value post = EvalNode.Do(next, scope, nodes);
+			Value post = EvalNode.Do(next, scope, nodes, requestor);
 			Value match, leftover;
 			if (!PatternChecker.Do(post, Metadata[keyNextPattern], out match, out leftover))
 				throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], post);
@@ -114,11 +115,11 @@ namespace loki3.core
 		internal void Init(Value pattern) { Init(pattern, null); }
 		internal void Init(Value pattern, Order order) { Init(pattern, null, order); }
 
-		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 		{
 			if (prev == null)
 				return this;	// without parameters, it's still a function
-			Value pre = EvalNode.Do(prev, scope, nodes);
+			Value pre = EvalNode.Do(prev, scope, nodes, requestor);
 			Value match, leftover;
 			if (!PatternChecker.Do(pre, Metadata[keyPreviousPattern], out match, out leftover))
 				throw new Loki3Exception().AddWrongPattern(Metadata[keyPreviousPattern], pre);

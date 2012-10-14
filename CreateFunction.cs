@@ -56,7 +56,7 @@ namespace loki3.core
 				m_fullPattern = (m_usePrevious ? func.Metadata[keyPreviousPattern] : func.Metadata[keyNextPattern]);
 			}
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope parent, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope parent, INodeRequestor nodes, ILineRequestor requestor)
 			{
 				// create a new scope and add passed in arguments
 				ScopeChain scope = new ScopeChain(parent);
@@ -65,7 +65,7 @@ namespace loki3.core
 
 				if (m_usePrevious)
 				{
-					Value value1 = EvalNode.Do(prev, scope, nodes);
+					Value value1 = EvalNode.Do(prev, scope, nodes, requestor);
 					Value match, leftover;
 					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], out match, out leftover))
 						throw new Loki3Exception().AddWrongPattern(Metadata[keyPreviousPattern], value1);
@@ -83,10 +83,15 @@ namespace loki3.core
 				}
 				if (m_useNext)
 				{
-					Value value2 = EvalNode.Do(next, scope, nodes);
+					Value value2 = EvalNode.Do(next, scope, nodes, requestor);
 					Value match, leftover;
 					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], out match, out leftover))
 						throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], value2);
+
+					// if we created a function that needs a body, add it if present
+					ValueFunction matchFunc = match as ValueFunction;
+					if (matchFunc != null && matchFunc.RequiresBody())
+						match = EvalList.DoAddBody(matchFunc, scope, requestor);
 
 					if (leftover != null)
 					{

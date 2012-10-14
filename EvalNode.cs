@@ -26,7 +26,7 @@ namespace loki3.core
 		/// <param name="token">token representing a function or variable</param>
 		/// <param name="scope">used to request functions, variables, and delimiters</param>
 		/// <param name="nodes">used to request previous and next nodes</param>
-		internal static Value Do(DelimiterNode node, IScope scope, INodeRequestor nodes)
+		internal static Value Do(DelimiterNode node, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 		{
 			if (node.Value != null)
 			{	// node has already been evaluated
@@ -44,7 +44,7 @@ namespace loki3.core
 					DelimiterNode next = (function.ConsumesNext ? nodes.GetNext() : null);
 
 					// evaluate
-					return function.Eval(previous, next, scope, nodes);
+					return function.Eval(previous, next, scope, nodes, requestor);
 				}
 				else if (value != null)
 				{
@@ -74,7 +74,7 @@ namespace loki3.core
 						List<Value> values = new List<Value>(list.Nodes.Count);
 						foreach (DelimiterNode subnode in list.Nodes)
 						{	// note: 'nodes' is null so functions don't get evaled
-							Value subvalue = Do(subnode, scope, null);
+							Value subvalue = Do(subnode, scope, null, requestor);
 							values.Add(subvalue);
 						}
 						value = new ValueArray(values);
@@ -89,7 +89,7 @@ namespace loki3.core
 				if (function == null)
 					return value;
 				DelimiterNode next = new DelimiterNodeValue(value);
-				return function.Eval(null, next, scope, nodes);
+				return function.Eval(null, next, scope, nodes, requestor);
 			}
 			return new ValueNil();
 		}

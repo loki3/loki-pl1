@@ -262,7 +262,7 @@ namespace loki3.builtin
 				SetDocString("Get a map representing the current scope.");
 			}
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 			{
 				return new ValueMap(scope.AsMap);
 			}

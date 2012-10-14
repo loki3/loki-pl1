@@ -12,10 +12,10 @@ namespace loki3.core.test
 		{
 			internal TestSum() { Init(PatternData.Single("a", ValueType.Int), PatternData.Single("b", ValueType.Int)); }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 			{
-				Value value1 = EvalNode.Do(prev, scope, nodes);
-				Value value2 = EvalNode.Do(next, scope, nodes);
+				Value value1 = EvalNode.Do(prev, scope, nodes, requestor);
+				Value value2 = EvalNode.Do(next, scope, nodes, requestor);
 				int sum = value1.AsInt + value2.AsInt;
 				return new ValueInt(sum);
 			}
@@ -110,7 +110,7 @@ namespace loki3.core.test
 			IScope scope = new TestScope();
 			INodeRequestor values = new TestValueIntRequestor();
 
-			Value result = EvalNode.Do(ToNode("1234"), scope, values);
+			Value result = EvalNode.Do(ToNode("1234"), scope, values, null);
 			Assert.AreEqual(1234, result.AsInt);
 		}
 
@@ -120,7 +120,7 @@ namespace loki3.core.test
 			IScope scope = new TestScope();
 			INodeRequestor values = new TestValueIntRequestor();
 
-			Value result = EvalNode.Do(ToNode("x"), scope, values);
+			Value result = EvalNode.Do(ToNode("x"), scope, values, null);
 			Assert.AreEqual(3.5, result.AsFloat);
 		}
 
@@ -131,15 +131,15 @@ namespace loki3.core.test
 			INodeRequestor values = new TestValueIntRequestor();
 
 			// infix
-			Value result = EvalNode.Do(ToNode("sum"), scope, values);
+			Value result = EvalNode.Do(ToNode("sum"), scope, values, null);
 			Assert.AreEqual(10, result.AsInt);
 
 			// only uses previous token
-			result = EvalNode.Do(ToNode("prev1"), scope, values);
+			result = EvalNode.Do(ToNode("prev1"), scope, values, null);
 			Assert.AreEqual(4, result.AsInt);
 
 			// only uses next token
-			result = EvalNode.Do(ToNode("next1"), scope, values);
+			result = EvalNode.Do(ToNode("next1"), scope, values, null);
 			Assert.AreEqual(8, result.AsInt);
 		}
 
@@ -152,7 +152,7 @@ namespace loki3.core.test
 			bool bCatch = false;
 			try
 			{
-				Value result = EvalNode.Do(ToNode("qwer"), scope, values);
+				Value result = EvalNode.Do(ToNode("qwer"), scope, values, null);
 			}
 			catch (Loki3Exception e)
 			{
@@ -176,12 +176,12 @@ namespace loki3.core.test
 			INodeRequestor values = new TestValueNodeRequestor(nodelist);
 
 			{	// delimited string
-				Value result = EvalNode.Do(nodelist, scope, values);
+				Value result = EvalNode.Do(nodelist, scope, values, null);
 				Assert.AreEqual("this is a test", result.AsString);
 			}
 
 			{	// function that takes a delimited string
-				Value result = EvalNode.Do(ToNode("caps"), scope, values);
+				Value result = EvalNode.Do(ToNode("caps"), scope, values, null);
 				Assert.AreEqual("THIS IS A TEST", result.AsString);
 			}
 		}
@@ -201,7 +201,7 @@ namespace loki3.core.test
 			INodeRequestor values = new TestValueNodeRequestor(nodelist);
 
 			{	// [3 7 3]
-				Value result = EvalNode.Do(nodelist, scope, values);
+				Value result = EvalNode.Do(nodelist, scope, values, null);
 				Assert.AreEqual(result.Type, ValueType.Array);
 				List<Value> array = result.AsArray;
 				Assert.AreEqual(3, array.Count);
@@ -243,7 +243,7 @@ namespace loki3.core.test
 			IScope scope = new TestScope();
 			INodeRequestor values = new TestValueNodeRequestor(nodelist);
 
-			Value result = EvalNode.Do(nodelist, scope, values);
+			Value result = EvalNode.Do(nodelist, scope, values, null);
 			Assert.AreEqual(18, result.AsInt);
 		}
 	}

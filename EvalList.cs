@@ -82,7 +82,7 @@ namespace loki3.core
 				// get new value
 				if (m_state == NodeState.Node)
 				{	// hasn't been evaled at all
-					m_value = EvalNode.Do(m_node, scope, nodes);
+					m_value = EvalNode.Do(m_node, scope, nodes, requestor);
 				}
 				else if (m_state == NodeState.Function)
 				{	// previously resolved to a function
@@ -102,7 +102,7 @@ namespace loki3.core
 					}
 					else
 					{
-						m_value = m_func.Eval(previous, next, scope, nodes);
+						m_value = m_func.Eval(previous, next, scope, nodes, requestor);
 					}
 				}
 

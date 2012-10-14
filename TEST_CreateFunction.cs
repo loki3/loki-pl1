@@ -12,10 +12,10 @@ namespace loki3.core.test
 		{
 			internal TestSum() { Init(PatternData.Single("a", ValueType.Int), PatternData.Single("b", ValueType.Int)); }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 			{
-				Value value1 = EvalNode.Do(prev, scope, nodes);
-				Value value2 = EvalNode.Do(next, scope, nodes);
+				Value value1 = EvalNode.Do(prev, scope, nodes, requestor);
+				Value value2 = EvalNode.Do(next, scope, nodes, requestor);
 				int sum = value1.AsInt + value2.AsInt;
 				return new ValueInt(sum);
 			}

@@ -10,7 +10,7 @@ l3.setValue { :key :` :value ( l3.createDelimiter { :start :`  :end :` :type :as
 // and // as the comment delimiter giving us some useful syntax
 
 // assignment
-l3.setValue { :key := :value ( l3.createFunction { :pre :key :post :value :order 0 :body [ ` l3.setValue { :key key :value value :scope :parent } ` ] } ) }
+l3.setValue { :key := :value ( l3.createFunction { :pre :key :post :value :order 1 :body [ ` l3.setValue { :key key :value value :scope :parent } ` ] } ) }
 
 
 //
@@ -20,9 +20,21 @@ l3.setValue { :key := :value ( l3.createFunction { :pre :key :post :value :order
 :func = l3.createFunction { :post :pattern :body [ ` l3.createFunction { :post pattern } ` ] }
 
 // a function which creates an infix function
-// :funcIn = l3.createFunction { :pre :pattern1 :post :pattern2 :body [ ` l3.createFunction { :pre pattern1 :post pattern2 } ` ] }
+:infix = ( l3.createFunction { :pre :pattern1 :post :pattern2 :body [ ` l3.createFunction { :pre pattern1 :post pattern2 } ` ] } )
 
 
-// infix addition
-// :+ = funcIn [ :a :b ]
-//	l3.add [ a b ]
+// math
+:+ = ( :a infix :b )
+	l3.add [ a b ]
+
+:- = ( :a infix :b )
+	l3.subtract [ a b ]
+
+:* = ( :a infix :b )
+	l3.multiply [ a b ]
+
+:/ = ( :a infix :b )
+	l3.divide [ a b ]
+
+:sqrt = func :a
+	l3.sqrt a
