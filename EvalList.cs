@@ -74,7 +74,7 @@ namespace loki3.core
 			internal DelimiterNode Node { get { return m_node; } }
 
 			/// <summary>Evaluate this node, possibly consuming adjacent nodes</summary>
-			internal void Eval(IScope scope, INodeRequestor nodes)
+			internal void Eval(IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 			{
 				if (m_state != NodeState.Node && m_state != NodeState.Function)
 					return;
@@ -89,11 +89,22 @@ namespace loki3.core
 					DelimiterNode previous = (m_func.ConsumesPrevious ? previous = nodes.GetPrevious() : null);
 					DelimiterNode next = (m_func.ConsumesNext ? next = nodes.GetNext() : null);
 					if ((m_func.ConsumesPrevious || m_func.ConsumesNext) && (previous == null && next == null))
-					{	// function can't be evaled further
-						m_state = NodeState.Value;
-						return;
+					{	// no prev/next parameters passed, perhaps it can use body?
+						if (m_func.RequiresBody())
+						{	// tack on body if present
+							m_value = EvalList.DoAddBody(m_func, scope, requestor);
+							m_func = m_value as ValueFunction;
+						}
+						else
+						{	// function can't be evaled further
+							m_state = NodeState.Value;
+							return;
+						}
 					}
-					m_value = m_func.Eval(previous, next, scope, nodes);
+					else
+					{
+						m_value = m_func.Eval(previous, next, scope, nodes);
+					}
 				}
 
 				if (m_value == null)
@@ -148,7 +159,7 @@ namespace loki3.core
 			/// Evaluate the right-most node with the highest precendence.
 			/// Return false when there are no more to eval.
 			/// </summary>
-			internal bool EvalNext()
+			internal bool EvalNext(ILineRequestor requestor)
 			{
 				// find right-most node with highest precedence
 				m_evalIndex = -1;
@@ -182,7 +193,7 @@ namespace loki3.core
 					throw new Loki3Exception().AddBadToken(m_nodes[m_evalIndex].Node.Token);
 
 				// eval the one we found
-				m_nodes[m_evalIndex].Eval(m_scope, this);
+				m_nodes[m_evalIndex].Eval(m_scope, this, requestor);
 				return true;
 			}
 
@@ -243,15 +254,53 @@ namespace loki3.core
 			private int m_evalIndex;
 		}
 
+
+		/// <summary>
+		/// If function requires a body & it follows current line, add on body.
+		/// 'requestor' will be advanced to the first line after the body.
+		/// </summary>
+		/// <returns>new function with body attached</returns>
+		internal static Value DoAddBody(ValueFunction function, IScope scope, ILineRequestor requestor)
+		{
+			ValueFunctionPre functionPre = function as ValueFunctionPre;
+			string line = requestor.GetCurrentLine();
+			int parentIndent = Utility.CountIndent(line);
+			List<Value> body = new List<Value>();
+			while (requestor.HasCurrent())
+			{
+				requestor.Advance();
+				string childLine = requestor.GetCurrentLine();
+				int childIndent = (childLine == null ? -1 : Utility.CountIndent(childLine));
+				if (childIndent <= parentIndent)
+					break;	// now we have the body
+
+				// keep adding to the body
+				body.Add(new ValueString(childLine));
+			}
+			// if no body to add to function, leave as-is
+			if (body.Count == 0)
+				return function;
+
+			// we've built the entire body - now pass it to function
+			Map map = new Map();
+			map[ValueFunction.keyBody] = new ValueArray(body);
+			return functionPre.Eval(new ValueMap(map), new ScopeChain(scope));
+		}
+
 		/// <summary>
 		/// Eval a list of DelimiterNodes and return a Value
 		/// </summary>
-		internal static Value Do(List<DelimiterNode> nodes, IScope scope)
+		internal static Value Do(List<DelimiterNode> nodes, IScope scope, ILineRequestor requestor)
 		{
 			ListEval eval = new ListEval(nodes, scope);
-			while (eval.EvalNext())
+			while (eval.EvalNext(requestor))
 				;
 			return eval.GetValue();
+		}
+
+		internal static Value Do(List<DelimiterNode> nodes, IScope scope)
+		{
+			return Do(nodes, scope, null);
 		}
 	}
 }

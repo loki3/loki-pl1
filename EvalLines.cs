@@ -36,45 +36,17 @@ namespace loki3.core
 			try
 			{
 				DelimiterList list = ParseLine.Do(line, scope, requestor);
-				Value value = EvalList.Do(list.Nodes, scope);
+				Value value = EvalList.Do(list.Nodes, scope, requestor);
 
-				bool requiresBody = false;
-				if (value is ValueFunction)
-				{
-					ValueFunction func = value as ValueFunction;
-					requiresBody = func.RequiresBody();
-				}
-
-				// if line created a partial function that needs a body,
-				// eval all subsequent indented lines
-				if (requiresBody)
-				{
-					ValueFunctionPre function = value as ValueFunctionPre;
-					int parentIndent = Utility.CountIndent(line);
-					List<Value> body = new List<Value>();
-					while (requestor.HasCurrent())
-					{
-						requestor.Advance();
-						string childLine = requestor.GetCurrentLine();
-						int childIndent = (childLine == null ? -1 : Utility.CountIndent(childLine));
-						if (childIndent <= parentIndent)
-							break;	// now we have the body
-
-						// keep adding to the body
-						body.Add(new ValueString(childLine));
-					}
-
-					// we've built the entire body - now pass it to function
-					if (body.Count == 0)
-						throw new Loki3Exception().AddMissingBody(function);
-					Map map = new Map();
-					map[ValueFunction.keyBody] = new ValueArray(body);
-					value = function.Eval(new ValueMap(map), new ScopeChain(scope));
-				}
-				else
-				{
+				ValueFunction func = value as ValueFunction;
+				if (func == null)
 					requestor.Advance();
-				}
+				else if (func.RequiresBody())
+					// if line created a partial function that needs a body,
+					// eval all subsequent indented lines
+					value = EvalList.DoAddBody(func, scope, requestor);
+				else
+					requestor.Advance();
 
 				return value;
 			}

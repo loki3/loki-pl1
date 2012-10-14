@@ -15,6 +15,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre :key :post :value :order
 // function definitions: a function which creates a prefix function
 :func = l3.createFunction { :post :pattern :body [ ` l3.createFunction { :post pattern } ` ] }
 
-// the following doesn't work yet
+// infix addition
 :+ = func [ :a :b ]
 	l3.add [ a b ]

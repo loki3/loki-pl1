@@ -12,6 +12,17 @@ namespace loki3.builtin.test
 			ScopeChain scope = new ScopeChain(null);
 			AllBuiltins.RegisterAll(scope);
 			EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+			try
+			{
+				DelimiterList list = ParseLine.Do("5 + 7", scope, null);
+				Value value = EvalList.Do(list.Nodes, scope);
+				Assert.AreEqual(12, value.AsInt);
+			}
+			catch (Loki3Exception e)
+			{
+				System.Diagnostics.Debug.WriteLine(e);
+			}
 		}
 	}
 }
