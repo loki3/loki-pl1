@@ -93,7 +93,6 @@ namespace loki3.core
 						if (m_func.RequiresBody())
 						{	// tack on body if present
 							m_value = EvalList.DoAddBody(m_func, scope, requestor);
-							m_func = m_value as ValueFunction;
 						}
 						else
 						{	// function can't be evaled further

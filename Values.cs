@@ -103,7 +103,7 @@ namespace loki3.builtin
 				Map map = new Map();
 				map["pre"] = PatternData.Single("pre", new ValueNil());
 				map["post"] = PatternData.Single("post", new ValueNil());
-				map["order"] = PatternData.Single("order", ValueType.Int, new ValueInt((int)Precedence.Medium));
+				map["order"] = PatternData.Single("order", ValueType.Int, new ValueInt((int)Order.Medium));
 				map["body"] = PatternData.Body();
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
@@ -117,7 +117,7 @@ namespace loki3.builtin
 				Value pre = map["pre"];
 				Value post = map["post"];
 				List<Value> body = (map.ContainsKey("body") ? map["body"].AsArray : map[ValueFunction.keyBody].AsArray);
-				Precedence order = (Precedence)(map["order"].AsInt);
+				Order order = (Order)(map["order"].AsInt);
 
 				return loki3.core.CreateFunction.Do(pre, post, body, order);
 			}

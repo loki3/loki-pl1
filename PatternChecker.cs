@@ -43,6 +43,8 @@ namespace loki3.core
 					return DoSingle(input as ValueFunction, ValueType.Function, pattern as ValueString, out match);
 				case ValueType.Delimiter:
 					return DoSingle(input as ValueDelimiter, ValueType.Delimiter, pattern as ValueString, out match);
+				case ValueType.Raw:
+					return DoSingle(input as ValueRaw, ValueType.Raw, pattern as ValueString, out match);
 			}
 
 			return false;

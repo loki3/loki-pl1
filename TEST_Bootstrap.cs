@@ -13,6 +13,13 @@ namespace loki3.builtin.test
 			AllBuiltins.RegisterAll(scope);
 			EvalFile.Do("../../l3/bootstrap.l3", scope);
 
+#if false
+			{
+				DelimiterList list = ParseLine.Do("+ [ 5 7 ]", scope, null);
+				Value value = EvalList.Do(list.Nodes, scope);
+				Assert.AreEqual(12, value.AsInt);
+			}
+
 			try
 			{
 				DelimiterList list = ParseLine.Do("5 + 7", scope, null);
@@ -21,8 +28,9 @@ namespace loki3.builtin.test
 			}
 			catch (Loki3Exception e)
 			{
-				System.Diagnostics.Debug.WriteLine(e);
+				Assert.Fail(e.ToString());
 			}
+#endif
 		}
 	}
 }

@@ -21,7 +21,7 @@ namespace loki3.core
 			/// <param name="pattern2">pattern for parameters that come after function name</param>
 			/// <param name="rawLines">body of function that will be parsed if needed</param>
 			/// <param name="precedence">order that function should be evaled relative to other functions</param>
-			internal UserFunction(Value pattern1, Value pattern2, List<Value> rawLines, Precedence precedence)
+			internal UserFunction(Value pattern1, Value pattern2, List<Value> rawLines, Order precedence)
 			{
 				Init(pattern1, pattern2, precedence);
 
@@ -145,13 +145,13 @@ namespace loki3.core
 		/// <param name="pattern2">null, variable name, or pattern to match for next token</param>
 		/// <param name="rawLines">lines to parse (if string, not ValueRaw) and run when function is invoked</param>
 		/// <param name="precedence">the order in which function should be evaled</param>
-		internal static ValueFunction Do(Value pattern1, Value pattern2, List<Value> rawLines, Precedence precedence)
+		internal static ValueFunction Do(Value pattern1, Value pattern2, List<Value> rawLines, Order precedence)
 		{
 			return new UserFunction(pattern1, pattern2, rawLines, precedence);
 		}
 		internal static ValueFunction Do(Value pattern1, Value pattern2, List<Value> rawLines)
 		{
-			return new UserFunction(pattern1, pattern2, rawLines, Precedence.Medium);
+			return new UserFunction(pattern1, pattern2, rawLines, Order.Medium);
 		}
 
 		/// <summary>
@@ -164,7 +164,7 @@ namespace loki3.core
 		/// <param name="rawLines">lines to parse and run when function is invoked</param>
 		/// <param name="precedence">the order in which function should be evaled</param>
 		internal static void Do(IScope scope, string name,
-			Value pattern1, Value pattern2, List<Value> rawLines, Precedence precedence)
+			Value pattern1, Value pattern2, List<Value> rawLines, Order precedence)
 		{
 			ValueFunction func = new UserFunction(pattern1, pattern2, rawLines, precedence);
 			scope.SetValue(name, func);
@@ -172,7 +172,7 @@ namespace loki3.core
 		internal static void Do(IScope scope, string name,
 			Value pattern1, Value pattern2, List<Value> rawLines)
 		{
-			Do(scope, name, pattern1, pattern2, rawLines, Precedence.Medium);
+			Do(scope, name, pattern1, pattern2, rawLines, Order.Medium);
 		}
 
 		internal static void Do(IScope scope, string name,
@@ -181,7 +181,7 @@ namespace loki3.core
 			List<Value> lines = new List<Value>();
 			foreach (string s in rawLines)
 				lines.Add(new ValueString(s));
-			Do(scope, name, pattern1, pattern2, lines, Precedence.Medium);
+			Do(scope, name, pattern1, pattern2, lines, Order.Medium);
 		}
 	}
 }

@@ -59,16 +59,16 @@ namespace loki3.core
 		}
 
 		#region Keys
-		internal static string keyPrecedence = "l3.value.precedence";
+		internal static string keyOrder = "l3.value.order";
 		internal static string keyDoc = "l3.value.doc";
 		#endregion
 
 		/// <summary>Evaluation precedence of this token</summary>
-		internal Precedence Precedence
+		internal Order Precedence
 		{
 			get
 			{
-				return m_metadata == null ? Precedence.Low : (Precedence)m_metadata.GetOptional<int>(keyPrecedence, (int)Precedence.Low);
+				return m_metadata == null ? Order.Low : (Order)m_metadata.GetOptional<int>(keyOrder, (int)Order.Low);
 			}
 		}
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace loki3.core
 {
-	internal enum Precedence
+	internal enum Order
 	{
 		Low,
 		Medium,
@@ -21,19 +21,19 @@ namespace loki3.core
 		/// </summary>
 		/// <param name="previousPattern">if func consumes previous value, this describes the pattern</param>
 		/// <param name="nextPattern">if func consumes next value, this describes the pattern</param>
-		/// <param name="precedence">evaluation precedence of function within a list</param>
-		protected void Init(Value previousPattern, Value nextPattern, Precedence precedence)
+		/// <param name="order">evaluation precedence of function within a list</param>
+		protected void Init(Value previousPattern, Value nextPattern, Order order)
 		{
 			Map meta = WritableMetadata;
 			if (previousPattern != null && !previousPattern.IsNil)
 				meta[keyPreviousPattern] = previousPattern;
 			if (nextPattern != null && !nextPattern.IsNil)
 				meta[keyNextPattern] = nextPattern;
-			meta[keyPrecedence] = new ValueInt((int)precedence);
+			meta[keyOrder] = new ValueInt((int)order);
 		}
 		protected void Init(Value previousPattern, Value nextPattern)
 		{
-			Init(previousPattern, nextPattern, Precedence.Medium);
+			Init(previousPattern, nextPattern, Order.Medium);
 		}
 
 		#region Value
@@ -87,7 +87,7 @@ namespace loki3.core
 	internal abstract class ValueFunctionPre : ValueFunction
 	{
 		internal void Init(Value pattern) { Init(null, pattern); }
-		internal void Init(Value pattern, Precedence precedence) { Init(null, pattern, precedence); }
+		internal void Init(Value pattern, Order order) { Init(null, pattern, order); }
 
 		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
@@ -112,7 +112,7 @@ namespace loki3.core
 	internal abstract class ValueFunctionPost : ValueFunction
 	{
 		internal void Init(Value pattern) { Init(pattern, null); }
-		internal void Init(Value pattern, Precedence precedence) { Init(pattern, null, precedence); }
+		internal void Init(Value pattern, Order order) { Init(pattern, null, order); }
 
 		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes)
 		{
