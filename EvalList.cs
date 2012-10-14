@@ -88,6 +88,11 @@ namespace loki3.core
 				{	// previously resolved to a function
 					DelimiterNode previous = (m_func.ConsumesPrevious ? previous = nodes.GetPrevious() : null);
 					DelimiterNode next = (m_func.ConsumesNext ? next = nodes.GetNext() : null);
+					if ((m_func.ConsumesPrevious || m_func.ConsumesNext) && (previous == null && next == null))
+					{	// function can't be evaled further
+						m_state = NodeState.Value;
+						return;
+					}
 					m_value = m_func.Eval(previous, next, scope, nodes);
 				}
 
@@ -153,7 +158,7 @@ namespace loki3.core
 				for (int i = count - 1; i >= 0; --i)
 				{
 					NodeEval node = m_nodes[i];
-					if (!node.HasValue /*&& !node.HasFunction*/ && !node.IsEmpty)
+					if (!node.HasValue && !node.IsEmpty)
 					{	// node hasn't been evaled or consumed yet
 						int p = node.Precedence;
 						if (p > max)

@@ -116,7 +116,7 @@ namespace loki3.builtin
 				// extract optional & required parameters
 				Value pre = map["pre"];
 				Value post = map["post"];
-				List<Value> body = map["body"].AsArray;
+				List<Value> body = (map.ContainsKey("body") ? map["body"].AsArray : map[ValueFunction.keyBody].AsArray);
 				Precedence order = (Precedence)(map["order"].AsInt);
 
 				return loki3.core.CreateFunction.Do(pre, post, body, order);
