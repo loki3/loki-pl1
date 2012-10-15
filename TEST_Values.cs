@@ -216,5 +216,24 @@ namespace loki3.builtin.test
 				Assert.AreEqual(false, map["key2"].AsBool);
 			}
 		}
+
+		[Test]
+		public void TestGetMetadata()
+		{
+			IScope scope = CreateValueScope();
+
+			{	// lookup metadata on a value
+				scope.SetValue("a", new ValueInt(42));
+				Value value = ToValue("l3.getMetadata { :value a }", scope);
+				Assert.AreEqual(loki3.core.ValueType.Nil, value.Type);
+				value = ToValue("l3.getMetadata { :value a :writable? true }", scope);
+				Assert.AreEqual(loki3.core.ValueType.Map, value.Type);
+			}
+
+			{	// lookup a key on the current scope (so function doesn't get evaled)
+				Value value = ToValue("l3.getMetadata { :key :l3.getValue }", scope);
+				Assert.AreEqual(loki3.core.ValueType.Map, value.Type);
+			}
+		}
 	}
 }

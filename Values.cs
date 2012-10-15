@@ -254,7 +254,7 @@ namespace loki3.builtin
 		{
 			internal GetMetadata()
 			{
-				SetDocString("Get metadata attached to a value.\nEither pass key to do a lookup of a specific value.\nIf writable?, make sure metadata map exists before returning.");
+				SetDocString("Get metadata attached to a value.\nEither pass key to do a lookup or a specific value.\nIf writable?, make sure metadata map exists before returning.");
 
 				Map map = new Map();
 				map["key"] = PatternData.Single("key", ValueType.String, ValueNil.Nil);
