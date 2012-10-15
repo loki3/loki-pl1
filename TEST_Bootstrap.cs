@@ -6,6 +6,12 @@ namespace loki3.builtin.test
 	[TestFixture]
 	class TEST_Bootstrap
 	{
+		static Value ToValue(string s, IScope scope)
+		{
+			DelimiterList list = ParseLine.Do(s, scope);
+			return EvalList.Do(list.Nodes, scope);
+		}
+
 		[Test]
 		public void Test()
 		{
@@ -15,9 +21,19 @@ namespace loki3.builtin.test
 				AllBuiltins.RegisterAll(scope);
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 
-				{
-					DelimiterList list = ParseLine.Do("5 + 7", scope, null);
-					Value value = EvalList.Do(list.Nodes, scope);
+				{	// test setting a value and adding metadata to it
+					Value a = ToValue(":a = 3", scope);
+					ToValue(":a @ [ :tag :hello ]", scope);
+					Assert.AreEqual("hello", a.Metadata["tag"].AsString);
+				}
+
+				{	// test modifying the doc string on a function
+					Value a = ToValue(":= @doc :testing", scope);
+					Assert.AreEqual("testing", scope.AsMap["="].Metadata["l3.value.doc"].AsString);
+				}
+
+				{	// test infix addition
+					Value value = ToValue("5 + 7", scope);
 					Assert.AreEqual(12, value.AsInt);
 				}
 			}

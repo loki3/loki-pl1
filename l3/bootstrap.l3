@@ -24,11 +24,19 @@ l3.setValue { :key := :value ( l3.createFunction { :pre :key :post :value :order
 
 
 //
-// access
+// get & set
 
 // member access using the . infix
 :. = ( :a infix :b )
 	l3.getValue { :object a :key b }
+
+// modify a value's metadata
+:@ = ( :val infix [ :key :value ] )
+	l3.setValue { :map ( l3.getMetadata { :key val :writable? true } ) :key key :value value }
+
+// set the doc string on a value
+:@doc = ( :val infix :docString )
+	val @ [ :l3.value.doc docString ]
 
 
 //
