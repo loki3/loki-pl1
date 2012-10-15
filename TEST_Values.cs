@@ -117,6 +117,18 @@ namespace loki3.builtin.test
 				Assert.AreNotEqual(null, nested.Exists("on-parent"));
 				Assert.IsFalse(nested.AsMap.ContainsKey("on-parent"));
 			}
+
+			{	// set a value on a map
+				Map map = new Map();
+				map["one"] = new ValueInt(1);
+				map["two"] = new ValueInt(2);
+				ValueMap valueMap = new ValueMap(map);
+				scope.SetValue("mymap", valueMap);
+
+				Value value = ToValue("l3.setValue { :key :one :value 3 :map mymap }", scope);
+				Assert.AreEqual(3, value.AsInt);
+				Assert.AreEqual(3, map["one"].AsInt);
+			}
 		}
 
 		[Test]

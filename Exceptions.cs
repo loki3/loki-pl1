@@ -23,6 +23,13 @@ namespace loki3.core
 			return this;
 		}
 
+		/// <summary>A map that was required to have a key</summary>
+		internal Loki3Exception AddMissingKey(Value key)
+		{
+			m_map[keyMissingKey] = key;
+			return this;
+		}
+
 		/// <summary>Could not parse token</summary>
 		internal Loki3Exception AddBadToken(Token token)
 		{
@@ -85,6 +92,8 @@ namespace loki3.core
 		internal static string keyMissingEndDelimiter = "l3.error.missingEndDelimiter";
 		/// <summary>Function that needed a body</summary>
 		internal static string keyMissingBody = "l3.error.missingBody";
+		/// <summary>Map that was required to have a key</summary>
+		internal static string keyMissingKey = "l3.error.missingKey";
 		/// <summary>Token that couldn't be parsed</summary>
 		internal static string keyBadToken = "l3.error.badToken";
 		/// <summary>Expected type</summary>
