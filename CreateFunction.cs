@@ -90,7 +90,7 @@ namespace loki3.core
 
 					// if we created a function that needs a body, add it if present
 					ValueFunction matchFunc = match as ValueFunction;
-					if (matchFunc != null && matchFunc.RequiresBody())
+					if (matchFunc != null && matchFunc.RequiresBody() && requestor != null)
 						match = EvalList.DoAddBody(matchFunc, scope, requestor);
 
 					if (leftover != null)

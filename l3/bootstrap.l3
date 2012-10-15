@@ -24,7 +24,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre :key :post :value :order
 
 
 //
+// access
 
+// member access using the . infix
 :. = ( :a infix :b )
 	l3.getValue { :object a :key b }
 

@@ -90,7 +90,7 @@ namespace loki3.core
 					DelimiterNode next = (m_func.ConsumesNext ? next = nodes.GetNext() : null);
 					if ((m_func.ConsumesPrevious || m_func.ConsumesNext) && (previous == null && next == null))
 					{	// no prev/next parameters passed, perhaps it can use body?
-						if (m_func.RequiresBody())
+						if (m_func.RequiresBody() && requestor != null)
 						{	// tack on body if present
 							m_value = EvalList.DoAddBody(m_func, scope, requestor);
 						}
