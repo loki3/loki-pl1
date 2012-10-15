@@ -37,7 +37,9 @@ namespace loki3.core
 				case ValueType.Array:
 					return Do(input as ValueArray, pattern, out match, out leftover);
 				case ValueType.Map:
-					return Do(input as ValueMap, pattern as ValueMap, out match, out leftover);
+					if (Do(input as ValueMap, pattern as ValueMap, out match, out leftover))
+						return true;
+					return DoSingle(input as ValueMap, ValueType.Map, pattern as ValueString, out match);
 
 				case ValueType.Function:
 					return DoSingle(input as ValueFunction, ValueType.Function, pattern as ValueString, out match);

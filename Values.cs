@@ -14,6 +14,7 @@ namespace loki3.builtin
 		internal static void Register(IScope scope)
 		{
 			scope.SetValue("l3.setValue", new SetValue());
+			scope.SetValue("l3.getValue", new GetValue());
 			scope.SetValue("l3.createMap", new CreateMap());
 			scope.SetValue("l3.createFunction", new CreateFunction());
 			scope.SetValue("l3.createDelimiter", new CreateDelimiter());
@@ -64,6 +65,45 @@ namespace loki3.builtin
 					active.SetValue(key, value);
 				}
 				return value;
+			}
+		}
+
+		/// <summary>{ :object :key } -> value,  either map[key.AsString] or array[key.AsInt]</summary>
+		class GetValue : ValueFunctionPre
+		{
+			internal GetValue()
+			{
+				SetDocString("On a map, gets the value attached to a key.\nOn an array, gets the indexed item.");
+
+				Map map = new Map();
+				// todo: better pattern definition, map|array & string|int
+				// or make this into two functions
+				map["object"] = PatternData.Single("object");
+				map["key"] = PatternData.Single("key");
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+
+				// extract parameters
+				Value obj = map["object"];
+				Value key = map["key"];
+
+				ValueMap objMap = obj as ValueMap;
+				if (objMap != null)
+				{
+					return objMap.AsMap[key.AsString];
+				}
+				ValueArray objArr = obj as ValueArray;
+				if (objArr != null)
+				{
+					return objArr.AsArray[key.AsInt];
+				}
+				// todo: better error
+				throw new Loki3Exception().AddWrongType(ValueType.Map, obj.Type);
 			}
 		}
 

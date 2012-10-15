@@ -120,6 +120,32 @@ namespace loki3.builtin.test
 		}
 
 		[Test]
+		public void TestGetValue()
+		{
+			IScope scope = CreateValueScope();
+
+			Map map = new Map();
+			map["one"] = new ValueInt(1);
+			map["two"] = new ValueInt(2);
+			scope.SetValue("aMap", new ValueMap(map));
+
+			List<Value> array = new List<Value>();
+			array.Add(new ValueInt(2));
+			array.Add(new ValueInt(4));
+			scope.SetValue("anArray", new ValueArray(array));
+
+			{
+				Value value = ToValue("l3.getValue { :object aMap :key :two }", scope);
+				Assert.AreEqual(2, value.AsInt);
+			}
+
+			{
+				Value value = ToValue("l3.getValue { :object anArray :key 1 }", scope);
+				Assert.AreEqual(4, value.AsInt);
+			}
+		}
+
+		[Test]
 		public void TestCreateMap()
 		{
 			IScope scope = CreateValueScope();

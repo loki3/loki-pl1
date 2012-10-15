@@ -23,7 +23,15 @@ l3.setValue { :key := :value ( l3.createFunction { :pre :key :post :value :order
 :infix = ( l3.createFunction { :pre :pattern1 :post :pattern2 :body [ ` l3.createFunction { :pre pattern1 :post pattern2 } ` ] } )
 
 
+//
+
+:. = ( :a infix :b )
+	l3.getValue { :object a :key b }
+
+
+//
 // math
+
 :+ = ( :a infix :b )
 	l3.add [ a b ]
 
