@@ -14,22 +14,22 @@ l3.setValue { :key :` :value ( l3.createDelimiter { :start :`  :end :` :type :as
 l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 1 :body [ ` l3.setValue { :key key :value value :scope :parent } ` ] } ) }
 
 // remainder of line is a value (like Haskell's $)
-:/v = ( l3.createDelimiter { :start :/v  :end : :type :asValue } )
+:/( = ( l3.createDelimiter { :start :/(  :end : :type :asValue } )
 
 // remainder of line is an array
-:/a = /v l3.createDelimiter { :start :/a  :end : :type :asArray }
+:/[ = /( l3.createDelimiter { :start :/[  :end : :type :asArray }
 
 // remainder of line is a map
-:/m = /v l3.createDelimiter { :start :/m  :end : :type :asArray :function l3.createMap }
+:/{ = /( l3.createDelimiter { :start :/{  :end : :type :asArray :function l3.createMap }
 
 // range comment delimiter
-:/* = /v l3.createDelimiter /m :start :/*  :end :*/ :type :asComment
+:/* = /( l3.createDelimiter /{ :start :/*  :end :*/ :type :asComment
 
 // string delimiter
-:" = /v l3.createDelimiter /m :start :"  :end :" :type :asString
+:" = /( l3.createDelimiter /{ :start :"  :end :" :type :asString
 
 // remainder of line is a string
-:/" = /v l3.createDelimiter /m :start :/"  :end : :type :asString
+:/" = /( l3.createDelimiter /{ :start :/"  :end : :type :asString
 
 
 //
@@ -40,11 +40,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :post pattern }
 
 // a function which creates an infix function
-:infix = /v l3.createFunction { :pre ->pattern1 :post ->pattern2 }
+:infix = /( l3.createFunction { :pre ->pattern1 :post ->pattern2 }
 	l3.createFunction { :pre pattern1 :post pattern2 }
 
 // a function which creates a postfix function
-:postfix = /v l3.createFunction { :pre ->pattern }
+:postfix = /( l3.createFunction { :pre ->pattern }
 	l3.createFunction { :pre pattern }
 
 
@@ -52,23 +52,23 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // get & set
 
 // member access using the . infix
-:. = /v ->a infix ->b
+:. = /( ->a infix ->b
 	l3.getValue { :object a :key b }
 
 // modify a value's metadata
-:@ = /v ->object infix [ ->key ->value ]
+:@ = /( ->object infix [ ->key ->value ]
 	l3.setValue { :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value }
 
 // get a particular piece of metadata attached to a value
-:.@ = /v ->object infix ->key
+:.@ = /( ->object infix ->key
 	l3.getValue { :object ( l3.getMetadata { :key object } ) :key key }
 
 // set the doc string on a value
-:@doc = /v ->object infix ->docString
+:@doc = /( ->object infix ->docString
 	object @ [ :l3.value.doc docString ]
 
 // get the doc string attached to a value
-:.@doc = /v ->object postfix
+:.@doc = /( ->object postfix
 	l3.getValue { :object ( l3.getMetadata { :key object } ) :key :l3.value.doc }
 
 
