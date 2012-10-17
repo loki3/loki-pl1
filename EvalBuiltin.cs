@@ -33,8 +33,11 @@ namespace loki3.core
 				return new ValueFloat(d);
 
 			// try as string
+			// todo: replace with a prefix definition in bootstrap
 			if (s.StartsWith(":"))
 				return new ValueString(s.Substring(1));
+			if (s.StartsWith("->"))
+				return new ValueString(s.Substring(2));
 
 			// give up
 			throw new Loki3Exception().AddBadToken(token);

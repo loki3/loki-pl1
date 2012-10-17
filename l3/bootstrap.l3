@@ -2,57 +2,82 @@ l3.createEvalDelimiter :()
 l3.createArrayDelimiter :[]
 l3.setValue ( l3.createMap [ :key :{ :value ( l3.createDelimiter l3.createMap [ :start :{  :end :} :type :asArray :function l3.createMap ] ) ] )
 l3.setValue { :key :// :value ( l3.createDelimiter { :start ://  :end : :type :asComment } ) }
-l3.setValue { :key :" :value ( l3.createDelimiter { :start :"  :end :" :type :asString } ) }
+
+// the first lines created () as the value delimiter,
+// [] as the array delimiter, {} as the map delimeter,
+// and // as the remainder-of-line comment delimiter
+
+// raw delimiter
 l3.setValue { :key :` :value ( l3.createDelimiter { :start :`  :end :` :type :asRaw } ) }
 
-// the first lines created [] as the array delimiter, {} as the map delimeter,
-// " as a string delimiter, ` as the raw delimiter
-// and // as the comment delimiter giving us some useful syntax
-
 // assignment
-l3.setValue { :key := :value ( l3.createFunction { :pre :key :post :value :order 1 :body [ ` l3.setValue { :key key :value value :scope :parent } ` ] } ) }
+l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 1 :body [ ` l3.setValue { :key key :value value :scope :parent } ` ] } ) }
+
+// remainder of line is a value (like Haskell's $)
+:/v = ( l3.createDelimiter { :start :/v  :end : :type :asValue } )
+
+// remainder of line is an array
+:/a = /v l3.createDelimiter { :start :/a  :end : :type :asArray }
+
+// remainder of line is a map
+:/m = /v l3.createDelimiter { :start :/m  :end : :type :asArray :function l3.createMap }
+
+// range comment delimiter
+:/* = /v l3.createDelimiter /m :start :/*  :end :*/ :type :asComment
+
+// string delimiter
+:" = /v l3.createDelimiter /m :start :"  :end :" :type :asString
+
+// remainder of line is a string
+:/" = /v l3.createDelimiter /m :start :/"  :end : :type :asString
 
 
 //
 // function definitions:
 
 // a function which creates a prefix function
-:func = l3.createFunction { :post :pattern :body [ ` l3.createFunction { :post pattern } ` ] }
+:func = l3.createFunction { :post ->pattern }
+	l3.createFunction { :post pattern }
 
 // a function which creates an infix function
-:infix = ( l3.createFunction { :pre :pattern1 :post :pattern2 :body [ ` l3.createFunction { :pre pattern1 :post pattern2 } ` ] } )
+:infix = /v l3.createFunction { :pre ->pattern1 :post ->pattern2 }
+	l3.createFunction { :pre pattern1 :post pattern2 }
+
+// a function which creates a postfix function
+:postfix = /v l3.createFunction { :pre ->pattern }
+	l3.createFunction { :pre pattern }
 
 
 //
 // get & set
 
 // member access using the . infix
-:. = ( :a infix :b )
+:. = /v ->a infix ->b
 	l3.getValue { :object a :key b }
 
 // modify a value's metadata
-:@ = ( :val infix [ :key :value ] )
-	l3.setValue { :map ( l3.getMetadata { :key val :writable? true } ) :key key :value value }
+:@ = /v ->object infix [ ->key ->value ]
+	l3.setValue { :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value }
 
 // set the doc string on a value
-:@doc = ( :val infix :docString )
+:@doc = /v ->val infix ->docString
 	val @ [ :l3.value.doc docString ]
 
 
 //
 // math
 
-:+ = ( :a infix :b )
+:+ = ( ->a infix ->b )
 	l3.add [ a b ]
 
-:- = ( :a infix :b )
+:- = ( ->a infix ->b )
 	l3.subtract [ a b ]
 
-:* = ( :a infix :b )
+:* = ( ->a infix ->b )
 	l3.multiply [ a b ]
 
-:/ = ( :a infix :b )
+:/ = ( ->a infix ->b )
 	l3.divide [ a b ]
 
-:sqrt = func :a
+:sqrt = func ->a
 	l3.sqrt a

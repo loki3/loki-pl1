@@ -36,6 +36,11 @@ namespace loki3.builtin.test
 					Value value = ToValue("5 + 7", scope);
 					Assert.AreEqual(12, value.AsInt);
 				}
+
+				{	// test function definition
+					Value value = ToValue("sqrt 4", scope);
+					Assert.AreEqual(2, value.AsFloat);
+				}
 			}
 			catch (Loki3Exception e)
 			{
