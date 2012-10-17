@@ -68,20 +68,31 @@ namespace loki3.core
 			{	// simply search for end and stuff everything in the middle into a single token
 				// todo: leave the whitespace alone
 				string all = "";
+				iEnd = -1;
 				for (int i = iStart; i < strs.Length; i++)
 				{
 					string s = strs[i];
 					if (s == thisDelim.End)
-					{	// end - wrap entire string in a single node
+					{
 						iEnd = i;
-						Token token = new Token(all);
-						DelimiterNode node = new DelimiterNodeToken(token);
-						nodes.Add(node);
-						return new DelimiterList(thisDelim, nodes);
+						break;
 					}
 					if (i != iStart)
 						all += " ";
 					all += s;
+				}
+
+				// no specified end delim means take the remainder of the line
+				if (thisDelim.End == "")
+					iEnd = strs.Length - 1;
+
+				// if we found end, wrap entire string in a single node
+				if (iEnd != -1)
+				{
+					Token token = new Token(all);
+					DelimiterNode node = new DelimiterNodeToken(token);
+					nodes.Add(node);
+					return new DelimiterList(thisDelim, nodes);
 				}
 			}
 			else // Value, Array && Raw
