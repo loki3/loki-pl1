@@ -1,7 +1,7 @@
 l3.createEvalDelimiter :()
 l3.createArrayDelimiter :[]
 l3.setValue ( l3.createMap [ :key :{ :value ( l3.createDelimiter l3.createMap [ :start :{  :end :} :type :asArray :function l3.createMap ] ) ] )
-l3.setValue { :key :// :value ( l3.createDelimiter { :start ://  :end : :type :asComment } ) }
+l3.setValue { :key :// :value ( l3.createDelimiter { :start ://  :type :asComment } ) }
 
 // the first lines created () as the value delimiter,
 // [] as the array delimiter, {} as the map delimeter,
@@ -14,16 +14,16 @@ l3.setValue { :key :` :value ( l3.createDelimiter { :start :`  :end :` :type :as
 l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 1 :body [ ` l3.setValue { :key key :value value :scope :parent } ` ] } ) }
 
 // remainder of line is a value (like Haskell's $)
-:/( = ( l3.createDelimiter { :start :/(  :end : :type :asValue } )
+:/( = ( l3.createDelimiter { :start :/(  :type :asValue } )
 
 // remainder of line is an array
-:/[ = /( l3.createDelimiter { :start :/[  :end : :type :asArray }
+:/[ = /( l3.createDelimiter { :start :/[  :type :asArray }
 
 // remainder of line is a map
-:/{ = /( l3.createDelimiter { :start :/{  :end : :type :asArray :function l3.createMap }
+:/{ = /( l3.createDelimiter { :start :/{  :type :asArray :function l3.createMap }
 
 // remainder of line is raw
-:/` = /( l3.createDelimiter /{ :start :/`  :end : :type :asRaw
+:/` = /( l3.createDelimiter /{ :start :/`  :type :asRaw
 
 // range comment delimiter
 :/* = /( l3.createDelimiter /{ :start :/*  :end :*/ :type :asComment
@@ -32,7 +32,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :" = /( l3.createDelimiter /{ :start :"  :end :" :type :asString
 
 // remainder of line is a string
-:/" = /( l3.createDelimiter /{ :start :/"  :end : :type :asString
+:/" = /( l3.createDelimiter /{ :start :/"  :type :asString
 
 
 //
@@ -56,35 +56,35 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // member access using the . infix
 :. = /( ->a infix ->b
-	l3.getValue { :object a :key b }
+	l3.getValue /{ :object a :key b
 
 // modify a value's metadata
 :@ = /( ->object infix [ ->key ->value ]
-	l3.setValue { :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value }
+	l3.setValue /{ :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value
 
 // get a particular piece of metadata attached to a value
 :.@ = /( ->object infix ->key
-	l3.getValue { :object ( l3.getMetadata { :key object } ) :key key }
+	l3.getValue /{ :object ( l3.getMetadata { :key object } ) :key key
 
 // set the doc string on a value
 :@doc = /( ->object infix ->docString
-	object @ [ :l3.value.doc docString ]
+	object @ /[ :l3.value.doc docString
 
 // get the doc string attached to a value
 :.@doc = /( ->object postfix
-	l3.getValue { :object ( l3.getMetadata { :key object } ) :key :l3.value.doc }
+	l3.getValue /{ :object ( l3.getMetadata { :key object } ) :key :l3.value.doc
 
 
 //
 // add documentation to functions that have been previously definied
 
-:=		@doc	" Assign a value to a key "
-:func	@doc	" Define a function that takes parameters after the function name "
-:infix	@doc	" Define a function that takes parameters before and after the function name "
-:postfix @doc	" Define a function that takes parameters before the function name "
-:.		@doc	" Access the member of a map by key or array by index "
-:@		@doc	" Modify a value's metadata "
-:@doc	@doc	" Add documentation to a value "
+:=		@doc	/" Assign a value to a key
+:func	@doc	/" Define a function that takes parameters after the function name
+:infix	@doc	/" Define a function that takes parameters before and after the function name
+:postfix @doc	/" Define a function that takes parameters before the function name
+:.		@doc	/" Access the member of a map by key or array by index
+:@		@doc	/" Modify a value's metadata
+:@doc	@doc	/" Add documentation to a value
 
 
 //
@@ -92,20 +92,20 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :+ = ( ->a infix ->b )
 	l3.add [ a b ]
-:+ @doc " Add two numbers "
+:+ @doc /" Add two numbers
 
 :- = ( ->a infix ->b )
 	l3.subtract [ a b ]
-:- @doc " Subtract one number from another "
+:- @doc /" Subtract one number from another
 
 :* = ( ->a infix ->b )
 	l3.multiply [ a b ]
-:* @doc " Multiply two numbers "
+:* @doc /" Multiply two numbers
 
 :/ = ( ->a infix ->b )
 	l3.divide [ a b ]
-:/ @doc " Divide the first number by the second number "
+:/ @doc /" Divide the first number by the second number
 
 :sqrt = func ->a
 	l3.sqrt a
-:sqrt @doc " Compute the square root of a number "
+:sqrt @doc /" Compute the square root of a number

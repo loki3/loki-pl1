@@ -184,7 +184,7 @@ namespace loki3.builtin
 
 				Map map = new Map();
 				map["start"] = PatternData.Single("start", ValueType.String);
-				map["end"] = PatternData.Single("end", ValueType.String);
+				map["end"] = PatternData.Single("end", ValueType.String, new ValueString(""));
 				map["type"] = PatternData.Single("type", new ValueNil());
 				map["function"] = PatternData.Single("function", ValueType.Function, new ValueNil());
 				ValueMap vMap = new ValueMap(map);
