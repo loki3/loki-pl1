@@ -59,9 +59,29 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :@ = /v ->object infix [ ->key ->value ]
 	l3.setValue { :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value }
 
+// get a particular piece of metadata attached to a value
+:.@ = /v ->object infix ->key
+	l3.getValue { :object ( l3.getMetadata { :key object } ) :key key }
+
 // set the doc string on a value
-:@doc = /v ->val infix ->docString
-	val @ [ :l3.value.doc docString ]
+:@doc = /v ->object infix ->docString
+	object @ [ :l3.value.doc docString ]
+
+// get the doc string attached to a value
+:.@doc = /v ->object postfix
+	l3.getValue { :object ( l3.getMetadata { :key object } ) :key :l3.value.doc }
+
+
+//
+// add documentation to functions that have been previously definied
+
+:=		@doc	" Assign a value to a key "
+:func	@doc	" Define a function that takes parameters after the function name "
+:infix	@doc	" Define a function that takes parameters before and after the function name "
+:postfix @doc	" Define a function that takes parameters before the function name "
+:.		@doc	" Access the member of a map by key or array by index "
+:@		@doc	" Modify a value's metadata "
+:@doc	@doc	" Add documentation to a value "
 
 
 //
@@ -69,15 +89,20 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :+ = ( ->a infix ->b )
 	l3.add [ a b ]
+:+ @doc " Add two numbers "
 
 :- = ( ->a infix ->b )
 	l3.subtract [ a b ]
+:- @doc " Subtract one number from another "
 
 :* = ( ->a infix ->b )
 	l3.multiply [ a b ]
+:* @doc " Multiply two numbers "
 
 :/ = ( ->a infix ->b )
 	l3.divide [ a b ]
+:/ @doc " Divide the first number by the second number "
 
 :sqrt = func ->a
 	l3.sqrt a
+:sqrt @doc " Compute the square root of a number "
