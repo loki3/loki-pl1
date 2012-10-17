@@ -46,5 +46,17 @@ namespace loki3.core
 				list.Add(v);
 			return new ValueArray(list);
 		}
+
+		public override string ToString()
+		{
+			System.Text.StringBuilder builder = new System.Text.StringBuilder("[ ");
+			foreach (Value v in m_val)
+			{
+				builder.Append(v.ToString());
+				builder.Append(" ");
+			}
+			builder.Append("]");
+			return builder.ToString();
+		}
 	}
 }
