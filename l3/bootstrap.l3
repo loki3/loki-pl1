@@ -88,6 +88,26 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// logic
+
+:=? = /( ->a infix ->b
+	l3.equal? [ a b ]
+:=? @doc /" Return true if two values are equal
+
+:&? = /( ->a infix ->b
+	l3.and? [ a b ]
+:&? @doc /" Return true if both values are true
+
+:|? = /( ->a infix ->b
+	l3.or? [ a b ]
+:|? @doc /" Return true if either value is true
+
+:!? = func ->a
+	l3.not? a
+:!? @doc /" Returns true if value is false or false if value is true
+
+
+//
 // math
 
 :+ = ( ->a infix ->b )

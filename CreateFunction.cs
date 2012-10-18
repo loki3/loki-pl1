@@ -60,8 +60,13 @@ namespace loki3.core
 			{
 				// create a new scope and add passed in arguments
 				ScopeChain scope = new ScopeChain(parent);
+				// note: second copy is so that evaling previous doesn't impact scope used to eval next
+				ScopeChain scope2 = new ScopeChain(parent);
 				if (m_fullPattern != null && m_passed != null)
+				{
 					Utility.AddToScope(m_fullPattern, m_passed, scope);
+					Utility.AddToScope(m_fullPattern, m_passed, scope2);
+				}
 
 				if (m_usePrevious)
 				{
@@ -83,7 +88,7 @@ namespace loki3.core
 				}
 				if (m_useNext)
 				{
-					Value value2 = EvalNode.Do(next, scope, nodes, requestor);
+					Value value2 = EvalNode.Do(next, scope2, nodes, requestor);
 					Value match, leftover;
 					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], out match, out leftover))
 						throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], value2);
