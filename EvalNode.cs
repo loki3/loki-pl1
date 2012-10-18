@@ -44,7 +44,16 @@ namespace loki3.core
 					DelimiterNode next = (function.ConsumesNext ? nodes.GetNext() : null);
 
 					// evaluate
-					return function.Eval(previous, next, scope, nodes, requestor);
+					try
+					{
+						return function.Eval(previous, next, scope, nodes, requestor);
+					}
+					catch (Loki3Exception e)
+					{	// this function is the correct context if there isn't already one there
+						if (!e.Errors.ContainsKey(Loki3Exception.keyFunction))
+							e.AddFunction(token.Value);
+						throw e;
+					}
 				}
 				else if (value != null)
 				{

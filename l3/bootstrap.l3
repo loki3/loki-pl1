@@ -108,6 +108,15 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// conditional
+
+// ternary operator
+:? = /( ->do? infix [ ->doIfTrue ->doIfFalse ]
+	l3.ifValue /{ :do? do? :ifTrue doIfTrue :ifFalse doIfFalse
+:+ @doc /" If condition is met, return first value, else return second value
+
+
+//
 // math
 
 :+ = ( ->a infix ->b )

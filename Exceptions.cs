@@ -54,6 +54,13 @@ namespace loki3.core
 		}
 
 
+		/// <summary>Tack on the function where the error occurred</summary>
+		internal Loki3Exception AddFunction(string function)
+		{
+			m_map[keyFunction] = new ValueString(function);
+			return this;
+		}
+
 		/// <summary>Tack on the line number where the error occurred</summary>
 		internal Loki3Exception AddLineNumber(int line)
 		{
@@ -105,6 +112,8 @@ namespace loki3.core
 		/// <summary>Actual pattern</summary>
 		internal static string keyActualPattern = "l3.error.actualPattern";
 
+		/// <summary>Function where error occurred</summary>
+		internal static string keyFunction = "l3.error.function";
 		/// <summary>Line number where error occurred</summary>
 		internal static string keyLineNumber = "l3.error.lineNumber";
 		/// <summary>Line where error occurred</summary>

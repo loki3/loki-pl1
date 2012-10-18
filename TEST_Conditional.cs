@@ -33,11 +33,11 @@ namespace loki3.builtin.test
 			Values.Register(scope);
 
 			{	// run body
-				Value value = ToValue("l3.if l3.createMap [ :do? true :body [ ' 5 ' ] ]", scope);
+				Value value = ToValue("l3.ifBody l3.createMap [ :do? true :body [ ' 5 ' ] ]", scope);
 				Assert.AreEqual(5, value.AsInt);
 			}
 			{	// skip body
-				Value value = ToValue("l3.if l3.createMap [ :do? false :body [ ' 5 ' ] ]", scope);
+				Value value = ToValue("l3.ifBody l3.createMap [ :do? false :body [ ' 5 ' ] ]", scope);
 				Assert.AreEqual(false, value.AsBool);
 			}
 		}
