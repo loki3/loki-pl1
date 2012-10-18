@@ -86,8 +86,8 @@ namespace loki3.core
 		/// <summary>Get collection of all errors</summary>
 		internal Map Errors { get { return m_map; } }
 
-		internal ValueType ExpectedType { get { return (ValueType)m_map.GetOptional<int>(keyExpectedType, 0); } }
-		internal ValueType ActualType { get { return (ValueType)m_map.GetOptional<int>(keyActualType, 0); } }
+		internal ValueType ExpectedType { get { return (ValueType)m_map.GetOptionalT<int>(keyExpectedType, 0); } }
+		internal ValueType ActualType { get { return (ValueType)m_map.GetOptionalT<int>(keyActualType, 0); } }
 
 		public override string ToString()
 		{

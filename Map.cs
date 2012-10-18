@@ -52,7 +52,7 @@ namespace loki3.core
 		}
 
 		/// <summary>Return value if present, else return a default</summary>
-		internal T GetOptional<T>(string key, T ifmissing)
+		internal T GetOptionalT<T>(string key, T ifmissing)
 		{
 			if (m_val == null)
 				return ifmissing;

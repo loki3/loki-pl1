@@ -97,7 +97,7 @@ namespace loki3.core
 		/// <summary>If present, required type of parameter</summary>
 		internal ValueType ValueType
 		{
-			get { return m_readableMetadata == null ? ValueType.Nil : (ValueType)m_readableMetadata.GetOptional<int>(keyType, (int)ValueType.Nil); }
+			get { return m_readableMetadata == null ? ValueType.Nil : (ValueType)m_readableMetadata.GetOptionalT<int>(keyType, (int)ValueType.Nil); }
 			set { WritableMetadata[keyType] = new ValueInt((int)value); }
 		}
 
@@ -125,14 +125,14 @@ namespace loki3.core
 		/// <summary>If present, the parameter will contain the portion of the array that hasn't otherwise been used</summary>
 		internal bool RestOfArray
 		{
-			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptional<bool>(keyRestOfArray, false); }
+			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptionalT<bool>(keyRestOfArray, false); }
 			set { WritableMetadata[keyRestOfArray] = new ValueBool(value); }
 		}
 
 		/// <summary>If present, the parameter will contain the function body, i.e. an array of strings</summary>
 		internal bool IsBody
 		{
-			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptional<bool>(keyIsBody, false); }
+			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptionalT<bool>(keyIsBody, false); }
 			set { WritableMetadata[keyIsBody] = new ValueBool(value); }
 		}
 

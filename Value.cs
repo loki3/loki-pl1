@@ -68,7 +68,7 @@ namespace loki3.core
 		{
 			get
 			{
-				return m_metadata == null ? Order.Low : (Order)m_metadata.GetOptional<int>(keyOrder, (int)Order.Low);
+				return m_metadata == null ? Order.Low : (Order)m_metadata.GetOptionalT<int>(keyOrder, (int)Order.Low);
 			}
 		}
 

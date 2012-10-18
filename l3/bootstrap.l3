@@ -61,6 +61,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // modify a value's metadata
 :@ = /( ->object infix [ ->key ->value ]
 	l3.setValue /{ :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value
+	object
 
 // get a particular piece of metadata attached to a value
 :.@ = /( ->object infix ->key
@@ -84,7 +85,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :postfix @doc	/" Define a function that takes parameters before the function name
 :.		@doc	/" Access the member of a map by key or array by index
 :@		@doc	/" Modify a value's metadata
+:.@		@doc	/" Get a value's metadata
 :@doc	@doc	/" Add documentation to a value
+:.@doc	@doc	/" Get the documentation attached to a value
 
 
 //
@@ -114,6 +117,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :? = /( ->do? infix [ ->doIfTrue ->doIfFalse ]
 	l3.ifValue /{ :do? do? :ifTrue doIfTrue :ifFalse doIfFalse
 :+ @doc /" If condition is met, return first value, else return second value
+
+:if = func ->do?
+	l3.ifBody /{ :do? do? :body body
+:if @doc /" If condition is met, do body
+:if @ [ :body? true ]
 
 
 //

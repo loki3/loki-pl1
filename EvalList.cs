@@ -255,13 +255,11 @@ namespace loki3.core
 
 
 		/// <summary>
-		/// If function requires a body & it follows current line, add on body.
+		/// Get the body following the current line.
 		/// 'requestor' will be advanced to the first line after the body.
 		/// </summary>
-		/// <returns>new function with body attached</returns>
-		internal static Value DoAddBody(ValueFunction function, IScope scope, ILineRequestor requestor)
+		internal static List<Value> DoGetBody(IScope scope, ILineRequestor requestor)
 		{
-			ValueFunctionPre functionPre = function as ValueFunctionPre;
 			string line = requestor.GetCurrentLine();
 			int parentIndent = Utility.CountIndent(line);
 			List<Value> body = new List<Value>();
@@ -276,6 +274,17 @@ namespace loki3.core
 				// keep adding to the body
 				body.Add(new ValueString(childLine));
 			}
+			return body;
+		}
+
+		/// <summary>
+		/// If function requires a body & it follows current line, add on body.
+		/// 'requestor' will be advanced to the first line after the body.
+		/// </summary>
+		/// <returns>new function with body attached</returns>
+		internal static Value DoAddBody(ValueFunction function, IScope scope, ILineRequestor requestor)
+		{
+			List<Value> body = DoGetBody(scope, requestor);
 			// if no body to add to function, leave as-is
 			if (body.Count == 0)
 				return function;
@@ -283,8 +292,10 @@ namespace loki3.core
 			// we've built the entire body - now pass it to function
 			Map map = new Map();
 			map[ValueFunction.keyBody] = new ValueArray(body);
+			ValueFunctionPre functionPre = function as ValueFunctionPre;
 			return functionPre.Eval(new ValueMap(map), new ScopeChain(scope));
 		}
+
 
 		/// <summary>
 		/// Eval a list of DelimiterNodes and return a Value

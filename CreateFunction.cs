@@ -110,6 +110,13 @@ namespace loki3.core
 					Utility.AddToScope(m_pattern2, match, scope);
 				}
 
+				// tack on body if requested
+				if (Metadata.GetOptionalT<bool>("body?", false))
+				{
+					List<Value> body = EvalList.DoGetBody(scope2, requestor);
+					scope.SetValue("body", new ValueArray(body));
+				}
+
 				// lazily parse
 				EnsureParsed(parent);
 

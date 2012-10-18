@@ -107,7 +107,7 @@ namespace loki3.builtin
 				ValueMap objMap = obj as ValueMap;
 				if (objMap != null)
 				{
-					return objMap.AsMap[key.AsString];
+					return objMap.AsMap.GetOptional(key.AsString, ValueNil.Nil);
 				}
 				ValueArray objArr = obj as ValueArray;
 				if (objArr != null)
