@@ -11,7 +11,7 @@ l3.setValue { :key :// :value ( l3.createDelimiter { :start ://  :type :asCommen
 l3.setValue { :key :` :value ( l3.createDelimiter { :start :`  :end :` :type :asRaw } ) }
 
 // assignment
-l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 1 :body [ ` l3.setValue { :key key :value value :scope :parent } ` ] } ) }
+l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent } ` ] } ) }
 
 // remainder of line is a value (like Haskell's $)
 :/( = ( l3.createDelimiter { :start :/(  :type :asValue } )
@@ -74,6 +74,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // get the doc string attached to a value
 :.@doc = /( ->object postfix
 	l3.getValue /{ :object ( l3.getMetadata { :key object } ) :key :l3.value.doc
+:.@doc	@doc	/" Get the documentation attached to a value
+
+:@order = /( ->object infix ->order
+	object @ /[ :l3.value.order order
+:@order @doc /" Add evaluation order to a value
 
 
 //
@@ -87,27 +92,32 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :@		@doc	/" Modify a value's metadata
 :.@		@doc	/" Get a value's metadata
 :@doc	@doc	/" Add documentation to a value
-:.@doc	@doc	/" Get the documentation attached to a value
 
 
 //
 // logic
 
-:=? = /( ->a infix ->b
-	l3.equal? [ a b ]
-:=? @doc /" Return true if two values are equal
-
 :&? = /( ->a infix ->b
 	l3.and? [ a b ]
 :&? @doc /" Return true if both values are true
+:&? @order 4
 
 :|? = /( ->a infix ->b
 	l3.or? [ a b ]
 :|? @doc /" Return true if either value is true
+:|? @order 4
 
 :!? = func ->a
 	l3.not? a
 :!? @doc /" Returns true if value is false or false if value is true
+
+:=? = /( ->a infix ->b
+	l3.equal? [ a b ]
+:=? @doc /" Return true if two values are equal
+
+:!=? = /( ->a infix ->b
+	!? l3.equal? [ a b ]
+:!=? @doc /" Return true if two values are not equal
 
 
 //
@@ -138,10 +148,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :* = ( ->a infix ->b )
 	l3.multiply [ a b ]
 :* @doc /" Multiply two numbers
+:* @order 2
 
 :/ = ( ->a infix ->b )
 	l3.divide [ a b ]
 :/ @doc /" Divide the first number by the second number
+:/ @order 2
 
 :sqrt = func ->a
 	l3.sqrt a

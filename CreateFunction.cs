@@ -50,7 +50,7 @@ namespace loki3.core
 				m_pattern2 = pattern2;
 				m_rawLines = func.m_rawLines;
 				m_parsedLines = func.m_parsedLines;
-				Init(pattern1, pattern2, func.Precedence);
+				Init(pattern1, pattern2, func.Order);
 
 				m_passed = passed;
 				m_fullPattern = (m_usePrevious ? func.Metadata[keyPreviousPattern] : func.Metadata[keyNextPattern]);

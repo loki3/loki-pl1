@@ -34,7 +34,7 @@ namespace loki3.core
 					if (m_func != null)
 					{	// function
 						m_state = NodeState.Node;
-						m_precedence = (int)m_func.Precedence;
+						m_order = (int)m_func.Order;
 					}
 					else if (value != null)
 					{	// variable
@@ -54,18 +54,18 @@ namespace loki3.core
 				else if (node.List != null)
 				{
 					m_state = NodeState.Node;
-					m_precedence = 0;
+					m_order = (int)Order.Lowest;
 				}
 				else if (node.Value != null)
 				{
 					m_value = node.Value;
-					m_precedence = (int)m_value.Precedence;
+					m_order = (int)m_value.Order;
 					m_func = m_value as ValueFunction;
 					m_state = (m_func == null ? NodeState.Value : NodeState.Function);
 				}
 			}
 
-			internal int Precedence { get { return m_precedence; } }
+			internal int Precedence { get { return m_order; } }
 			internal bool IsEmpty { get { return m_state == NodeState.Empty; } }
 			internal bool HasFunction { get { return m_state == NodeState.Function; } }
 			internal bool HasValue { get { return m_state == NodeState.Value; } }
@@ -114,7 +114,7 @@ namespace loki3.core
 
 				// store new info about this node
 				m_node = new DelimiterNodeValue(m_value);
-				m_precedence = (int)m_value.Precedence;
+				m_order = (int)m_value.Order;
 				if (m_value.Type == ValueType.Function)
 				{
 					m_state = NodeState.Function;
@@ -132,11 +132,9 @@ namespace loki3.core
 				m_state = NodeState.Empty;
 			}
 
-			private const int m_unknownPrecedence = -1;
-
 			private DelimiterNode m_node;
 			private ValueFunction m_func = null;
-			private int m_precedence = m_unknownPrecedence;
+			private int m_order = (int)Order.Medium;
 			private Value m_value = null;
 			private NodeState m_state = NodeState.CantEval;
 		}
@@ -162,7 +160,7 @@ namespace loki3.core
 			{
 				// find right-most node with highest precedence
 				m_evalIndex = -1;
-				int max = -2;
+				int max = Int32.MaxValue;
 				int count = m_nodes.Count;
 				int empties = 0;
 				for (int i = count - 1; i >= 0; --i)
@@ -171,7 +169,7 @@ namespace loki3.core
 					if (!node.HasValue && !node.IsEmpty)
 					{	// node hasn't been evaled or consumed yet
 						int p = node.Precedence;
-						if (p > max)
+						if (p < max)
 						{	// greater precedence than anything to the right
 							max = p;
 							m_evalIndex = i;
@@ -182,7 +180,7 @@ namespace loki3.core
 				}
 
 				// we're done if we didn't find anything
-				if (max == -2)
+				if (max == Int32.MaxValue)
 					return false;
 				// if the only thing left is a function, there's nothing further to do
 				if (empties == count - 1 && m_nodes[m_evalIndex].HasFunction)

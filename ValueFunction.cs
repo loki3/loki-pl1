@@ -3,12 +3,18 @@ using System.Collections.Generic;
 
 namespace loki3.core
 {
+	/// <summary>
+	/// Evaluation order
+	/// </summary>
 	internal enum Order
 	{
-		Lowest,
-		Low,
-		Medium,
+		Highest,
+		Higher,
 		High,
+		Medium,	// 3
+		Low,
+		Lower,
+		Lowest,
 	}
 
 	/// <summary>

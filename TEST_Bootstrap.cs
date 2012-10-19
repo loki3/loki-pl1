@@ -48,6 +48,13 @@ namespace loki3.builtin.test
 					Value value = ToValue("4 =? a", scope);
 					Assert.IsFalse(value.AsBool);
 				}
+
+				{	// test eval order
+					Value value = ToValue("2 * 2 + 3", scope);
+					Assert.AreEqual(7, value.AsInt);
+					value = ToValue("2 + 2 * 3", scope);
+					Assert.AreEqual(8, value.AsInt);
+				}
 			}
 			catch (Loki3Exception e)
 			{

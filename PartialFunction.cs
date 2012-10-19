@@ -16,7 +16,7 @@ namespace loki3.core
 			m_nested = nested;
 			m_passed = passed;
 			// our pattern is the remaining parameters; use same precedence as nested func
-			Init(needed, nested.Precedence);
+			Init(needed, nested.Order);
 		}
 
 		internal override Value Eval(Value arg, IScope scope)
@@ -43,7 +43,7 @@ namespace loki3.core
 			m_nested = nested;
 			m_passed = passed;
 			// our pattern is the remaining parameters; use same precedence as nested func
-			Init(needed, nested.Precedence);
+			Init(needed, nested.Order);
 		}
 
 		internal override Value Eval(Value arg, IScope scope)

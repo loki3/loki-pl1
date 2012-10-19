@@ -64,7 +64,7 @@ namespace loki3.core
 		#endregion
 
 		/// <summary>Evaluation precedence of this token</summary>
-		internal Order Precedence
+		internal Order Order
 		{
 			get
 			{
