@@ -254,7 +254,7 @@ namespace loki3.core
 
 		/// <summary>
 		/// Get the body following the current line.
-		/// 'requestor' will be advanced to the first line after the body.
+		/// 'requestor' will be positioned on the last line of the body.
 		/// </summary>
 		internal static List<Value> DoGetBody(IScope scope, ILineRequestor requestor)
 		{
@@ -267,7 +267,10 @@ namespace loki3.core
 				string childLine = requestor.GetCurrentLine();
 				int childIndent = (childLine == null ? -1 : Utility.CountIndent(childLine));
 				if (childIndent <= parentIndent)
+				{
+					requestor.Rewind();
 					break;	// now we have the body
+				}
 
 				// keep adding to the body
 				body.Add(new ValueString(childLine));

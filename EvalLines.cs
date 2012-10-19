@@ -14,7 +14,7 @@ namespace loki3.core
 				Value value = null;
 				while (requestor.HasCurrent())
 				{
-					lineNumber++;
+					lineNumber = requestor.GetCurrentLineNumber();
 					value = EvalLines.DoOne(requestor, scope);
 				}
 				return value;
@@ -39,14 +39,12 @@ namespace loki3.core
 				Value value = EvalList.Do(list.Nodes, scope, requestor);
 
 				ValueFunction func = value as ValueFunction;
-				if (func == null)
-					requestor.Advance();
-				else if (func.RequiresBody())
+				if (func != null && func.RequiresBody())
 					// if line created a partial function that needs a body,
 					// eval all subsequent indented lines
 					value = EvalList.DoAddBody(func, scope, requestor);
-				else
-					requestor.Advance();
+
+				requestor.Advance();
 
 				return value;
 			}

@@ -9,9 +9,12 @@ namespace loki3.core
 	{
 		/// <summary>Get line requestor is currently on, or null if none</summary>
 		string GetCurrentLine();
+		int GetCurrentLineNumber();
 
 		/// <summary>Advance to next line</summary>
 		void Advance();
+		/// <summary>Back up a line</summary>
+		void Rewind();
 
 		/// <summary>Are we on a valid line?</summary>
 		bool HasCurrent();
@@ -49,9 +52,19 @@ namespace loki3.core
 			return (m_current < m_count ? m_lines[m_current] : null);
 		}
 
+		public int GetCurrentLineNumber()
+		{
+			return m_current + 1;
+		}
+
 		public void Advance()
 		{
 			m_current++;
+		}
+
+		public void Rewind()
+		{
+			m_current--;
 		}
 
 		public bool HasCurrent()

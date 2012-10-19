@@ -99,13 +99,13 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :&? = /( ->a infix ->b
 	l3.and? [ a b ]
-:&? @doc /" Return true if both values are true
 :&? @order 4
+:&? @doc /" Return true if both values are true
 
 :|? = /( ->a infix ->b
 	l3.or? [ a b ]
-:|? @doc /" Return true if either value is true
 :|? @order 4
+:|? @doc /" Return true if either value is true
 
 :!? = func ->a
 	l3.not? a
@@ -126,12 +126,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // ternary operator
 :? = /( ->do? infix [ ->doIfTrue ->doIfFalse ]
 	l3.ifValue /{ :do? do? :ifTrue doIfTrue :ifFalse doIfFalse
-:+ @doc /" If condition is met, return first value, else return second value
+:? @doc /" If condition is met, return first value, else return second value
 
 :if = func ->do?
 	l3.ifBody /{ :do? do? :body body
-:if @doc /" If condition is met, do body
 :if @ [ :body? true ]
+:if @doc /" If condition is met, do body
 
 
 //
@@ -147,13 +147,13 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :* = ( ->a infix ->b )
 	l3.multiply [ a b ]
-:* @doc /" Multiply two numbers
 :* @order 2
+:* @doc /" Multiply two numbers
 
 :/ = ( ->a infix ->b )
 	l3.divide [ a b ]
-:/ @doc /" Divide the first number by the second number
 :/ @order 2
+:/ @doc /" Divide the first number by the second number
 
 :sqrt = func ->a
 	l3.sqrt a
