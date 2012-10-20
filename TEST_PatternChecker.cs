@@ -267,5 +267,52 @@ namespace loki3.core.test
 				Assert.AreEqual("second", leftover.AsMap["second"].AsString);
 			}
 		}
+
+		[Test]
+		public void TestMapFromArrayPattern()
+		{
+			List<Value> list = new List<Value>();
+			list.Add(PatternData.Single("a", ValueType.Int));
+			list.Add(PatternData.Single("b", new ValueInt(17)));
+			ValueArray pattern = new ValueArray(list);
+			Value match = null, leftover = null;
+
+			{	// get a & b
+				Map map = new Map();
+				map["a"] = new ValueInt(42);
+				map["b"] = new ValueInt(31);
+				ValueMap input = new ValueMap(map);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.AreEqual(2, match.AsMap.Count);
+				Assert.AreEqual(42, match.AsMap["a"].AsInt);
+				Assert.AreEqual(31, match.AsMap["b"].AsInt);
+				Assert.AreEqual(null, leftover);
+			}
+
+			{	// fill in default for b
+				Map map = new Map();
+				map["a"] = new ValueInt(42);
+				ValueMap input = new ValueMap(map);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.AreEqual(2, match.AsMap.Count);
+				Assert.AreEqual(42, match.AsMap["a"].AsInt);
+				Assert.AreEqual(17, match.AsMap["b"].AsInt);
+				Assert.AreEqual(null, leftover);
+			}
+
+			{	// leftover
+				Map map = new Map();
+				map["b"] = new ValueInt(31);
+				ValueMap input = new ValueMap(map);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.AreEqual(1, match.AsMap.Count);
+				Assert.AreEqual(31, match.AsMap["b"].AsInt);
+				Assert.AreEqual(1, leftover.AsMap.Count);
+				Assert.AreEqual("a", leftover.AsMap["a"].AsString);
+			}
+		}
 	}
 }

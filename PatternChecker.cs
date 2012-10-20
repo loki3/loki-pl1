@@ -39,6 +39,8 @@ namespace loki3.core
 				case ValueType.Map:
 					if (Do(input as ValueMap, pattern as ValueMap, out match, out leftover))
 						return true;
+					if (Do(input as ValueMap, pattern as ValueArray, out match, out leftover))
+						return true;
 					return DoSingle(input as ValueMap, ValueType.Map, pattern as ValueString, out match);
 
 				case ValueType.Function:
@@ -170,6 +172,54 @@ namespace loki3.core
 
 			// matches + defaults
 			match = new ValueMap(matchmap);
+
+			return true;
+		}
+
+
+		/// <summary>Match a map against an array of keys</summary>
+		private static bool Do(ValueMap input, ValueArray pattern, out Value match, out Value leftover)
+		{
+			match = null;
+			leftover = null;
+			if (pattern == null)
+				return false;
+
+			Map inmap = input.AsMap;
+			List<Value> patarray = pattern.AsArray;
+			int incount = inmap.Count;
+			int patcount = patarray.Count;
+			if (patcount < incount)
+				return false;	// pattern has fewer elements than input - not a match
+
+			// matches
+			Map matchmap = new Map();
+			Map leftovermap = new Map();
+			foreach (Value key in patarray)
+			{
+				Value submatch, subleftover;
+				string keyString = key.AsString;
+				if (inmap.ContainsKey(keyString) &&
+					Do(inmap[keyString], key, out submatch, out subleftover))
+				{
+					matchmap[keyString] = submatch;
+				}
+				else
+				{	// doesn't have key or it's a mismatch
+					PatternData data = new PatternData(key as ValueString);
+					if (data.Default != null)
+						matchmap[keyString] = data.Default;
+					else
+						leftovermap[keyString] = key;
+				}
+			}
+
+			if (matchmap.Count == 0)
+				return false;
+
+			match = new ValueMap(matchmap);
+			if (leftovermap.Count > 0)
+				leftover = new ValueMap(leftovermap);
 
 			return true;
 		}

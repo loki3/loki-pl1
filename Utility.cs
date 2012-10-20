@@ -11,6 +11,11 @@ namespace loki3.core
 			{
 				SetOnScope(scope, pattern.AsString, match, bCreate);
 			}
+			else if (match is ValueMap)
+			{	// add matched dictionary to current scope
+				foreach (string key in match.AsMap.Raw.Keys)
+					SetOnScope(scope, key, match.AsMap[key], bCreate);
+			}
 			else if (pattern is ValueArray)
 			{	// add matched array values to current scope
 				List<Value> patarray = pattern.AsArray;
@@ -18,11 +23,6 @@ namespace loki3.core
 				int count = System.Math.Min(patarray.Count, matcharray.Count);
 				for (int i = 0; i < count; i++)
 					SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate);
-			}
-			else if (pattern is ValueMap)
-			{	// add matched dictionary to current scope
-				foreach (string key in match.AsMap.Raw.Keys)
-					SetOnScope(scope, key, match.AsMap[key], bCreate);
 			}
 		}
 		/// <summary>Add the values from the matched pattern to the scope</summary>
