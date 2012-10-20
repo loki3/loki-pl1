@@ -277,7 +277,7 @@ namespace loki3.builtin
 				Value key = map["key"];
 				if (key != ValueNil.Nil)
 				{
-					Token token = new Token(map["key"].AsString);
+					Token token = new Token(key.AsString);
 					value = scope.GetValue(token);
 					if (value == null)
 						throw new Loki3Exception().AddBadToken(token);
