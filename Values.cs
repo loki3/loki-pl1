@@ -33,7 +33,7 @@ namespace loki3.builtin
 				SetDocString("Set the value on given map key.\nEither creates new variable on active scope or stores value on existing variable.\nCan be stored on a map, current or parent scope.");
 
 				Map map = new Map();
-				map["key"] = PatternData.Single("key", ValueType.String);
+				map["key"] = PatternData.Single("key");
 				map["value"] = PatternData.Single("value");
 				map["create?"] = PatternData.Single("create?", ValueType.Bool, ValueBool.True);
 				map["map"] = PatternData.Single("map", ValueType.Map, ValueNil.Nil);
@@ -47,35 +47,27 @@ namespace loki3.builtin
 				Map map = arg.AsMap;
 
 				// extract parameters
-				string key = map["key"].AsString;
+				Value key = map["key"];
 				Value value = map["value"];
 				bool bCreate = map["create?"].AsBool;
 				ValueMap valueMap = map["map"] as ValueMap;
 				// todo: turn this into an enum, at least "current" & "parent"
 				bool bParentScope = (map["scope"].AsString == "parent");
 
+				// find the matches in the pattern, ignoring the leftover
+				Value match, leftover;
+				PatternChecker.Do(value, key, out match, out leftover);
+
+				// scope we're going to modify
+				IScope toModify = null;
 				if (valueMap != null)
-				{
-					Map theMap = valueMap.AsMap;
-					if (!bCreate && !theMap.ContainsKey(key))
-						throw new Loki3Exception().AddMissingKey(map["key"]);
-					theMap[key] = value;
-				}
+					toModify = new ScopeChain(valueMap.AsMap);
 				else
-				{
-					IScope active = (bParentScope && scope.Parent != null) ? scope.Parent : scope;
-					if (bCreate)
-					{	// store on active scope, creating if needed
-						active.SetValue(key, value);
-					}
-					else
-					{	// var must exist somewhere up the scope chain
-						active = active.Exists(key);
-						if (active == null)
-							throw new Loki3Exception().AddBadToken(new Token(key));
-						active.SetValue(key, value);
-					}
-				}
+					toModify = (bParentScope && scope.Parent != null) ? scope.Parent : scope;
+
+				// add/modify scope
+				if (match != null)
+					Utility.AddToScope(key, match, toModify, bCreate);
 				return value;
 			}
 		}

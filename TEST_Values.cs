@@ -32,7 +32,7 @@ namespace loki3.builtin.test
 
 		static IScope CreateValueScope()
 		{
-			ScopeChain scope = new ScopeChain(null);
+			ScopeChain scope = new ScopeChain();
 			Values.Register(scope);
 
 			scope.SetValue("(", new ValueDelimiter("(", ")", DelimiterType.AsValue));
@@ -128,6 +128,13 @@ namespace loki3.builtin.test
 				Value value = ToValue("l3.setValue { :key :one :value 3 :map mymap }", scope);
 				Assert.AreEqual(3, value.AsInt);
 				Assert.AreEqual(3, map["one"].AsInt);
+			}
+
+			{	// pattern matching: extract values out of an array
+				Value value = ToValue("l3.setValue { :key [ :first :second :third ] :value [ 11 22 33 ] :create? true }", scope);
+				Assert.AreEqual(11, scope.AsMap["first"].AsInt);
+				Assert.AreEqual(22, scope.AsMap["second"].AsInt);
+				Assert.AreEqual(33, scope.AsMap["third"].AsInt);
 			}
 		}
 

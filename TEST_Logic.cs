@@ -10,7 +10,7 @@ namespace loki3.builtin.test
 	{
 		static IScope CreateValueScope()
 		{
-			ScopeChain scope = new ScopeChain(null);
+			ScopeChain scope = new ScopeChain();
 			Logic.Register(scope);
 
 			scope.SetValue("[", new ValueDelimiter("[", "]", DelimiterType.AsArray));

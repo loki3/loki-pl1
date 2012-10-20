@@ -49,7 +49,7 @@ namespace loki3.core.test
 
 		static IScope CreateScope()
 		{
-			ScopeChain scope = new ScopeChain(null);
+			ScopeChain scope = new ScopeChain();
 			scope.SetValue("subtract", new SubtractArray());
 			scope.SetValue("add", new AddUpBody());
 

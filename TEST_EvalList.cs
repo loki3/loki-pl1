@@ -83,7 +83,7 @@ namespace loki3.core.test
 		/// <summary>Registry of test functions</summary>
 		internal class TestScope : ScopeChain
 		{
-			internal TestScope() : base(null)
+			internal TestScope()
 			{
 				SetValue("x", new ValueInt(6));
 				SetValue("+", new TestSum());

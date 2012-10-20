@@ -45,7 +45,7 @@ namespace loki3.core.test
 		[Test]
 		public void TestSimple()
 		{
-			ScopeChain scope = new ScopeChain(null);
+			ScopeChain scope = new ScopeChain();
 			scope.SetValue("+", new TestSum());
 
 			{	// create postfix function
@@ -80,7 +80,7 @@ namespace loki3.core.test
 		[Test]
 		public void TestArrayParams()
 		{
-			ScopeChain scope = new ScopeChain(null);
+			ScopeChain scope = new ScopeChain();
 			scope.SetValue("+", new TestSum());
 			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
 			scope.SetValue("[", square);
@@ -106,7 +106,7 @@ namespace loki3.core.test
 		[Test]
 		public void TestMapParams()
 		{
-			ScopeChain scope = new ScopeChain(null);
+			ScopeChain scope = new ScopeChain();
 			scope.SetValue("+", new TestSum());
 			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
 			scope.SetValue("[", square);

@@ -67,7 +67,7 @@ namespace loki3.core.test
 
 		static IScope CreateScope()
 		{
-			ScopeChain scope = new ScopeChain(null);
+			ScopeChain scope = new ScopeChain();
 			scope.SetValue("subtract-array", new SubtractArray());
 			scope.SetValue("subtract-map", new SubtractMap());
 			scope.SetValue("create-map", new CreateMap());

@@ -36,7 +36,7 @@ namespace loki_pl1
 
 		static ScopeChain Bootstrap()
 		{
-			ScopeChain scope = new ScopeChain(null);
+			ScopeChain scope = new ScopeChain();
 			AllBuiltins.RegisterAll(scope);
 			EvalFile.Do("l3/bootstrap.l3", scope);
 			return scope;

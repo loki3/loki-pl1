@@ -9,7 +9,7 @@ namespace loki3.builtin.test
 	{
 		static IScope CreateMathScope()
 		{
-			ScopeChain scope = new ScopeChain(null);
+			ScopeChain scope = new ScopeChain();
 			Math.Register(scope);
 
 			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);

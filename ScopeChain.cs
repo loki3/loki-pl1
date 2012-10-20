@@ -26,11 +26,27 @@ namespace loki3.core
 	/// Stores functions and delimiters.
 	/// Returns its own functions first, deferring to parent if not found.
 	/// </summary>
-	internal class ScopeChain : IScope, IParseLineDelimiters
+	internal class ScopeChain : IScope
 	{
+		/// <summary>Chain a new scope off a parent scope</summary>
 		internal ScopeChain(IScope parent)
 		{
 			m_parent = parent;
+			m_values = new Map();
+		}
+
+		/// <summary>Treat a map as a scope</summary>
+		internal ScopeChain(Map map)
+		{
+			m_parent = null;
+			m_values = map;
+		}
+
+		/// <summary>Create a scope with no parent</summary>
+		internal ScopeChain()
+		{
+			m_parent = null;
+			m_values = new Map();
 		}
 
 		#region IScope Members
