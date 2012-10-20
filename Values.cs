@@ -56,7 +56,7 @@ namespace loki3.builtin
 
 				// find the matches in the pattern, ignoring the leftover
 				Value match, leftover;
-				PatternChecker.Do(value, key, out match, out leftover);
+				PatternChecker.Do(value, key, true/*bShortPat*/, out match, out leftover);
 
 				// scope we're going to modify
 				IScope toModify = null;

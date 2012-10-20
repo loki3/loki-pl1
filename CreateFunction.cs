@@ -72,7 +72,7 @@ namespace loki3.core
 				{
 					Value value1 = EvalNode.Do(prev, scope, nodes, requestor);
 					Value match, leftover;
-					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], out match, out leftover))
+					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], false/*bShortPat*/, out match, out leftover))
 						throw new Loki3Exception().AddWrongPattern(Metadata[keyPreviousPattern], value1);
 
 					if (leftover != null)
@@ -90,7 +90,7 @@ namespace loki3.core
 				{
 					Value value2 = EvalNode.Do(next, scope2, nodes, requestor);
 					Value match, leftover;
-					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], out match, out leftover))
+					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], false/*bShortPat*/, out match, out leftover))
 						throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], value2);
 
 					// if we created a function that needs a body, add it if present

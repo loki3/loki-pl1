@@ -102,7 +102,7 @@ namespace loki3.core
 				return this;	// without parameters, it's still a function
 			Value post = EvalNode.Do(next, scope, nodes, requestor);
 			Value match, leftover;
-			if (!PatternChecker.Do(post, Metadata[keyNextPattern], out match, out leftover))
+			if (!PatternChecker.Do(post, Metadata[keyNextPattern], false/*bShortPat*/, out match, out leftover))
 				throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], post);
 			if (leftover != null)
 				// create a partial function that starts w/ match & still needs leftover
@@ -127,7 +127,7 @@ namespace loki3.core
 				return this;	// without parameters, it's still a function
 			Value pre = EvalNode.Do(prev, scope, nodes, requestor);
 			Value match, leftover;
-			if (!PatternChecker.Do(pre, Metadata[keyPreviousPattern], out match, out leftover))
+			if (!PatternChecker.Do(pre, Metadata[keyPreviousPattern], false/*bShortPat*/, out match, out leftover))
 				throw new Loki3Exception().AddWrongPattern(Metadata[keyPreviousPattern], pre);
 			if (leftover != null)
 				// create a partial function that starts w/ match & still needs leftover

@@ -15,7 +15,7 @@ namespace loki3.core.test
 
 			{	// single item - match
 				Value input = new ValueBool(true);
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.IsTrue(match.AsBool);
 				Assert.AreEqual(null, leftover);
 			}
@@ -29,14 +29,14 @@ namespace loki3.core.test
 
 			{	// single bool type - match
 				Value input = new ValueBool(true);
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.IsTrue(match.AsBool);
 				Assert.AreEqual(null, leftover);
 			}
 
 			{	// single int type - not a match
 				Value input = new ValueInt(42);
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 			}
 		}
 
@@ -48,14 +48,14 @@ namespace loki3.core.test
 
 			{	// single int type - match
 				Value input = new ValueInt(42);
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(42, match.AsInt);
 				Assert.AreEqual(null, leftover);
 			}
 
 			{	// single float type - not a match
 				Value input = new ValueFloat(3.14);
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 			}
 		}
 
@@ -67,21 +67,21 @@ namespace loki3.core.test
 
 			{	// single int type - match
 				Value input = new ValueInt(42);
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(42, match.AsInt);
 				Assert.AreEqual(null, leftover);
 			}
 
 			{	// single float type - match
 				Value input = new ValueFloat(3.5);
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(3.5, match.AsFloat);
 				Assert.AreEqual(null, leftover);
 			}
 
 			{	// single string type - not a match
 				Value input = new ValueString("hello");
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace loki3.core.test
 
 			{	// single object - not a match
 				Value input = new ValueInt(37);
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 			}
 
 			{	// array with one item - match with leftover
@@ -104,7 +104,7 @@ namespace loki3.core.test
 				one.Add(new ValueInt(5));
 				ValueArray input = new ValueArray(one);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(1, match.AsArray.Count);
 				Assert.AreEqual(5, match.AsArray[0].AsInt);
 				Assert.AreEqual(1, leftover.AsArray.Count);
@@ -117,7 +117,7 @@ namespace loki3.core.test
 				two.Add(new ValueString("hello"));
 				ValueArray input = new ValueArray(two);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(2, match.AsArray.Count);
 				Assert.AreEqual(5, match.AsArray[0].AsInt);
 				Assert.AreEqual("hello", match.AsArray[1].AsString);
@@ -130,7 +130,7 @@ namespace loki3.core.test
 				two.Add(new ValueFloat(2.718));
 				ValueArray input = new ValueArray(two);
 
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 			}
 
 			{	// array with three items - not a match
@@ -140,7 +140,21 @@ namespace loki3.core.test
 				three.Add(new ValueString("goodbye"));
 				ValueArray input = new ValueArray(three);
 
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
+			}
+
+			{	// array with three items & smaller pattern is allowed
+				List<Value> three = new List<Value>();
+				three.Add(new ValueInt(5));
+				three.Add(new ValueString("hello"));
+				three.Add(new ValueString("goodbye"));
+				ValueArray input = new ValueArray(three);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, true/*bShortPat*/, out match, out leftover));
+				Assert.AreEqual(2, match.AsArray.Count);
+				Assert.AreEqual(5, match.AsArray[0].AsInt);
+				Assert.AreEqual("hello", match.AsArray[1].AsString);
+				Assert.AreEqual(null, leftover);
 			}
 		}
 
@@ -155,7 +169,7 @@ namespace loki3.core.test
 
 			{	// single object - not a match
 				Value input = new ValueInt(37);
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 			}
 
 			{	// array with one item - match with default added
@@ -163,7 +177,7 @@ namespace loki3.core.test
 				one.Add(new ValueInt(5));
 				ValueArray input = new ValueArray(one);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(2, match.AsArray.Count);
 				Assert.AreEqual(5, match.AsArray[0].AsInt);
 				Assert.AreEqual(17, match.AsArray[1].AsInt);
@@ -176,7 +190,7 @@ namespace loki3.core.test
 				two.Add(new ValueString("hello"));
 				ValueArray input = new ValueArray(two);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(2, match.AsArray.Count);
 				Assert.AreEqual(5, match.AsArray[0].AsInt);
 				Assert.AreEqual("hello", match.AsArray[1].AsString);
@@ -195,7 +209,7 @@ namespace loki3.core.test
 
 			{	// single object - not a match
 				Value input = PatternData.Single("a");
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 			}
 
 			{	// input is a map w/ fewer keys - match w/ leftover
@@ -203,7 +217,7 @@ namespace loki3.core.test
 				map["do?"] = new ValueBool(true);
 				ValueMap input = new ValueMap(map);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(1, match.AsMap.Count);
 				Assert.AreEqual(true, match.AsMap["do?"].AsBool);
 				Assert.AreEqual(1, leftover.AsMap.Count);
@@ -216,7 +230,7 @@ namespace loki3.core.test
 				map["body"] = PatternData.Body();
 				ValueMap input = new ValueMap(map);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(2, match.AsMap.Count);
 				Assert.AreEqual(true, match.AsMap["do?"].AsBool);
 				Assert.AreEqual("l3.body", match.AsMap["body"].AsString);
@@ -230,7 +244,7 @@ namespace loki3.core.test
 				map["something"] = new ValueInt(42);
 				ValueMap input = new ValueMap(map);
 
-				Assert.IsFalse(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 			}
 		}
 
@@ -248,7 +262,7 @@ namespace loki3.core.test
 				map["second"] = new ValueInt(3);
 				ValueMap input = new ValueMap(map);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(2, match.AsMap.Count);
 				Assert.AreEqual(156, match.AsMap["first"].AsInt);
 				Assert.AreEqual(3, match.AsMap["second"].AsInt);
@@ -260,7 +274,7 @@ namespace loki3.core.test
 				map["first"] = new ValueInt(5);
 				ValueMap input = new ValueMap(map);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(1, match.AsMap.Count);
 				Assert.AreEqual(5, match.AsMap["first"].AsInt);
 				Assert.AreEqual(1, leftover.AsMap.Count);
@@ -283,7 +297,7 @@ namespace loki3.core.test
 				map["b"] = new ValueInt(31);
 				ValueMap input = new ValueMap(map);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(2, match.AsMap.Count);
 				Assert.AreEqual(42, match.AsMap["a"].AsInt);
 				Assert.AreEqual(31, match.AsMap["b"].AsInt);
@@ -295,7 +309,7 @@ namespace loki3.core.test
 				map["a"] = new ValueInt(42);
 				ValueMap input = new ValueMap(map);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(2, match.AsMap.Count);
 				Assert.AreEqual(42, match.AsMap["a"].AsInt);
 				Assert.AreEqual(17, match.AsMap["b"].AsInt);
@@ -307,11 +321,25 @@ namespace loki3.core.test
 				map["b"] = new ValueInt(31);
 				ValueMap input = new ValueMap(map);
 
-				Assert.IsTrue(PatternChecker.Do(input, pattern, out match, out leftover));
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
 				Assert.AreEqual(1, match.AsMap.Count);
 				Assert.AreEqual(31, match.AsMap["b"].AsInt);
 				Assert.AreEqual(1, leftover.AsMap.Count);
 				Assert.AreEqual("a", leftover.AsMap["a"].AsString);
+			}
+
+			{	// get a & b, ignore c because bShortPat=true
+				Map map = new Map();
+				map["a"] = new ValueInt(42);
+				map["b"] = new ValueInt(31);
+				map["c"] = new ValueInt(31);
+				ValueMap input = new ValueMap(map);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, true/*bShortPat*/, out match, out leftover));
+				Assert.AreEqual(2, match.AsMap.Count);
+				Assert.AreEqual(42, match.AsMap["a"].AsInt);
+				Assert.AreEqual(31, match.AsMap["b"].AsInt);
+				Assert.AreEqual(null, leftover);
 			}
 		}
 	}

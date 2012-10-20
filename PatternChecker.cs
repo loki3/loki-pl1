@@ -13,9 +13,10 @@ namespace loki3.core
 		/// </summary>
 		/// <param name="input">input value to match against</param>
 		/// <param name="pattern">pattern to apply against input value</param>
+		/// <param name="bShortPat">true if pattern is allowed to be smaller than input</param>
 		/// <param name="match">portions that match</param>
 		/// <param name="leftover">portions that don't match</param>
-		internal static bool Do(Value input, Value pattern, out Value match, out Value leftover)
+		internal static bool Do(Value input, Value pattern, bool bShortPat, out Value match, out Value leftover)
 		{
 			match = null;
 			leftover = null;
@@ -35,11 +36,11 @@ namespace loki3.core
 					return DoSingle(input as ValueString, ValueType.String, pattern as ValueString, out match);
 
 				case ValueType.Array:
-					return Do(input as ValueArray, pattern, out match, out leftover);
+					return Do(input as ValueArray, pattern, bShortPat, out match, out leftover);
 				case ValueType.Map:
-					if (Do(input as ValueMap, pattern as ValueMap, out match, out leftover))
+					if (Do(input as ValueMap, pattern as ValueMap, bShortPat, out match, out leftover))
 						return true;
-					if (Do(input as ValueMap, pattern as ValueArray, out match, out leftover))
+					if (Do(input as ValueMap, pattern as ValueArray, bShortPat, out match, out leftover))
 						return true;
 					return DoSingle(input as ValueMap, ValueType.Map, pattern as ValueString, out match);
 
@@ -72,7 +73,7 @@ namespace loki3.core
 		}
 
 		/// <summary>Match against an array</summary>
-		private static bool Do(ValueArray input, Value pattern, out Value match, out Value leftover)
+		private static bool Do(ValueArray input, Value pattern, bool bShortPat, out Value match, out Value leftover)
 		{
 			match = null;
 			leftover = null;
@@ -94,15 +95,16 @@ namespace loki3.core
 			List<Value> patarray = patternArray.AsArray;
 			int incount = inarray.Count;
 			int patcount = patarray.Count;
-			if (patcount < incount)
+			if (!bShortPat && patcount < incount)
 				return false;	// pattern has fewer elements than input - not a match
 
 			// matches
 			List<Value> matchlist = new List<Value>();
-			for (int i = 0; i < incount; i++)
+			int count = System.Math.Min(incount, patcount);
+			for (int i = 0; i < count; i++)
 			{
 				Value submatch, subleftover;
-				if (!Do(inarray[i], patarray[i], out submatch, out subleftover))
+				if (!Do(inarray[i], patarray[i], bShortPat, out submatch, out subleftover))
 					return false;
 				matchlist.Add(submatch);
 			}
@@ -130,7 +132,7 @@ namespace loki3.core
 		}
 
 		/// <summary>Match against a map</summary>
-		private static bool Do(ValueMap input, ValueMap pattern, out Value match, out Value leftover)
+		private static bool Do(ValueMap input, ValueMap pattern, bool bShortPat, out Value match, out Value leftover)
 		{
 			match = null;
 			leftover = null;
@@ -141,7 +143,7 @@ namespace loki3.core
 			Map patmap = pattern.AsMap;
 			int incount = inmap.Count;
 			int patcount = patmap.Count;
-			if (patcount < incount)
+			if (!bShortPat && patcount < incount)
 				return false;	// pattern has fewer elements than input - not a match
 
 			// matches
@@ -149,9 +151,10 @@ namespace loki3.core
 			foreach (string key in inmap.Raw.Keys)
 			{
 				Value submatch, subleftover;
-				if (!Do(inmap[key], patmap[key], out submatch, out subleftover))
+				if (Do(inmap[key], patmap[key], bShortPat, out submatch, out subleftover))
+					matchmap[key] = submatch;
+				else if (!bShortPat)
 					return false;	// input has key that pattern doesn't
-				matchmap[key] = submatch;
 			}
 
 			// leftover
@@ -178,7 +181,7 @@ namespace loki3.core
 
 
 		/// <summary>Match a map against an array of keys</summary>
-		private static bool Do(ValueMap input, ValueArray pattern, out Value match, out Value leftover)
+		private static bool Do(ValueMap input, ValueArray pattern, bool bShortPat, out Value match, out Value leftover)
 		{
 			match = null;
 			leftover = null;
@@ -189,7 +192,7 @@ namespace loki3.core
 			List<Value> patarray = pattern.AsArray;
 			int incount = inmap.Count;
 			int patcount = patarray.Count;
-			if (patcount < incount)
+			if (!bShortPat && patcount < incount)
 				return false;	// pattern has fewer elements than input - not a match
 
 			// matches
@@ -200,7 +203,7 @@ namespace loki3.core
 				Value submatch, subleftover;
 				string keyString = key.AsString;
 				if (inmap.ContainsKey(keyString) &&
-					Do(inmap[keyString], key, out submatch, out subleftover))
+					Do(inmap[keyString], key, bShortPat, out submatch, out subleftover))
 				{
 					matchmap[keyString] = submatch;
 				}
