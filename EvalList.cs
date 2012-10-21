@@ -102,6 +102,11 @@ namespace loki3.core
 					}
 					else
 					{
+						if (!m_func.ConsumesPrevious && !m_func.ConsumesNext && !m_func.RequiresBody())
+						{	// function can't be evaled further
+							m_state = NodeState.Value;
+							return;
+						}
 						m_value = m_func.Eval(previous, next, scope, nodes, requestor);
 					}
 				}

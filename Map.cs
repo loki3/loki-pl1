@@ -7,7 +7,7 @@ namespace loki3.core
 	{
 		internal bool ContainsKey(string key)
 		{
-			return m_val.ContainsKey(key);
+			return m_val != null && m_val.ContainsKey(key);
 		}
 		internal int Count
 		{

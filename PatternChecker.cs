@@ -148,14 +148,15 @@ namespace loki3.core
 
 			// matches
 			Map matchmap = new Map();
-			foreach (string key in inmap.Raw.Keys)
-			{
-				Value submatch, subleftover;
-				if (Do(inmap[key], patmap[key], bShortPat, out submatch, out subleftover))
-					matchmap[key] = submatch;
-				else if (!bShortPat)
-					return false;	// input has key that pattern doesn't
-			}
+			if (inmap.Raw != null)
+				foreach (string key in inmap.Raw.Keys)
+				{
+					Value submatch, subleftover;
+					if (Do(inmap[key], patmap[key], bShortPat, out submatch, out subleftover))
+						matchmap[key] = submatch;
+					else if (!bShortPat)
+						return false;	// input has key that pattern doesn't
+				}
 
 			// leftover
 			if (patcount > incount)

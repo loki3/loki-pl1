@@ -10,12 +10,26 @@ namespace loki3.core
 	{
 		internal static Value Do(List<Value> valueLines, IScope parent)
 		{
-			// need a list of strings, not values
-			List<string> rawLines = new List<string>(valueLines.Count);
+			// run each line, returning value of last line
+			Value retval = null;
 			foreach (Value v in valueLines)
-				rawLines.Add(v.AsString);
-
-			return Do(rawLines, parent);
+			{
+				if (v is ValueString)
+				{
+					DelimiterList line = ParseLine.Do(v.AsString, parent);
+					retval = EvalList.Do(line.Nodes, parent);
+				}
+				else if (v is ValueRaw)
+				{
+					ValueRaw raw = v as ValueRaw;
+					retval = EvalList.Do(raw.GetValue().Nodes, parent);
+				}
+				else
+				{
+					throw new Loki3Exception().AddBadLine(v);
+				}
+			}
+			return (retval == null ? new ValueNil() : retval);
 		}
 
 		internal static Value Do(List<string> rawLines, IScope parent)

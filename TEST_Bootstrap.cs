@@ -116,5 +116,55 @@ namespace loki3.builtin.test
 				Assert.Fail(e.ToString());
 			}
 		}
+
+		[Test]
+		public void TestIf()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				string[] lines = {
+					":result = 0",
+					// todo: improve once there's better syntax for creating/updating vars
+					"if flag1?",
+					"	l3.setValue { :key :result :value 1 :create? false }",
+					"elsif flag2?",
+					"	l3.setValue { :key :result :value 2 :create? false }",
+					"else",
+					"	l3.setValue { :key :result :value 3 :create? false }",
+				};
+
+				{	// if block is run
+					scope.SetValue("flag1?", ValueBool.True);
+					scope.SetValue("flag2?", ValueBool.True);
+					LineConsumer requestor = new LineConsumer(lines);
+					EvalLines.Do(requestor, scope);
+					Assert.AreEqual(1, scope.GetValue(new Token("result")).AsInt);
+				}
+
+				{	// elsif block is run
+					scope.SetValue("flag1?", ValueBool.False);
+					scope.SetValue("flag2?", ValueBool.True);
+					LineConsumer requestor = new LineConsumer(lines);
+					EvalLines.Do(requestor, scope);
+					Assert.AreEqual(2, scope.GetValue(new Token("result")).AsInt);
+				}
+
+				{	// else block is run
+					scope.SetValue("flag1?", ValueBool.False);
+					scope.SetValue("flag2?", ValueBool.False);
+					LineConsumer requestor = new LineConsumer(lines);
+					EvalLines.Do(requestor, scope);
+					Assert.AreEqual(3, scope.GetValue(new Token("result")).AsInt);
+				}
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
 	}
 }

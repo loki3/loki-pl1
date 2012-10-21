@@ -50,6 +50,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :postfix = /( l3.createFunction { :pre ->pattern }
 	l3.createFunction { :pre pattern }
 
+// a function with no parameters which may decide to execute its body
+:emptyFunc = l3.createFunction { }
+	l3.createFunction { }
+
 
 //
 // get & set
@@ -130,8 +134,25 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :if = func ->do?
 	l3.ifBody /{ :do? do? :body body
+	l3.setValue { :key :l3.coFunction.if.done? :value do? :scope :parent }
+	do?
 :if @ [ :body? true ]
 :if @doc /" If condition is met, do body
+
+:elsif = func ->do?
+	:doThis? = /( ( !? l3.coFunction.if.done? ) &? do?
+	l3.ifBody /{ :do? doThis? :body body
+	l3.ifBody /{ :do? doThis? :body /[ /` l3.setValue /{ :key :l3.coFunction.if.done? :value true :scope :parent
+	doThis?
+:elsif @ [ :body? true ]
+:elsif @doc /" If previous if and elsifs failed and this condition is met, do body
+
+:else = emptyFunc
+	:doThis? = /( !? l3.coFunction.if.done?
+	l3.ifBody /{ :do? ( !? l3.coFunction.if.done? ) :body body
+	doThis?
+:else @ [ :body? true ]
+:else @doc /" If previous if and elsifs failed, do body
 
 
 //

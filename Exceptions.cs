@@ -37,6 +37,13 @@ namespace loki3.core
 			return this;
 		}
 
+		/// <summary>Couldn't eval line in a body</summary>
+		internal Loki3Exception AddBadLine(Value v)
+		{
+			m_map[keyBadLine] = v;
+			return this;
+		}
+
 		/// <summary>Value wasn't of requested type</summary>
 		internal Loki3Exception AddWrongType(ValueType expected, ValueType actual)
 		{
@@ -64,7 +71,8 @@ namespace loki3.core
 		/// <summary>Tack on the line number where the error occurred</summary>
 		internal Loki3Exception AddLineNumber(int line)
 		{
-			m_map[keyLineNumber] = new ValueInt(line);
+			if (!m_map.ContainsKey(keyLineNumber))
+				m_map[keyLineNumber] = new ValueInt(line);
 			return this;
 		}
 
@@ -103,6 +111,8 @@ namespace loki3.core
 		internal static string keyMissingKey = "l3.error.missingKey";
 		/// <summary>Token that couldn't be parsed</summary>
 		internal static string keyBadToken = "l3.error.badToken";
+		/// <summary>Bad line in a body</summary>
+		internal static string keyBadLine = "l3.error.badLine";
 		/// <summary>Expected type</summary>
 		internal static string keyExpectedType = "l3.error.expectedType";
 		/// <summary>Actual type</summary>
