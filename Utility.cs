@@ -11,10 +11,12 @@ namespace loki3.core
 			{
 				SetOnScope(scope, pattern.AsString, match, bCreate);
 			}
-			else if (match is ValueMap)
+			else if (pattern is ValueMap && match is ValueMap)
 			{	// add matched dictionary to current scope
-				foreach (string key in match.AsMap.Raw.Keys)
-					SetOnScope(scope, key, match.AsMap[key], bCreate);
+				Map patmap = pattern.AsMap;
+				Map matmap = match.AsMap;
+				foreach (string key in matmap.Raw.Keys)
+					SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate);
 			}
 			else if (pattern is ValueArray)
 			{	// add matched array values to current scope

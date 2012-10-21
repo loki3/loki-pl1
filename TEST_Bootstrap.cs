@@ -61,5 +61,60 @@ namespace loki3.builtin.test
 				Assert.Fail(e.ToString());
 			}
 		}
+
+		[Test]
+		public void TestComplex()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				// define complex math
+				string[] lines = {
+					// complex [ 1 2 ] -> 1+2i
+					":complex = func [ ->x ->y ]",
+					"	{ :real x :imaginary y }",
+					":complex @order 1",
+					// 5 i -> 5i
+					":i = /( ->y postfix",
+					"	{ :real 0 :imaginary y }",
+					":i @order 1",
+					// addition
+					// todo: adjust when we have function overloading & default values
+					":+c = /( { :real ->x1 :imaginary ->y1 } infix { :real ->x2 :imaginary ->y2 }",
+					"	{ :real ( x1 + x2 ) :imaginary ( y1 + y2 ) }",
+					":+i = /( ->x1 infix { :real ->x2 :imaginary ->y2 }",
+					"	{ :real ( x1 + x2 ) :imaginary y2 }",
+				};
+				LineConsumer requestor = new LineConsumer(lines);
+				EvalLines.Do(requestor, scope);
+
+				{
+					Value value = ToValue("complex [ 1 2 ]", scope);
+					Assert.AreEqual("{ :real 1 , :imaginary 2 }", value.ToString());
+				}
+
+				{
+					Value value = ToValue("4 i", scope);
+					Assert.AreEqual("{ :real 0 , :imaginary 4 }", value.ToString());
+				}
+
+				{
+					Value value = ToValue("1 +i 3 i", scope);
+					Assert.AreEqual("{ :real 1 , :imaginary 3 }", value.ToString());
+				}
+
+				{
+					Value value = ToValue("( 1 +i 3 i ) +c complex [ 4 6 ]", scope);
+					Assert.AreEqual("{ :real 5 , :imaginary 9 }", value.ToString());
+				}
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
 	}
 }
