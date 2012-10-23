@@ -166,5 +166,50 @@ namespace loki3.builtin.test
 				Assert.Fail(e.ToString());
 			}
 		}
+
+
+		[Test]
+		public void TestParamMetadata()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				string[] lines = {
+					":addUp = func [ ( ->a :type 2 ) ( ->b :default 5 ) ]",
+					"	a + b",
+				};
+				LineConsumer requestor = new LineConsumer(lines);
+				EvalLines.Do(requestor, scope);
+
+				{	// pass expected parameters
+					Value value = ToValue("addUp [ 1 2 ]", scope);
+					Assert.AreEqual(3, value.AsInt);
+				}
+
+				{	// leave off 2nd, use default
+					Value value = ToValue("addUp [ 1 ]", scope);
+					Assert.AreEqual(6, value.AsInt);
+				}
+
+				// it throws if we pass wrong type
+				bool bThrew = false;
+				try
+				{
+					ToValue("addUp [ true 1 ]", scope);
+				}
+				catch (Loki3Exception)
+				{
+					bThrew = true;
+				}
+				Assert.IsTrue(bThrew);
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
 	}
 }

@@ -84,6 +84,19 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object @ /[ :l3.value.order order
 :@order @doc /" Add evaluation order to a value
 
+:: = /( ->object infix [ ->key ->value ]
+	l3.setValue /{ :map ( l3.getMetadata { :value object :writable? true } ) :key key :value value
+	object
+:: @doc /" Set metadata on a value, e.g. a parameter
+
+::type = /( ->object infix ->type
+	object : /[ :l3.param.type type
+::type @doc /" Restrict a parameter to a specific type
+
+::default = /( ->object infix ->default
+	object : /[ :l3.param.default default
+::default @doc /" Set the default value for a parameter if not present
+
 
 //
 // add documentation to functions that have been previously definied
