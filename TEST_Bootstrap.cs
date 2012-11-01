@@ -211,5 +211,32 @@ namespace loki3.builtin.test
 				Assert.Fail(e.ToString());
 			}
 		}
+
+		[Test]
+		public void TestParamMetadata2()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				{
+					Value value = ToValue("{ :a :a :remainder ( :remainder :rest ) } = { :a 4 :b 5 :c 6 }", scope);
+					// value should be { :a 4 :b 5 :c 6 }
+					Assert.AreEqual(3, value.AsMap.Count);
+					// scope should now contain "a" and "remainder"
+					Assert.AreEqual(4, scope.GetValue(new Token("a")).AsInt);
+					Map rest = scope.GetValue(new Token("remainder")).AsMap;
+					Assert.AreEqual(2, rest.Count);
+					Assert.AreEqual(5, rest["b"].AsInt);
+					Assert.AreEqual(6, rest["c"].AsInt);
+				}
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
 	}
 }

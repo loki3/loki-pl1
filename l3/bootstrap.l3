@@ -97,6 +97,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object : /[ :l3.param.default default
 ::default @doc /" Set the default value for a parameter if not present
 
+::rest = /( ->object postfix
+	object : /[ :l3.param.rest true
+::rest @doc /" Associated parameter will be filled with the remainder of the parameter values
+
 
 //
 // add documentation to functions that have been previously definied
