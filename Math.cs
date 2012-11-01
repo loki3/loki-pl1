@@ -27,7 +27,7 @@ namespace loki3.builtin
 			internal AddArray()
 			{
 				SetDocString("Return sum of the numbers in the array.");
-				Init(PatternData.ArrayEnd("a", ValueType.Number));
+				Init(PatternData.Rest("a", ValueType.Number));
 			}
 
 			internal override Value Eval(Value arg, IScope scope)
@@ -94,7 +94,7 @@ namespace loki3.builtin
 			internal MultiplyArray()
 			{
 				SetDocString("Return product of the numbers in the array.");
-				Init(PatternData.ArrayEnd("a", ValueType.Number));
+				Init(PatternData.Rest("a", ValueType.Number));
 			}
 
 			internal override Value Eval(Value arg, IScope scope)

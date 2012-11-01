@@ -49,17 +49,7 @@ namespace loki3.core
 		{
 			ValueString vName = new ValueString(name);
 			PatternData data = new PatternData(vName);
-			data.RestOfArray = true;
-			return vName;
-		}
-
-		/// <summary>Parameter that's the remainder of an array of a given type</summary>
-		internal static Value ArrayEnd(string name, ValueType type)
-		{
-			ValueString vName = new ValueString(name);
-			PatternData data = new PatternData(vName);
-			data.ValueType = type;
-			data.RestOfArray = true;
+			data.UseRest = true;
 			return vName;
 		}
 
@@ -69,7 +59,26 @@ namespace loki3.core
 			ValueString vName = new ValueString("l3.body");
 			PatternData data = new PatternData(vName);
 			data.ValueType = ValueType.String;
-			data.RestOfArray = true;
+			data.UseRest = true;
+			return vName;
+		}
+
+		/// <summary>Parameter that's the remainder of an array or map</summary>
+		internal static Value Rest(string name)
+		{
+			ValueString vName = new ValueString(name);
+			PatternData data = new PatternData(vName);
+			data.UseRest = true;
+			return vName;
+		}
+
+		/// <summary>Parameter that's the remainder of an array of a given type</summary>
+		internal static Value Rest(string name, ValueType type)
+		{
+			ValueString vName = new ValueString(name);
+			PatternData data = new PatternData(vName);
+			data.ValueType = type;
+			data.UseRest = true;
 			return vName;
 		}
 
@@ -90,7 +99,7 @@ namespace loki3.core
 		internal static string keyOneOf = "l3.param.oneOf";
 		internal static string keyRequiredKeys = "l3.param.keys";
 		internal static string keyDefault = "l3.param.default";
-		internal static string keyRestOfArray = "l3.param.rest";
+		internal static string keyRest = "l3.param.rest";
 		internal static string keyIsBody = "l3.param.body?";
 		#endregion
 
@@ -122,18 +131,18 @@ namespace loki3.core
 			set { WritableMetadata[keyDefault] = value; }
 		}
 
-		/// <summary>If present, the parameter will contain the portion of the array that hasn't otherwise been used</summary>
-		internal bool RestOfArray
-		{
-			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptionalT<bool>(keyRestOfArray, false); }
-			set { WritableMetadata[keyRestOfArray] = new ValueBool(value); }
-		}
-
 		/// <summary>If present, the parameter will contain the function body, i.e. an array of strings</summary>
 		internal bool IsBody
 		{
 			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptionalT<bool>(keyIsBody, false); }
 			set { WritableMetadata[keyIsBody] = new ValueBool(value); }
+		}
+
+		/// <summary>If present, the parameter will contain the portion of the array or map that hasn't otherwise been used</summary>
+		internal bool UseRest
+		{
+			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptionalT<bool>(keyRest, false); }
+			set { WritableMetadata[keyRest] = new ValueBool(value); }
 		}
 
 		/// <summary>Make metadata writable if it isn't already</summary>

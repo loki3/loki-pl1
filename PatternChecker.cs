@@ -36,11 +36,11 @@ namespace loki3.core
 					return DoSingle(input as ValueString, ValueType.String, pattern as ValueString, out match);
 
 				case ValueType.Array:
-					return Do(input as ValueArray, pattern, bShortPat, out match, out leftover);
+					return MatchAgainstArray(input as ValueArray, pattern, bShortPat, out match, out leftover);
 				case ValueType.Map:
-					if (Do(input as ValueMap, pattern as ValueMap, bShortPat, out match, out leftover))
+					if (MatchAgainstMap(input as ValueMap, pattern as ValueMap, bShortPat, out match, out leftover))
 						return true;
-					if (Do(input as ValueMap, pattern as ValueArray, bShortPat, out match, out leftover))
+					if (MatchMapAgainstKeys(input as ValueMap, pattern as ValueArray, bShortPat, out match, out leftover))
 						return true;
 					return DoSingle(input as ValueMap, ValueType.Map, pattern as ValueString, out match);
 
@@ -73,7 +73,7 @@ namespace loki3.core
 		}
 
 		/// <summary>Match against an array</summary>
-		private static bool Do(ValueArray input, Value pattern, bool bShortPat, out Value match, out Value leftover)
+		private static bool MatchAgainstArray(ValueArray input, Value pattern, bool bShortPat, out Value match, out Value leftover)
 		{
 			match = null;
 			leftover = null;
@@ -132,7 +132,7 @@ namespace loki3.core
 		}
 
 		/// <summary>Match against a map</summary>
-		private static bool Do(ValueMap input, ValueMap pattern, bool bShortPat, out Value match, out Value leftover)
+		private static bool MatchAgainstMap(ValueMap input, ValueMap pattern, bool bShortPat, out Value match, out Value leftover)
 		{
 			match = null;
 			leftover = null;
@@ -182,7 +182,7 @@ namespace loki3.core
 
 
 		/// <summary>Match a map against an array of keys</summary>
-		private static bool Do(ValueMap input, ValueArray pattern, bool bShortPat, out Value match, out Value leftover)
+		private static bool MatchMapAgainstKeys(ValueMap input, ValueArray pattern, bool bShortPat, out Value match, out Value leftover)
 		{
 			match = null;
 			leftover = null;
