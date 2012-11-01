@@ -59,7 +59,6 @@ namespace loki3.core
 			ValueString vName = new ValueString("l3.body");
 			PatternData data = new PatternData(vName);
 			data.ValueType = ValueType.String;
-			data.UseRest = true;
 			return vName;
 		}
 

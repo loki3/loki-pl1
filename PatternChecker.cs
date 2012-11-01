@@ -143,17 +143,28 @@ namespace loki3.core
 			Map patmap = pattern.AsMap;
 			int incount = inmap.Count;
 			int patcount = patmap.Count;
-			if (!bShortPat && patcount < incount)
+			string restKey = FindRestKey(patmap);	// a key that wants the rest of the map
+			if (!bShortPat && patcount < incount && restKey == null)
 				return false;	// pattern has fewer elements than input - not a match
 
-			// matches
 			Map matchmap = new Map();
+			// if an item in pattern wants rest of map, create housing for it
+			Map restMap = null;
+			if (restKey != null)
+			{
+				restMap = new Map();
+				matchmap[restKey] = new ValueMap(restMap);
+			}
+
+			// matches
 			if (inmap.Raw != null)
 				foreach (string key in inmap.Raw.Keys)
 				{
 					Value submatch, subleftover;
-					if (Do(inmap[key], patmap[key], bShortPat, out submatch, out subleftover))
+					if (patmap.ContainsKey(key) && Do(inmap[key], patmap[key], bShortPat, out submatch, out subleftover))
 						matchmap[key] = submatch;
+					else if (restMap != null)
+						restMap[key] = inmap[key];
 					else if (!bShortPat)
 						return false;	// input has key that pattern doesn't
 				}
@@ -167,7 +178,7 @@ namespace loki3.core
 					PatternData data = new PatternData(patmap[key] as ValueString);
 					if (!matchmap.ContainsKey(key) && data.Default != null)
 						matchmap[key] = data.Default;
-					else if (!inmap.ContainsKey(key))
+					else if (key != restKey && !inmap.ContainsKey(key))
 						leftovermap[key] = patmap[key];
 				}
 				if (leftovermap.Count > 0)
@@ -226,6 +237,21 @@ namespace loki3.core
 				leftover = new ValueMap(leftovermap);
 
 			return true;
+		}
+
+		/// <summary>
+		/// If anything in map should get the rest of the map, return it
+		/// </summary>
+		private static string FindRestKey(Map map)
+		{
+			foreach (string key in map.Raw.Keys)
+			{
+				Value value = map[key];
+				Map meta = value.Metadata;
+				if (meta != null && meta.ContainsKey(PatternData.keyRest))
+					return key;
+			}
+			return null;
 		}
 	}
 }

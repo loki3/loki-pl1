@@ -283,6 +283,46 @@ namespace loki3.core.test
 		}
 
 		[Test]
+		public void TestRestOfMap()
+		{
+			Map map = new Map();
+			map["a"] = PatternData.Single("a", ValueType.Int);
+			map["other"] = PatternData.Rest("other");
+			ValueMap pattern = new ValueMap(map);
+			Value match = null, leftover = null;
+
+			{	// input is a map w/ fewer keys - match w/ leftover
+				map = new Map();
+				map["a"] = new ValueInt(14);
+				ValueMap input = new ValueMap(map);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
+				Assert.AreEqual(2, match.AsMap.Count);
+				Assert.AreEqual(14, match.AsMap["a"].AsInt);
+				Map rest = match.AsMap["other"].AsMap;
+				Assert.AreEqual(0, rest.Count);				// 'rest' is present but empty
+				Assert.AreEqual(null, leftover);
+			}
+
+			{	// input contains extra keys that will get stuffed in 'other'
+				map = new Map();
+				map["a"] = new ValueInt(14);
+				map["b"] = new ValueInt(3);
+				map["c"] = new ValueInt(15);
+				ValueMap input = new ValueMap(map);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
+				Assert.AreEqual(2, match.AsMap.Count);
+				Assert.AreEqual(14, match.AsMap["a"].AsInt);
+				Map rest = match.AsMap["other"].AsMap;
+				Assert.AreEqual(2, rest.Count);
+				Assert.AreEqual(3, rest["b"].AsInt);
+				Assert.AreEqual(15, rest["c"].AsInt);
+				Assert.AreEqual(null, leftover);
+			}
+		}
+
+		[Test]
 		public void TestMapFromArrayPattern()
 		{
 			List<Value> list = new List<Value>();
