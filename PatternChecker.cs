@@ -207,8 +207,21 @@ namespace loki3.core
 			if (!bShortPat && patcount < incount)
 				return false;	// pattern has fewer elements than input - not a match
 
-			// matches
 			Map matchmap = new Map();
+			// if an item in pattern wants rest of map, create housing for it
+			Map restMap = null;
+			Value lastPat = pattern.AsArray[patcount - 1];
+			if (lastPat.Metadata != null && lastPat.Metadata.ContainsKey(PatternData.keyRest))
+			{
+				string restKey = lastPat.AsString;
+				if (restKey != null)
+				{
+					restMap = new Map();
+					matchmap[restKey] = new ValueMap(restMap);
+				}
+			}
+
+			// matches
 			Map leftovermap = new Map();
 			foreach (Value key in patarray)
 			{
@@ -219,7 +232,7 @@ namespace loki3.core
 				{
 					matchmap[keyString] = submatch;
 				}
-				else
+				else if (restMap == null)
 				{	// doesn't have key or it's a mismatch
 					PatternData data = new PatternData(key as ValueString);
 					if (data.Default != null)
@@ -233,6 +246,12 @@ namespace loki3.core
 				return false;
 
 			match = new ValueMap(matchmap);
+			if (restMap != null && incount > patcount)
+			{	// copy across remainder of input
+				foreach (string inkey in inmap.Raw.Keys)
+					if (!matchmap.ContainsKey(inkey))
+						restMap[inkey] = inmap[inkey];
+			}
 			if (leftovermap.Count > 0)
 				leftover = new ValueMap(leftovermap);
 

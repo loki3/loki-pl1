@@ -18,13 +18,19 @@ namespace loki3.core
 				foreach (string key in matmap.Raw.Keys)
 					SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate);
 			}
-			else if (pattern is ValueArray)
+			else if (pattern is ValueArray && match is ValueArray)
 			{	// add matched array values to current scope
 				List<Value> patarray = pattern.AsArray;
 				List<Value> matcharray = match.AsArray;
 				int count = System.Math.Min(patarray.Count, matcharray.Count);
 				for (int i = 0; i < count; i++)
 					SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate);
+			}
+			else if (pattern is ValueArray && match is ValueMap)
+			{
+				Map matmap = match.AsMap;
+				foreach (string key in matmap.Raw.Keys)
+					SetOnScope(scope, key, matmap[key], bCreate);
 			}
 		}
 		/// <summary>Add the values from the matched pattern to the scope</summary>
