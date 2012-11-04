@@ -16,6 +16,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.setValue", new SetValue());
 			scope.SetValue("l3.getValue", new GetValue());
 			scope.SetValue("l3.createMap", new CreateMap());
+			scope.SetValue("l3.createRange", new CreateRange());
 			scope.SetValue("l3.createFunction", new CreateFunction());
 			scope.SetValue("l3.createDelimiter", new CreateDelimiter());
 			scope.SetValue("l3.createEvalDelimiter", new CreateEvalDelimiter());
@@ -134,6 +135,52 @@ namespace loki3.builtin
 					map[key] = value;
 				}
 				return new ValueMap(map);
+			}
+		}
+
+		/// <summary>{ [:start] :end [:step] } -> array</summary>
+		class CreateRange : ValueFunctionPre
+		{
+			internal CreateRange()
+			{
+				SetDocString("Create an array using a given range");
+
+				Map map = new Map();
+				map["start"] = PatternData.Single("start", ValueType.Number, new ValueInt(1));
+				map["end"] = PatternData.Single("end", ValueType.Number);
+				map["step"] = PatternData.Single("step", ValueType.Number, new ValueInt(1));
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+
+				Value vStart = map["start"];
+				Value vEnd = map["end"];
+				Value vStep = map["step"];
+
+				List<Value> list = new List<Value>();
+				if (vStart is ValueInt && vEnd is ValueInt && vStep is ValueInt)
+				{	// all params are ints - output is ints
+					int start = vStart.AsInt;
+					int end = vEnd.AsInt;
+					int step = vStep.AsInt;
+					for (int i = start; i <= end; i += step)
+						list.Add(new ValueInt(i));
+				}
+				else
+				{	// if anything is a float, output is floats
+					double start = vStart.AsForcedFloat;
+					double end = vEnd.AsForcedFloat;
+					double step = vStep.AsForcedFloat;
+					end += 1e-10;	// a cheap but non-robust way to deal w/ roundoff
+					for (double i = start; i < end; i += step)
+						list.Add(new ValueFloat(i));
+				}
+
+				return new ValueArray(list);
 			}
 		}
 

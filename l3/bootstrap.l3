@@ -142,6 +142,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// data structures
+
+:.. = /( ->start infix ->end
+	l3.createRange { :start start :end end }
+:.. @doc /" Creates an array starting with one value and ending with another
+
+
+//
 // conditional
 
 // ternary operator
