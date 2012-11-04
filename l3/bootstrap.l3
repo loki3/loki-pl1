@@ -67,6 +67,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.setValue /{ :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value
 	object
 
+// get all the metadata attached to a value
+:.@@ = /( ->object postfix
+	l3.getMetadata { :key object }
+
 // get a particular piece of metadata attached to a value
 :.@ = /( ->object infix ->key
 	l3.getValue /{ :object ( l3.getMetadata { :key object } ) :key key
@@ -112,6 +116,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :.		@doc	/" Access the member of a map by key or array by index
 :@		@doc	/" Modify a value's metadata
 :.@		@doc	/" Get a value's metadata
+:.@@	@doc	/" Get all of a value's metadata
 :@doc	@doc	/" Add documentation to a value
 
 
