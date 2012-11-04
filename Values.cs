@@ -138,7 +138,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ [:start] :end [:step] } -> array</summary>
+		/// <summary>{ [->start : number] ->end : number [->step : number] } -> array</summary>
 		class CreateRange : ValueFunctionPre
 		{
 			internal CreateRange()
