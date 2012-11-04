@@ -246,6 +246,19 @@ namespace loki3.builtin.test
 					Assert.AreEqual(5, rest["b"].AsInt);
 					Assert.AreEqual(6, rest["c"].AsInt);
 				}
+
+				{
+					ScopeChain nested = new ScopeChain(scope);
+					Value value = ToValue("[ ->a ( ->remainder :rest ) ] = [ 7 8 9 ]", nested);
+					// value should be [ 7 8 9 ]
+					Assert.AreEqual(3, value.AsArray.Count);
+					// nested should now contain "a" and "remainder"
+					Assert.AreEqual(7, nested.GetValue(new Token("a")).AsInt);
+					System.Collections.Generic.List<Value> rest = nested.GetValue(new Token("remainder")).AsArray;
+					Assert.AreEqual(2, rest.Count);
+					Assert.AreEqual(8, rest[0].AsInt);
+					Assert.AreEqual(9, rest[1].AsInt);
+				}
 			}
 			catch (Loki3Exception e)
 			{

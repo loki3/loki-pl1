@@ -199,6 +199,61 @@ namespace loki3.core.test
 		}
 
 		[Test]
+		public void TestRestOfArray()
+		{
+			List<Value> list = new List<Value>();
+			list.Add(PatternData.Single("a", ValueType.Int));
+			list.Add(PatternData.Rest("b"));
+			ValueArray pattern = new ValueArray(list);
+			Value match = null, leftover = null;
+
+			{	// array with one item - remainder is empty
+				List<Value> one = new List<Value>();
+				one.Add(new ValueInt(5));
+				ValueArray input = new ValueArray(one);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
+				Assert.AreEqual(2, match.AsArray.Count);
+				Assert.AreEqual(5, match.AsArray[0].AsInt);
+				List<Value> rest = match.AsArray[1].AsArray;
+				Assert.AreEqual(0, rest.Count);
+				Assert.AreEqual(null, leftover);
+			}
+
+			{	// array with two items of proper type - single remainder
+				List<Value> two = new List<Value>();
+				two.Add(new ValueInt(5));
+				two.Add(new ValueString("hello"));
+				ValueArray input = new ValueArray(two);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
+				Assert.AreEqual(2, match.AsArray.Count);
+				Assert.AreEqual(5, match.AsArray[0].AsInt);
+				List<Value> rest = match.AsArray[1].AsArray;
+				Assert.AreEqual(1, rest.Count);
+				Assert.AreEqual("hello", rest[0].AsString);
+				Assert.AreEqual(null, leftover);
+			}
+
+			{	// array with three items of proper type - two items in remainder
+				List<Value> three = new List<Value>();
+				three.Add(new ValueInt(5));
+				three.Add(new ValueString("hello"));
+				three.Add(new ValueInt(7));
+				ValueArray input = new ValueArray(three);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
+				Assert.AreEqual(2, match.AsArray.Count);
+				Assert.AreEqual(5, match.AsArray[0].AsInt);
+				List<Value> rest = match.AsArray[1].AsArray;
+				Assert.AreEqual(2, rest.Count);
+				Assert.AreEqual("hello", rest[0].AsString);
+				Assert.AreEqual(7, rest[1].AsInt);
+				Assert.AreEqual(null, leftover);
+			}
+		}
+
+		[Test]
 		public void TestMap()
 		{
 			Map map = new Map();
