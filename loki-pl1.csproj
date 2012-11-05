@@ -48,6 +48,7 @@
     <Compile Include="Conditional.cs" />
     <Compile Include="ILineRequestor.cs" />
     <Compile Include="Logic.cs" />
+    <Compile Include="Loop.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="PartialFunction.cs" />

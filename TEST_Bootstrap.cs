@@ -265,5 +265,36 @@ namespace loki3.builtin.test
 				Assert.Fail(e.ToString());
 			}
 		}
+
+
+
+		[Test]
+		public void TestLoop()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				string[] lines = {
+					":total = 0",
+					":i = 0",
+					"l3.loop { :check ` i !=? 5 ` }",
+					"	:i = i + 1",
+					"	:total = total + i",
+				};
+
+				{
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.AreEqual(15, result.AsInt);
+				}
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
 	}
 }

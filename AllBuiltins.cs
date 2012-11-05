@@ -10,6 +10,7 @@ namespace loki3.builtin
 		{
 			Conditional.Register(scope);
 			Logic.Register(scope);
+			Loop.Register(scope);
 			Math.Register(scope);
 			Values.Register(scope);
 		}
