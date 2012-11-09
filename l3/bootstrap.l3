@@ -186,6 +186,21 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// loop
+
+:while = func ->cond
+	l3.loop /{ :check cond :body body
+:while @ [ :body? true ]
+:while @doc /" Repeat loop while condition is true
+
+:for = func /[ ->start ->cond ->change
+	start
+	l3.loop /{ :check cond :change change :body body
+:for @ [ :body? true ]
+:for @doc /" Call initialization code, then repeat loop while condition is true, evaluating final expression each time
+
+
+//
 // math
 
 :+ = ( ->a infix ->b )

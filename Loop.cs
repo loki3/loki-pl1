@@ -17,15 +17,16 @@ namespace loki3.builtin
 		}
 
 
-		/// <summary>{ :check :body [checkFirst?] } -> keep running body until !check</summary>
+		/// <summary>{ :check :body [:change] [:checkFirst?] } -> keep running body until !check</summary>
 		class BasicLoop : ValueFunctionPre
 		{
 			internal BasicLoop()
 			{
-				SetDocString("Repeat body until a condition is no longer true. Return value is last value of body.");
+				SetDocString("Repeat body until a condition is no longer true. Optionally run some code at the end of each loop.  Return value is last value of body.");
 
 				Map map = new Map();
 				map["check"] = PatternData.Single("check", ValueType.Raw);
+				map["change"] = PatternData.Single("change", ValueType.Raw, ValueNil.Nil);
 				map["checkFirst?"] = PatternData.Single("checkFirst?", ValueType.Bool, ValueBool.True);
 				map["body"] = PatternData.Body();
 				ValueMap vMap = new ValueMap(map);
@@ -37,8 +38,10 @@ namespace loki3.builtin
 				Map map = arg.AsMap;
 
 				List<DelimiterNode> check = (map["check"] as ValueRaw).GetValue().Nodes;
+				Value changeVal = map["change"];
+				List<DelimiterNode> change = changeVal is ValueNil ? null : (changeVal as ValueRaw).GetValue().Nodes;
 				bool checkFirst = map["checkFirst?"].AsBool;
-				List<Value> valueBody = map["l3.func.body"].AsArray;
+				List<Value> valueBody = map.ContainsKey("body") ? map["body"].AsArray : map["l3.func.body"].AsArray;
 
 				bool isFirst = true;
 				Value result = ValueBool.False;
@@ -55,6 +58,8 @@ namespace loki3.builtin
 						isFirst = false;
 					}
 					result = EvalBody.Do(valueBody, scope);
+					if (change != null)
+						EvalList.Do(change, scope);
 				}
 			}
 		}
