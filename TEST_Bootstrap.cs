@@ -22,7 +22,7 @@ namespace loki3.builtin.test
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 
 				{	// test setting a value and adding metadata to it
-					Value a = ToValue(":a = 3", scope);
+					Value a = ToValue(":a <- 3", scope);
 					ToValue(":a @ [ :tag :hello ]", scope);
 					Assert.AreEqual("hello", a.Metadata["tag"].AsString);
 				}
@@ -74,18 +74,18 @@ namespace loki3.builtin.test
 				// define complex math
 				string[] lines = {
 					// complex [ 1 2 ] -> 1+2i
-					":complex = func [ ->x ->y ]",
+					":complex <- func [ ->x ->y ]",
 					"	{ :real x :imaginary y }",
 					":complex @order 1",
 					// 5 i -> 5i
-					":i = /( ->y postfix",
+					":i <- /( ->y postfix",
 					"	{ :real 0 :imaginary y }",
 					":i @order 1",
 					// addition
 					// todo: adjust when we have function overloading & default values
-					":+c = /( { :real ->x1 :imaginary ->y1 } infix { :real ->x2 :imaginary ->y2 }",
+					":+c <- /( { :real ->x1 :imaginary ->y1 } infix { :real ->x2 :imaginary ->y2 }",
 					"	{ :real ( x1 + x2 ) :imaginary ( y1 + y2 ) }",
-					":+i = /( ->x1 infix { :real ->x2 :imaginary ->y2 }",
+					":+i <- /( ->x1 infix { :real ->x2 :imaginary ->y2 }",
 					"	{ :real ( x1 + x2 ) :imaginary y2 }",
 				};
 				LineConsumer requestor = new LineConsumer(lines);
@@ -127,14 +127,13 @@ namespace loki3.builtin.test
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 
 				string[] lines = {
-					":result = 0",
-					// todo: improve once there's better syntax for creating/updating vars
+					":result <- 0",
 					"if flag1?",
-					"	l3.setValue { :key :result :value 1 :create? false }",
+					"	:result = 1",
 					"elsif flag2?",
-					"	l3.setValue { :key :result :value 2 :create? false }",
+					"	:result = 2",
 					"else",
-					"	l3.setValue { :key :result :value 3 :create? false }",
+					"	:result = 3",
 				};
 
 				{	// if block is run
@@ -177,18 +176,17 @@ namespace loki3.builtin.test
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 
 				string[] lines = {
-					":result = 0",
-					// todo: improve once there's better syntax for creating/updating vars
+					":result <- 0",
 					"if flag1?",
 					"	if flag2?",
-					"		l3.setValue { :key :result :value 1 :create? false }",
+					"		:result = 1",
 					"	else",
-					"		l3.setValue { :key :result :value 2 :create? false }",
+					"		:result = 2",
 					"else",
 					"	if flag3?",
-					"		l3.setValue { :key :result :value 3 :create? false }",
+					"		:result = 3",
 					"	else",
-					"		l3.setValue { :key :result :value 4 :create? false }",
+					"		:result = 4",
 				};
 
 				{	// nested if block is run
@@ -240,7 +238,7 @@ namespace loki3.builtin.test
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 
 				string[] lines = {
-					":addUp = func [ ( ->a :type 2 ) ( ->b :default 5 ) ]",
+					":addUp <- func [ ( ->a :type 2 ) ( ->b :default 5 ) ]",
 					"	a + b",
 				};
 				LineConsumer requestor = new LineConsumer(lines);
@@ -285,7 +283,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = ToValue("{ :a :a :remainder ( :remainder :rest ) } = { :a 4 :b 5 :c 6 }", nested);
+					Value value = ToValue("{ :a :a :remainder ( :remainder :rest ) } <- { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -298,7 +296,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = ToValue("[ ->a ( ->remainder :rest ) ] = { :a 4 :b 5 :c 6 }", nested);
+					Value value = ToValue("[ ->a ( ->remainder :rest ) ] <- { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -311,7 +309,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = ToValue("[ ->a ( ->remainder :rest ) ] = [ 7 8 9 ]", nested);
+					Value value = ToValue("[ ->a ( ->remainder :rest ) ] <- [ 7 8 9 ]", nested);
 					// value should be [ 7 8 9 ]
 					Assert.AreEqual(3, value.AsArray.Count);
 					// nested should now contain "a" and "remainder"
@@ -341,8 +339,8 @@ namespace loki3.builtin.test
 
 				{	// l3.loop
 					string[] lines = {
-						":total = 0",
-						":i = 0",
+						":total <- 0",
+						":i <- 0",
 						"l3.loop /{ :check /` i !=? 5",
 						"	:i = i + 1",
 						"	:total = total + i",
@@ -354,8 +352,8 @@ namespace loki3.builtin.test
 
 				{	// while
 					string[] lines = {
-						":total = 0",
-						":i = 0",
+						":total <- 0",
+						":i <- 0",
 						"while /` i !=? 5",
 						"	:i = i + 1",
 						"	:total = total + i",
@@ -367,7 +365,9 @@ namespace loki3.builtin.test
 
 				{	// for
 					string[] lines = {
-						":total = 0",
+						":total <- 0",
+						// todo: should be able to declare i inside for
+						":i <- 0",
 						"for /[ ` :i = 0 ` ` i !=? 5 ` ` :i = i + 1 `",
 						"	:total = total + i",
 					};
