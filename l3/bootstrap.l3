@@ -203,6 +203,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :for @ [ :body? true ]
 :for @doc /" Call initialization code, then repeat loop while condition is true, evaluating final expression each time
 
+:forEach <- /( ->key infix ->collection
+	l3.forEach /{ :key key :collection collection :body body
+:forEach @ [ :body? true ]
+:forEach @doc /" Repeat loop for each item in collection.  Pattern is specified before forEach.  Collection is specified after forEach.
+
 
 //
 // math

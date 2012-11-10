@@ -14,6 +14,7 @@ namespace loki3.builtin
 		internal static void Register(IScope scope)
 		{
 			scope.SetValue("l3.loop", new BasicLoop());
+			scope.SetValue("l3.forEach", new ForEach());
 		}
 
 
@@ -67,6 +68,68 @@ namespace loki3.builtin
 					if (change != null)
 						EvalList.Do(change, scope);
 				}
+			}
+		}
+
+		/// <summary>{ :key :collection :body } -> run body for every item in collection</summary>
+		class ForEach : ValueFunctionPre
+		{
+			internal ForEach()
+			{
+				SetDocString("Repeat body once for every item in collection.  Return value is last value of body.");
+
+				Map map = new Map();
+				map["key"] = PatternData.Single("key");
+				map["collection"] = PatternData.Single("collection");
+				map["body"] = PatternData.Body();
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+
+				// todo: generalize key for pattern matching
+				string var = map["key"].AsString;
+				Value collection = map["collection"];
+				// todo: consolidate these bodies, one from an explicit param & one from the following lines
+				List<Value> valueBody = map.ContainsKey("body") ? map["body"].AsArray : map["l3.func.body"].AsArray;
+
+				// todo: abstract iteration to avoid these ifs
+				Value result = ValueNil.Nil;
+				if (collection is ValueString)
+				{
+					string s = collection.AsString;
+					foreach (char c in s)
+					{
+						scope.SetValue(var, new ValueString(c.ToString()));
+						result = EvalBody.Do(valueBody, scope);
+					}
+				}
+				else if (collection is ValueArray)
+				{
+					List<Value> list = collection.AsArray;
+					foreach (Value v in list)
+					{
+						scope.SetValue(var, v);
+						result = EvalBody.Do(valueBody, scope);
+					}
+				}
+				else if (collection is ValueMap)
+				{
+					Dictionary<string, Value> dict = collection.AsMap.Raw;
+					foreach (string key in dict.Keys)
+					{
+						List<Value> list = new List<Value>();
+						list.Add(new ValueString(key));
+						list.Add(dict[key]);
+						
+						scope.SetValue(var, new ValueArray(list));
+						result = EvalBody.Do(valueBody, scope);
+					}
+				}
+				return result;
 			}
 		}
 

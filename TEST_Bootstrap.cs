@@ -327,7 +327,6 @@ namespace loki3.builtin.test
 		}
 
 
-
 		[Test]
 		public void TestLoop()
 		{
@@ -392,6 +391,46 @@ namespace loki3.builtin.test
 					Assert.AreEqual(10, result.AsInt);
 				}
 #endif
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
+
+		[Test]
+		public void TestForEach()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				{	// loop thru all items in an array
+					string[] lines = {
+						":total <- 0",
+						// todo: should be able to declare i in forEach line
+						":i <- 0",
+						":i forEach ( 1 .. 5 )",
+						"	:total = total + i",
+					};
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.AreEqual(15, result.AsInt);
+				}
+
+				{	// loop thru all items in a map
+					string[] lines = {
+						":total <- 0",
+						":i <- nil",
+						":i forEach { :a 2 :b 4 }",
+						"	:total = total + i . 1",
+					};
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.AreEqual(6, result.AsInt);
+				}
 			}
 			catch (Loki3Exception e)
 			{
