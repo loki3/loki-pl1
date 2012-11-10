@@ -41,12 +41,14 @@ namespace loki3.builtin
 				Value changeVal = map["change"];
 				List<DelimiterNode> change = changeVal is ValueNil ? null : (changeVal as ValueRaw).GetValue().Nodes;
 				bool checkFirst = map["checkFirst?"].AsBool;
+				// todo: consolidate these bodies, one from an explicit param & one from the following lines
 				List<Value> valueBody = map.ContainsKey("body") ? map["body"].AsArray : map["l3.func.body"].AsArray;
 
 				bool isFirst = true;
 				Value result = ValueBool.False;
 				while (true)
 				{
+					// check if we should stop loop
 					if (!isFirst || checkFirst)
 					{
 						Value retval = EvalList.Do(check, scope);
@@ -57,7 +59,11 @@ namespace loki3.builtin
 					{
 						isFirst = false;
 					}
+
+					// eval body
 					result = EvalBody.Do(valueBody, scope);
+
+					// if per-loop code was passed, run it
 					if (change != null)
 						EvalList.Do(change, scope);
 				}

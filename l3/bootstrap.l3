@@ -179,7 +179,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :else = emptyFunc
 	:doThis? = /( !? l3.coFunction.if.done?
-	l3.ifBody /{ :do? ( !? l3.coFunction.if.done? ) :body body
+	l3.ifBody /{ :do? doThis? :body body
 	doThis?
 :else @ [ :body? true ]
 :else @doc /" If previous if and elsifs failed, do body

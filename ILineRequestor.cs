@@ -18,6 +18,9 @@ namespace loki3.core
 
 		/// <summary>Are we on a valid line?</summary>
 		bool HasCurrent();
+
+		/// <summary>Is this just a subset of all lines?</summary>
+		bool IsSubset();
 	}
 
 
@@ -34,16 +37,26 @@ namespace loki3.core
 		}
 		internal LineConsumer(List<string> lines)
 		{
-			m_count = lines.Count;
-			m_lines = new string[m_count];
-			int i = 0;
-			foreach (string line in lines)
-				m_lines[i++] = line;
+			Init(lines);
+		}
+		internal LineConsumer(List<string> lines, bool isSubset)
+		{
+			Init(lines);
+			m_isSubset = isSubset;
 		}
 		internal LineConsumer(string[] lines)
 		{
 			m_count = lines.GetLength(0);
 			m_lines = lines;
+		}
+
+		private void Init(List<string> lines)
+		{
+			m_count = lines.Count;
+			m_lines = new string[m_count];
+			int i = 0;
+			foreach (string line in lines)
+				m_lines[i++] = line;
 		}
 
 		#region ILineRequestor Members
@@ -71,10 +84,16 @@ namespace loki3.core
 		{
 			return (m_current < m_count);
 		}
+
+		public bool IsSubset()
+		{
+			return m_isSubset;
+		}
 		#endregion
 
 		private string[] m_lines;
 		private int m_count;
 		private int m_current = 0;
+		private bool m_isSubset = false;
 	}
 }

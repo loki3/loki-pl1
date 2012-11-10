@@ -12,12 +12,15 @@ namespace loki3.core
 		{
 			// run each line, returning value of last line
 			Value retval = null;
-			foreach (Value v in valueLines)
+			int count = valueLines.Count;
+			for (int i = 0; i < count; i++)
 			{
+				Value v = valueLines[i];
 				if (v is ValueString)
 				{
+					ILineRequestor requestor = Utility.GetSubLineRequestor(valueLines, i, out i);
 					DelimiterList line = ParseLine.Do(v.AsString, parent);
-					retval = EvalList.Do(line.Nodes, parent);
+					retval = EvalList.Do(line.Nodes, parent, requestor);
 				}
 				else if (v is ValueRaw)
 				{

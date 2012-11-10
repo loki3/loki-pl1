@@ -167,6 +167,68 @@ namespace loki3.builtin.test
 			}
 		}
 
+		[Test]
+		public void TestNested()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				string[] lines = {
+					":result = 0",
+					// todo: improve once there's better syntax for creating/updating vars
+					"if flag1?",
+					"	if flag2?",
+					"		l3.setValue { :key :result :value 1 :create? false }",
+					"	else",
+					"		l3.setValue { :key :result :value 2 :create? false }",
+					"else",
+					"	if flag3?",
+					"		l3.setValue { :key :result :value 3 :create? false }",
+					"	else",
+					"		l3.setValue { :key :result :value 4 :create? false }",
+				};
+
+				{	// nested if block is run
+					scope.SetValue("flag1?", ValueBool.True);
+					scope.SetValue("flag2?", ValueBool.True);
+					LineConsumer requestor = new LineConsumer(lines);
+					EvalLines.Do(requestor, scope);
+					Assert.AreEqual(1, scope.GetValue(new Token("result")).AsInt);
+				}
+
+				{	// nested else is run
+					scope.SetValue("flag1?", ValueBool.True);
+					scope.SetValue("flag2?", ValueBool.False);
+					LineConsumer requestor = new LineConsumer(lines);
+					EvalLines.Do(requestor, scope);
+					Assert.AreEqual(2, scope.GetValue(new Token("result")).AsInt);
+				}
+
+				{	// top level else block is run, nested if
+					scope.SetValue("flag1?", ValueBool.False);
+					scope.SetValue("flag3?", ValueBool.True);
+					LineConsumer requestor = new LineConsumer(lines);
+					EvalLines.Do(requestor, scope);
+					Assert.AreEqual(3, scope.GetValue(new Token("result")).AsInt);
+				}
+
+				{	// top level else block is run, nested else
+					scope.SetValue("flag1?", ValueBool.False);
+					scope.SetValue("flag3?", ValueBool.False);
+					LineConsumer requestor = new LineConsumer(lines);
+					EvalLines.Do(requestor, scope);
+					Assert.AreEqual(4, scope.GetValue(new Token("result")).AsInt);
+				}
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
+
 
 		[Test]
 		public void TestParamMetadata()
@@ -277,7 +339,7 @@ namespace loki3.builtin.test
 				AllBuiltins.RegisterAll(scope);
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 
-				{
+				{	// l3.loop
 					string[] lines = {
 						":total = 0",
 						":i = 0",
@@ -290,7 +352,7 @@ namespace loki3.builtin.test
 					Assert.AreEqual(15, result.AsInt);
 				}
 
-				{
+				{	// while
 					string[] lines = {
 						":total = 0",
 						":i = 0",
@@ -303,7 +365,7 @@ namespace loki3.builtin.test
 					Assert.AreEqual(15, result.AsInt);
 				}
 
-				{
+				{	// for
 					string[] lines = {
 						":total = 0",
 						"for /[ ` :i = 0 ` ` i !=? 5 ` ` :i = i + 1 `",
@@ -313,6 +375,23 @@ namespace loki3.builtin.test
 					Value result = EvalLines.Do(requestor, scope);
 					Assert.AreEqual(10, result.AsInt);
 				}
+
+#if false
+				{	// break
+					string[] lines = {
+						":total = 0",
+						":i = 0",
+						"while /` i !=? 8",
+						"	:i = i + 1",
+						"	if i =? 4",
+						"		break",
+						"	:total = total + i",
+					};
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.AreEqual(10, result.AsInt);
+				}
+#endif
 			}
 			catch (Loki3Exception e)
 			{

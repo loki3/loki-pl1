@@ -79,5 +79,40 @@ namespace loki3.core
 					break;
 			return count;
 		}
+
+		/// <summary>Return the list of indented lines, if any</summary>
+		internal static ILineRequestor GetSubLineRequestor(List<Value> valueLines, int start, out int end)
+		{
+			end = start;
+			Value v = valueLines[start];
+			if (!(v is ValueString))
+				return null;	// only strings have indents
+			int count = valueLines.Count;
+			if (start == count - 1)
+				return null;	// no more lines
+
+			string sThis = v.AsString;
+			string sNext = valueLines[start+1].AsString;
+			int indent = Utility.CountIndent(sThis);
+			int nextindent = (start < count - 1 ? Utility.CountIndent(sNext) : indent);
+			if (nextindent <= indent)
+				return null;	// next line isn't indented
+
+			List<string> subStrings = new List<string>();
+			subStrings.Add(sNext);
+			end++;
+			for (int i = start + 2; i < count; i++)
+			{
+				string s = valueLines[i].AsString;
+				nextindent = Utility.CountIndent(s);
+				if (nextindent <= indent)
+				{
+					end = i - 1;
+					break;	// ran out of indented lines
+				}
+				subStrings.Add(s);
+			}
+			return new LineConsumer(subStrings, true/*isSubset*/);
+		}
 	}
 }

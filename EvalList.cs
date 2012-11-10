@@ -263,9 +263,22 @@ namespace loki3.core
 		/// </summary>
 		internal static List<Value> DoGetBody(IScope scope, ILineRequestor requestor)
 		{
+			List<Value> body = new List<Value>();
+
+			// if we have a subset of all lines, we should simply use them as-is
+			if (requestor.IsSubset())
+			{
+				while (requestor.HasCurrent())
+				{
+					body.Add(new ValueString(requestor.GetCurrentLine()));
+					requestor.Advance();
+				}
+				return body;
+			}
+
+			// else just grab indented lines
 			string line = requestor.GetCurrentLine();
 			int parentIndent = Utility.CountIndent(line);
-			List<Value> body = new List<Value>();
 			while (requestor.HasCurrent())
 			{
 				requestor.Advance();
