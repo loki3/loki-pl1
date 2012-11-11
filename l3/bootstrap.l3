@@ -57,7 +57,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :pre pattern }
 
 // a function with no parameters which may decide to execute its body
-:emptyFunc <- l3.createFunction { }
+:bodyFunc <- l3.createFunction { }
 	l3.createFunction { }
 
 
@@ -111,9 +111,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object : /[ :l3.param.rest true
 ::rest @doc /" Associated parameter will be filled with the remainder of the parameter values
 
-:concat <- /( ->array infix ->value
+:+= <- /( ->array infix ->value
 	l3.addToArray /{ :array array :value value
-:concat @doc /" Add a value to an array
+:+= @doc /" Add a value to an array
 
 
 //
@@ -189,7 +189,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :elsif @ [ :body? true ]
 :elsif @doc /" If previous if and elsifs failed and this condition is met, do body
 
-:else <- emptyFunc
+:else <- bodyFunc
 	:doThis? <- /( !? l3.coFunction.if.done?
 	l3.ifBody /{ :do? doThis? :body body
 	doThis?

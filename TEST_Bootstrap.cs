@@ -57,7 +57,7 @@ namespace loki3.builtin.test
 				}
 
 				{	// array concat
-					Value value = ToValue("[ 1 2 ] concat 3", scope);
+					Value value = ToValue("[ 1 2 ] += 3", scope);
 					System.Collections.Generic.List<Value> values = value.AsArray;
 					Assert.AreEqual(3, values.Count);
 					Assert.AreEqual(1, values[0].AsInt);
