@@ -56,21 +56,14 @@ namespace loki3.core
 				m_fullPattern = (m_usePrevious ? func.Metadata[keyPreviousPattern] : func.Metadata[keyNextPattern]);
 			}
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope parent, INodeRequestor nodes, ILineRequestor requestor)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope parentScope, INodeRequestor nodes, ILineRequestor requestor)
 			{
-				// create a new scope and add passed in arguments
-				ScopeChain scope = new ScopeChain(parent);
-				// note: second copy is so that evaling previous doesn't impact scope used to eval next
-				ScopeChain scope2 = new ScopeChain(parent);
-				if (m_fullPattern != null && m_passed != null)
-				{
-					Utility.AddToScope(m_fullPattern, m_passed, scope);
-					Utility.AddToScope(m_fullPattern, m_passed, scope2);
-				}
+				// scope we'll add prev/next/body params to
+				ScopeChain localScope = new ScopeChain();
 
 				if (m_usePrevious)
 				{
-					Value value1 = EvalNode.Do(prev, scope, nodes, requestor);
+					Value value1 = EvalNode.Do(prev, parentScope, nodes, requestor);
 					Value match, leftover;
 					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], false/*bShortPat*/, out match, out leftover))
 						throw new Loki3Exception().AddWrongPattern(Metadata[keyPreviousPattern], value1);
@@ -84,11 +77,11 @@ namespace loki3.core
 						return new UserFunction(this, match, leftover, null);
 					}
 
-					Utility.AddToScope(m_pattern1, match, scope);
+					Utility.AddToScope(m_pattern1, match, localScope);
 				}
 				if (m_useNext)
 				{
-					Value value2 = EvalNode.Do(next, scope2, nodes, requestor);
+					Value value2 = EvalNode.Do(next, parentScope, nodes, requestor);
 					Value match, leftover;
 					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], false/*bShortPat*/, out match, out leftover))
 						throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], value2);
@@ -96,7 +89,7 @@ namespace loki3.core
 					// if we created a function that needs a body, add it if present
 					ValueFunction matchFunc = match as ValueFunction;
 					if (matchFunc != null && matchFunc.RequiresBody() && requestor != null)
-						match = EvalList.DoAddBody(matchFunc, scope, requestor);
+						match = EvalList.DoAddBody(matchFunc, parentScope, requestor);
 
 					if (leftover != null)
 					{
@@ -107,18 +100,25 @@ namespace loki3.core
 						return new UserFunction(this, match, null, leftover);
 					}
 
-					Utility.AddToScope(m_pattern2, match, scope);
+					Utility.AddToScope(m_pattern2, match, localScope);
 				}
 
 				// tack on body if requested
 				if (Metadata.GetOptionalT<bool>("body?", false))
 				{
-					List<Value> body = EvalList.DoGetBody(scope2, requestor);
-					scope.SetValue("body", new ValueArray(body));
+					List<Value> body = EvalList.DoGetBody(parentScope, requestor);
+					localScope.SetValue("body", new ValueArray(body));
 				}
 
+				// create a new scope and add passed in arguments...
+				ScopeChain scope = new ScopeChain(parentScope);
+				if (m_fullPattern != null && m_passed != null)
+					Utility.AddToScope(m_fullPattern, m_passed, scope);
+				// ...and the prev/next/body params we just extracted
+				Utility.AddToScope(localScope, scope);
+
 				// lazily parse
-				EnsureParsed(parent);
+				EnsureParsed(parentScope);
 
 				// eval each line using current scope
 				return EvalBody.Do(m_parsedLines, scope);

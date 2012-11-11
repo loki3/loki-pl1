@@ -39,6 +39,15 @@ namespace loki3.core
 			AddToScope(pattern, match, scope, true);
 		}
 
+		/// <summary>Add values from one scope onto another</summary>
+		internal static void AddToScope(IScope from, IScope to)
+		{
+			Dictionary<string, Value> dict = from.AsMap.Raw;
+			if (dict != null)
+				foreach (string key in dict.Keys)
+					to.SetValue(key, dict[key]);
+		}
+
 		/// <summary>
 		/// If bCreate, always set value on current scope,
 		/// else, change value on scope value exists on or throw exception if it doesn't exist
