@@ -10,3 +10,11 @@ var :i forEach ( 1 .. 20 )
 		fizzBuzz1 += /" buzz
 	else
 		fizzBuzz1 += i
+
+
+// solve fizzbuzz using multiple return values
+var :fizzBuzz2 = [ ]
+var :i forEach ( 1 .. 20 )
+	[ :str1 :fizz? ] <- ( i % 3 =? 0 ) ? /[ [ :fizz true ] [ " " false ]
+	[ :str2 :buzz? ] <- ( i % 5 =? 0 ) ? /[ [ :buzz true ] [ " " false ]
+	fizzBuzz2 += /( ( fizz? |? buzz? ) ? /[ ( str1 +s str2 ) i
