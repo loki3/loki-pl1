@@ -431,6 +431,19 @@ namespace loki3.builtin.test
 					Value result = EvalLines.Do(requestor, scope);
 					Assert.AreEqual(6, result.AsInt);
 				}
+
+				{	// create a partial function to use for a later loop
+					string[] lines = {
+						":1to5 <- /( :i forEach /( 1 .. 5",	// partial that needs a body
+						":total <- 0",
+						":i <- 0",
+						"1to5",
+						"	:total = total + i",
+					};
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.AreEqual(15, result.AsInt);
+				}
 			}
 			catch (Loki3Exception e)
 			{

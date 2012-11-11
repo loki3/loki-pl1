@@ -51,9 +51,32 @@ namespace loki3.core
 				m_rawLines = func.m_rawLines;
 				m_parsedLines = func.m_parsedLines;
 				Init(pattern1, pattern2, func.Order);
+				if (func.Metadata.GetOptionalT<bool>("body?", false))
+					WritableMetadata["body?"] = ValueBool.True;
 
 				m_passed = passed;
 				m_fullPattern = (m_usePrevious ? func.Metadata[keyPreviousPattern] : func.Metadata[keyNextPattern]);
+			}
+
+			/// <summary>
+			/// Create a partial function based on another user defined function that only needs a body
+			/// </summary>
+			/// <param name="func">function to build off of</param>
+			/// <param name="passedScope">partially filled in scope</param>
+			internal UserFunction(UserFunction func, IScope passedScope)
+			{
+				m_usePrevious = false;
+				m_useNext = false;
+				m_pattern1 = null;
+				m_rawLines = func.m_rawLines;
+				m_parsedLines = func.m_parsedLines;
+				Init(null, null, func.Order);
+				if (func.Metadata.GetOptionalT<bool>("body?", false))
+					WritableMetadata["body?"] = ValueBool.True;
+
+				m_passed = null;
+				m_fullPattern = null;
+				m_passedScope = passedScope;
 			}
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope parentScope, INodeRequestor nodes, ILineRequestor requestor)
@@ -106,8 +129,19 @@ namespace loki3.core
 				// tack on body if requested
 				if (Metadata.GetOptionalT<bool>("body?", false))
 				{
-					List<Value> body = EvalList.DoGetBody(parentScope, requestor);
-					localScope.SetValue("body", new ValueArray(body));
+					bool foundBody = false;
+					if (requestor != null)
+					{
+						List<Value> body = EvalList.DoGetBody(parentScope, requestor);
+						if (body.Count != 0)
+						{
+							localScope.SetValue("body", new ValueArray(body));
+							foundBody = true;
+						}
+					}
+					if (!foundBody)
+						// create a partial function that only needs a body
+						return new UserFunction(this, localScope);
 				}
 
 				// create a new scope and add passed in arguments...
@@ -116,6 +150,8 @@ namespace loki3.core
 					Utility.AddToScope(m_fullPattern, m_passed, scope);
 				// ...and the prev/next/body params we just extracted
 				Utility.AddToScope(localScope, scope);
+				if (m_passedScope != null)
+					Utility.AddToScope(m_passedScope, scope);
 
 				// lazily parse
 				EnsureParsed(parentScope);
@@ -153,6 +189,7 @@ namespace loki3.core
 
 			private Value m_passed;
 			private Value m_fullPattern;
+			private IScope m_passedScope = null;
 		}
 
 		/// <summary>
