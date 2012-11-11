@@ -111,12 +111,17 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object : /[ :l3.param.rest true
 ::rest @doc /" Associated parameter will be filled with the remainder of the parameter values
 
+:concat <- /( ->array infix ->value
+	l3.addToArray /{ :array array :value value
+:concat @doc /" Add a value to an array
+
 
 //
 // add documentation to functions that have been previously definied
 
 :<-		@doc	/" Create a new key/value pair in the current scope
 :=		@doc	/" Assign a value to a key
+:var	@doc	/" Create a new variable in the current scope
 :func	@doc	/" Define a function that takes parameters after the function name
 :infix	@doc	/" Define a function that takes parameters before and after the function name
 :postfix @doc	/" Define a function that takes parameters before the function name
@@ -232,6 +237,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.divide [ a b ]
 :/ @order 2
 :/ @doc /" Divide the first number by the second number
+
+:% <- ( ->a infix ->b )
+	l3.modulo [ a b ]
+:% @order 2
+:% @doc /" First number modulo the second number
 
 :sqrt <- func ->a
 	l3.sqrt a

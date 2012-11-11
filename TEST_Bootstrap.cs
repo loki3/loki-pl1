@@ -55,6 +55,15 @@ namespace loki3.builtin.test
 					value = ToValue("2 + 2 * 3", scope);
 					Assert.AreEqual(8, value.AsInt);
 				}
+
+				{	// array concat
+					Value value = ToValue("[ 1 2 ] concat 3", scope);
+					System.Collections.Generic.List<Value> values = value.AsArray;
+					Assert.AreEqual(3, values.Count);
+					Assert.AreEqual(1, values[0].AsInt);
+					Assert.AreEqual(2, values[1].AsInt);
+					Assert.AreEqual(3, values[2].AsInt);
+				}
 			}
 			catch (Loki3Exception e)
 			{

@@ -21,6 +21,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.createDelimiter", new CreateDelimiter());
 			scope.SetValue("l3.createEvalDelimiter", new CreateEvalDelimiter());
 			scope.SetValue("l3.createArrayDelimiter", new CreateArrayDelimiter());
+			scope.SetValue("l3.addToArray", new AddToArray());
 			scope.SetValue("l3.getMetadata", new GetMetadata());
 			scope.SetValue("l3.getScope", new GetScope());
 		}
@@ -298,6 +299,31 @@ namespace loki3.builtin
 		class CreateArrayDelimiter : CreateSimpleDelimiter
 		{
 			protected override DelimiterType DelimiterType { get { return DelimiterType.AsArray; } }
+		}
+
+		/// <summary>{ :array :value } -> add value to array</summary>
+		class AddToArray : ValueFunctionPre
+		{
+			internal AddToArray()
+			{
+				SetDocString("Add value to an array");
+
+				Map map = new Map();
+				map["array"] = PatternData.Single("array", ValueType.Array);
+				map["value"] = PatternData.Single("value");
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+				Value array = map["array"];
+				Value value = map["value"];
+
+				array.AsArray.Add(value);
+				return array;
+			}
 		}
 
 		/// <summary>{ [:key : string] [:value] [:writable? : bool] ] } -> map containing the metadata</summary>
