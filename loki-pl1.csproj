@@ -55,6 +55,7 @@
     <Compile Include="PatternData.cs" />
     <Compile Include="PatternChecker.cs" />
     <Compile Include="ScopeChain.cs" />
+    <Compile Include="String.cs" />
     <Compile Include="TEST_Bootstrap.cs" />
     <Compile Include="TEST_Conditional.cs" />
     <Compile Include="TEST_CreateFunction.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="TEST_Math.cs" />
     <Compile Include="TEST_PartialFunction.cs" />
     <Compile Include="TEST_PatternChecker.cs" />
+    <Compile Include="TEST_String.cs" />
     <Compile Include="TEST_TestCode.cs" />
     <Compile Include="TEST_Values.cs" />
     <Compile Include="Utility.cs" />
