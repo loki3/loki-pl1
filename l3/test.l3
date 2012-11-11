@@ -1,0 +1,12 @@
+
+// solve fizzbuzz using a simple loop
+var :fizzBuzz1 = [ ]
+var :i forEach ( 1 .. 20 )
+	if ( i % 15 =? 0 )
+		fizzBuzz1 += /" fizzbuzz
+	elsif /( i % 3 =? 0
+		fizzBuzz1 += /" fizz
+	elsif /( i % 5 =? 0
+		fizzBuzz1 += /" buzz
+	else
+		fizzBuzz1 += i

@@ -65,6 +65,7 @@
     <Compile Include="TEST_Math.cs" />
     <Compile Include="TEST_PartialFunction.cs" />
     <Compile Include="TEST_PatternChecker.cs" />
+    <Compile Include="TEST_TestCode.cs" />
     <Compile Include="TEST_Values.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="ValueArray.cs" />
@@ -84,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="l3\bootstrap.l3" />
+    <None Include="l3\test.l3" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
