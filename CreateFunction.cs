@@ -36,6 +36,25 @@ namespace loki3.core
 			}
 
 			/// <summary>
+			/// Create a new user defined function
+			/// </summary>
+			/// <param name="parsedLines">body of function to run if needed</param>
+			internal UserFunction(Value pattern1, Value pattern2, List<DelimiterList> parsedLines, Order precedence)
+			{
+				Init(pattern1, pattern2, precedence);
+
+				m_usePrevious = (pattern1 != null && !pattern1.IsNil);
+				m_useNext = (pattern2 != null && !pattern2.IsNil);
+				m_pattern1 = pattern1;
+				m_pattern2 = pattern2;
+				m_rawLines = null;
+				m_parsedLines = parsedLines;
+
+				m_passed = null;
+				m_fullPattern = null;
+			}
+
+			/// <summary>
 			/// Create a partial function based on another user defined function
 			/// </summary>
 			/// <param name="func">function to build off of</param>
@@ -132,10 +151,10 @@ namespace loki3.core
 					bool foundBody = false;
 					if (requestor != null)
 					{
-						List<Value> body = EvalList.DoGetBody(parentScope, requestor);
+						List<DelimiterList> body = EvalList.DoGetBody(parentScope, requestor);
 						if (body.Count != 0)
 						{
-							localScope.SetValue("body", new ValueArray(body));
+							localScope.SetValue("body", new ValueLine(body));
 							foundBody = true;
 						}
 					}
@@ -203,9 +222,9 @@ namespace loki3.core
 		{
 			return new UserFunction(pattern1, pattern2, rawLines, precedence);
 		}
-		internal static ValueFunction Do(Value pattern1, Value pattern2, List<Value> rawLines)
+		internal static ValueFunction Do(Value pattern1, Value pattern2, List<DelimiterList> parsedLines, Order precedence)
 		{
-			return new UserFunction(pattern1, pattern2, rawLines, Order.Medium);
+			return new UserFunction(pattern1, pattern2, parsedLines, precedence);
 		}
 
 		/// <summary>

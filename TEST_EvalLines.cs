@@ -35,8 +35,15 @@ namespace loki3.core.test
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
-				List<Value> body = ValueFunction.GetBody(arg);
-				LineConsumer consumer = new LineConsumer(body);
+				List<DelimiterList> body = ValueFunction.GetBody(arg);
+				// temporarily turn parsed body back into strings
+				List<Value> valueLines = new List<Value>();
+				foreach (DelimiterList list in body)
+				{
+					string s = list.ToString();
+					valueLines.Add(new ValueString(s));
+				}
+				LineConsumer consumer = new LineConsumer(valueLines);
 				int total = 0;
 				while (consumer.HasCurrent())
 				{

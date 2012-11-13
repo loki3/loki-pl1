@@ -66,12 +66,12 @@ namespace loki3.core
 		internal bool ConsumesNext { get { return Metadata.ContainsKey(keyNextPattern); } }
 
 		/// <summary>Retrieve the body off the argument</summary>
-		internal static List<Value> GetBody(Value arg)
+		internal static List<DelimiterList> GetBody(Value arg)
 		{
 			Map map = arg.AsMap;
 			if (map == null || !map.ContainsKey(keyBody))
 				return null;
-			return map[keyBody].AsArray;
+			return map[keyBody].AsLine;
 		}
 		/// <summary>Does function require body?</summary>
 		internal bool RequiresBody()

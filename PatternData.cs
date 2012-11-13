@@ -53,12 +53,12 @@ namespace loki3.core
 			return vName;
 		}
 
-		/// <summary>Parameter that indicates that a "body" is required, i.e. an array of strings</summary>
+		/// <summary>Parameter that indicates that a "body" is required, i.e. an array of strings or parsed lines</summary>
 		internal static Value Body()
 		{
 			ValueString vName = new ValueString("l3.body");
 			PatternData data = new PatternData(vName);
-			data.ValueType = ValueType.String;
+			// todo: data.ValueType = ValueType.RawList | ValueType.String;
 			return vName;
 		}
 

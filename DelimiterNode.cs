@@ -34,6 +34,8 @@ namespace loki3.core
 
 		internal override DelimiterList List { get { return m_list; } }
 
+		public override string ToString() { return m_list.ToString(); }
+
 		private DelimiterList m_list;
 	}
 
@@ -46,6 +48,8 @@ namespace loki3.core
 		}
 
 		internal override Value Value { get { return m_value; } }
+
+		public override string ToString() { return m_value.ToString(); }
 
 		private Value m_value;
 	}

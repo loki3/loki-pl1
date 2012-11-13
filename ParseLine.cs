@@ -43,11 +43,12 @@ namespace loki3.core
 		{
 			char[] separators = { ' ', '\n', '\r', '\t' };
 			string[] strs = str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+			int indent = Utility.CountIndent(str);
 			int end;
-			return Do(strs, 0, ValueDelimiter.Line, delims, requestor, out end);
+			return Do(indent, strs, 0, ValueDelimiter.Line, delims, requestor, out end);
 		}
 
-		private static DelimiterList Do(string[] strs, int iStart, ValueDelimiter thisDelim,
+		private static DelimiterList Do(int indent, string[] strs, int iStart, ValueDelimiter thisDelim,
 			IParseLineDelimiters delims, ILineRequestor requestor, out int iEnd)
 		{
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
@@ -92,7 +93,7 @@ namespace loki3.core
 					Token token = new Token(all);
 					DelimiterNode node = new DelimiterNodeToken(token);
 					nodes.Add(node);
-					return new DelimiterList(thisDelim, nodes);
+					return new DelimiterList(thisDelim, nodes, indent);
 				}
 			}
 			else // Value, Array && Raw
@@ -105,7 +106,7 @@ namespace loki3.core
 					if (s == thisDelim.End)
 					{	// end delimiter
 						iEnd = i;
-						return new DelimiterList(thisDelim, nodes);
+						return new DelimiterList(thisDelim, nodes, indent);
 					}
 
 					// is it a stand alone starting delimiter?
@@ -113,7 +114,7 @@ namespace loki3.core
 					if (subDelim != null)
 					{	// start delimiter
 						int end;
-						DelimiterList sublist = Do(strs, i + 1, subDelim, delims, requestor, out end);
+						DelimiterList sublist = Do(0, strs, i + 1, subDelim, delims, requestor, out end);
 						if (sublist != null)
 						{
 							DelimiterNodeList node = new DelimiterNodeList(sublist);
@@ -135,7 +136,7 @@ namespace loki3.core
 				throw new Loki3Exception().AddMissingEndDelimiter(thisDelim);
 
 			iEnd = strs.Length;
-			return new DelimiterList(thisDelim, nodes);
+			return new DelimiterList(thisDelim, nodes, indent);
 		}
 	}
 }

@@ -261,16 +261,17 @@ namespace loki3.core
 		/// Get the body following the current line.
 		/// 'requestor' will be positioned on the last line of the body.
 		/// </summary>
-		internal static List<Value> DoGetBody(IScope scope, ILineRequestor requestor)
+		internal static List<DelimiterList> DoGetBody(IScope scope, ILineRequestor requestor)
 		{
-			List<Value> body = new List<Value>();
+			List<DelimiterList> body = new List<DelimiterList>();
 
 			// if we have a subset of all lines, we should simply use them as-is
 			if (requestor.IsSubset())
 			{
 				while (requestor.HasCurrent())
 				{
-					body.Add(new ValueString(requestor.GetCurrentLine()));
+					DelimiterList dline = ParseLine.Do(requestor.GetCurrentLine(), scope, requestor);
+					body.Add(dline);
 					requestor.Advance();
 				}
 				return body;
@@ -283,15 +284,20 @@ namespace loki3.core
 			{
 				requestor.Advance();
 				string childLine = requestor.GetCurrentLine();
-				int childIndent = (childLine == null ? -1 : Utility.CountIndent(childLine));
-				if (childIndent <= parentIndent)
+				if (childLine == null)
+				{
+					requestor.Rewind();
+					break;	// now we have the body
+				}
+				DelimiterList dline = ParseLine.Do(childLine, scope, requestor);
+				if (dline.Indent <= parentIndent)
 				{
 					requestor.Rewind();
 					break;	// now we have the body
 				}
 
 				// keep adding to the body
-				body.Add(new ValueString(childLine));
+				body.Add(dline);
 			}
 			return body;
 		}
@@ -303,14 +309,14 @@ namespace loki3.core
 		/// <returns>new function with body attached</returns>
 		internal static Value DoAddBody(ValueFunction function, IScope scope, ILineRequestor requestor)
 		{
-			List<Value> body = DoGetBody(scope, requestor);
+			List<DelimiterList> body = DoGetBody(scope, requestor);
 			// if no body to add to function, leave as-is
 			if (body.Count == 0)
 				return function;
 
 			// we've built the entire body - now pass it to function
 			Map map = new Map();
-			map[ValueFunction.keyBody] = new ValueArray(body);
+			map[ValueFunction.keyBody] = new ValueLine(body);
 			ValueFunctionPre functionPre = function as ValueFunctionPre;
 			return functionPre.Eval(new ValueMap(map), new ScopeChain(scope));
 		}

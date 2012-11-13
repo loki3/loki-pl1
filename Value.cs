@@ -9,13 +9,14 @@ namespace loki3.core
 		Bool,
 		Int,
 		Float,
-		Number,	// pseudo-type: Int or Float
+		Number,		// pseudo-type: Int or Float
 		String,
 		Array,
 		Map,
 		Function,
 		Delimiter,
-		Raw,	// DelimiterNode
+		Raw,		// DelimiterNode
+		RawList,	// DelimiterList
 	}
 
 	/// <summary>
@@ -36,6 +37,7 @@ namespace loki3.core
 		internal virtual string AsString { get { throw new Loki3Exception().AddWrongType(ValueType.String, Type); } }
 		internal virtual List<Value> AsArray { get { throw new Loki3Exception().AddWrongType(ValueType.Array, Type); } }
 		internal virtual Map AsMap { get { throw new Loki3Exception().AddWrongType(ValueType.Map, Type); } }
+		internal virtual List<DelimiterList> AsLine { get { throw new Loki3Exception().AddWrongType(ValueType.RawList, Type); } }
 
 		/// <summary>Get this value's metadata.  May be null.</summary>
 		internal Map Metadata { get { return m_metadata; } }

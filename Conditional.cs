@@ -42,7 +42,7 @@ namespace loki3.builtin
 					return new ValueBool(false);
 
 				// if do?, eval body
-				List<Value> valueBody = map["body"].AsArray;
+				Value valueBody = map["body"];
 				return EvalBody.Do(valueBody, scope);
 			}
 		}

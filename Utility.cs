@@ -123,5 +123,17 @@ namespace loki3.core
 			}
 			return new LineConsumer(subStrings, true/*isSubset*/);
 		}
+
+		internal static ILineRequestor GetSubLineRequestor(List<DelimiterList> lines, int start, out int end)
+		{
+			// temporarily turn parsed body back into strings
+			List<Value> valueLines = new List<Value>();
+			foreach (DelimiterList list in lines)
+			{
+				string s = list.ToString();
+				valueLines.Add(new ValueString(s));
+			}
+			return GetSubLineRequestor(valueLines, start, out end);
+		}
 	}
 }
