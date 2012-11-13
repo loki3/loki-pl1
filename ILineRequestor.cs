@@ -8,7 +8,7 @@ namespace loki3.core
 	interface ILineRequestor
 	{
 		/// <summary>Get line requestor is currently on, or null if none</summary>
-		string GetCurrentLine();
+		DelimiterList GetCurrentLine(IParseLineDelimiters delims);
 		int GetCurrentLineNumber();
 
 		/// <summary>Advance to next line</summary>
@@ -60,9 +60,11 @@ namespace loki3.core
 		}
 
 		#region ILineRequestor Members
-		public string GetCurrentLine()
+		public DelimiterList GetCurrentLine(IParseLineDelimiters delims)
 		{
-			return (m_current < m_count ? m_lines[m_current] : null);
+			if (m_current >= m_count)
+				return null;
+			return ParseLine.Do(m_lines[m_current], delims);
 		}
 
 		public int GetCurrentLineNumber()

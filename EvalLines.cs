@@ -32,10 +32,9 @@ namespace loki3.core
 		/// </summary>
 		internal static Value DoOne(ILineRequestor requestor, IScope scope)
 		{
-			string line = requestor.GetCurrentLine();
+			DelimiterList list = requestor.GetCurrentLine(scope);
 			try
 			{
-				DelimiterList list = ParseLine.Do(line, scope, requestor);
 				Value value = EvalList.Do(list.Nodes, scope, requestor);
 
 				ValueFunction func = value as ValueFunction;
@@ -50,7 +49,7 @@ namespace loki3.core
 			}
 			catch (Loki3Exception e)
 			{
-				e.AddLine(line);
+				e.AddLine(list.ToString());
 				throw e;
 			}
 		}

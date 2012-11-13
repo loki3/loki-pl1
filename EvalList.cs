@@ -270,7 +270,7 @@ namespace loki3.core
 			{
 				while (requestor.HasCurrent())
 				{
-					DelimiterList dline = ParseLine.Do(requestor.GetCurrentLine(), scope, requestor);
+					DelimiterList dline = requestor.GetCurrentLine(scope);
 					body.Add(dline);
 					requestor.Advance();
 				}
@@ -278,26 +278,20 @@ namespace loki3.core
 			}
 
 			// else just grab indented lines
-			string line = requestor.GetCurrentLine();
-			int parentIndent = Utility.CountIndent(line);
+			DelimiterList pline = requestor.GetCurrentLine(scope);
+			int parentIndent = pline.Indent;
 			while (requestor.HasCurrent())
 			{
 				requestor.Advance();
-				string childLine = requestor.GetCurrentLine();
-				if (childLine == null)
-				{
-					requestor.Rewind();
-					break;	// now we have the body
-				}
-				DelimiterList dline = ParseLine.Do(childLine, scope, requestor);
-				if (dline.Indent <= parentIndent)
+				DelimiterList childLine = requestor.GetCurrentLine(scope);
+				if (childLine == null || childLine.Indent <= parentIndent)
 				{
 					requestor.Rewind();
 					break;	// now we have the body
 				}
 
 				// keep adding to the body
-				body.Add(dline);
+				body.Add(childLine);
 			}
 			return body;
 		}
