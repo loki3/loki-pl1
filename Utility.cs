@@ -126,14 +126,33 @@ namespace loki3.core
 
 		internal static ILineRequestor GetSubLineRequestor(List<DelimiterList> lines, int start, out int end)
 		{
-			// temporarily turn parsed body back into strings
-			List<Value> valueLines = new List<Value>();
-			foreach (DelimiterList list in lines)
+			end = start;
+			int count = lines.Count;
+			if (start == count - 1)
+				return null;	// no more lines
+
+			DelimiterList dThis = lines[start];
+			DelimiterList dNext = lines[start + 1];
+			int indent = dThis.Indent;
+			int nextindent = (start < count - 1 ? dNext.Indent : indent);
+			if (nextindent <= indent)
+				return null;	// next line isn't indented
+
+			List<DelimiterList> subLines = new List<DelimiterList>();
+			subLines.Add(dNext);
+			end++;
+			for (int i = start + 2; i < count; i++)
 			{
-				string s = list.ToString();
-				valueLines.Add(new ValueString(s));
+				DelimiterList s = lines[i];
+				nextindent = s.Indent;
+				if (nextindent <= indent)
+				{
+					end = i - 1;
+					break;	// ran out of indented lines
+				}
+				subLines.Add(s);
 			}
-			return GetSubLineRequestor(valueLines, start, out end);
+			return new LineConsumer(subLines, true/*isSubset*/);
 		}
 	}
 }

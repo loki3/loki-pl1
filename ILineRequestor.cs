@@ -34,6 +34,7 @@ namespace loki3.core
 			int i = 0;
 			foreach (Value line in lines)
 				m_lines[i++] = line.AsString;
+			m_parsedLines = new List<DelimiterList>();
 		}
 		internal LineConsumer(List<string> lines)
 		{
@@ -48,7 +49,23 @@ namespace loki3.core
 		{
 			m_count = lines.GetLength(0);
 			m_lines = lines;
+			m_parsedLines = new List<DelimiterList>();
 		}
+
+		internal LineConsumer(List<DelimiterList> lines)
+		{
+			m_count = lines.Count;
+			m_lines = null;
+			m_parsedLines = lines;
+		}
+		internal LineConsumer(List<DelimiterList> lines, bool isSubset)
+		{
+			m_count = lines.Count;
+			m_lines = null;
+			m_parsedLines = lines;
+			m_isSubset = isSubset;
+		}
+
 
 		private void Init(List<string> lines)
 		{
@@ -57,6 +74,7 @@ namespace loki3.core
 			int i = 0;
 			foreach (string line in lines)
 				m_lines[i++] = line;
+			m_parsedLines = new List<DelimiterList>();
 		}
 
 		#region ILineRequestor Members
@@ -64,7 +82,14 @@ namespace loki3.core
 		{
 			if (m_current >= m_count)
 				return null;
-			return ParseLine.Do(m_lines[m_current], delims);
+			// see if line was already parsed
+			DelimiterList parsedLine = (m_current < m_parsedLines.Count ? m_parsedLines[m_current] : null);
+			if (parsedLine == null)
+			{	// if not, parse it now
+				parsedLine = ParseLine.Do(m_lines[m_current], delims);
+				m_parsedLines.Add(parsedLine);
+			}
+			return parsedLine;
 		}
 
 		public int GetCurrentLineNumber()
@@ -94,6 +119,7 @@ namespace loki3.core
 		#endregion
 
 		private string[] m_lines;
+		private List<DelimiterList> m_parsedLines = null;
 		private int m_count;
 		private int m_current = 0;
 		private bool m_isSubset = false;
