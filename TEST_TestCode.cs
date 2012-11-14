@@ -30,6 +30,9 @@ namespace loki3.builtin.test
 
 					Value b = scope.GetValue(new Token("fizzBuzz2"));
 					Assert.AreEqual(str20, b.ToString());
+
+					Value c = ToValue("fizzbuzz3", scope);
+					Assert.AreEqual(str20, c.ToString());
 				}
 			}
 			catch (Loki3Exception e)

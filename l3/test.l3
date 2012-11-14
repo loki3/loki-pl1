@@ -1,5 +1,5 @@
 
-// solve fizzbuzz using a simple loop
+// fizzbuzz using a simple loop
 var :fizzBuzz1 = [ ]
 var :i forEach ( 1 .. 20 )
 	if ( i % 15 =? 0 )
@@ -11,10 +11,23 @@ var :i forEach ( 1 .. 20 )
 	else
 		fizzBuzz1 += i
 
-
-// solve fizzbuzz using multiple return values
+// fizzbuzz using multiple return values
 var :fizzBuzz2 = [ ]
 var :i forEach ( 1 .. 20 )
 	[ :str1 :fizz? ] <- ( i % 3 =? 0 ) ? /[ [ :fizz true ] [ " " false ]
 	[ :str2 :buzz? ] <- ( i % 5 =? 0 ) ? /[ [ :buzz true ] [ " " false ]
 	fizzBuzz2 += /( ( fizz? |? buzz? ) ? /[ ( str1 +s str2 ) i
+
+// fizzbuzz using a function in a simple loop
+var :fizzbuzz3 <- bodyFunc
+	var :zzz = [ ]
+	var :i forEach ( 1 .. 20 )
+		if ( i % 15 =? 0 )
+			zzz += /" fizzbuzz
+		elsif /( i % 3 =? 0
+			zzz += /" fizz
+		elsif /( i % 5 =? 0
+			zzz += /" buzz
+		else
+			zzz += i
+	zzz

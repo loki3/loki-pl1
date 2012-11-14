@@ -40,11 +40,17 @@ namespace loki3.core
 			// run each line, returning value of last line
 			Value retval = null;
 			int count = parsedLines.Count;
+			int indent = -1;
 			for (int i = 0; i < count; i++)
 			{
 				DelimiterList line = parsedLines[i];
-				ILineRequestor requestor = Utility.GetSubLineRequestor(parsedLines, i, out i);
-				retval = EvalList.Do(line.Nodes, scope, requestor);
+				if (indent == -1)
+					indent = line.Indent;
+				if (indent == line.Indent)
+				{	// only run lines that are at the original indentation
+					ILineRequestor requestor = Utility.GetSubLineRequestor(parsedLines, i, out i);
+					retval = EvalList.Do(line.Nodes, scope, requestor);
+				}
 			}
 			return (retval == null ? new ValueNil() : retval);
 		}
