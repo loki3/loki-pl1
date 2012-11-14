@@ -19,7 +19,7 @@ var :i forEach ( 1 .. 20 )
 	fizzBuzz2 += /( ( fizz? |? buzz? ) ? /[ ( str1 +s str2 ) i
 
 // fizzbuzz using a function in a simple loop
-var :fizzbuzz3 <- bodyFunc
+var :fizzbuzz3 = bodyFunc
 	var :zzz = [ ]
 	var :i forEach ( 1 .. 20 )
 		if ( i % 15 =? 0 )
@@ -31,3 +31,20 @@ var :fizzbuzz3 <- bodyFunc
 		else
 			zzz += i
 	zzz
+
+
+//
+// complex numbers
+// todo: consolidate function numbers once overloading is implemented
+
+var :i = /( ->y postfix
+	{ :x 0 :y y }
+:i @doc /" Creates a complex number
+
+var :+c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
+	{ :x ( x1 + x2 ) :y ( y1 + y2 ) }
+:+c @doc /" Adds together two complex numbers of the form { :x # :y # }
+
+var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
+	{ :x ( ( x1 * x2 ) - ( y1 * y2 ) ) :y ( ( x1 * y2 ) + ( x2 * y1 ) ) }
+:*c @doc /" Multiples together two complex numbers of the form { :x # :y # }

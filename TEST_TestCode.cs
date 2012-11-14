@@ -34,6 +34,19 @@ namespace loki3.builtin.test
 					Value c = ToValue("fizzbuzz3", scope);
 					Assert.AreEqual(str20, c.ToString());
 				}
+
+				{	// complex numbers
+					Value v = ToValue("5 i", scope);
+					Assert.AreEqual("{ :x 0 , :y 5 }", v.ToString());
+
+					v = ToValue("{ :x 1 :y 2 } +c { :x 3 :y 4 }", scope);
+					Assert.AreEqual("{ :x 4 , :y 6 }", v.ToString());
+					v = ToValue("4 i +c { :x 3 :y 4 }", scope);
+					Assert.AreEqual("{ :x 3 , :y 8 }", v.ToString());
+
+					v = ToValue("4 i *c 3 i", scope);
+					Assert.AreEqual("{ :x -12 , :y 0 }", v.ToString());
+				}
 			}
 			catch (Loki3Exception e)
 			{
