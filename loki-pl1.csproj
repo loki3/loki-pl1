@@ -51,11 +51,13 @@
     <Compile Include="Loop.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Math.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="PartialFunction.cs" />
     <Compile Include="PatternData.cs" />
     <Compile Include="PatternChecker.cs" />
     <Compile Include="ScopeChain.cs" />
     <Compile Include="String.cs" />
+    <Compile Include="TestSupport.cs" />
     <Compile Include="TEST_Bootstrap.cs" />
     <Compile Include="TEST_Conditional.cs" />
     <Compile Include="TEST_CreateFunction.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="TEST_EvalList.cs" />
     <Compile Include="TEST_Logic.cs" />
     <Compile Include="TEST_Math.cs" />
+    <Compile Include="TEST_Module.cs" />
     <Compile Include="TEST_PartialFunction.cs" />
     <Compile Include="TEST_PatternChecker.cs" />
     <Compile Include="TEST_String.cs" />
@@ -87,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="l3\bootstrap.l3" />
+    <None Include="l3\module.l3" />
     <None Include="l3\test.l3" />
     <None Include="README.md" />
   </ItemGroup>

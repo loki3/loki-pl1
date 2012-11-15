@@ -255,3 +255,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :+s <- ( ->a infix ->b )
 	l3.stringConcat [ a b ]
 :+s @doc /" Concatenate two strings
+
+
+//
+// modules
+
+:import <- ( func ->file )
+	l3.loadModule { :file file :scope " parent " }
+:import @doc /" Run the code from the given file
