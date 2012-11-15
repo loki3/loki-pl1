@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
+using loki3.builtin.test;
 
 namespace loki3.core.test
 {
@@ -18,27 +19,6 @@ namespace loki3.core.test
 				Value value2 = EvalNode.Do(next, scope, nodes, requestor);
 				int sum = value1.AsInt + value2.AsInt;
 				return new ValueInt(sum);
-			}
-		}
-
-		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
-		class CreateMap : ValueFunctionPre
-		{
-			internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
-
-			internal override Value Eval(Value arg, IScope scope)
-			{
-				List<Value> list = arg.AsArray;
-
-				Map map = new Map();
-				int count = list.Count;
-				for (int i = 0; i < count; i += 2)
-				{
-					string key = list[i].AsString;
-					Value value = list[i + 1];
-					map[key] = value;
-				}
-				return new ValueMap(map);
 			}
 		}
 

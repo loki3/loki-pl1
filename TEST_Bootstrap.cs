@@ -6,12 +6,6 @@ namespace loki3.builtin.test
 	[TestFixture]
 	class TEST_Bootstrap
 	{
-		static Value ToValue(string s, IScope scope)
-		{
-			DelimiterList list = ParseLine.Do(s, scope);
-			return EvalList.Do(list.Nodes, scope);
-		}
-
 		[Test]
 		public void Test()
 		{
@@ -22,42 +16,42 @@ namespace loki3.builtin.test
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 
 				{	// test setting a value and adding metadata to it
-					Value a = ToValue(":a <- 3", scope);
-					ToValue(":a @ [ :tag :hello ]", scope);
+					Value a = TestSupport.ToValue(":a <- 3", scope);
+					TestSupport.ToValue(":a @ [ :tag :hello ]", scope);
 					Assert.AreEqual("hello", a.Metadata["tag"].AsString);
 				}
 
 				{	// test modifying the doc string on a function
-					Value a = ToValue(":= @doc :testing", scope);
+					Value a = TestSupport.ToValue(":= @doc :testing", scope);
 					Assert.AreEqual("testing", scope.AsMap["="].Metadata["l3.value.doc"].AsString);
 				}
 
 				{	// test infix addition
-					Value value = ToValue("5 + 7", scope);
+					Value value = TestSupport.ToValue("5 + 7", scope);
 					Assert.AreEqual(12, value.AsInt);
 				}
 
 				{	// test function definition
-					Value value = ToValue("sqrt 4", scope);
+					Value value = TestSupport.ToValue("sqrt 4", scope);
 					Assert.AreEqual(2, value.AsFloat);
 				}
 
 				{	// test comparison
-					Value a = ToValue("a", scope);
+					Value a = TestSupport.ToValue("a", scope);
 					Assert.AreNotEqual(4, a.AsInt);
-					Value value = ToValue("4 =? a", scope);
+					Value value = TestSupport.ToValue("4 =? a", scope);
 					Assert.IsFalse(value.AsBool);
 				}
 
 				{	// test eval order
-					Value value = ToValue("2 * 2 + 3", scope);
+					Value value = TestSupport.ToValue("2 * 2 + 3", scope);
 					Assert.AreEqual(7, value.AsInt);
-					value = ToValue("2 + 2 * 3", scope);
+					value = TestSupport.ToValue("2 + 2 * 3", scope);
 					Assert.AreEqual(8, value.AsInt);
 				}
 
 				{	// array concat
-					Value value = ToValue("[ 1 2 ] += 3", scope);
+					Value value = TestSupport.ToValue("[ 1 2 ] += 3", scope);
 					System.Collections.Generic.List<Value> values = value.AsArray;
 					Assert.AreEqual(3, values.Count);
 					Assert.AreEqual(1, values[0].AsInt);
@@ -101,22 +95,22 @@ namespace loki3.builtin.test
 				EvalLines.Do(requestor, scope);
 
 				{
-					Value value = ToValue("complex [ 1 2 ]", scope);
+					Value value = TestSupport.ToValue("complex [ 1 2 ]", scope);
 					Assert.AreEqual("{ :real 1 , :imaginary 2 }", value.ToString());
 				}
 
 				{
-					Value value = ToValue("4 i", scope);
+					Value value = TestSupport.ToValue("4 i", scope);
 					Assert.AreEqual("{ :real 0 , :imaginary 4 }", value.ToString());
 				}
 
 				{
-					Value value = ToValue("1 +i 3 i", scope);
+					Value value = TestSupport.ToValue("1 +i 3 i", scope);
 					Assert.AreEqual("{ :real 1 , :imaginary 3 }", value.ToString());
 				}
 
 				{
-					Value value = ToValue("( 1 +i 3 i ) +c complex [ 4 6 ]", scope);
+					Value value = TestSupport.ToValue("( 1 +i 3 i ) +c complex [ 4 6 ]", scope);
 					Assert.AreEqual("{ :real 5 , :imaginary 9 }", value.ToString());
 				}
 			}
@@ -254,12 +248,12 @@ namespace loki3.builtin.test
 				EvalLines.Do(requestor, scope);
 
 				{	// pass expected parameters
-					Value value = ToValue("addUp [ 1 2 ]", scope);
+					Value value = TestSupport.ToValue("addUp [ 1 2 ]", scope);
 					Assert.AreEqual(3, value.AsInt);
 				}
 
 				{	// leave off 2nd, use default
-					Value value = ToValue("addUp [ 1 ]", scope);
+					Value value = TestSupport.ToValue("addUp [ 1 ]", scope);
 					Assert.AreEqual(6, value.AsInt);
 				}
 
@@ -267,7 +261,7 @@ namespace loki3.builtin.test
 				bool bThrew = false;
 				try
 				{
-					ToValue("addUp [ true 1 ]", scope);
+					TestSupport.ToValue("addUp [ true 1 ]", scope);
 				}
 				catch (Loki3Exception)
 				{
@@ -292,7 +286,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = ToValue("{ :a :a :remainder ( :remainder :rest ) } <- { :a 4 :b 5 :c 6 }", nested);
+					Value value = TestSupport.ToValue("{ :a :a :remainder ( :remainder :rest ) } <- { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -305,7 +299,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = ToValue("[ ->a ( ->remainder :rest ) ] <- { :a 4 :b 5 :c 6 }", nested);
+					Value value = TestSupport.ToValue("[ ->a ( ->remainder :rest ) ] <- { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -318,7 +312,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = ToValue("[ ->a ( ->remainder :rest ) ] <- [ 7 8 9 ]", nested);
+					Value value = TestSupport.ToValue("[ ->a ( ->remainder :rest ) ] <- [ 7 8 9 ]", nested);
 					// value should be [ 7 8 9 ]
 					Assert.AreEqual(3, value.AsArray.Count);
 					// nested should now contain "a" and "remainder"

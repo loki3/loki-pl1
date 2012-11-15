@@ -20,18 +20,12 @@ namespace loki3.builtin.test
 			return scope;
 		}
 
-		static Value ToValue(string s, IScope scope)
-		{
-			DelimiterList list = ParseLine.Do(s, scope);
-			return EvalList.Do(list.Nodes, scope);
-		}
-
 		[Test]
 		public void TestConcat()
 		{
 			IScope scope = CreateStringScope();
 			{
-				Value value = ToValue("l3.stringConcat [ \" one \" \" two \" ]", scope);
+				Value value = TestSupport.ToValue("l3.stringConcat [ \" one \" \" two \" ]", scope);
 				Assert.AreEqual("onetwo", value.AsString);
 			}
 		}

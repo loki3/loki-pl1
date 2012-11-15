@@ -9,27 +9,6 @@ namespace loki3.builtin.test
 	[TestFixture]
 	class TEST_Values
 	{
-		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
-		class CreateMap : ValueFunctionPre
-		{
-			internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
-
-			internal override Value Eval(Value arg, IScope scope)
-			{
-				List<Value> list = arg.AsArray;
-
-				Map map = new Map();
-				int count = list.Count;
-				for (int i = 0; i < count; i += 2)
-				{
-					string key = list[i].AsString;
-					Value value = list[i + 1];
-					map[key] = value;
-				}
-				return new ValueMap(map);
-			}
-		}
-
 		static IScope CreateValueScope()
 		{
 			ScopeChain scope = new ScopeChain();
@@ -43,19 +22,13 @@ namespace loki3.builtin.test
 			return scope;
 		}
 
-		static Value ToValue(string s, IScope scope)
-		{
-			DelimiterList list = ParseLine.Do(s, scope);
-			return EvalList.Do(list.Nodes, scope);
-		}
-
 		[Test]
 		public void TestSetValue()
 		{
 			IScope scope = CreateValueScope();
 
 			{
-				Value value = ToValue("l3.setValue { :key :a :value 5 }", scope);
+				Value value = TestSupport.ToValue("l3.setValue { :key :a :value 5 }", scope);
 				Assert.AreEqual(5, value.AsInt);
 
 				Value fetch = scope.GetValue(new Token("a"));
@@ -63,7 +36,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// change a
-				Value value = ToValue("l3.setValue { :key :a :value 7.5 }", scope);
+				Value value = TestSupport.ToValue("l3.setValue { :key :a :value 7.5 }", scope);
 				Assert.AreEqual(7.5, value.AsFloat);
 
 				Value fetch = scope.GetValue(new Token("a"));
@@ -71,7 +44,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// set an array
-				Value value = ToValue("l3.setValue { :key :key :value [ a 2 false ] }", scope);
+				Value value = TestSupport.ToValue("l3.setValue { :key :key :value [ a 2 false ] }", scope);
 				List<Value> array = value.AsArray;
 				Assert.AreEqual(3, array.Count);
 				Assert.AreEqual(7.5, array[0].AsFloat);
@@ -90,7 +63,7 @@ namespace loki3.builtin.test
 			IScope nested = new ScopeChain(scope);
 
 			{	// explicitly say create-if-needed
-				ToValue("l3.setValue { :key :created :value 3 :create? true }", nested);
+				TestSupport.ToValue("l3.setValue { :key :created :value 3 :create? true }", nested);
 				Value fetch = nested.GetValue(new Token("created"));
 				Assert.AreEqual(3, fetch.AsInt);
 			}
@@ -99,7 +72,7 @@ namespace loki3.builtin.test
 				bool bThrew = false;
 				try
 				{
-					Value value = ToValue("l3.setValue { :key :doesnt-exist :value 3 :create? false }", nested);
+					Value value = TestSupport.ToValue("l3.setValue { :key :doesnt-exist :value 3 :create? false }", nested);
 				}
 				catch (Loki3Exception e)
 				{
@@ -110,9 +83,9 @@ namespace loki3.builtin.test
 			}
 
 			{	// set var on parent scope & reuse on nested scope
-				ToValue("l3.setValue { :key :on-parent :value 5 :create? true }", scope);
+				TestSupport.ToValue("l3.setValue { :key :on-parent :value 5 :create? true }", scope);
 				Assert.AreEqual(5, scope.AsMap["on-parent"].AsInt);
-				ToValue("l3.setValue { :key :on-parent :value 4 :create? false }", nested);
+				TestSupport.ToValue("l3.setValue { :key :on-parent :value 4 :create? false }", nested);
 				Assert.AreEqual(4, scope.AsMap["on-parent"].AsInt);
 				Assert.AreNotEqual(null, nested.Exists("on-parent"));
 				Assert.IsFalse(nested.AsMap.ContainsKey("on-parent"));
@@ -125,13 +98,13 @@ namespace loki3.builtin.test
 				ValueMap valueMap = new ValueMap(map);
 				scope.SetValue("mymap", valueMap);
 
-				Value value = ToValue("l3.setValue { :key :one :value 3 :map mymap }", scope);
+				Value value = TestSupport.ToValue("l3.setValue { :key :one :value 3 :map mymap }", scope);
 				Assert.AreEqual(3, value.AsInt);
 				Assert.AreEqual(3, map["one"].AsInt);
 			}
 
 			{	// pattern matching: extract values out of an array
-				Value value = ToValue("l3.setValue { :key [ :first :second :third ] :value [ 11 22 33 ] :create? true }", scope);
+				Value value = TestSupport.ToValue("l3.setValue { :key [ :first :second :third ] :value [ 11 22 33 ] :create? true }", scope);
 				Assert.AreEqual(11, scope.AsMap["first"].AsInt);
 				Assert.AreEqual(22, scope.AsMap["second"].AsInt);
 				Assert.AreEqual(33, scope.AsMap["third"].AsInt);
@@ -154,12 +127,12 @@ namespace loki3.builtin.test
 			scope.SetValue("anArray", new ValueArray(array));
 
 			{
-				Value value = ToValue("l3.getValue { :object aMap :key :two }", scope);
+				Value value = TestSupport.ToValue("l3.getValue { :object aMap :key :two }", scope);
 				Assert.AreEqual(2, value.AsInt);
 			}
 
 			{
-				Value value = ToValue("l3.getValue { :object anArray :key 1 }", scope);
+				Value value = TestSupport.ToValue("l3.getValue { :object anArray :key 1 }", scope);
 				Assert.AreEqual(4, value.AsInt);
 			}
 		}
@@ -170,7 +143,7 @@ namespace loki3.builtin.test
 			IScope scope = CreateValueScope();
 
 			{
-				Value value = ToValue("l3.createMap [ :a 5  :key true ]", scope);
+				Value value = TestSupport.ToValue("l3.createMap [ :a 5  :key true ]", scope);
 				Map map = value.AsMap;
 				Assert.AreEqual(5, map["a"].AsInt);
 				Assert.AreEqual(true, map["key"].AsBool);
@@ -184,7 +157,7 @@ namespace loki3.builtin.test
 			Math.Register(scope);
 
 			{	// prefix
-				Value value = ToValue("l3.createFunction { :post :x :body [ ' l3.add [ 3 x ] ' ] }", scope);
+				Value value = TestSupport.ToValue("l3.createFunction { :post :x :body [ ' l3.add [ 3 x ] ' ] }", scope);
 				ValueFunction func = value as ValueFunction;
 
 				List<DelimiterNode> nodes = new List<DelimiterNode>();
@@ -196,7 +169,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// postfix
-				Value value = ToValue("l3.createFunction { :pre :x :body [ ' l3.add [ 7 x ] ' ] }", scope);
+				Value value = TestSupport.ToValue("l3.createFunction { :pre :x :body [ ' l3.add [ 7 x ] ' ] }", scope);
 				ValueFunction func = value as ValueFunction;
 
 				List<DelimiterNode> nodes = new List<DelimiterNode>();
@@ -209,11 +182,11 @@ namespace loki3.builtin.test
 
 			{	// infix
 				// first add the + function to the current scope
-				Value value = ToValue("l3.setValue { :key :+ :value ( l3.createFunction l3.createMap [ :pre :x  :post :y :body [ ' l3.add [ x y ] ' ] ] ) }", scope);
+				Value value = TestSupport.ToValue("l3.setValue { :key :+ :value ( l3.createFunction l3.createMap [ :pre :x  :post :y :body [ ' l3.add [ x y ] ' ] ] ) }", scope);
 				ValueFunction func = value as ValueFunction;
 
 				// next, use it
-				Value result = ToValue("5 + 7", scope);
+				Value result = TestSupport.ToValue("5 + 7", scope);
 				Assert.AreEqual(12, result.AsInt);
 			}
 		}
@@ -225,11 +198,11 @@ namespace loki3.builtin.test
 
 			{	// {} should mean create a map from the contents
 				// first add the + function to the current scope
-				Value value = ToValue("l3.setValue { :key :{ :value ( l3.createDelimiter { :start :{  :end :} :type :asArray :function l3.createMap } ) }", scope);
+				Value value = TestSupport.ToValue("l3.setValue { :key :{ :value ( l3.createDelimiter { :start :{  :end :} :type :asArray :function l3.createMap } ) }", scope);
 				ValueDelimiter delimi = value as ValueDelimiter;
 
 				// next, use it
-				Value result = ToValue("{ :key1 5 :key2 false }", scope);
+				Value result = TestSupport.ToValue("{ :key1 5 :key2 false }", scope);
 				ValueMap map = result as ValueMap;
 				Assert.AreEqual(5, map["key1"].AsInt);
 				Assert.AreEqual(false, map["key2"].AsBool);
@@ -243,14 +216,14 @@ namespace loki3.builtin.test
 
 			{	// lookup metadata on a value
 				scope.SetValue("a", new ValueInt(42));
-				Value value = ToValue("l3.getMetadata { :value a }", scope);
+				Value value = TestSupport.ToValue("l3.getMetadata { :value a }", scope);
 				Assert.AreEqual(loki3.core.ValueType.Nil, value.Type);
-				value = ToValue("l3.getMetadata { :value a :writable? true }", scope);
+				value = TestSupport.ToValue("l3.getMetadata { :value a :writable? true }", scope);
 				Assert.AreEqual(loki3.core.ValueType.Map, value.Type);
 			}
 
 			{	// lookup a key on the current scope (so function doesn't get evaled)
-				Value value = ToValue("l3.getMetadata { :key :l3.getValue }", scope);
+				Value value = TestSupport.ToValue("l3.getMetadata { :key :l3.getValue }", scope);
 				Assert.AreEqual(loki3.core.ValueType.Map, value.Type);
 			}
 		}

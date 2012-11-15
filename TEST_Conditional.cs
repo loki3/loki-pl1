@@ -19,12 +19,6 @@ namespace loki3.builtin.test
 			return scope;
 		}
 
-		static Value ToValue(string s, IScope scope)
-		{
-			DelimiterList list = ParseLine.Do(s, scope);
-			return EvalList.Do(list.Nodes, scope);
-		}
-
 
 		[Test]
 		public void TestIf()
@@ -33,11 +27,11 @@ namespace loki3.builtin.test
 			Values.Register(scope);
 
 			{	// run body
-				Value value = ToValue("l3.ifBody l3.createMap [ :do? true :body [ ' 5 ' ] ]", scope);
+				Value value = TestSupport.ToValue("l3.ifBody l3.createMap [ :do? true :body [ ' 5 ' ] ]", scope);
 				Assert.AreEqual(5, value.AsInt);
 			}
 			{	// skip body
-				Value value = ToValue("l3.ifBody l3.createMap [ :do? false :body [ ' 5 ' ] ]", scope);
+				Value value = TestSupport.ToValue("l3.ifBody l3.createMap [ :do? false :body [ ' 5 ' ] ]", scope);
 				Assert.AreEqual(false, value.AsBool);
 			}
 		}

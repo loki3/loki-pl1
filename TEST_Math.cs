@@ -18,30 +18,24 @@ namespace loki3.builtin.test
 			return scope;
 		}
 
-		static Value ToValue(string s, IScope scope)
-		{
-			DelimiterList list = ParseLine.Do(s, scope);
-			return EvalList.Do(list.Nodes, scope);
-		}
-
 		[Test]
 		public void TestAdd()
 		{
 			IScope scope = CreateMathScope();
 			{	// 3
-				Value value = ToValue("l3.add [ 3 ]", scope);
+				Value value = TestSupport.ToValue("l3.add [ 3 ]", scope);
 				Assert.AreEqual(3, value.AsInt);
 			}
 			{	// 3.0
-				Value value = ToValue("l3.add [ 3.0 ]", scope);
+				Value value = TestSupport.ToValue("l3.add [ 3.0 ]", scope);
 				Assert.AreEqual(3.0, value.AsFloat);
 			}
 			{	// 3 + 2 + 1
-				Value value = ToValue("l3.add [ 3 2 1 ]", scope);
+				Value value = TestSupport.ToValue("l3.add [ 3 2 1 ]", scope);
 				Assert.AreEqual(6, value.AsInt);
 			}
 			{	// 3 + 2.5 + 1
-				Value value = ToValue("l3.add [ 3 2.5 1 ]", scope);
+				Value value = TestSupport.ToValue("l3.add [ 3 2.5 1 ]", scope);
 				Assert.AreEqual(6.5, value.AsFloat);
 			}
 
@@ -49,7 +43,7 @@ namespace loki3.builtin.test
 			bool bException = false;
 			try
 			{
-				ToValue("l3.add [ 3 true 1 ]", scope);
+				TestSupport.ToValue("l3.add [ 3 true 1 ]", scope);
 			}
 			catch (Loki3Exception e)
 			{
@@ -65,11 +59,11 @@ namespace loki3.builtin.test
 		{
 			IScope scope = CreateMathScope();
 			{	// 42 - 31
-				Value value = ToValue("l3.subtract [ 42 31 ]", scope);
+				Value value = TestSupport.ToValue("l3.subtract [ 42 31 ]", scope);
 				Assert.AreEqual(11, value.AsInt);
 			}
 			{	// 42 - 31.0
-				Value value = ToValue("l3.subtract [ 42 31.0 ]", scope);
+				Value value = TestSupport.ToValue("l3.subtract [ 42 31.0 ]", scope);
 				Assert.AreEqual(11.0, value.AsFloat);
 			}
 
@@ -77,7 +71,7 @@ namespace loki3.builtin.test
 			bool bException = false;
 			try
 			{
-				ToValue("l3.subtract [ true ]", scope);
+				TestSupport.ToValue("l3.subtract [ true ]", scope);
 			}
 			catch (Loki3Exception)
 			{
@@ -91,11 +85,11 @@ namespace loki3.builtin.test
 		{
 			IScope scope = CreateMathScope();
 			{	// 2 * 3 * 4
-				Value value = ToValue("l3.multiply [ 2 3 4 ]", scope);
+				Value value = TestSupport.ToValue("l3.multiply [ 2 3 4 ]", scope);
 				Assert.AreEqual(24, value.AsInt);
 			}
 			{	// 1.5 2
-				Value value = ToValue("l3.multiply [ 1.5 2 ]", scope);
+				Value value = TestSupport.ToValue("l3.multiply [ 1.5 2 ]", scope);
 				Assert.AreEqual(3.0, value.AsFloat);
 			}
 		}
@@ -105,11 +99,11 @@ namespace loki3.builtin.test
 		{
 			IScope scope = CreateMathScope();
 			{	// 6 / 2
-				Value value = ToValue("l3.divide [ 6 2 ]", scope);
+				Value value = TestSupport.ToValue("l3.divide [ 6 2 ]", scope);
 				Assert.AreEqual(3, value.AsInt);
 			}
 			{	// 1.5 / 3
-				Value value = ToValue("l3.divide [ 1.5 3 ]", scope);
+				Value value = TestSupport.ToValue("l3.divide [ 1.5 3 ]", scope);
 				Assert.AreEqual(0.5, value.AsFloat);
 			}
 		}
@@ -119,7 +113,7 @@ namespace loki3.builtin.test
 		{
 			IScope scope = CreateMathScope();
 			{
-				Value value = ToValue("l3.sqrt 16", scope);
+				Value value = TestSupport.ToValue("l3.sqrt 16", scope);
 				Assert.AreEqual(4, value.AsFloat);
 			}
 		}

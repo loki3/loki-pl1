@@ -18,31 +18,25 @@ namespace loki3.builtin.test
 			return scope;
 		}
 
-		static Value ToValue(string s, IScope scope)
-		{
-			DelimiterList list = ParseLine.Do(s, scope);
-			return EvalList.Do(list.Nodes, scope);
-		}
-
 		[Test]
 		public void TestEquals()
 		{
 			IScope scope = CreateValueScope();
 
 			{
-				Value value = ToValue("l3.equal? [ 1 1 ]", scope);
+				Value value = TestSupport.ToValue("l3.equal? [ 1 1 ]", scope);
 				Assert.True(value.AsBool);
 			}
 			{
-				Value value = ToValue("l3.equal? [ 1 2 ]", scope);
+				Value value = TestSupport.ToValue("l3.equal? [ 1 2 ]", scope);
 				Assert.False(value.AsBool);
 			}
 			{
-				Value value = ToValue("l3.equal? [ [ :a true ] [ :a true ] ]", scope);
+				Value value = TestSupport.ToValue("l3.equal? [ [ :a true ] [ :a true ] ]", scope);
 				Assert.True(value.AsBool);
 			}
 			{
-				Value value = ToValue("l3.equal? [ [ :a true ] [ :a true 3 ] ]", scope);
+				Value value = TestSupport.ToValue("l3.equal? [ [ :a true ] [ :a true 3 ] ]", scope);
 				Assert.False(value.AsBool);
 			}
 		}
@@ -54,31 +48,31 @@ namespace loki3.builtin.test
 
 			// AND
 			{
-				Value value = ToValue("l3.and? [ true true ]", scope);
+				Value value = TestSupport.ToValue("l3.and? [ true true ]", scope);
 				Assert.True(value.AsBool);
 			}
 			{
-				Value value = ToValue("l3.and? [ true false ]", scope);
+				Value value = TestSupport.ToValue("l3.and? [ true false ]", scope);
 				Assert.False(value.AsBool);
 			}
 
 			// OR
 			{
-				Value value = ToValue("l3.or? [ true false ]", scope);
+				Value value = TestSupport.ToValue("l3.or? [ true false ]", scope);
 				Assert.True(value.AsBool);
 			}
 			{
-				Value value = ToValue("l3.or? [ false false ]", scope);
+				Value value = TestSupport.ToValue("l3.or? [ false false ]", scope);
 				Assert.False(value.AsBool);
 			}
 
 			// NOT
 			{
-				Value value = ToValue("l3.not? false", scope);
+				Value value = TestSupport.ToValue("l3.not? false", scope);
 				Assert.True(value.AsBool);
 			}
 			{
-				Value value = ToValue("l3.not? true", scope);
+				Value value = TestSupport.ToValue("l3.not? true", scope);
 				Assert.False(value.AsBool);
 			}
 		}

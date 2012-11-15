@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using loki3.builtin.test;
 
 namespace loki3.core.test
 {
@@ -44,27 +45,6 @@ namespace loki3.core.test
 			}
 		}
 
-		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
-		class CreateMap : ValueFunctionPre
-		{
-			internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
-
-			internal override Value Eval(Value arg, IScope scope)
-			{
-				List<Value> list = arg.AsArray;
-
-				Map map = new Map();
-				int count = list.Count;
-				for (int i = 0; i < count; i += 2)
-				{
-					string key = list[i].AsString;
-					Value value = list[i + 1];
-					map[key] = value;
-				}
-				return new ValueMap(map);
-			}
-		}
-
 		static IScope CreateScope()
 		{
 			ScopeChain scope = new ScopeChain();
@@ -80,27 +60,21 @@ namespace loki3.core.test
 			return scope;
 		}
 
-		static Value ToValue(string s, IScope scope)
-		{
-			DelimiterList list = ParseLine.Do(s, scope);
-			return EvalList.Do(list.Nodes, scope);
-		}
-
 		[Test]
 		public void TestPre()
 		{
 			IScope scope = CreateScope();
 
 			{	// partial function
-				Value partial = ToValue("subtract-array [ 3 ]", scope);
+				Value partial = TestSupport.ToValue("subtract-array [ 3 ]", scope);
 				Assert.IsTrue(partial is ValueFunction);
 
 				// "subtract-array [ 3 ]" gets turned into a function that takes one more value
-				Value value = ToValue("subtract-array [ 3 ] [ 1 ]", scope);
+				Value value = TestSupport.ToValue("subtract-array [ 3 ] [ 1 ]", scope);
 				Assert.AreEqual(2, value.AsInt);
 
 				// this is the same as passing them both at the same time
-				value = ToValue("subtract-array [ 3 1 ]", scope);
+				value = TestSupport.ToValue("subtract-array [ 3 1 ]", scope);
 				Assert.AreEqual(2, value.AsInt);
 			}
 		}
@@ -111,20 +85,20 @@ namespace loki3.core.test
 			IScope scope = CreateScope();
 
 			{	// bind to a
-				Value partial = ToValue("{ :a 3 } subtract-map", scope);
+				Value partial = TestSupport.ToValue("{ :a 3 } subtract-map", scope);
 				Assert.IsTrue(partial is ValueFunction);
 
 				// "{ :a 3 } subtract-map" gets turned into a function that takes one more value
-				Value value = ToValue("{ :b 1 } { :a 3 } subtract-map", scope);
+				Value value = TestSupport.ToValue("{ :b 1 } { :a 3 } subtract-map", scope);
 				Assert.AreEqual(2, value.AsInt);
 			}
 
 			{	// bind to b
-				Value partial = ToValue("{ :b 7 } subtract-map", scope);
+				Value partial = TestSupport.ToValue("{ :b 7 } subtract-map", scope);
 				Assert.IsTrue(partial is ValueFunction);
 
 				// "{ :b 7 } subtract-map" gets turned into a function that takes one more value
-				Value value = ToValue("{ :a 10 } { :b 7 } subtract-map", scope);
+				Value value = TestSupport.ToValue("{ :a 10 } { :b 7 } subtract-map", scope);
 				Assert.AreEqual(3, value.AsInt);
 			}
 		}
