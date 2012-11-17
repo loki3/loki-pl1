@@ -93,6 +93,7 @@
     <None Include="l3\bootstrap.l3" />
     <None Include="l3\module.l3" />
     <None Include="l3\test.l3" />
+    <None Include="l3\unittest.l3" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
