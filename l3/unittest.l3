@@ -1,0 +1,16 @@
+//
+// Unittest framework
+//
+
+:checkDocs <- func ->scope
+	var :failed = [ ]
+	var :f forEach scope
+		if /( ( f . 0 ) .@doc =? nil
+			failed += f . 0
+	if ( countOf failed ) !=? 0
+		print /" checkDocs failed
+		print failed
+		false
+	else
+		true
+:checkDocs @doc /" Success if everything in scope has doc metadata
