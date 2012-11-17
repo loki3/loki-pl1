@@ -2,15 +2,24 @@
 // Unittest framework
 //
 
+:unittest <- func ->scope
+	var :success? = true
+	:success? = success? &? testFunction /[ checkDocs :checkDocs scope
+	success?
+:unittest @doc /" Run tests and check for docstrings on everything in scope
+
+:testFunction <- func /[ ->function ->name ->scope
+	[ :success? :failures ] <- function scope
+	if !? success?
+		print name +s /" : failed
+		print failures
+	success?
+:testFunction @doc /" Run a function and output failures if any.  Takes a function that returns [ success? arrayOfFailures ], the name of the test, and a scope to operate on.
+
 :checkDocs <- func ->scope
-	var :failed = [ ]
+	var :failures = [ ]
 	var :f forEach scope
 		if /( ( f . 0 ) .@doc =? nil
-			failed += f . 0
-	if ( countOf failed ) !=? 0
-		print /" checkDocs failed
-		print failed
-		false
-	else
-		true
-:checkDocs @doc /" Success if everything in scope has doc metadata
+			failures += f . 0
+	[ ( ( countOf failures ) =? 0 ) failures ]
+:checkDocs @doc /" Check if everything in scope has doc metadata.  Returns [ success? arrayOfFailures ]
