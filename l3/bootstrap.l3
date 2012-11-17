@@ -263,3 +263,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :import <- ( func ->file )
 	l3.loadModule { :file file :scope " parent " }
 :import @doc /" Run the code from the given file
+
+
+//
+// I/O
+
+:print <- /( func ->val
+	l3.print /{ :value val
+:print @doc /" Print a value as a string
