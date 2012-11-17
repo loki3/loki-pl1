@@ -8,18 +8,22 @@ namespace loki3.core
 		/// <summary>Read and eval all the lines in a file</summary>
 		internal static void Do(string file, IScope scope)
 		{
+			StreamReader stream = null;
 			try
 			{
 				List<string> lines = new List<string>();
-				StreamReader stream = new StreamReader(file);
+				stream = new StreamReader(file);
 				while (!stream.EndOfStream)
 					lines.Add(stream.ReadLine());
 
 				LineConsumer consumer = new LineConsumer(lines);
 				EvalLines.Do(consumer, scope);
+				stream.Close();
 			}
 			catch (Loki3Exception e)
 			{
+				if (stream != null)
+					stream.Close();
 				e.AddFileName(file);
 				throw e;
 			}
