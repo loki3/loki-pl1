@@ -123,12 +123,25 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // add documentation to functions that have been previously definied
 
+:(		@doc	/" Delimiter around code that is evaluated to a single value
+:[		@doc	/" Delimiter around values in an array
+:{		@doc	/" Delimiter around key/value pairs in a map
+://		@doc	/" Remainder of line is ignored
+:`		@doc	/" Delimiter around code that may be evaluated at a later time
+:/(		@doc	/" Remainder of line is evaluated to a single value
+:/[		@doc	/" Remainder of line is values in an array
+:/{		@doc	/" Remainder of line is key/value pairs in a map
+:/`		@doc	/" Remainder of line may be evaluated at a later time
+:/*		@doc	/" Everything with delimiters is ignored
+:"		@doc	/" Delimiter around a string
+:/"		@doc	/" Remainder of line is a string
 :<-		@doc	/" Create a new key/value pair in the current scope
 :=		@doc	/" Assign a value to a key
 :var	@doc	/" Create a new variable in the current scope
 :func	@doc	/" Define a function that takes parameters after the function name
 :infix	@doc	/" Define a function that takes parameters before and after the function name
 :postfix @doc	/" Define a function that takes parameters before the function name
+:bodyFunc @doc	/" Define a function that takes no parameters
 :.		@doc	/" Access the member of a map by key or array by index
 :@		@doc	/" Modify a value's metadata
 :.@		@doc	/" Get a value's metadata
