@@ -100,6 +100,10 @@ namespace loki3.core
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope parentScope, INodeRequestor nodes, ILineRequestor requestor)
 			{
+				// if we need prev or next params but they're not there, simply return the function
+				if ((m_usePrevious || m_useNext) && prev == null && next == null)
+					return this;
+
 				// scope we'll add prev/next/body params to
 				ScopeChain localScope = new ScopeChain();
 

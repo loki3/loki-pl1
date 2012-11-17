@@ -31,6 +31,11 @@ namespace loki3.builtin.test
 					Assert.AreEqual(12, value.AsInt);
 				}
 
+				{	// a function that needs params but doesn't get them is just a function
+					Value value = TestSupport.ToValue("+", scope);
+					Assert.AreEqual(ValueType.Function, value.Type);
+				}
+
 				{	// test function definition
 					Value value = TestSupport.ToValue("sqrt 4", scope);
 					Assert.AreEqual(2, value.AsFloat);
