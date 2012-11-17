@@ -1,25 +1,61 @@
 //
 // Unittest framework
 //
+// Provides tools for attaching unittests to functions (@unittest),
+//	validating that all functions pass their tests and
+//	have attached documentation (@doc)
+//
+// :myFunc @unittest bodyFunc
+//		doSomething
+//
 
 :unittest <- func ->scope
 	var :success? = true
 	:success? = success? &? testFunction /[ checkDocs :checkDocs scope
+	:success? = success? &? testFunction /[ runUnittests :runUnittests scope
 	success?
 :unittest @doc /" Run tests and check for docstrings on everything in scope
 
 :testFunction <- func /[ ->function ->name ->scope
 	[ :success? :failures ] <- function scope
-	if !? success?
-		print name +s /" : failed
+	if success?
+		print " ---- " +s name +s /" : succeeded
+	else
+		print " ---- " +s name +s /" : failed
 		print failures
 	success?
 :testFunction @doc /" Run a function and output failures if any.  Takes a function that returns [ success? arrayOfFailures ], the name of the test, and a scope to operate on.
 
+
 :checkDocs <- func ->scope
 	var :failures = [ ]
 	var :f forEach scope
-		if /( ( f . 0 ) .@doc =? nil
+		if ( f . 0 ) .@doc =? nil
 			failures += f . 0
 	[ ( ( countOf failures ) =? 0 ) failures ]
 :checkDocs @doc /" Check if everything in scope has doc metadata.  Returns [ success? arrayOfFailures ]
+
+:printDocs <- func ->scope
+	var :f forEach scope
+		if ( f . 0 ) .@doc !=? nil
+			print ( f . 0 ) +s " -- " +s ( f . 0 ) .@doc
+:printDocs @doc /" Print all the docstrings attached to the values in this scope
+
+
+:@unittest <- /( ->object infix ->function
+	object @ /[ :l3.value.unittest function
+:@unittest	@doc /" Attach a unittest to a value
+
+:.@unittest <- /( ->object postfix
+	l3.getValue /{ :object ( l3.getMetadata { :key object } ) :key :l3.value.unittest
+:.@unittest	@doc /" Get the unittest attached to a value
+
+
+:runUnittests <- func ->scope
+	var :failures = [ ]
+	var :f forEach scope
+		var :test = ( f . 0 ) .@unittest
+		if test !=? true
+			failures += f . 0
+	[ ( ( countOf failures ) =? 0 ) failures ]
+:runUnittests @doc /" Run .@unittest on every value in the scope.  A unittest fails if it isn't present or returns anything other than true.
