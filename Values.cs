@@ -57,6 +57,10 @@ namespace loki3.builtin
 				// todo: turn this into an enum, at least "current" & "parent"
 				bool bParentScope = (map["scope"].AsString == "parent");
 
+				// key must be a type that can be used for pattern matching
+				if (key.Type != ValueType.String && key.Type != ValueType.Array && key.Type != ValueType.Map)
+					throw new Loki3Exception().AddWrongType(ValueType.String, key.Type);
+
 				// find the matches in the pattern, ignoring the leftover
 				Value match, leftover;
 				PatternChecker.Do(value, key, true/*bShortPat*/, out match, out leftover);
