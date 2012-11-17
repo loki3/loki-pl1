@@ -22,6 +22,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.createEvalDelimiter", new CreateEvalDelimiter());
 			scope.SetValue("l3.createArrayDelimiter", new CreateArrayDelimiter());
 			scope.SetValue("l3.addToArray", new AddToArray());
+			scope.SetValue("l3.getCount", new GetCount());
 			scope.SetValue("l3.getMetadata", new GetMetadata());
 			scope.SetValue("l3.getScope", new GetScope());
 		}
@@ -325,6 +326,29 @@ namespace loki3.builtin
 
 				array.AsArray.Add(value);
 				return array;
+			}
+		}
+
+		/// <summary>:value -> count of items in value</summary>
+		class GetCount : ValueFunctionPre
+		{
+			internal GetCount()
+			{
+				SetDocString("Get the number of items in a value");
+				Value item = PatternData.Single("value");
+				Init(item);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				int count = 1;
+				if (arg is ValueString)
+					count = arg.AsString.Length;
+				else if (arg is ValueArray)
+					count = arg.AsArray.Count;
+				else if (arg is ValueMap)
+					count = arg.AsMap.Count;
+				return new ValueInt(count);
 			}
 		}
 

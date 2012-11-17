@@ -115,6 +115,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.addToArray /{ :array array :value value
 :+= @doc /" Add a value to an array
 
+:countOf <- /( func ->value
+	l3.getCount value
+:countOf @doc /" Add a value to an array
+
 
 //
 // add documentation to functions that have been previously definied
