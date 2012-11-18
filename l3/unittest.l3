@@ -73,28 +73,26 @@
 :.@unittest	@doc /" Get the unittest attached to a value
 
 :assert=? <- /( ->expected infix ->actual
-	:success? <- expected =? actual
-	if !? success?
-		print " FAILED: expected: "
-		print expected
-		print " actual: "
-		print actual
+	if expected !=? actual
+		print " FAILED : " +s unittestName
+		print " .expected: " +s expected =>str
+		print " ...actual: " +s actual =>str
 		l3.popScope { :name :runUnittests :return false }
-	success?
-:assert=? @doc /"
+:assert=? @doc /" Unittests can assert objects are equal.  If they're not, the unittest aborts & fails.
 
 
 :runUnittests <- func ->scope
 	var :failures = [ ]
 	var :f forEach scope
+		var :unittestName = f . 0
 		var :success? = if true
 			// asserts will exit this scope & the above 'if' will return false
 			l3.setScopeName { :name :runUnittests }
 			// run the test
-			if ( f . 0 ) .@unittest =? nil		// fail if no test
-				failures += f . 0
+			if unittestName .@unittest =? nil		// fail if no test
+				failures += unittestName
 		// fail if function asserted
 		if !? success?
-			failures += f . 0
+			failures += unittestName
 	[ ( ( countOf failures ) =? 0 ) failures ]
 :runUnittests @doc /" Run .@unittest on every value in the scope.  A unittest fails if it isn't present or if an assert fails.

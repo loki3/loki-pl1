@@ -13,9 +13,25 @@ namespace loki3.builtin
 		/// </summary>
 		internal static void Register(IScope scope)
 		{
+			scope.SetValue("l3.toString", new ConvertToString());
 			scope.SetValue("l3.stringConcat", new StringConcat());
 		}
 
+
+		/// <summary>:a -> convert a value to a string</summary>
+		class ConvertToString : ValueFunctionPre
+		{
+			internal ConvertToString()
+			{
+				SetDocString("Convert a value to a string.");
+				Init(PatternData.Single("a"));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				return new ValueString(arg.ToString());
+			}
+		}
 
 		/// <summary>[ :a :b ] -> add together two strings</summary>
 		class StringConcat : ValueFunctionPre
