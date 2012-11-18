@@ -79,6 +79,7 @@
 		print expected
 		print " actual: "
 		print actual
+		l3.popScope { :name :runUnittests :return false }
 	success?
 :assert=? @doc /"
 
@@ -86,8 +87,14 @@
 :runUnittests <- func ->scope
 	var :failures = [ ]
 	var :f forEach scope
-		var :test = ( f . 0 ) .@unittest
-		if test !=? true
+		var :success? = if true
+			// asserts will exit this scope & the above 'if' will return false
+			l3.setScopeName { :name :runUnittests }
+			// run the test
+			if ( f . 0 ) .@unittest =? nil		// fail if no test
+				failures += f . 0
+		// fail if function asserted
+		if !? success?
 			failures += f . 0
 	[ ( ( countOf failures ) =? 0 ) failures ]
-:runUnittests @doc /" Run .@unittest on every value in the scope.  A unittest fails if it isn't present or returns anything other than true.
+:runUnittests @doc /" Run .@unittest on every value in the scope.  A unittest fails if it isn't present or if an assert fails.
