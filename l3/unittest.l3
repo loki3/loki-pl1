@@ -9,12 +9,25 @@
 //		doSomething
 //
 
-:unittest <- func ->scope
+:unittest <- func [ ->targetFile ->testFile ]
+	// import files into local scope
+	import targetFile
+	import testFile
+	// stub out doc & unittest so local vars don't affect results
+	:targetFile @doc /"
+	:testFile @doc /"
+	:targetFile @unittest true
+	:testFile @unittest true
+	// run tests on local scope
+	unittestScope l3.getScope
+:unittest @doc /" For a given implementation file, run all the tests defined in a test file.
+
+:unittestScope <- func ->scope
 	var :success? = true
 	:success? = success? &? testFunction /[ checkDocs :checkDocs scope
 	:success? = success? &? testFunction /[ runUnittests :runUnittests scope
 	success?
-:unittest @doc /" Run tests and check for docstrings on everything in scope
+:unittestScope @doc /" Run tests and check for docstrings on everything in scope
 
 :testFunction <- func /[ ->function ->name ->scope
 	[ :success? :failures ] <- function scope
@@ -41,13 +54,22 @@
 			print ( f . 0 ) +s " -- " +s ( f . 0 ) .@doc
 :printDocs @doc /" Print all the docstrings attached to the values in this scope
 
+:printFileDocs <- func ->file
+	import file
+	printDocs l3.getScope
+:printFileDocs @doc /" Print all the docstrings attached to the values in a given file
+
 
 :@unittest <- /( ->object infix ->function
 	object @ /[ :l3.value.unittest function
 :@unittest	@doc /" Attach a unittest to a value
 
 :.@unittest <- /( ->object postfix
-	l3.getValue /{ :object ( l3.getMetadata { :key object } ) :key :l3.value.unittest
+	:metadata <- l3.getMetadata { :key object }
+	:test <- nil
+	if metadata !=? nil
+		:test = l3.getValue /{ :object metadata :key :l3.value.unittest
+	test
 :.@unittest	@doc /" Get the unittest attached to a value
 
 

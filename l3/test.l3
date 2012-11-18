@@ -1,5 +1,4 @@
 
-// fizzbuzz using a simple loop
 var :fizzBuzz1 = [ ]
 var :i forEach ( 1 .. 20 )
 	if ( i % 15 =? 0 )
@@ -10,15 +9,15 @@ var :i forEach ( 1 .. 20 )
 		fizzBuzz1 += /" buzz
 	else
 		fizzBuzz1 += i
+:fizzBuzz1 @doc /" fizzbuzz using a simple loop
 
-// fizzbuzz using multiple return values
 var :fizzBuzz2 = [ ]
 var :i forEach ( 1 .. 20 )
 	[ :str1 :fizz? ] <- ( i % 3 =? 0 ) ? /[ [ :fizz true ] [ " " false ]
 	[ :str2 :buzz? ] <- ( i % 5 =? 0 ) ? /[ [ :buzz true ] [ " " false ]
 	fizzBuzz2 += /( ( fizz? |? buzz? ) ? /[ ( str1 +s str2 ) i
+:fizzBuzz2 @doc /" fizzbuzz using multiple return values
 
-// fizzbuzz using a function in a simple loop
 var :fizzbuzz3 = bodyFunc
 	var :zzz = [ ]
 	var :i forEach ( 1 .. 20 )
@@ -31,11 +30,12 @@ var :fizzbuzz3 = bodyFunc
 		else
 			zzz += i
 	zzz
+:fizzbuzz3 @doc /" fizzbuzz using a function in a simple loop
 
 
 //
 // complex numbers
-// todo: consolidate function numbers once overloading is implemented
+// todo: consolidate function names once overloading is implemented
 
 var :i = /( ->y postfix
 	{ :x 0 :y y }
