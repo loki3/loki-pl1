@@ -1,0 +1,24 @@
+// unittests for test.l3
+
+:fizzbuzz20 <- /[ 1 2 :fizz 4 :buzz :fizz 7 8 :fizz :buzz 11 :fizz 13 14 :fizzbuzz 16 17 :fizz 19 :buzz
+:fizzbuzz20 @doc /" Expected output for fizzbuzz from 1 to 20
+:fizzbuzz20 @unittest true
+
+:fizzBuzz1 @unittest bodyFunc
+	fizzbuzz20 =? fizzBuzz1
+
+:fizzBuzz2 @unittest bodyFunc
+	fizzbuzz20 =? fizzBuzz2
+
+:fizzbuzz3 @unittest bodyFunc
+	fizzbuzz20 =? fizzbuzz3
+
+:i @unittest bodyFunc
+	{ :x 0 :y 3 } =? 3 i
+
+:+c @unittest bodyFunc
+	{ :x 4 :y 6 } =? { :x 1 :y 2 } +c { :x 3 :y 4 }
+	{ :x 3 :y 8 } =? 4 i +c { :x 3 :y 4 }
+
+:*c @unittest bodyFunc
+	{ :x -12 :y 0 } =? 4 i *c 3 i
