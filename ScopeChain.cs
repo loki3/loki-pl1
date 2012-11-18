@@ -12,6 +12,9 @@ namespace loki3.core
 		/// <summary>Stores a value on a token</summary>
 		void SetValue(string token, Value value);
 
+		/// <summary>Optional name for the scope</summary>
+		string Name { get; set; }
+
 		/// <summary>Returns scope token exists on in the scope chain, or null</summary>
 		IScope Exists(string token);
 
@@ -64,6 +67,12 @@ namespace loki3.core
 			return (m_parent != null ? m_parent.GetValue(token) : null);
 		}
 
+		public string Name
+		{
+			get { return m_name; }
+			set { m_name = value; }
+		}
+
 		public ValueDelimiter GetDelim(string start)
 		{
 			Value val;
@@ -93,5 +102,6 @@ namespace loki3.core
 
 		private IScope m_parent;
 		private Map m_values = new Map();
+		private string m_name = "";
 	}
 }

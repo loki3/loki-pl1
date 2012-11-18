@@ -24,7 +24,6 @@ namespace loki3.builtin
 			scope.SetValue("l3.addToArray", new AddToArray());
 			scope.SetValue("l3.getCount", new GetCount());
 			scope.SetValue("l3.getMetadata", new GetMetadata());
-			scope.SetValue("l3.getScope", new GetScope());
 		}
 
 
@@ -398,20 +397,6 @@ namespace loki3.builtin
 				if (meta == null)
 					return ValueNil.Nil;
 				return new ValueMap(meta);
-			}
-		}
-
-		/// <summary>Get the current scope</summary>
-		class GetScope : ValueFunction
-		{
-			internal GetScope()
-			{
-				SetDocString("Get a map representing the current scope.");
-			}
-
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
-			{
-				return new ValueMap(scope.AsMap);
 			}
 		}
 	}

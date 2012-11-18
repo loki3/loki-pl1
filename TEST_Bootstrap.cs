@@ -404,7 +404,6 @@ namespace loki3.builtin.test
 					Assert.AreEqual(10, result.AsInt);
 				}
 
-#if false
 				{	// break
 					string[] lines = {
 						":total = 0",
@@ -414,12 +413,12 @@ namespace loki3.builtin.test
 						"	if i =? 4",
 						"		break",
 						"	:total = total + i",
+						"total",
 					};
 					LineConsumer requestor = new LineConsumer(lines);
 					Value result = EvalLines.Do(requestor, scope);
-					Assert.AreEqual(10, result.AsInt);
+					Assert.AreEqual(6, result.AsInt);
 				}
-#endif
 			}
 			catch (Loki3Exception e)
 			{

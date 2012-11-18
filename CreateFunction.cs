@@ -180,7 +180,16 @@ namespace loki3.core
 				EnsureParsed(parentScope);
 
 				// eval each line using current scope
-				return EvalBody.Do(m_parsedLines, scope);
+				try
+				{
+					return EvalBody.Do(m_parsedLines, scope);
+				}
+				catch (PopStackException pop)
+				{	// if we're supposed to pop back to here then return, else keep throwing up the stack
+					if (pop.ScopeName == scope.Name)
+						return pop.Return;
+					throw pop;
+				}
 			}
 
 			/// <summary>If we haven't already parsed our lines, do so now</summary>

@@ -5,7 +5,7 @@ namespace loki3.core
 	/// <summary>
 	/// Base exception class for all parsing and evaluation errors.
 	/// Details are stored in a map, allowing each level of eval
-	/// to tack on additional context it knows as error bubbles up.
+	/// to tack on additional context as error bubbles up.
 	/// </summary>
 	internal class Loki3Exception : Exception
 	{
@@ -133,5 +133,26 @@ namespace loki3.core
 		#endregion
 
 		private Map m_map = new Map();
+	}
+
+
+	/// <summary>
+	/// Used to pop the stack back to a named scope
+	/// </summary>
+	internal class PopStackException : Exception
+	{
+		internal PopStackException(string name, Value returnValue)
+		{
+			m_name = name;
+			m_return = returnValue;
+		}
+
+		/// <summary>Name of scope to pop back to</summary>
+		internal string ScopeName { get { return m_name; } }
+		/// <summary>Return value of function at named scope</summary>
+		internal Value Return { get { return m_return; } }
+
+		private string m_name;
+		private Value m_return;
 	}
 }

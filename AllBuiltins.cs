@@ -14,6 +14,7 @@ namespace loki3.builtin
 			Loop.Register(scope);
 			Math.Register(scope);
 			Module.Register(scope);
+			ScopeFunctions.Register(scope);
 			String.Register(scope);
 			Values.Register(scope);
 		}

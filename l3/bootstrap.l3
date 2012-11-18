@@ -226,20 +226,27 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // loop
 
 :while <- func ->cond
+	l3.setScopeName /{ :name :loop
 	l3.loop /{ :check cond :body body
 :while @ [ :body? true ]
 :while @doc /" Repeat loop while condition is true
 
 :for <- func /[ ->start ->cond ->change
 	start
+	l3.setScopeName /{ :name :loop
 	l3.loop /{ :check cond :change change :body body
 :for @ [ :body? true ]
 :for @doc /" Call initialization code, then repeat loop while condition is true, evaluating final expression each time
 
 :forEach <- /( ->key infix ->collection
+	l3.setScopeName /{ :name :loop
 	l3.forEach /{ :key key :collection collection :body body
 :forEach @ [ :body? true ]
 :forEach @doc /" Repeat loop for each item in collection.  Pattern is specified before forEach.  Collection is specified after forEach.
+
+:break <- bodyFunc
+	l3.popScope /{ :name :loop
+:break @doc /" Pop the stack out of the current loop
 
 
 //
