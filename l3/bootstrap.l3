@@ -36,9 +36,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // string delimiter
 :" <- /( l3.createDelimiter /{ :start :"  :end :" :type :asString
+:' <- /( l3.createDelimiter /{ :start :'  :end :' :type :asString
 
 // remainder of line is a string
 :/" <- /( l3.createDelimiter /{ :start :/"  :type :asString
+:/' <- /( l3.createDelimiter /{ :start :/'  :type :asString
 
 
 //
@@ -87,7 +89,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // get the doc string attached to a value
 :.@doc <- /( ->object postfix
-	l3.getValue /{ :object ( l3.getMetadata { :key object } ) :key :l3.value.doc
+	:metadata <- l3.getMetadata { :key object }
+	:doc <- nil
+	if metadata !=? nil
+		:doc = l3.getValue /{ :object metadata :key :l3.value.doc
+	doc
 :.@doc	@doc	/" Get the documentation attached to a value
 
 :@order <- /( ->object infix ->order
@@ -134,7 +140,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :/`		@doc	/" Remainder of line may be evaluated at a later time
 :/*		@doc	/" Everything with delimiters is ignored
 :"		@doc	/" Delimiter around a string
+:'		@doc	/" Delimiter around a string
 :/"		@doc	/" Remainder of line is a string
+:/'		@doc	/" Remainder of line is a string
 :<-		@doc	/" Create a new key/value pair in the current scope
 :=		@doc	/" Assign a value to a key
 :var	@doc	/" Create a new variable in the current scope

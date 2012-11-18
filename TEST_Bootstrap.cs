@@ -71,6 +71,27 @@ namespace loki3.builtin.test
 		}
 
 		[Test]
+		public void VerifyDocStrings()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				EvalFile.Do("../../l3/unittest.l3", scope);
+
+				// make sure all functions have @doc
+				Value a = TestSupport.ToValue("checkDocs l3.getScope", scope);
+				if (!a.AsArray[0].AsBool)	// make it obvious which functions need @doc
+					Assert.AreEqual("[ ]", a.AsArray[1].AsArray);
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
+
+		[Test]
 		public void TestComplex()
 		{
 			try
