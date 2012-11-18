@@ -72,6 +72,16 @@
 	test
 :.@unittest	@doc /" Get the unittest attached to a value
 
+:assert=? <- /( ->expected infix ->actual
+	:success? <- expected =? actual
+	if !? success?
+		print " FAILED: expected: "
+		print expected
+		print " actual: "
+		print actual
+	success?
+:assert=? @doc /"
+
 
 :runUnittests <- func ->scope
 	var :failures = [ ]
