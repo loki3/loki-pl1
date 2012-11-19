@@ -8,6 +8,7 @@ namespace loki3.builtin
 	{
 		internal static void RegisterAll(IScope scope)
 		{
+			ArrayFunctions.Register(scope);
 			Conditional.Register(scope);
 			IO.Register(scope);
 			Logic.Register(scope);

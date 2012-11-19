@@ -35,6 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllBuiltins.cs" />
+    <Compile Include="ArrayFunctions.cs" />
     <Compile Include="CreateFunction.cs" />
     <Compile Include="DelimiterNode.cs" />
     <Compile Include="DelimiterList.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="ScopeFunctions.cs" />
     <Compile Include="String.cs" />
     <Compile Include="TestSupport.cs" />
+    <Compile Include="TEST_ArrayFunctions.cs" />
     <Compile Include="TEST_Bootstrap.cs" />
     <Compile Include="TEST_Conditional.cs" />
     <Compile Include="TEST_CreateFunction.cs" />

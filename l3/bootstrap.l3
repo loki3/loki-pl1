@@ -190,6 +190,22 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createRange { :start start :end end }
 :.. @doc /" Creates an array starting with one value and ending with another
 
+:apply <- /( ->array infix ->function
+	l3.apply { :array array :function function }
+:apply @doc /" Apply function to every element of array.  Function takes a single value.  Returns the new array.
+
+:foldLeft <- /( ->array infix ->function
+	l3.foldLeft { :array array :function function }
+:foldLeft @doc /" ((a[0] function a[1]) function a[2]) etc.  Returns a single value.
+
+:foldRight <- /( ->array infix ->function
+	l3.foldRight { :array array :function function }
+:foldRight @doc /" (a[0] function (a[1] function a[2])) etc.  Returns a single value.
+
+:filter <- /( ->array infix ->function
+	l3.filter { :array array :function function }
+:filter @doc /" Returns an array consisting of every member for which function returns true
+
 
 //
 // conditional
