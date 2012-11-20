@@ -295,6 +295,22 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.sqrt a
 :sqrt @doc /" Compute the square root of a number
 
+:<? <- ( ->a infix ->b )
+	l3.lt [ a b ]
+:<? @doc /" True if a < b
+
+:>? <- ( ->a infix ->b )
+	l3.gt [ a b ]
+:>? @doc /" True if a > b
+
+:min <- ( ->a infix ->b )
+	( a <? b ) ? [ a b ]
+:min @doc /" Returns the smallest of two values.
+
+:max <- ( ->a infix ->b )
+	( a >? b ) ? [ a b ]
+:max @doc /" Returns the largest of two values.
+
 
 //
 // strings
