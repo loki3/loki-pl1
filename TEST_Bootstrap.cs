@@ -267,7 +267,7 @@ namespace loki3.builtin.test
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 
 				string[] lines = {
-					":addUp <- func [ ( ->a :type 2 ) ( ->b :default 5 ) ]",
+					":addUp <- func [ ( ->a @@type 2 ) ( ->b @@default 5 ) ]",
 					"	a + b",
 				};
 				LineConsumer requestor = new LineConsumer(lines);
@@ -312,7 +312,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = TestSupport.ToValue("{ :a :a :remainder ( :remainder :rest ) } <- { :a 4 :b 5 :c 6 }", nested);
+					Value value = TestSupport.ToValue("{ :a :a :remainder ( :remainder @@rest ) } <- { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -325,7 +325,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = TestSupport.ToValue("[ ->a ( ->remainder :rest ) ] <- { :a 4 :b 5 :c 6 }", nested);
+					Value value = TestSupport.ToValue("[ ->a ( ->remainder @@rest ) ] <- { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -338,7 +338,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = TestSupport.ToValue("[ ->a ( ->remainder :rest ) ] <- [ 7 8 9 ]", nested);
+					Value value = TestSupport.ToValue("[ ->a ( ->remainder @@rest ) ] <- [ 7 8 9 ]", nested);
 					// value should be [ 7 8 9 ]
 					Assert.AreEqual(3, value.AsArray.Count);
 					// nested should now contain "a" and "remainder"
