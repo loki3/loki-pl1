@@ -71,8 +71,8 @@ namespace loki3.core
 		internal static Value Combine(Value a, Value b)
 		{
 			if (a is ValueArray)
-				return ValueArray.Combine(a as ValueArray, b as ValueArray);
-			else if (a is ValueMap)
+				return ValueArray.Combine(a as ValueArray, b);
+			else if (a is ValueMap && b is ValueMap)
 				return ValueMap.Combine(a as ValueMap, b as ValueMap);
 			return null;
 		}

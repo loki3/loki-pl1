@@ -37,13 +37,19 @@ namespace loki3.core
 		#endregion
 
 		/// <summary>Combine a and b into a new array</summary>
-		internal static ValueArray Combine(ValueArray a, ValueArray b)
+		internal static ValueArray Combine(ValueArray a, Value b)
 		{
 			List<Value> list = new List<Value>();
 			foreach (Value v in a.AsArray)
 				list.Add(v);
-			foreach (Value v in b.AsArray)
-				list.Add(v);
+
+			ValueArray bArray = b as ValueArray;
+			if (bArray == null)
+				list.Add(b);
+			else
+				foreach (Value v in b.AsArray)
+					list.Add(v);
+
 			return new ValueArray(list);
 		}
 
