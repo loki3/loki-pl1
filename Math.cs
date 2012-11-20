@@ -18,6 +18,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.multiply", new MultiplyArray());
 			scope.SetValue("l3.divide", new Divide());
 			scope.SetValue("l3.modulo", new Modulo());
+			scope.SetValue("l3.sqrt", new SquareRoot());
 			scope.SetValue("l3.lt", new LessThan());
 			scope.SetValue("l3.gt", new GreaterThan());
 		}
