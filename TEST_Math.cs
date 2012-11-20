@@ -22,20 +22,29 @@ namespace loki3.builtin.test
 		public void TestAdd()
 		{
 			IScope scope = CreateMathScope();
+			{
+				Value value = TestSupport.ToValue("l3.add [ 3 4 ]", scope);
+				Assert.AreEqual(7, value.AsInt);
+			}
+			{
+				Value value = TestSupport.ToValue("l3.add [ 3.5 4 ]", scope);
+				Assert.AreEqual(7.5, value.AsFloat);
+			}
+
 			{	// 3
-				Value value = TestSupport.ToValue("l3.add [ 3 ]", scope);
+				Value value = TestSupport.ToValue("l3.addArray [ 3 ]", scope);
 				Assert.AreEqual(3, value.AsInt);
 			}
 			{	// 3.0
-				Value value = TestSupport.ToValue("l3.add [ 3.0 ]", scope);
+				Value value = TestSupport.ToValue("l3.addArray [ 3.0 ]", scope);
 				Assert.AreEqual(3.0, value.AsFloat);
 			}
 			{	// 3 + 2 + 1
-				Value value = TestSupport.ToValue("l3.add [ 3 2 1 ]", scope);
+				Value value = TestSupport.ToValue("l3.addArray [ 3 2 1 ]", scope);
 				Assert.AreEqual(6, value.AsInt);
 			}
 			{	// 3 + 2.5 + 1
-				Value value = TestSupport.ToValue("l3.add [ 3 2.5 1 ]", scope);
+				Value value = TestSupport.ToValue("l3.addArray [ 3 2.5 1 ]", scope);
 				Assert.AreEqual(6.5, value.AsFloat);
 			}
 
@@ -43,7 +52,7 @@ namespace loki3.builtin.test
 			bool bException = false;
 			try
 			{
-				TestSupport.ToValue("l3.add [ 3 true 1 ]", scope);
+				TestSupport.ToValue("l3.addArray [ 3 true 1 ]", scope);
 			}
 			catch (Loki3Exception e)
 			{
@@ -84,12 +93,21 @@ namespace loki3.builtin.test
 		public void TestMultiply()
 		{
 			IScope scope = CreateMathScope();
+			{	// 2 * 3
+				Value value = TestSupport.ToValue("l3.multiply [ 2 3 ]", scope);
+				Assert.AreEqual(6, value.AsInt);
+			}
+			{	// 2 * 3.5
+				Value value = TestSupport.ToValue("l3.multiply [ 2 3.5 ]", scope);
+				Assert.AreEqual(7, value.AsFloat);
+			}
+
 			{	// 2 * 3 * 4
-				Value value = TestSupport.ToValue("l3.multiply [ 2 3 4 ]", scope);
+				Value value = TestSupport.ToValue("l3.multiplyArray [ 2 3 4 ]", scope);
 				Assert.AreEqual(24, value.AsInt);
 			}
 			{	// 1.5 2
-				Value value = TestSupport.ToValue("l3.multiply [ 1.5 2 ]", scope);
+				Value value = TestSupport.ToValue("l3.multiplyArray [ 1.5 2 ]", scope);
 				Assert.AreEqual(3.0, value.AsFloat);
 			}
 		}
