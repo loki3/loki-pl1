@@ -493,6 +493,16 @@ namespace loki3.builtin.test
 					Value result = EvalLines.Do(requestor, scope);
 					Assert.AreEqual(42, result.AsInt);
 				}
+
+				{
+					string[] lines = {
+						":a <- [ 1 2 3 ] apply /(( :x /` x * 2",
+						"a =>str"
+					};
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.AreEqual("[ 2 4 6 ]", result.AsString);
+				}
 			}
 			catch (Loki3Exception e)
 			{

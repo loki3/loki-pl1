@@ -87,12 +87,13 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				List<Value> array = map["array"].AsArray;
-				ValueFunctionPre function = map["function"] as ValueFunctionPre;
+				ValueFunction function = map["function"] as ValueFunction;
 
 				List<Value> newarray = new List<Value>(array.Count);
 				foreach (Value val in array)
 				{
-					Value newval = function.Eval(val, scope);
+					DelimiterNode node = new DelimiterNodeValue(val);
+					Value newval = function.Eval(null, node, scope, null, null);
 					newarray.Add(newval);
 				}
 				return new ValueArray(newarray);
@@ -189,12 +190,13 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				List<Value> array = map["array"].AsArray;
-				ValueFunctionPre function = map["function"] as ValueFunctionPre;
+				ValueFunction function = map["function"] as ValueFunction;
 
-				List<Value> newarray = new List<Value>();
+				List<Value> newarray = new List<Value>(array.Count);
 				foreach (Value val in array)
 				{
-					Value check = function.Eval(val, scope);
+					DelimiterNode node = new DelimiterNodeValue(val);
+					Value check = function.Eval(null, node, scope, null, null);
 					if (check.AsBool)
 						newarray.Add(val);
 				}
