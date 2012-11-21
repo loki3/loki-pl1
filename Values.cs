@@ -171,17 +171,29 @@ namespace loki3.builtin
 					int start = vStart.AsInt;
 					int end = vEnd.AsInt;
 					int step = vStep.AsInt;
-					for (int i = start; i <= end; i += step)
-						list.Add(new ValueInt(i));
-				}
+					if ((start < end && step < 0) || (start > end && step > 0))
+						step = -step;
+					if (start < end)
+						for (int i = start; i <= end; i += step)
+							list.Add(new ValueInt(i));
+					else
+						for (int i = start; i >= end; i += step)
+							list.Add(new ValueInt(i));
+			}
 				else
 				{	// if anything is a float, output is floats
 					double start = vStart.AsForcedFloat;
 					double end = vEnd.AsForcedFloat;
 					double step = vStep.AsForcedFloat;
 					end += 1e-10;	// a cheap but non-robust way to deal w/ roundoff
-					for (double i = start; i < end; i += step)
-						list.Add(new ValueFloat(i));
+					if ((start < end && step < 0) || (start > end && step > 0))
+						step = -step;
+					if (start < end)
+						for (double i = start; i < end; i += step)
+							list.Add(new ValueFloat(i));
+					else
+						for (double i = start; i > end; i += step)
+							list.Add(new ValueFloat(i));
 				}
 
 				return new ValueArray(list);

@@ -459,7 +459,7 @@ namespace loki3.builtin.test
 
 				{	// create a partial function to use for a later loop
 					string[] lines = {
-						":1to5 <- /( var :i forEach /( 1 .. 5",	// partial that needs a body
+						":1to5 <- /( var :i forEach /( 5 .. 1",	// partial that needs a body
 						":total <- 0",
 						"1to5",
 						"	:total = total + i",
