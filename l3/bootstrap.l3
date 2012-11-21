@@ -150,6 +150,20 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// more function definitions
+
+:lambda <- func [ ->pattern ->line1 ( ->more @@rest ) ]
+	l3.createFunction { :post pattern :body ( [ line1 ] +a more ) }
+:lambda	@doc	/" Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. lambda [ :x ` 2 + x ` ]
+
+:(( <- /( l3.createDelimiter /{ :start :((  :end :)) :type :asArray :function lambda
+:((		@doc	/" Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
+
+:/(( <- /( l3.createDelimiter /{ :start :/((  :type :asArray :function lambda
+:/((	@doc	/" Remainder of line is a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
+
+
+//
 // logic
 
 :&? <- /( ->a infix ->b

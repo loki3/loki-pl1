@@ -474,5 +474,30 @@ namespace loki3.builtin.test
 				Assert.Fail(e.ToString());
 			}
 		}
+
+		[Test]
+		public void TestFunctions()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				{
+					string[] lines = {
+						":double <- (( :x ` x * 2 ` ))",
+						"double 21",
+					};
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.AreEqual(42, result.AsInt);
+				}
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
 	}
 }
