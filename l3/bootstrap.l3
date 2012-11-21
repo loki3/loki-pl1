@@ -117,14 +117,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object @@ /[ :l3.param.rest true
 :@@rest @doc /" Associated parameter will be filled with the remainder of the parameter values
 
-:+= <- /( ->array infix ->value
-	l3.addToArray /{ :array array :value value
-:+= @doc /" Add a value to an array
-
-:countOf <- /( func ->value
-	l3.getCount value
-:countOf @doc /" Add a value to an array
-
 
 //
 // add documentation to functions that have been previously definied
@@ -184,11 +176,23 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
-// data structures
+// arrays
 
 :.. <- /( ->start infix ->end
 	l3.createRange { :start start :end end }
 :.. @doc /" Creates an array starting with one value and ending with another
+
+:+a <- /( ->array1 infix ->array2
+	l3.combine /[ array1 array2
+:+a @doc /" Combine two arrays
+
+:+= <- /( ->array infix ->value
+	l3.addToArray /{ :array array :value value
+:+= @doc /" Add a value to an array
+
+:countOf <- /( func ->value
+	l3.getCount value
+:countOf @doc /" Add a value to an array
 
 :apply <- /( ->array infix ->function
 	l3.apply { :array array :function function }

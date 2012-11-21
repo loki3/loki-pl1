@@ -62,6 +62,31 @@ namespace loki3.builtin.test
 
 
 		[Test]
+		public void TestCombine()
+		{
+			IScope scope = CreateScope();
+			ArrayFunctions.Register(scope);
+
+			{
+				Value value = TestSupport.ToValue("l3.combine [ [ 1 2 ] [ 3 4 ] ]", scope);
+				List<Value> array = value.AsArray;
+				Assert.AreEqual(4, array.Count);
+				Assert.AreEqual(1, array[0].AsInt);
+				Assert.AreEqual(2, array[1].AsInt);
+				Assert.AreEqual(3, array[2].AsInt);
+				Assert.AreEqual(4, array[3].AsInt);
+			}
+
+			{
+				Value value = TestSupport.ToValue("l3.combine [ [ 1 2 ] nil ]", scope);
+				List<Value> array = value.AsArray;
+				Assert.AreEqual(2, array.Count);
+				Assert.AreEqual(1, array[0].AsInt);
+				Assert.AreEqual(2, array[1].AsInt);
+			}
+		}
+
+		[Test]
 		public void TestApply()
 		{
 			IScope scope = CreateScope();

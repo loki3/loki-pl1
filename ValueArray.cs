@@ -39,6 +39,9 @@ namespace loki3.core
 		/// <summary>Combine a and b into a new array</summary>
 		internal static ValueArray Combine(ValueArray a, Value b)
 		{
+			if (b is ValueNil)
+				return a;
+
 			List<Value> list = new List<Value>();
 			foreach (Value v in a.AsArray)
 				list.Add(v);
