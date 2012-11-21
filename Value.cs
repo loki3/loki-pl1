@@ -268,10 +268,12 @@ namespace loki3.core
 		internal static ValueMap Combine(ValueMap a, ValueMap b)
 		{
 			Map map = new Map();
-			foreach (string key in a.AsMap.Raw.Keys)
-				map[key] = a.AsMap[key];
-			foreach (string key in b.AsMap.Raw.Keys)
-				map[key] = b.AsMap[key];
+			if (a.AsMap.Raw != null)
+				foreach (string key in a.AsMap.Raw.Keys)
+					map[key] = a.AsMap[key];
+			if (b.AsMap.Raw != null)
+				foreach (string key in b.AsMap.Raw.Keys)
+					map[key] = b.AsMap[key];
 			return new ValueMap(map);
 		}
 
