@@ -152,6 +152,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // more function definitions
 
+
+// definitions that take a pattern and one or more lines of code
+
 :lambda <- func [ ->pattern ->line1 ( ->more @@rest ) ]
 	l3.createFunction { :post pattern :body ( [ line1 ] +a more ) }
 :lambda	@doc	/" Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. lambda [ :x ` 2 + x ` ]
@@ -161,6 +164,32 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :/(( <- /( l3.createDelimiter /{ :start :/((  :type :asArray :function lambda
 :/((	@doc	/" Remainder of line is a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
+
+
+// definitions that create a prefix function, assume parameter is called ## and takes a single line of code
+
+:lambda1 <- func ->line
+	l3.createFunction { :post ->## :body [ line ] }
+:lambda1	@doc	/" Creates a single line prefix function, assuming parameter is called ##, e.g. lambda1 ` 2 + ## `
+
+:(| <- /( l3.createDelimiter /{ :start :(|  :end :|) :type :asRaw :function lambda1
+:(|		@doc	/" Create a single line prefix function, assuming parameter is called ##, e.g. (| 2 + ## |)
+
+:/(| <- /( l3.createDelimiter /{ :start :/(|  :type :asRaw :function lambda1
+:/(|	@doc	/" Create a single line prefix function, assuming parameter is called ##, e.g. /(| 2 + ##
+
+
+// definitions that create an infix function, assume parameters are called #1 and #2 and takes a single line of code
+
+:lambda2 <- func ->line
+	l3.createFunction { :pre ->#1 :post ->#2 :body [ line ] }
+:lambda2	@doc	/" Create a single line infix function, assuming parameters are called #1 and #2, e.g. lambda2 ` #1 + #2 `
+
+:(< <- /( l3.createDelimiter /{ :start :(<  :end :|> :type :asRaw :function lambda2
+:(<		@doc	/" Create a single line infix function, assuming parameters are called #1 and #2, e.g. (< #1 + #2 >)
+
+:/(< <- /( l3.createDelimiter /{ :start :/(<  :type :asRaw :function lambda2
+:/(<	@doc	/" Create a single line infix function, assuming parameters are called #1 and #2, e.g. /(< #1 + #2
 
 
 //
