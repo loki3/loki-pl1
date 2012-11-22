@@ -15,6 +15,7 @@ namespace loki3.builtin
 		{
 			scope.SetValue("l3.setValue", new SetValue());
 			scope.SetValue("l3.getValue", new GetValue());
+			scope.SetValue("l3.copy", new Copy());
 			scope.SetValue("l3.createMap", new CreateMap());
 			scope.SetValue("l3.createRange", new CreateRange());
 			scope.SetValue("l3.createFunction", new CreateFunction());
@@ -122,6 +123,24 @@ namespace loki3.builtin
 				}
 				// todo: better error
 				throw new Loki3Exception().AddWrongType(ValueType.Map, obj.Type);
+			}
+		}
+
+		/// <summary>value -> new value</summary>
+		class Copy : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new Copy(); }
+
+			internal Copy()
+			{
+				SetDocString("Create a copy of a value.");
+
+				Init(PatternData.ArrayEnd("a"));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				return arg.Copy();
 			}
 		}
 
