@@ -4,23 +4,23 @@
 :fizzbuzz20 @doc /" Expected output for fizzbuzz from 1 to 20
 :fizzbuzz20 @unittest true
 
-:fizzBuzz1 @unittest bodyFunc
+:fizzBuzz1 @unittest func()
 	fizzbuzz20 assert=? fizzBuzz1
 
-:fizzBuzz2 @unittest bodyFunc
+:fizzBuzz2 @unittest func()
 	fizzbuzz20 assert=? fizzBuzz2
 
-:fizzbuzz3 @unittest bodyFunc
+:fizzbuzz3 @unittest func()
 	fizzbuzz20 assert=? fizzbuzz3
 
-:i @unittest bodyFunc
+:i @unittest func()
 	{ :x 0 :y 3 } assert=? 3 i
 
-:+c @unittest bodyFunc
+:+c @unittest func()
 	{ :x 4 :y 6 } assert=? { :x 1 :y 2 } +c { :x 3 :y 4 }
 	{ :x 3 :y 8 } assert=? 4 i +c { :x 3 :y 4 }
 
-:*c @unittest bodyFunc
+:*c @unittest func()
 	{ :x -12 :y 0 } assert=? 4 i *c 3 i
 
 // stub out tests & docstrings for the enum & its values
@@ -33,7 +33,7 @@
 ( :days.friday		@unittest (| true |) ) @doc /"
 ( :days.saturday	@unittest (| true |) ) @doc /"
 
-:isWeekend @unittest bodyFunc
+:isWeekend @unittest func()
 	( isWeekend days.sunday )	assert=? true
 	( isWeekend days.monday )	assert=? false
 	( isWeekend days.tuesday )	assert=? false

@@ -18,7 +18,7 @@ var :i forEach ( 1 .. 20 )
 	fizzBuzz2 += /( ( fizz? |? buzz? ) ? /[ ( str1 +s str2 ) i
 :fizzBuzz2 @doc /" fizzbuzz using multiple return values
 
-var :fizzbuzz3 = bodyFunc
+var :fizzbuzz3 = func()
 	var :zzz = [ ]
 	var :i forEach ( 1 .. 20 )
 		if ( i % 15 =? 0 )

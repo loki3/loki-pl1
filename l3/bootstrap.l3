@@ -59,7 +59,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :pre pattern }
 
 // a function with no parameters which may decide to execute its body
-:bodyFunc <- l3.createFunction { }
+:func() <- l3.createFunction { }
 	l3.createFunction { }
 
 
@@ -141,7 +141,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :func	@doc	/" Define a function that takes parameters after the function name
 :infix	@doc	/" Define a function that takes parameters before and after the function name
 :postfix @doc	/" Define a function that takes parameters before the function name
-:bodyFunc @doc	/" Define a function that takes no parameters
+:func()	@doc	/" Define a function that takes no parameters
 :.		@doc	/" Access the member of a map by key or array by index
 :@		@doc	/" Modify a value's metadata
 :.@		@doc	/" Get a value's metadata
@@ -277,7 +277,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :elsif @ [ :body? true ]
 :elsif @doc /" If previous if and elsifs failed and this condition is met, do body
 
-:else <- bodyFunc
+:else <- func()
 	:doThis? <- /( !? l3.coFunction.if.done?
 	l3.ifBody /{ :do? doThis? :body body
 	doThis?
@@ -307,7 +307,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :forEach @ [ :body? true ]
 :forEach @doc /" Repeat loop for each item in collection.  Pattern is specified before forEach.  Collection is specified after forEach.
 
-:break <- bodyFunc
+:break <- func()
 	l3.popScope /{ :name :loop
 :break @doc /" Pop the stack out of the current loop
 
