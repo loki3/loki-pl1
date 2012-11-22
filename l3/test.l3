@@ -48,3 +48,14 @@ var :+c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	{ :x ( ( x1 * x2 ) - ( y1 * y2 ) ) :y ( ( x1 * y2 ) + ( x2 * y1 ) ) }
 :*c @doc /" Multiples together two complex numbers of the form { :x # :y # }
+
+
+//
+// an enum representing the days of the week
+
+:days enum /[ :sunday :monday :tuesday :wednesday :thursday :friday :saturday
+:days @doc /" an enum representing the days of the week
+
+:isWeekend <- func ( ->day @@type :days )
+	( day =? days.sunday ) |? ( day =? days.saturday )
+:isWeekend @doc /" true if the day is Saturday or Sunday

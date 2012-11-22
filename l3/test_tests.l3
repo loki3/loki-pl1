@@ -22,3 +22,22 @@
 
 :*c @unittest bodyFunc
 	{ :x -12 :y 0 } assert=? 4 i *c 3 i
+
+// stub out tests & docstrings for the enum & its values
+:days				@unittest (| true |)
+( :days.sunday		@unittest (| true |) ) @doc /"
+( :days.monday		@unittest (| true |) ) @doc /"
+( :days.tuesday		@unittest (| true |) ) @doc /"
+( :days.wednesday	@unittest (| true |) ) @doc /"
+( :days.thursday	@unittest (| true |) ) @doc /"
+( :days.friday		@unittest (| true |) ) @doc /"
+( :days.saturday	@unittest (| true |) ) @doc /"
+
+:isWeekend @unittest bodyFunc
+	( isWeekend days.sunday )	assert=? true
+	( isWeekend days.monday )	assert=? false
+	( isWeekend days.tuesday )	assert=? false
+	( isWeekend days.wednesday ) assert=? false
+	( isWeekend days.thursday )	assert=? false
+	( isWeekend days.friday )	assert=? false
+	( isWeekend days.sunday )	assert=? true

@@ -321,7 +321,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	var :val forEach array
 		:key <- name +s " . " +s val
 		// metadata on the value describing enum name & key
-		i @@ [ :l3.enum.name name ]
+		i @@ [ :l3.value.type name ]
 		i @@ [ :l3.enum.key key ]
 		:list = list +a { key i }
 		// store enum key/value on scope that called this function

@@ -88,7 +88,7 @@ namespace loki3.core
 		#region Keys
 		internal static string keyOrder = "l3.value.order";
 		internal static string keyDoc = "l3.value.doc";
-		internal static string keyEnumName = "l3.enum.name";
+		internal static string keyType = "l3.value.type";
 		internal static string keyEnumKey = "l3.enum.key";
 		#endregion
 
@@ -101,12 +101,12 @@ namespace loki3.core
 			}
 		}
 
-		/// <summary>If this is an enum value, return the name of the owning enum</summary>
-		internal string EnumName
+		/// <summary>If this is an instance of a class or enum, return name of class</summary>
+		internal string MetaType
 		{
 			get
 			{
-				return m_metadata == null ? "" : m_metadata.GetOptionalT<string>(keyEnumName, "");
+				return m_metadata == null ? "" : m_metadata.GetOptionalT<string>(keyType, "");
 			}
 		}
 

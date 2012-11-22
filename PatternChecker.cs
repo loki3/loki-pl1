@@ -64,12 +64,15 @@ namespace loki3.core
 			if (pattern == null)
 				return false;	// this only matches against a single item
 			PatternData data = new PatternData(pattern);
-			string inputType = data.Type;
+			string patternType = data.Type;
 			string targetType = ValueClasses.ClassOf(target);
-			if (inputType != ValueClasses.ClassOf(ValueType.Nil) && inputType != targetType)
+			if (patternType != ValueClasses.ClassOf(ValueType.Nil) && patternType != targetType)
 			{
-				if (inputType != ValueClasses.ClassOf(ValueType.Number) || (target != ValueType.Int && target != ValueType.Float))
-					return false;	// they asked for a different type
+				if (patternType != ValueClasses.ClassOf(ValueType.Number) || (target != ValueType.Int && target != ValueType.Float))
+				{
+					if (input.MetaType != patternType)
+						return false;	// they asked for a different type
+				}
 			}
 			match = input;
 			return true;
