@@ -221,7 +221,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // arrays
 
-:.. <- /( ->start infix ->end
+:.. <- /( ( ->start @@type :number ) infix ( ->end @@type :number )
 	l3.createRange { :start start :end end }
 :.. @doc /" Creates an array starting with one value and ending with another
 
@@ -229,7 +229,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.combine /[ array1 array2
 :+a @doc /" Combine two arrays
 
-:+= <- /( ->array infix ->value
+:+= <- /( ( ->array @@type :array ) infix ->value
 	l3.addToArray /{ :array array :value value
 :+= @doc /" Add a value to an array
 
@@ -237,19 +237,21 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.getCount value
 :countOf @doc /" Add a value to an array
 
-:apply <- /( ->array infix ->function
+:apply <- /( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.apply { :array array :function function }
 :apply @doc /" Apply function to every element of array.  Function takes a single value.  Returns the new array.
 
-:foldLeft <- /( ->array infix ->function
+:foldLeft <- /( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.foldLeft { :array array :function function }
 :foldLeft @doc /" ((a[0] function a[1]) function a[2]) etc.  Returns a single value.
 
-:foldRight <- /( ->array infix ->function
+:fold <- /( foldLeft
+
+:foldRight <- /( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.foldRight { :array array :function function }
 :foldRight @doc /" (a[0] function (a[1] function a[2])) etc.  Returns a single value.
 
-:filter <- /( ->array infix ->function
+:filter <- /( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.filter { :array array :function function }
 :filter @doc /" Returns an array consisting of every member for which function returns true
 
@@ -258,18 +260,18 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // conditional
 
 // ternary operator
-:? <- /( ->do? infix [ ->doIfTrue ->doIfFalse ]
+:? <- /( ( ->do? @@type :bool ) infix [ ->doIfTrue ->doIfFalse ]
 	l3.ifValue /{ :do? do? :ifTrue doIfTrue :ifFalse doIfFalse
 :? @doc /" If condition is met, return first value, else return second value
 
-:if <- func ->do?
+:if <- func ( ->do? @@type :bool )
 	l3.ifBody /{ :do? do? :body body
 	l3.setValue { :key :l3.coFunction.if.done? :value do? :scope :parent }
 	do?
 :if @ [ :body? true ]
 :if @doc /" If condition is met, do body
 
-:elsif <- func ->do?
+:elsif <- func ( ->do? @@type :bool )
 	:doThis? <- /( ( !? l3.coFunction.if.done? ) &? do?
 	l3.ifBody /{ :do? doThis? :body body
 	l3.ifBody /{ :do? doThis? :body /[ /` l3.setValue /{ :key :l3.coFunction.if.done? :value true :scope :parent
@@ -288,7 +290,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // loop
 
-:while <- func ->cond
+:while <- func ( ->cond @@type :rawLines )
 	l3.setScopeName /{ :name :loop
 	l3.loop /{ :check cond :body body
 :while @ [ :body? true ]
@@ -315,7 +317,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // enumerated type
 
-:enum <- /( ->name infix ->array
+:enum <- /( ( ->name @@type :string ) infix ( ->array @@type :array )
 	:list <- { }
 	:i <- 0
 	var :val forEach array
@@ -385,7 +387,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // modules
 
-:import <- /( func ->file
+:import <- /( func ( ->file @@type :string )
 	l3.loadModule { :file file :scope " parent " }
 :import @doc /" Run the code from the given file
 

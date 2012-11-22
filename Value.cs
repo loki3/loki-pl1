@@ -38,8 +38,8 @@ namespace loki3.core
 			"map",
 			"function",
 			"delimiter",
-			"parsedLines",
-			"parsedLine",
+			"rawLines",
+			"rawLine",
 		};
 	}
 
