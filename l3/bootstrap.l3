@@ -313,6 +313,27 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// enumerated type
+
+:enum <- /( ->name infix ->array
+	:list <- { }
+	:i <- 0
+	var :val forEach array
+		:key <- name +s " . " +s val
+		// metadata on the value describing enum name & key
+		i @@ [ :l3.enum.name name ]
+		i @@ [ :l3.enum.key key ]
+		:list = list +a { key i }
+		// store enum key/value on scope that called this function
+		l3.setValue { :key key :value i :scope :grandparent }
+		:i = i + 1
+	// store entire map on scope that called this function
+	l3.setValue { :key name :value list :scope :parent }
+	list
+:enum @doc /" Create an enumerated map of values
+
+
+//
 // math
 
 :+ <- ( ->a infix ->b )

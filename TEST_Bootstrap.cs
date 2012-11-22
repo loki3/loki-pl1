@@ -509,5 +509,33 @@ namespace loki3.builtin.test
 				Assert.Fail(e.ToString());
 			}
 		}
+
+		[Test]
+		public void TestEnum()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				{
+					string[] lines = {
+						":mine enum [ :first :second ]",
+					};
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.True(result.AsMap != null);
+					Map mineMap = scope.GetValue(new Token("mine")).AsMap;
+					Assert.AreEqual(0, mineMap["mine.first"].AsInt);
+					Assert.AreEqual(1, mineMap["mine.second"].AsInt);
+					Assert.True(mineMap["mine.first"].Metadata != null);
+				}
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
 	}
 }

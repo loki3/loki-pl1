@@ -63,6 +63,8 @@ namespace loki3.core
 		#region Keys
 		internal static string keyOrder = "l3.value.order";
 		internal static string keyDoc = "l3.value.doc";
+		internal static string keyEnumName = "l3.enum.name";
+		internal static string keyEnumKey = "l3.enum.key";
 		#endregion
 
 		/// <summary>Evaluation precedence of this token</summary>
@@ -71,6 +73,24 @@ namespace loki3.core
 			get
 			{
 				return m_metadata == null ? Order.Low : (Order)m_metadata.GetOptionalT<int>(keyOrder, (int)Order.Low);
+			}
+		}
+
+		/// <summary>If this is an enum value, return the name of the owning enum</summary>
+		internal string EnumName
+		{
+			get
+			{
+				return m_metadata == null ? "" : m_metadata.GetOptionalT<string>(keyEnumName, "");
+			}
+		}
+
+		/// <summary>If this is an enum value, return the key</summary>
+		internal string EnumKey
+		{
+			get
+			{
+				return m_metadata == null ? "" : m_metadata.GetOptionalT<string>(keyEnumKey, "");
 			}
 		}
 
@@ -171,7 +191,13 @@ namespace loki3.core
 		internal override double AsForcedFloat { get { return m_val; } }
 		#endregion
 
-		public override string ToString() { return m_val.ToString(); }
+		public override string ToString()
+		{
+			string enumkey = EnumKey;
+			if (enumkey != "")
+				return enumkey + "=" + m_val.ToString();
+			return m_val.ToString();
+		}
 	}
 
 	/// <summary>
