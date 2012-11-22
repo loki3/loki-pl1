@@ -47,8 +47,8 @@ namespace loki3.core
 		/// <summary>Value wasn't of requested type</summary>
 		internal Loki3Exception AddWrongType(ValueType expected, ValueType actual)
 		{
-			m_map[keyExpectedType] = new ValueInt((int)expected);
-			m_map[keyActualType] = new ValueInt((int)actual);
+			m_map[keyExpectedType] = new ValueString(ValueClasses.ClassOf(expected));
+			m_map[keyActualType] = new ValueString(ValueClasses.ClassOf(actual));
 			return this;
 		}
 
@@ -94,8 +94,8 @@ namespace loki3.core
 		/// <summary>Get collection of all errors</summary>
 		internal Map Errors { get { return m_map; } }
 
-		internal ValueType ExpectedType { get { return (ValueType)m_map.GetOptionalT<int>(keyExpectedType, 0); } }
-		internal ValueType ActualType { get { return (ValueType)m_map.GetOptionalT<int>(keyActualType, 0); } }
+		internal string ExpectedType { get { return m_map.GetOptionalT<string>(keyExpectedType, ""); } }
+		internal string ActualType { get { return m_map.GetOptionalT<string>(keyActualType, ""); } }
 
 		public override string ToString()
 		{

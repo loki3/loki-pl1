@@ -56,8 +56,8 @@ namespace loki3.builtin.test
 			}
 			catch (Loki3Exception e)
 			{
-				Assert.AreEqual(loki3.core.ValueType.Float, e.ExpectedType);
-				Assert.AreEqual(loki3.core.ValueType.Bool, e.ActualType);
+				Assert.AreEqual("float", e.ExpectedType);
+				Assert.AreEqual("bool", e.ActualType);
 				bException = true;
 			}
 			Assert.True(bException);

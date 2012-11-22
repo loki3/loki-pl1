@@ -267,7 +267,7 @@ namespace loki3.builtin.test
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 
 				string[] lines = {
-					":addUp <- func [ ( ->a @@type 2 ) ( ->b @@default 5 ) ]",
+					":addUp <- func [ ( ->a @@type :int ) ( ->b @@default 5 ) ]",
 					"	a + b",
 				};
 				LineConsumer requestor = new LineConsumer(lines);

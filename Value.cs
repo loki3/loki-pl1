@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace loki3.core
 {
+	/// <summary>built-in types of values</summary>
 	internal enum ValueType
 	{
 		Nil,
@@ -19,12 +20,36 @@ namespace loki3.core
 		RawList,	// DelimiterList
 	}
 
+	/// <summary>built-in types of values</summary>
+	internal class ValueClasses
+	{
+		/// <summary>get string representing class of value type</summary>
+		static public string ClassOf(ValueType type) { return m_classes[(int)type]; }
+
+		// NOTE: must match order of enum ValueType
+		static private string[] m_classes = {
+			"nil",
+			"bool",
+			"int",
+			"float",
+			"number",	// pseudo-type: int or float
+			"string",
+			"array",
+			"map",
+			"function",
+			"delimiter",
+			"parsedLines",
+			"parsedLine",
+		};
+	}
+
 	/// <summary>
 	/// Represents a number, string, bool, map, array, function, etc.
 	/// and can contain metadata
 	/// </summary>
 	internal abstract class Value
 	{
+		internal string Class { get { return ValueClasses.ClassOf(Type); } }
 		internal abstract ValueType Type { get; }
 		internal abstract bool Equals(Value v);
 

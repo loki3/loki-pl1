@@ -30,7 +30,7 @@ namespace loki3.core
 		{
 			ValueString vName = new ValueString(name);
 			PatternData data = new PatternData(vName);
-			data.ValueType = type;
+			data.Type = ValueClasses.ClassOf(type);
 			return vName;
 		}
 
@@ -39,7 +39,7 @@ namespace loki3.core
 		{
 			ValueString vName = new ValueString(name);
 			PatternData data = new PatternData(vName);
-			data.ValueType = type;
+			data.Type = ValueClasses.ClassOf(type);
 			data.Default = theDefault;
 			return vName;
 		}
@@ -76,7 +76,7 @@ namespace loki3.core
 		{
 			ValueString vName = new ValueString(name);
 			PatternData data = new PatternData(vName);
-			data.ValueType = type;
+			data.Type = ValueClasses.ClassOf(type);
 			data.UseRest = true;
 			return vName;
 		}
@@ -103,10 +103,10 @@ namespace loki3.core
 		#endregion
 
 		/// <summary>If present, required type of parameter</summary>
-		internal ValueType ValueType
+		internal string Type
 		{
-			get { return m_readableMetadata == null ? ValueType.Nil : (ValueType)m_readableMetadata.GetOptionalT<int>(keyType, (int)ValueType.Nil); }
-			set { WritableMetadata[keyType] = new ValueInt((int)value); }
+			get { return m_readableMetadata == null ? ValueClasses.ClassOf(ValueType.Nil) : m_readableMetadata.GetOptionalT<string>(keyType, ValueClasses.ClassOf(ValueType.Nil)); }
+			set { WritableMetadata[keyType] = new ValueString(value); }
 		}
 
 		/// <summary>If present, value must be one of the values in the array</summary>
