@@ -23,6 +23,8 @@ namespace loki3.builtin
 		/// <summary>[a b] -> bool,  depending on if a and b are equal</summary>
 		class IsEqual : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new IsEqual(); }
+
 			internal IsEqual()
 			{
 				SetDocString("If both elements in array are equal, return true, else false.");
@@ -46,6 +48,8 @@ namespace loki3.builtin
 		/// <summary>[bool bool] -> bool,  a AND b</summary>
 		class LogicalAnd : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new LogicalAnd(); }
+
 			internal LogicalAnd()
 			{
 				SetDocString("Return true only if both values of array are true.");
@@ -67,6 +71,8 @@ namespace loki3.builtin
 		/// <summary>[bool bool] -> bool,  a OR b</summary>
 		class LogicalOr : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new LogicalOr(); }
+
 			internal LogicalOr()
 			{
 				SetDocString("Return true if either value in array are true.");
@@ -88,6 +94,8 @@ namespace loki3.builtin
 		/// <summary>bool -> bool,  NOT a</summary>
 		class LogicalNot : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new LogicalNot(); }
+
 			internal LogicalNot()
 			{
 				SetDocString("Return true if value is false, else false.");

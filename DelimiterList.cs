@@ -62,6 +62,8 @@ namespace loki3.core
 		{
 			return this == v;
 		}
+
+		internal override Value ValueCopy() { return new ValueLine(m_list); }
 #endregion
 
 		private List<DelimiterList> m_list;

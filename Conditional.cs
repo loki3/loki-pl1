@@ -21,6 +21,8 @@ namespace loki3.builtin
 		/// <summary>{ :do? :body } -> if do?, last value of body, else false</summary>
 		class IfBody : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new IfBody(); }
+
 			internal IfBody()
 			{
 				SetDocString("If do?, evaluate body and return the last value in body.\nElse return false.");
@@ -50,6 +52,8 @@ namespace loki3.builtin
 		/// <summary>{ :do? [:ifTrue] [:ifFalse] } -> if do?, returns ifTrue, else ifFalse</summary>
 		class IfValue : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new IfValue(); }
+
 			internal IfValue()
 			{
 				SetDocString("If do?, return value of ifTrue, else value of ifFalse.");

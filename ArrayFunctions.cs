@@ -25,6 +25,8 @@ namespace loki3.builtin
 		/// <summary>[a1] [a2] -> [a1 a2]</summary>
 		class Combine : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Combine(); }
+
 			internal Combine()
 			{
 				SetDocString("Concatenates two arrays.");
@@ -47,6 +49,8 @@ namespace loki3.builtin
 		/// <summary>{ :array :value } -> add value to array</summary>
 		class AddToArray : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new AddToArray(); }
+
 			internal AddToArray()
 			{
 				SetDocString("Add value to an array");
@@ -72,6 +76,8 @@ namespace loki3.builtin
 		/// <summary>{ :array :function } -> apply function to every element of array</summary>
 		class Apply : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Apply(); }
+
 			internal Apply()
 			{
 				SetDocString("Apply function to every element of array.  Function takes a single value.  Returns the new array.");
@@ -103,6 +109,8 @@ namespace loki3.builtin
 		/// <summary>{ :array :function } -> turn array into a single value by applying function to members as pairs</summary>
 		class FoldLeft : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new FoldLeft(); }
+
 			internal FoldLeft()
 			{
 				SetDocString("Apply infix function to first and second item, then result and third item, etc.  Returns a single value.");
@@ -143,6 +151,8 @@ namespace loki3.builtin
 		/// <summary>{ :array :function } -> turn array into a single value by applying function to members as pairs</summary>
 		class FoldRight : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new FoldRight(); }
+
 			internal FoldRight()
 			{
 				SetDocString("Apply infix function to last and second to last item, then result and third to last, etc.  Returns a single value.");
@@ -175,6 +185,8 @@ namespace loki3.builtin
 		/// <summary>{ :array :function } -> apply function to every element of array</summary>
 		class Filter : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Filter(); }
+
 			internal Filter()
 			{
 				SetDocString("Any members of array for which the function returns true are added to a new array.  Returns the new array.");

@@ -36,6 +36,8 @@ namespace loki3.core
 		internal override List<Value> AsArray { get { return m_val; } }
 		#endregion
 
+		internal override Value ValueCopy() { return new ValueArray(new List<Value>(m_val)); }
+
 		/// <summary>Combine a and b into a new array</summary>
 		internal static ValueArray Combine(ValueArray a, Value b)
 		{

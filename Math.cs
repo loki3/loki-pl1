@@ -29,6 +29,8 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 + a2</summary>
 		class Add : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Add(); }
+
 			internal Add()
 			{
 				SetDocString("Return [0] + [1].");
@@ -57,6 +59,8 @@ namespace loki3.builtin
 		/// <summary>[a1 a2 ... an] -> a1 + a2 + ... + an</summary>
 		class AddArray : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new AddArray(); }
+
 			internal AddArray()
 			{
 				SetDocString("Return sum of the numbers in the array.");
@@ -96,6 +100,8 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 - a2</summary>
 		class Subtract : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Subtract(); }
+
 			internal Subtract()
 			{
 				SetDocString("Return [0] - [1].");
@@ -124,6 +130,8 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 * a2</summary>
 		class Multiply : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Multiply(); }
+
 			internal Multiply()
 			{
 				SetDocString("Return [0] * [1].");
@@ -152,6 +160,8 @@ namespace loki3.builtin
 		/// <summary>[a1 a2 ... an] -> a1 * a2 * ... * an</summary>
 		class MultiplyArray : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new MultiplyArray(); }
+
 			internal MultiplyArray()
 			{
 				SetDocString("Return product of the numbers in the array.");
@@ -191,6 +201,8 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 / a2</summary>
 		class Divide : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Divide(); }
+
 			internal Divide()
 			{
 				SetDocString("Return [0] / [1].");
@@ -220,6 +232,8 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 % a2</summary>
 		class Modulo : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Modulo(); }
+
 			internal Modulo()
 			{
 				SetDocString("Return [0] % [1].");
@@ -249,6 +263,8 @@ namespace loki3.builtin
 		/// <summary>a -> sqrt(a)</summary>
 		class SquareRoot : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new SquareRoot(); }
+
 			internal SquareRoot()
 			{
 				SetDocString("Return square root of number.");
@@ -265,6 +281,8 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 < a2</summary>
 		class LessThan : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new LessThan(); }
+
 			internal LessThan()
 			{
 				SetDocString("Return [0] < [1].");
@@ -294,6 +312,8 @@ namespace loki3.builtin
 		/// <summary>[a1 a2] -> a1 > a2</summary>
 		class GreaterThan : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new GreaterThan(); }
+
 			internal GreaterThan()
 			{
 				SetDocString("Return [0] > [1].");

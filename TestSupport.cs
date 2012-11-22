@@ -6,6 +6,8 @@ namespace loki3.builtin.test
 	/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
 	class CreateMap : ValueFunctionPre
 	{
+		internal override Value ValueCopy() { return new CreateMap(); }
+
 		internal CreateMap() { Init(PatternData.ArrayEnd("a")); }
 
 		internal override Value Eval(Value arg, IScope scope)

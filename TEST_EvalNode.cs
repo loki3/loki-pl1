@@ -10,6 +10,8 @@ namespace loki3.core.test
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
 		{
+			internal override Value ValueCopy() { return new TestSum(); }
+
 			internal TestSum() { Init(PatternData.Single("a", ValueType.Int), PatternData.Single("b", ValueType.Int)); }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
@@ -24,6 +26,8 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to previous</summary>
 		class TestPrevious1 : ValueFunctionPost
 		{
+			internal override Value ValueCopy() { return new TestPrevious1(); }
+
 			internal TestPrevious1() { Init(PatternData.Single("a", ValueType.Int)); }
 
 			internal override Value Eval(Value arg, IScope scope)
@@ -36,6 +40,8 @@ namespace loki3.core.test
 		/// <summary>Function that adds 1 to next</summary>
 		class TestNext1 : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new TestNext1(); }
+
 			internal TestNext1() { Init(PatternData.Single("a", ValueType.Int)); }
 
 			internal override Value Eval(Value arg, IScope scope)
@@ -48,6 +54,8 @@ namespace loki3.core.test
 		/// <summary>Function that makes next ALL CAPS</summary>
 		class TestCaps : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new TestCaps(); }
+
 			internal TestCaps() { Init(PatternData.Single("a", ValueType.String)); }
 
 			internal override Value Eval(Value arg, IScope scope)
@@ -219,6 +227,8 @@ namespace loki3.core.test
 		/// <summary>Simple function that adds an array of ints</summary>
 		class AddFunction : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new AddFunction(); }
+
 			internal AddFunction() { Init(PatternData.Rest("a", ValueType.Int)); }
 
 			internal override Value Eval(Value arg, IScope scope)

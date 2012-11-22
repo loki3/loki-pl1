@@ -14,6 +14,21 @@ namespace loki3.core
 		/// </summary>
 		internal class UserFunction : ValueFunction
 		{
+			internal override Value ValueCopy() { return new UserFunction(this); }
+			private UserFunction(UserFunction other)
+			{
+				m_usePrevious = other.m_usePrevious;
+				m_useNext = other.m_useNext;
+				m_pattern1 = other.m_pattern1;
+				m_pattern2 = other.m_pattern2;
+				m_rawLines = other.m_rawLines;
+				m_parsedLines = other.m_parsedLines;
+
+				m_passed = other.m_passed;
+				m_fullPattern = other.m_fullPattern;
+				m_passedScope = other.m_passedScope;
+			}
+
 			/// <summary>
 			/// Create a new user defined function
 			/// </summary>

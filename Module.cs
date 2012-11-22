@@ -21,6 +21,8 @@ namespace loki3.builtin
 		/// <summary>{ :file [:scope] } -> load the given module, optionally on a scope</summary>
 		class LoadModule : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new LoadModule(); }
+
 			internal LoadModule()
 			{
 				SetDocString("Load a module into the current scope.  Returns true if the file was found.");

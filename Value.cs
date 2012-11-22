@@ -53,6 +53,18 @@ namespace loki3.core
 		internal abstract ValueType Type { get; }
 		internal abstract bool Equals(Value v);
 
+		/// <summary>Make a copy of the value (w/out metadata)</summary>
+		internal abstract Value ValueCopy();
+
+		/// <summary>Make a full copy of the value (w/ metadata)</summary>
+		internal Value Copy()
+		{
+			Value other = ValueCopy();
+			if (m_metadata != null)
+				other.m_metadata = m_metadata.Copy();
+			return other;
+		}
+
 		// request value as a particular type
 		internal virtual bool IsNil { get { return false; } }
 		internal virtual bool AsBool { get { throw new Loki3Exception().AddWrongType(ValueType.Bool, Type); } }
@@ -140,6 +152,8 @@ namespace loki3.core
 		{
 			return v is ValueNil;
 		}
+
+		internal override Value ValueCopy() { return new ValueNil(); }
 		#endregion
 
 		private static ValueNil m_nil = new ValueNil();
@@ -181,6 +195,8 @@ namespace loki3.core
 			return (other == null ? false : m_val == other.m_val);
 		}
 
+		internal override Value ValueCopy() { return new ValueBool(m_val); }
+
 		internal override bool AsBool { get { return m_val; } }
 		#endregion
 
@@ -211,6 +227,8 @@ namespace loki3.core
 			ValueInt other = v as ValueInt;
 			return (other == null ? false : m_val == other.m_val);
 		}
+
+		internal override Value ValueCopy() { return new ValueInt(m_val); }
 
 		internal override int AsInt { get { return m_val; } }
 		internal override double AsForcedFloat { get { return m_val; } }
@@ -247,6 +265,8 @@ namespace loki3.core
 			return (other == null ? false : m_val == other.m_val);
 		}
 
+		internal override Value ValueCopy() { return new ValueFloat(m_val); }
+
 		internal override double AsFloat { get { return m_val; } }
 		internal override double AsForcedFloat { get { return m_val; } }
 		#endregion
@@ -276,6 +296,8 @@ namespace loki3.core
 			return (other == null ? false : m_val == other.m_val);
 		}
 
+		internal override Value ValueCopy() { return new ValueString(m_val); }
+
 		internal override string AsString { get { return m_val; } }
 		#endregion
 
@@ -304,6 +326,11 @@ namespace loki3.core
 			if (other == null)
 				return false;
 			return m_val.Equals(other.m_val);
+		}
+
+		internal override Value ValueCopy()
+		{
+			return new ValueMap(m_val.Copy());
 		}
 
 		internal override Map AsMap { get { return m_val; } }
@@ -354,6 +381,8 @@ namespace loki3.core
 				return false;
 			return m_val.Equals(other.m_val);
 		}
+
+		internal override Value ValueCopy() { return new ValueRaw(m_val); }
 		#endregion
 	}
 }

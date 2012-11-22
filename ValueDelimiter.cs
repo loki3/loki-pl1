@@ -42,6 +42,8 @@ namespace loki3.core
 			Init(start, end, type, function);
 		}
 
+		private ValueDelimiter() { }
+
 		private void Init(string start, string end, DelimiterType type, ValueFunction function)
 		{
 			Map meta = WritableMetadata;
@@ -63,6 +65,8 @@ namespace loki3.core
 			ValueDelimiter other = v as ValueDelimiter;
 			return (other == null ? false : this == other);
 		}
+
+		internal override Value ValueCopy() { return new ValueDelimiter(); }
 		#endregion
 
 		#region Keys

@@ -21,6 +21,8 @@ namespace loki3.builtin
 		/// <summary>Get the current scope</summary>
 		class GetScope : ValueFunction
 		{
+			internal override Value ValueCopy() { return new GetScope(); }
+
 			internal GetScope()
 			{
 				SetDocString("Get a map representing the current scope.");
@@ -35,6 +37,8 @@ namespace loki3.builtin
 		/// <summary>{ :name [ :scope ] } -> assign a name to the current scope</summary>
 		class SetScopeName : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new SetScopeName(); }
+
 			internal SetScopeName()
 			{
 				SetDocString("Assign a name to the current scope.");
@@ -64,6 +68,8 @@ namespace loki3.builtin
 		/// <summary>{ :name [ :return ] } -> pop the stack back to the named scope</summary>
 		class PopScope : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new PopScope(); }
+
 			internal PopScope()
 			{
 				SetDocString("Pop the stack back to the named scope.");

@@ -20,6 +20,8 @@ namespace loki3.builtin
 		/// <summary>{ :value } -> send string to stdout</summary>
 		class Print : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Print(); }
+
 			internal Print()
 			{
 				SetDocString("Print the string representation of a value, i.e. send it to stdout.");

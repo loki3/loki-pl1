@@ -21,6 +21,8 @@ namespace loki3.builtin
 		/// <summary>{ :check :body [:change] [:checkFirst?] } -> keep running body until !check</summary>
 		class BasicLoop : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new BasicLoop(); }
+
 			internal BasicLoop()
 			{
 				SetDocString("Repeat body until a condition is no longer true. Optionally run some code at the end of each loop.  Return value is last value of body.");
@@ -74,6 +76,8 @@ namespace loki3.builtin
 		/// <summary>{ :key :collection :body } -> run body for every item in collection</summary>
 		class ForEach : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new ForEach(); }
+
 			internal ForEach()
 			{
 				SetDocString("Repeat body once for every item in collection.  Return value is last value of body.");

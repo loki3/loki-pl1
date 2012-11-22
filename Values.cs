@@ -29,6 +29,8 @@ namespace loki3.builtin
 		/// <summary>{ :key :value [:create?] [:map] [:scope] } -> value  and stores the key value pair on the specified map or scope</summary>
 		class SetValue : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new SetValue(); }
+
 			internal SetValue()
 			{
 				SetDocString("Set the value on given map key.\nEither creates new variable on active scope or stores value on existing variable.\nCan be stored on a map, current or parent scope.");
@@ -85,6 +87,8 @@ namespace loki3.builtin
 		/// <summary>{ :object :key } -> value,  either map[key.AsString] or array[key.AsInt]</summary>
 		class GetValue : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new GetValue(); }
+
 			internal GetValue()
 			{
 				SetDocString("On a map, gets the value attached to a key.\nOn an array, gets the indexed item.");
@@ -124,6 +128,8 @@ namespace loki3.builtin
 		/// <summary>[k1 v1 k2 v2 ...] -> map</summary>
 		class CreateMap : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new CreateMap(); }
+
 			internal CreateMap()
 			{
 				SetDocString("Create a map from an array, where the elements alternate between the key and the associated value.");
@@ -150,6 +156,8 @@ namespace loki3.builtin
 		/// <summary>{ [->start : number] ->end : number [->step : number] } -> array</summary>
 		class CreateRange : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new CreateRange(); }
+
 			internal CreateRange()
 			{
 				SetDocString("Create an array using a given range");
@@ -208,6 +216,8 @@ namespace loki3.builtin
 		/// <summary>{ [:pre] [:post] :body [:order] } -> function</summary>
 		class CreateFunction : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new CreateFunction(); }
+
 			internal CreateFunction()
 			{
 				SetDocString("Create a function.\nSpecify the previous and/or next parameter patterns and the body.\nCan optionally specify the evaluation precedence relative to other functions.");
@@ -240,6 +250,8 @@ namespace loki3.builtin
 		/// <summary>{ :start :end [:type] [function] } -> delimiter</summary>
 		class CreateDelimiter : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new CreateDelimiter(); }
+
 			internal CreateDelimiter()
 			{
 				SetDocString("Create a delimiter, with start and end strings.\nOptionally specify how the contents should be interpreted and/or a function to be run on the contents.");
@@ -316,16 +328,20 @@ namespace loki3.builtin
 
 		class CreateEvalDelimiter : CreateSimpleDelimiter
 		{
+			internal override Value ValueCopy() { return new CreateEvalDelimiter(); }
 			protected override DelimiterType DelimiterType { get { return DelimiterType.AsValue; } }
 		}
 		class CreateArrayDelimiter : CreateSimpleDelimiter
 		{
+			internal override Value ValueCopy() { return new CreateArrayDelimiter(); }
 			protected override DelimiterType DelimiterType { get { return DelimiterType.AsArray; } }
 		}
 
 		/// <summary>:value -> count of items in value</summary>
 		class GetCount : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new GetCount(); }
+
 			internal GetCount()
 			{
 				SetDocString("Get the number of items in a value");
@@ -349,6 +365,8 @@ namespace loki3.builtin
 		/// <summary>{ [:key : string] [:value] [:writable? : bool] ] } -> map containing the metadata</summary>
 		class GetMetadata : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new GetMetadata(); }
+
 			internal GetMetadata()
 			{
 				SetDocString("Get metadata attached to a value.\nEither pass key to do a lookup or a specific value.\nIf writable?, make sure metadata map exists before returning.");

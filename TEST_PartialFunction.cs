@@ -10,6 +10,8 @@ namespace loki3.core.test
 		/// <summary>[a1 a2] -> a1 - a2</summary>
 		class SubtractArray : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new SubtractArray(); }
+
 			internal SubtractArray()
 			{
 				List<Value> list = new List<Value>();
@@ -29,6 +31,8 @@ namespace loki3.core.test
 		/// <summary>{:a :b} -> a - b</summary>
 		class SubtractMap : ValueFunctionPost
 		{
+			internal override Value ValueCopy() { return new SubtractMap(); }
+
 			internal SubtractMap()
 			{
 				Map map = new Map();

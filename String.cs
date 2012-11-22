@@ -21,6 +21,8 @@ namespace loki3.builtin
 		/// <summary>:a -> convert a value to a string</summary>
 		class ConvertToString : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new ConvertToString(); }
+
 			internal ConvertToString()
 			{
 				SetDocString("Convert a value to a string.");
@@ -36,6 +38,8 @@ namespace loki3.builtin
 		/// <summary>[ :a :b ] -> add together two strings</summary>
 		class StringConcat : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new StringConcat(); }
+
 			internal StringConcat()
 			{
 				SetDocString("Concatenate two strings.");

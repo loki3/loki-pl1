@@ -21,6 +21,8 @@ namespace loki3.builtin.test
 		/// <summary>Function that doubles an int</summary>
 		class Double : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new Double(); }
+
 			internal Double()
 			{
 				Init(PatternData.Single("a", ValueType.Int));
@@ -35,6 +37,8 @@ namespace loki3.builtin.test
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
 		{
+			internal override Value ValueCopy() { return new TestSum(); }
+
 			internal TestSum() { Init(PatternData.Single("a", ValueType.Int), PatternData.Single("b", ValueType.Int)); }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
@@ -49,6 +53,8 @@ namespace loki3.builtin.test
 		/// <summary>Function that checks if a value is even</summary>
 		class IsEven : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new IsEven(); }
+
 			internal IsEven()
 			{
 				Init(PatternData.Single("a", ValueType.Int));

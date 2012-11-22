@@ -9,6 +9,8 @@ namespace loki3.core.test
 		/// <summary>[a1 a2] -> a1 - a2</summary>
 		class SubtractArray : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new SubtractArray(); }
+
 			internal SubtractArray()
 			{
 				List<Value> list = new List<Value>();
@@ -28,6 +30,8 @@ namespace loki3.core.test
 		/// <summary>adds up everything in the body</summary>
 		class AddUpBody : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new AddUpBody(); }
+
 			internal AddUpBody()
 			{
 				Init(PatternData.Body());

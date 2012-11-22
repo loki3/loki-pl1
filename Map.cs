@@ -84,6 +84,13 @@ namespace loki3.core
 			return true;
 		}
 
+		internal Map Copy()
+		{
+			Map map = new Map();
+			map.m_val = new Dictionary<string,Value>(m_val);
+			return map;
+		}
+
 		public override string ToString()
 		{
 			string s = "{ ";

@@ -4,6 +4,8 @@ namespace loki3.core
 {
 	internal class PartialFunctionPre : ValueFunctionPre
 	{
+		internal override Value ValueCopy() { return new PartialFunctionPre(m_nested, m_passed); }
+
 		/// <summary>
 		/// Create a function that waits for the missing parameters passed to
 		/// another function, then bundles them all up and calls the first function
@@ -19,6 +21,12 @@ namespace loki3.core
 			Init(needed, nested.Order);
 		}
 
+		internal PartialFunctionPre(ValueFunctionPre nested, Value passed)
+		{
+			m_nested = nested;
+			m_passed = passed;
+		}
+
 		internal override Value Eval(Value arg, IScope scope)
 		{
 			Value full = Utility.Combine(m_passed, arg);
@@ -31,6 +39,8 @@ namespace loki3.core
 
 	internal class PartialFunctionPost : ValueFunctionPost
 	{
+		internal override Value ValueCopy() { return new PartialFunctionPost(m_nested, m_passed); }
+
 		/// <summary>
 		/// Create a function that waits for the missing parameters passed to
 		/// another function, then bundles them all up and calls the first function
@@ -44,6 +54,12 @@ namespace loki3.core
 			m_passed = passed;
 			// our pattern is the remaining parameters; use same precedence as nested func
 			Init(needed, nested.Order);
+		}
+
+		internal PartialFunctionPost(ValueFunctionPost nested, Value passed)
+		{
+			m_nested = nested;
+			m_passed = passed;
 		}
 
 		internal override Value Eval(Value arg, IScope scope)

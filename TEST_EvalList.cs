@@ -20,6 +20,8 @@ namespace loki3.core.test
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
 		{
+			internal override Value ValueCopy() { return new TestSum(); }
+
 			internal TestSum() { Init(PatternData.Single("a", ValueType.Int), PatternData.Single("b", ValueType.Int)); }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
@@ -34,6 +36,8 @@ namespace loki3.core.test
 		/// <summary>Function that multiplies previous and next ints</summary>
 		class TestProduct : ValueFunction
 		{
+			internal override Value ValueCopy() { return new TestProduct(); }
+
 			internal TestProduct() { Init(PatternData.Single("a", ValueType.Int), PatternData.Single("b", ValueType.Int), Order.High); }
 
 			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
@@ -48,6 +52,8 @@ namespace loki3.core.test
 		/// <summary>Function that doubles the previous value</summary>
 		class TestDoubled : ValueFunctionPost
 		{
+			internal override Value ValueCopy() { return new TestDoubled(); }
+
 			internal TestDoubled() { Init(PatternData.Single("a", ValueType.Int), Order.High); }
 
 			internal override Value Eval(Value arg, IScope scope)
@@ -59,7 +65,9 @@ namespace loki3.core.test
 		/// <summary>Function that multiplies the next value by a canned value</summary>
 		class TestMultiplier : ValueFunctionPre
 		{
-			internal TestMultiplier(int f) { Init(PatternData.Single("a", ValueType.Int), Order.High);  m_f = f; }
+			internal override Value ValueCopy() { return new TestMultiplier(m_f); }
+
+			internal TestMultiplier(int f) { Init(PatternData.Single("a", ValueType.Int), Order.High); m_f = f; }
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
@@ -72,6 +80,8 @@ namespace loki3.core.test
 		/// <summary>Function that creates a TestMultiplier function based on a passed in int</summary>
 		class TestCreateMultiplier : ValueFunctionPre
 		{
+			internal override Value ValueCopy() { return new TestCreateMultiplier(); }
+
 			internal TestCreateMultiplier() { Init(PatternData.Single("a", ValueType.Int), Order.High); }
 
 			internal override Value Eval(Value arg, IScope scope)
