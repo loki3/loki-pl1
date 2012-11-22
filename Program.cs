@@ -26,6 +26,10 @@ namespace loki_pl1
 					{
 						Console.WriteLine(error.ToString());
 					}
+					catch (Exception error)
+					{
+						Console.WriteLine("INTERNAL ERROR: " + error.ToString());
+					}
 				} while (s != "");
 			}
 			catch (Loki3Exception error)
