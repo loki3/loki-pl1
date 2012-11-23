@@ -14,8 +14,10 @@ namespace loki3.builtin.test
 
 			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
 			scope.SetValue("[", square);
-			ValueDelimiter str = new ValueDelimiter("\"", "\"", DelimiterType.AsString);
-			scope.SetValue("\"", str);
+			ValueDelimiter str = new ValueDelimiter("'", "'", DelimiterType.AsString);
+			scope.SetValue("'", str);
+			ValueDelimiter curly = new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap());
+			scope.SetValue("{", curly);
 
 			return scope;
 		}
@@ -25,8 +27,26 @@ namespace loki3.builtin.test
 		{
 			IScope scope = CreateStringScope();
 			{
-				Value value = TestSupport.ToValue("l3.stringConcat [ \" one \" \" two \" ]", scope);
+				Value value = TestSupport.ToValue("l3.stringConcat { :array [ ' one ' ' two ' ] }", scope);
 				Assert.AreEqual("onetwo", value.AsString);
+			}
+			{
+				Value value = TestSupport.ToValue("l3.stringConcat { :array [ 2 ' two ' ] :spaces 2 }", scope);
+				Assert.AreEqual("2  two", value.AsString);
+			}
+		}
+
+		[Test]
+		public void TestFormatTable()
+		{
+			IScope scope = CreateStringScope();
+			{
+				Value value = TestSupport.ToValue("l3.formatTable { :arrayOfArrays [ [ 1 23 ] [ 1234 4 ] ] }", scope);
+				Assert.AreEqual("1    23 \n1234 4  \n", value.AsString);
+			}
+			{
+				Value value = TestSupport.ToValue("l3.formatTable { :arrayOfArrays [ [ 1 23 ] [ 1234 4 ] ] :dashesAfterFirst? true :spaces 2 }", scope);
+				Assert.AreEqual("1     23  \n--------\n1234  4   \n", value.AsString);
 			}
 		}
 	}

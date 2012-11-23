@@ -15,6 +15,7 @@ namespace loki3.builtin
 		{
 			scope.SetValue("l3.toString", new ConvertToString());
 			scope.SetValue("l3.stringConcat", new StringConcat());
+			scope.SetValue("l3.formatTable", new FormatTable());
 		}
 
 
@@ -35,7 +36,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>[ :a :b ] -> add together two strings</summary>
+		/// <summary>{ :array [:spaces] } -> convert a series of values to strings and concatenate them</summary>
 		class StringConcat : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new StringConcat(); }
@@ -44,19 +45,109 @@ namespace loki3.builtin
 			{
 				SetDocString("Concatenate two strings.");
 
-				List<Value> list = new List<Value>();
-				list.Add(PatternData.Single("a", ValueType.String));
-				list.Add(PatternData.Single("b", ValueType.String));
-				ValueArray array = new ValueArray(list);
-				Init(array);
+				Map map = new Map();
+				map["array"] = PatternData.Rest("array");
+				map["spaces"] = PatternData.Single("spaces", ValueType.Int, new ValueInt(0));
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
 			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
-				List<Value> list = arg.AsArray;
-				string s1 = list[0].AsString;
-				string s2 = list[1].AsString;
-				return new ValueString(s1 + s2);
+				Map map = arg.AsMap;
+				List<Value> list = map["array"].AsArray;
+				int spaces = map["spaces"].AsInt;
+
+				string padding = (spaces == 0 ? null : new string(' ', spaces));
+
+				string s = "";
+				bool bFirst = true;
+				foreach (Value val in list)
+				{
+					if (bFirst)
+						bFirst = false;
+					else if (padding != null)
+						s += padding;
+					s += val.ToString();
+				}
+				return new ValueString(s);
+			}
+		}
+
+		/// <summary>{ :arrayOfArrays [:dashesAfterFirst?] [:spaces] } -> a string that's a formatted table of the arrays of arrays</summary>
+		class FormatTable : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new FormatTable(); }
+
+			internal FormatTable()
+			{
+				SetDocString("Creates a string that's a formatted table of the arrays of arrays.");
+
+				Map map = new Map();
+				map["arrayOfArrays"] = PatternData.Single("arrayOfArrays", ValueType.Array);
+				map["dashesAfterFirst?"] = PatternData.Single("dashesAfterFirst?", ValueType.Bool, ValueBool.False);
+				map["spaces"] = PatternData.Single("spaces", ValueType.Int, new ValueInt(1));
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				// extract parameters
+				Map map = arg.AsMap;
+				List<Value> array = map["arrayOfArrays"].AsArray;
+				bool dashesAfterFirst = map["dashesAfterFirst?"].AsBool;
+				int spaces = map["spaces"].AsInt;
+
+				// first figure out how wide each column should be
+				List<int> widths = new List<int>();
+				List<List<string>> cache = new List<List<string>>();
+				foreach (Value line in array)
+				{
+					List<Value> lineArray = line.AsArray;
+					List<string> lineCache = new List<string>();
+					int iColumn = 0;
+					foreach (Value val in lineArray)
+					{
+						string s = val.ToString();
+						lineCache.Add(s);
+						int len = s.Length;
+						if (widths.Count < iColumn + 1)
+							widths.Add(len);
+						else if (len > widths[iColumn])
+							widths[iColumn] = len;
+						iColumn++;
+					}
+					cache.Add(lineCache);
+				}
+
+				// second build up entire table using calced widths
+				string table = "";
+				foreach (List<string> lineCache in cache)
+				{
+					int totalWidth = 0;
+					int iColumn = 0;
+					foreach (string s in lineCache)
+					{
+						int len = s.Length;
+						int width = widths[iColumn] + spaces;
+						totalWidth += width;
+
+						table += s + new string(' ', width - len);
+
+						iColumn++;
+					}
+					table += "\n";
+
+					// add a row of dashes if needed
+					if (dashesAfterFirst)
+					{
+						table += new string('-', totalWidth - spaces) + "\n";
+						dashesAfterFirst = false;
+					}
+				}
+
+				return new ValueString(table);
 			}
 		}
 	}

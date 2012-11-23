@@ -380,7 +380,8 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :=>str @doc /" Convert a value to a string
 
 // todo: switch to + when overloading is supported
-:+s <- /(< l3.stringConcat [ #1 #2 ]
+:+s <- /( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
+	l3.stringConcat /{ :array /[ str1 str2
 :+s @doc /" Concatenate two strings
 
 

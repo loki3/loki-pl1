@@ -301,7 +301,7 @@ namespace loki3.core
 		internal override string AsString { get { return m_val; } }
 		#endregion
 
-		public override string ToString() { return "\"" + m_val + "\""; }
+		public override string ToString() { return m_val; }
 	}
 
 	/// <summary>
