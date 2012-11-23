@@ -42,11 +42,11 @@ namespace loki3.builtin.test
 			IScope scope = CreateStringScope();
 			{
 				Value value = TestSupport.ToValue("l3.formatTable { :arrayOfArrays [ [ 1 23 ] [ 1234 4 ] ] }", scope);
-				Assert.AreEqual("1    23 \n1234 4  \n", value.AsString);
+				Assert.AreEqual("1    23 \n1234 4  ", value.AsString);
 			}
 			{
 				Value value = TestSupport.ToValue("l3.formatTable { :arrayOfArrays [ [ 1 23 ] [ 1234 4 ] ] :dashesAfterFirst? true :spaces 2 }", scope);
-				Assert.AreEqual("1     23  \n--------\n1234  4   \n", value.AsString);
+				Assert.AreEqual("1     23  \n--------\n1234  4   ", value.AsString);
 			}
 		}
 	}

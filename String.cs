@@ -123,8 +123,14 @@ namespace loki3.builtin
 
 				// second build up entire table using calced widths
 				string table = "";
+				bool bFirstLine = true;
 				foreach (List<string> lineCache in cache)
 				{
+					if (bFirstLine)
+						bFirstLine = false;
+					else
+						table += "\n";
+
 					int totalWidth = 0;
 					int iColumn = 0;
 					foreach (string s in lineCache)
@@ -137,12 +143,12 @@ namespace loki3.builtin
 
 						iColumn++;
 					}
-					table += "\n";
 
 					// add a row of dashes if needed
 					if (dashesAfterFirst)
 					{
-						table += new string('-', totalWidth - spaces) + "\n";
+						table += "\n";
+						table += new string('-', totalWidth - spaces);
 						dashesAfterFirst = false;
 					}
 				}
