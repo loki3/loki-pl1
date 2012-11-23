@@ -113,12 +113,22 @@ namespace loki3.core
 			}
 		}
 
-		/// <summary>If this is an instance of a class or enum, return name of class</summary>
+		/// <summary>If this is an instance of a class or enum, return name of class, else return built-in type</summary>
 		internal string MetaType
 		{
 			get
 			{
-				return m_metadata == null ? "" : m_metadata.GetOptionalT<string>(keyType, "");
+				string s = null;
+				if (m_metadata != null)
+					s = m_metadata.GetOptionalT<string>(keyType, null);
+				if (s == null)
+					s = ValueClasses.ClassOf(Type);
+				return s;
+			}
+			set
+			{
+				Map meta = WritableMetadata;
+				meta[keyType] = new ValueString(value);
 			}
 		}
 

@@ -24,6 +24,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.createArrayDelimiter", new CreateArrayDelimiter());
 			scope.SetValue("l3.getCount", new GetCount());
 			scope.SetValue("l3.getMetadata", new GetMetadata());
+			scope.SetValue("l3.getType", new GetTypeFunction());
 		}
 
 
@@ -425,6 +426,24 @@ namespace loki3.builtin
 				if (meta == null)
 					return ValueNil.Nil;
 				return new ValueMap(meta);
+			}
+		}
+
+		/// <summary>:value -> the type</summary>
+		class GetTypeFunction : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new GetTypeFunction(); }
+
+			internal GetTypeFunction()
+			{
+				SetDocString("Get a value's type");
+				Value item = PatternData.Single("value");
+				Init(item);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				return new ValueString(arg.MetaType);
 			}
 		}
 	}

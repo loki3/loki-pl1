@@ -227,5 +227,26 @@ namespace loki3.builtin.test
 				Assert.AreEqual(loki3.core.ValueType.Map, value.Type);
 			}
 		}
+
+		[Test]
+		public void TestGetTypeFunction()
+		{
+			IScope scope = CreateValueScope();
+
+			{	// built-in type w/out metadata
+				scope.SetValue("a", new ValueInt(42));
+				Value value = TestSupport.ToValue("l3.getType a", scope);
+				Assert.AreEqual("int", value.AsString);
+			}
+
+			{	// metadata type
+				Value b = new ValueInt(42);
+				b.MetaType = "myType";
+				scope.SetValue("b", b);
+
+				Value value = TestSupport.ToValue("l3.getType b", scope);
+				Assert.AreEqual("myType", value.AsString);
+			}
+		}
 	}
 }
