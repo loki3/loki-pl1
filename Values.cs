@@ -98,7 +98,7 @@ namespace loki3.builtin
 				Map map = new Map();
 				// todo: better pattern definition, map|array & string|int
 				// or make this into two functions
-				map["object"] = PatternData.Single("object");
+				map["object"] = PatternData.Single("object", ValueNil.Nil);
 				map["key"] = PatternData.Single("key");
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
@@ -112,16 +112,14 @@ namespace loki3.builtin
 				Value obj = map["object"];
 				Value key = map["key"];
 
+				if (obj.IsNil)
+					return scope.GetValue(new Token(key.AsString));
 				ValueMap objMap = obj as ValueMap;
 				if (objMap != null)
-				{
 					return objMap.AsMap.GetOptional(key.AsString, ValueNil.Nil);
-				}
 				ValueArray objArr = obj as ValueArray;
 				if (objArr != null)
-				{
 					return objArr.AsArray[key.AsInt];
-				}
 				// todo: better error
 				throw new Loki3Exception().AddWrongType(ValueType.Map, obj.Type);
 			}
@@ -404,19 +402,7 @@ namespace loki3.builtin
 				Map map = arg.AsMap;
 
 				// either lookup up value w/ specified key or just get specified value
-				Value value = null;
-				Value key = map["key"];
-				if (key != ValueNil.Nil)
-				{
-					Token token = new Token(key.AsString);
-					value = scope.GetValue(token);
-					if (value == null)
-						throw new Loki3Exception().AddBadToken(token);
-				}
-				else if (map.ContainsKey("value"))
-				{
-					value = map["value"];
-				}
+				Value value = Utility.GetFromKeyOrValue(map, scope);
 
 				// return associated metadata
 				if (value == null)
@@ -429,7 +415,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>:value -> the type</summary>
+		/// <summary>{ [:key] [:value] [:builtin?] } -> the type, optionally just looking at built-in type</summary>
 		class GetTypeFunction : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new GetTypeFunction(); }
@@ -437,13 +423,23 @@ namespace loki3.builtin
 			internal GetTypeFunction()
 			{
 				SetDocString("Get a value's type");
-				Value item = PatternData.Single("value");
-				Init(item);
+				Map map = new Map();
+				map["key"] = PatternData.Single("key", ValueType.String, ValueNil.Nil);
+				map["value"] = PatternData.Single("value", ValueNil.Nil);
+				map["builtin?"] = PatternData.Single("builtin?", ValueType.Bool, ValueBool.False);
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
 			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
-				return new ValueString(arg.MetaType);
+				// extract optional & required parameters
+				Map map = arg.AsMap;
+				Value value = Utility.GetFromKeyOrValue(map, scope);
+				bool builtin = map["builtin?"].AsBool;
+
+				string type = (builtin ? ValueClasses.ClassOf(value.Type) : value.MetaType);
+				return new ValueString(type);
 			}
 		}
 	}

@@ -67,6 +67,29 @@ namespace loki3.core
 			}
 		}
 
+		/// <summary>If :key is present, lookup value, else if :value is present, return value.</summary>
+		internal static Value GetFromKeyOrValue(Map map, IScope scope)
+		{
+			// either lookup up value w/ specified key or just get specified value
+			Value value = null;
+			Value key = map["key"];
+			if (key != ValueNil.Nil)
+			{
+				Token token = new Token(key.AsString);
+				value = scope.GetValue(token);
+				if (value == null)
+					throw new Loki3Exception().AddBadToken(token);
+			}
+			else if (map.ContainsKey("value"))
+			{
+				value = map["value"];
+			}
+			if (value == null)
+				// todo: better error
+				throw new Loki3Exception().AddMissingKey(new ValueString("key or value required"));
+			return value;
+		}
+
 		/// <summary>Add two arrays or maps into one</summary>
 		internal static Value Combine(Value a, Value b)
 		{

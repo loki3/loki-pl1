@@ -235,7 +235,11 @@ namespace loki3.builtin.test
 
 			{	// built-in type w/out metadata
 				scope.SetValue("a", new ValueInt(42));
-				Value value = TestSupport.ToValue("l3.getType a", scope);
+				Value value = TestSupport.ToValue("l3.getType { :value a }", scope);
+				Assert.AreEqual("int", value.AsString);
+				value = TestSupport.ToValue("l3.getType { :value a :builtin? true }", scope);
+				Assert.AreEqual("int", value.AsString);
+				value = TestSupport.ToValue("l3.getType { :key :a }", scope);
 				Assert.AreEqual("int", value.AsString);
 			}
 
@@ -244,8 +248,10 @@ namespace loki3.builtin.test
 				b.MetaType = "myType";
 				scope.SetValue("b", b);
 
-				Value value = TestSupport.ToValue("l3.getType b", scope);
+				Value value = TestSupport.ToValue("l3.getType { :value b }", scope);
 				Assert.AreEqual("myType", value.AsString);
+				value = TestSupport.ToValue("l3.getType { :value b :builtin? true }", scope);
+				Assert.AreEqual("int", value.AsString);
 			}
 		}
 	}

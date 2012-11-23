@@ -66,10 +66,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // get & set
 
-// copy
-:copy <- func ->value
-	l3.copy value
-
 // member access using the . infix
 :. <- /( ->a infix ->b
 	l3.getValue /{ :object a :key b
@@ -121,6 +117,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object @@ /[ :l3.param.rest true
 :@@rest @doc /" Associated parameter will be filled with the remainder of the parameter values
 
+:copy <- func ->value
+	l3.copy value
+:copy	@doc	/" Make a copy of a value
+
 
 //
 // add documentation to functions that have been previously definied
@@ -146,7 +146,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :infix	@doc	/" Define a function that takes parameters before and after the function name
 :postfix @doc	/" Define a function that takes parameters before the function name
 :func()	@doc	/" Define a function that takes no parameters
-:copy	@doc	/" Make a copy of a value
 :.		@doc	/" Access the member of a map by key or array by index
 :@		@doc	/" Modify a value's metadata
 :.@		@doc	/" Get a value's metadata
@@ -330,7 +329,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		l3.setValue { :key key :value i :scope :grandparent }
 		:i = i + 1
 	// store entire map on scope that called this function
-	l3.setValue { :key name :value list :scope :parent }
+	:value <- l3.setValue { :key name :value list :scope :parent }
+	// metadata on the enum
+	value @@ [ :l3.value.type " enum " ]
 	list
 :enum @doc /" Create an enumerated map of values
 
