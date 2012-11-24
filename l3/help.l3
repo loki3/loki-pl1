@@ -18,7 +18,7 @@
 :help <- func ->var
 	
 	// func that figures out if var is an in/post/prefix function
-	:getDetailedType <- func()
+	:getFixType <- func()
 		:details <- /"
 		:builtinType <- l3.getType { :key var :builtin? true }
 		if builtinType =? :function
@@ -33,12 +33,23 @@
 			else
 				:details = /" (body only)
 		details
+	// func that returns misc metadata
+	:getOtherMeta <- func()
+		:s <- ""
+		[ :order :body? ] <- [ ( var .@ :l3.value.order ) ( var .@ :body? ) ]
+		if order !=? nil
+			:s = /( l3.stringConcat /{ :spaces 1 :array /[ :@order order
+		if body? !=? nil
+			:s = l3.stringConcat /{ :spaces 1 :array /[ s /" (requires body)
+		s
 	
 	// print general info
 	print /"
 	:type <- l3.getType { :key var }
-	:details <- getDetailedType
-	print l3.stringConcat /{ :spaces 1 :array /[ " ----- " var " @type " type details
+	:fixType <- getFixType
+	:otherMeta <- getOtherMeta
+	print :============
+	print l3.stringConcat /{ :spaces 1 :array /[ :# var :@type type fixType otherMeta
 	:doc <- var .@doc
 	print ( doc =? nil ) ? [ " <no docstring> " doc ]
 	
@@ -107,7 +118,15 @@
 	:start    <- var .@ :l3.delim.start
 	:end      <- var .@ :l3.delim.end
 	print l3.stringConcat /{ :spaces 1 :array /[ :type: :delimiter start end
-	dumpMeta var
+	
+	:delimEnum <- /[ :comment :string :value :array :raw
+	:type      <- delimEnum . ( var .@ :l3.delim.type )
+	print l3.stringConcat /{ :spaces 1 :array /[ " parse as: " type
+	
+	:function <- var .@ :l3.delim.function
+	if ( function ) !=? nil
+		print /" applies the following function to the contents:
+		help :function
 :dumpDelimiter @doc /" Print the values of a delimiter
 
 
