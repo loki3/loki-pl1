@@ -73,7 +73,7 @@
 			[ line ]
 		if params !=? nil
 			:type <- l3.getType /{ :value params
-			if type =? :map |? type =? :array
+			if type =any? [ :map :array ]
 				var :param forEach params
 					:table = table +a getParam /( fix /( param . 1
 			else

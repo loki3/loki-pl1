@@ -48,6 +48,13 @@ namespace loki3.builtin.test
 					Assert.IsFalse(value.AsBool);
 				}
 
+				{	// test value-to-array comparison
+					Value value = TestSupport.ToValue("4 =any? [ 3 4 5 ]", scope);
+					Assert.IsTrue(value.AsBool);
+					value = TestSupport.ToValue("4 =any? [ 3 7 5 ]", scope);
+					Assert.IsFalse(value.AsBool);
+				}
+
 				{	// test eval order
 					Value value = TestSupport.ToValue("2 * 2 + 3", scope);
 					Assert.AreEqual(7, value.AsInt);
@@ -79,6 +86,7 @@ namespace loki3.builtin.test
 				AllBuiltins.RegisterAll(scope);
 				EvalFile.Do("../../l3/bootstrap.l3", scope);
 				EvalFile.Do("../../l3/unittest.l3", scope);
+				EvalFile.Do("../../l3/help.l3", scope);
 
 				// make sure all functions have @doc
 				Value a = TestSupport.ToValue("checkDocs l3.getScope", scope);

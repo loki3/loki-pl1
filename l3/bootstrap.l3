@@ -216,6 +216,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :!=? <- /(< !? l3.equal? [ #1 #2 ]
 :!=? @doc /" Return true if two values are not equal
 
+:=any? <- /( ->value infix ( ->array @@type :array )
+	l3.anyEqual? [ value array ]
+:=any? @doc /" Return true if value is equal to anything in array
+
 
 //
 // arrays

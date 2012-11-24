@@ -14,6 +14,7 @@ namespace loki3.builtin
 		internal static void Register(IScope scope)
 		{
 			scope.SetValue("l3.equal?", new IsEqual());
+			scope.SetValue("l3.anyEqual?", new IsAnyEqual());
 			scope.SetValue("l3.and?", new LogicalAnd());
 			scope.SetValue("l3.or?", new LogicalOr());
 			scope.SetValue("l3.not?", new LogicalNot());
@@ -42,6 +43,34 @@ namespace loki3.builtin
 				Value v1 = list[0];
 				Value v2 = list[1];
 				return new ValueBool(v1.Equals(v2));
+			}
+		}
+
+		/// <summary>[a array] -> bool,  depending on if a is equal to anything in b</summary>
+		class IsAnyEqual : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new IsAnyEqual(); }
+
+			internal IsAnyEqual()
+			{
+				SetDocString("If first element is equal to anything in second array, return true, else false.");
+
+				List<Value> list = new List<Value>();
+				list.Add(PatternData.Single("value"));
+				list.Add(PatternData.Single("array", ValueType.Array));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				List<Value> list = arg.AsArray;
+				Value value = list[0];
+				List<Value> array = list[1].AsArray;
+				foreach (Value v in array)
+					if (v.Equals(value))
+						return ValueBool.True;
+				return ValueBool.False;
 			}
 		}
 
