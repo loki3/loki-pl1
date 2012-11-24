@@ -49,6 +49,8 @@
 		dumpFunction var
 	elsif type =? :enum
 		dumpEnum var
+	elsif type =? :delimiter
+		dumpDelimiter var
 	else
 		:value <- l3.getValue /{ :key var
 		print l3.stringConcat /{ :spaces 1 :array /[ " value: " value
@@ -98,6 +100,14 @@
 :dumpEnum @doc /" Print the values of an enum
 
 
+:dumpDelimiter <- func ->var
+	:start    <- var .@ :l3.delim.start
+	:end      <- var .@ :l3.delim.end
+	print l3.stringConcat /{ :spaces 1 :array /[ :type: :delimiter start end
+	dumpMeta var
+:dumpDelimiter @doc /" Print the values of a delimiter
+
+
 :dumpMeta <- func ->key
 	:table <- [ [ :key :value ] ]
 	:metadata <- l3.getMetadata { :key key }
@@ -112,9 +122,9 @@
 :dumpMeta @doc /" Dump metadata for the given value attached to a key
 
 
-:listByFilter <- func { :map ->map :filter? ->filter? }
+:listByFilter <- func { :map ->map :filter? ( ->filter? @@type :function ) :perRow ( ->perRow @@default 3 ) :spaces ( ( ->spaces @@type :int ) @@default 1 ) }
 	[ :table :line ] <- [ nil nil ]
-	[ :perRow :current ] <- [ 3 0 ]
+	:current <- 0
 	var :pair forEach map
 		:key <- pair . 0
 		if ( filter? key )
@@ -126,7 +136,7 @@
 	if line !=? nil
 		:table = table +a [ line ]
 	if table !=? nil
-		print l3.formatTable { :arrayOfArrays table }
+		print l3.formatTable { :arrayOfArrays table :spaces spaces }
 	""
 :listByFilter @doc /" List all the functions that pass a filter
 
@@ -137,3 +147,7 @@
 :listEnums <- func ->map
 	listByFilter { :map map :filter? (| :enum =? l3.getType { :key ## } |) }
 :listEnums @doc /" List all the enums in the given map
+
+:listDelimiters <- func ->map
+	listByFilter { :map map :filter? (| :delimiter =? l3.getType { :key ## :builtin? true } |) :perRow 7 :spaces 3 }
+:listDelimiters @doc /" List all the delimiters in the given map
