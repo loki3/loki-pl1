@@ -89,7 +89,7 @@ namespace loki3.builtin.test
 				EvalFile.Do("../../l3/help.l3", scope);
 
 				// make sure all functions have @doc
-				Value a = TestSupport.ToValue("checkDocs l3.getScope", scope);
+				Value a = TestSupport.ToValue("checkDocs currentScope", scope);
 				if (!a.AsArray[0].AsBool)	// make it obvious which functions need @doc
 					Assert.AreEqual("[ ]", a.AsArray[1].AsArray);
 			}

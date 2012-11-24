@@ -19,18 +19,24 @@ namespace loki3.builtin
 		}
 
 		/// <summary>Get the current scope</summary>
-		class GetScope : ValueFunction
+		class GetScope : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new GetScope(); }
 
 			internal GetScope()
 			{
 				SetDocString("Get a map representing the current scope.");
+
+				Map map = new Map();
+				Utility.AddParamsForScopeToModify(map);
+				Init(new ValueMap(map));
 			}
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+			internal override Value Eval(Value arg, IScope scope)
 			{
-				return new ValueMap(scope.AsMap);
+				Map map = arg.AsMap;
+				IScope theScope = Utility.GetScopeToModify(map, scope);
+				return new ValueMap(theScope.AsMap);
 			}
 		}
 

@@ -3,10 +3,10 @@
 //
 // Provides tools for getting help on functions
 //
-// helpAll l3.getScope
+// helpAll currentScope
 // help :someFunction
 // dumpMeta :someFunction
-// listFunctions l3.getScope
+// listFunctions currentScope
 //
 
 
@@ -78,7 +78,10 @@
 			:type <- l3.getType /{ :value params
 			if type =any? [ :map :array ]
 				var :param forEach params
-					:table = table +a getParam /( fix /( param . 1
+					if :map =? l3.getType /{ :value params
+						:table = table +a getParam /( fix /( param . 1
+					else
+						:table = table +a getParam /( fix param
 			else
 				:table = table +a getParam params
 		table

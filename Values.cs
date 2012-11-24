@@ -41,10 +41,8 @@ namespace loki3.builtin
 				map["key"] = PatternData.Single("key");
 				map["value"] = PatternData.Single("value");
 				map["create?"] = PatternData.Single("create?", ValueType.Bool, ValueBool.True);
-				map["map"] = PatternData.Single("map", ValueType.Map, ValueNil.Nil);
-				map["scope"] = PatternData.Single("scope", ValueType.String, new ValueString("current"));
-				ValueMap vMap = new ValueMap(map);
-				Init(vMap);
+				Utility.AddParamsForScopeToModify(map);
+				Init(new ValueMap(map));
 			}
 
 			internal override Value Eval(Value arg, IScope scope)
@@ -55,10 +53,6 @@ namespace loki3.builtin
 				Value key = map["key"];
 				Value value = map["value"];
 				bool bCreate = map["create?"].AsBool;
-				ValueMap valueMap = map["map"] as ValueMap;
-				// todo: turn this into an enum, at least "current" & "parent" & "grandparent"
-				bool bParentScope = (map["scope"].AsString == "parent");
-				bool bGrandparentScope = (map["scope"].AsString == "grandparent");
 
 				// key must be a type that can be used for pattern matching
 				if (key.Type != ValueType.String && key.Type != ValueType.Array && key.Type != ValueType.Map)
@@ -69,15 +63,7 @@ namespace loki3.builtin
 				PatternChecker.Do(value, key, true/*bShortPat*/, out match, out leftover);
 
 				// scope we're going to modify
-				IScope toModify = scope;
-				if (valueMap != null)
-					toModify = new ScopeChain(valueMap.AsMap);
-				else if (bParentScope)
-					toModify = scope.Parent;
-				else if (bGrandparentScope && scope.Parent != null)
-					toModify = scope.Parent.Parent;
-				if (toModify == null)
-					toModify = scope;
+				IScope toModify = Utility.GetScopeToModify(map, scope);
 
 				// add/modify scope
 				if (match != null)

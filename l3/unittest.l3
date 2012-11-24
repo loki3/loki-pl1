@@ -19,7 +19,7 @@
 	:targetFile @unittest true
 	:testFile @unittest true
 	// run tests on local scope
-	unittestScope l3.getScope
+	unittestScope currentScope
 :unittest @doc /" For a given implementation file, run all the tests defined in a test file.
 
 :unittestScope <- func ->scope
@@ -56,7 +56,7 @@
 
 :printFileDocs <- func ->file
 	import file
-	printDocs l3.getScope
+	printDocs currentScope
 :printFileDocs @doc /" Print all the docstrings attached to the values in a given file
 
 

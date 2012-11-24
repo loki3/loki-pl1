@@ -90,6 +90,36 @@ namespace loki3.core
 			return value;
 		}
 
+		/// <summary>
+		/// Get the scope to modify based on values in 'map'.
+		///		:scope = current | parent | grandparent
+		///		:map   = if present, the map to modify
+		/// </summary>
+		internal static IScope GetScopeToModify(Map map, IScope scope)
+		{
+			ValueMap valueMap = map["map"] as ValueMap;
+			// todo: turn this into an enum, at least "current" & "parent" & "grandparent"
+			bool bParentScope = (map["scope"].AsString == "parent");
+			bool bGrandparentScope = (map["scope"].AsString == "grandparent");
+
+			// scope we're going to modify
+			IScope toModify = scope;
+			if (valueMap != null)
+				toModify = new ScopeChain(valueMap.AsMap);
+			else if (bParentScope)
+				toModify = scope.Parent;
+			else if (bGrandparentScope && scope.Parent != null)
+				toModify = scope.Parent.Parent;
+			if (toModify == null)
+				toModify = scope;
+			return toModify;
+		}
+		internal static void AddParamsForScopeToModify(Map map)
+		{
+			map["map"] = PatternData.Single("map", ValueType.Map, ValueNil.Nil);
+			map["scope"] = PatternData.Single("scope", ValueType.String, new ValueString("current"));
+		}
+
 		/// <summary>Add two arrays or maps into one</summary>
 		internal static Value Combine(Value a, Value b)
 		{
