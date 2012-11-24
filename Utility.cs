@@ -95,8 +95,12 @@ namespace loki3.core
 		{
 			if (a is ValueArray)
 				return ValueArray.Combine(a as ValueArray, b);
+			else if (a.IsNil & b is ValueArray)
+				return b;
 			else if (a is ValueMap && b is ValueMap)
 				return ValueMap.Combine(a as ValueMap, b as ValueMap);
+			else if (a.IsNil && b is ValueMap)
+				return b;
 			return null;
 		}
 

@@ -6,6 +6,7 @@
 // helpAll l3.getScope
 // help :someFunction
 // dumpMeta :someFunction
+// listFunctions l3.getScope
 //
 
 
@@ -109,3 +110,30 @@
 	print l3.formatTable { :arrayOfArrays table :dashesAfterFirst? true }
 	""
 :dumpMeta @doc /" Dump metadata for the given value attached to a key
+
+
+:listByFilter <- func { :map ->map :filter? ->filter? }
+	[ :table :line ] <- [ nil nil ]
+	[ :perRow :current ] <- [ 3 0 ]
+	var :pair forEach map
+		:key <- pair . 0
+		if ( filter? key )
+			if current =? perRow - 1
+				:table = table +a [ line ]
+				:line = nil
+			:current = ( current + 1 ) % perRow
+			:line = line +a [ key ]
+	if line !=? nil
+		:table = table +a [ line ]
+	if table !=? nil
+		print l3.formatTable { :arrayOfArrays table }
+	""
+:listByFilter @doc /" List all the functions that pass a filter
+
+:listFunctions <- func ->map
+	listByFilter { :map map :filter? (| :function =? l3.getType { :key ## :builtin? true } |) }
+:listFunctions @doc /" List all the functions in the given map
+
+:listEnums <- func ->map
+	listByFilter { :map map :filter? (| :enum =? l3.getType { :key ## } |) }
+:listEnums @doc /" List all the enums in the given map
