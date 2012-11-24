@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="l3\bootstrap.l3" />
+    <None Include="l3\help.l3" />
     <None Include="l3\module.l3" />
     <None Include="l3\test.l3" />
     <None Include="l3\test_tests.l3" />

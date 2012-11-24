@@ -1,0 +1,111 @@
+//
+// Help framework
+//
+// Provides tools for getting help on functions
+//
+// helpAll l3.getScope
+// help :someFunction
+// dumpMeta :someFunction
+//
+
+
+:helpAll <- func ->map
+	var :pair forEach map
+		help pair . 0
+:helpAll @doc /" Print out information on everything defined in the given scope
+
+:help <- func ->var
+	
+	// func that figures out if var is an in/post/prefix function
+	:getDetailedType <- func()
+		:details <- /"
+		:builtinType <- l3.getType { :key var :builtin? true }
+		if builtinType =? :function
+			[ :prev  :next ]  <- [ ( var .@ :l3.func.previous ) ( var .@ :l3.func.next ) ]
+			[ :prev? :next? ] <- [ ( prev !=? nil ) ( next !=? nil ) ]
+			if prev? &? next?
+				:details = /" (infix)
+			elsif prev?
+				:details = /" (postfix)
+			elsif next?
+				:details = /" (prefix)
+			else
+				:details = /" (body only)
+		details
+	
+	// print general info
+	print /"
+	:type <- l3.getType { :key var }
+	:details <- getDetailedType
+	print l3.stringConcat /{ :spaces 1 :array /[ " ----- " var " @type " type details
+	:doc <- var .@doc
+	print ( doc =? nil ) ? [ " <no docstring> " doc ]
+	
+	// print type specific info
+	:type <- l3.getType { :key var }
+	if type =? :function
+		print ""
+		dumpFunction var
+	elsif type =? :enum
+		dumpEnum var
+	else
+		:value <- l3.getValue /{ :key var
+		print l3.stringConcat /{ :spaces 1 :array /[ " value: " value
+	""
+:help @doc /" Print out a description of a variable, e.g. details on a function
+
+
+:dumpFunction <- func ->var
+	
+	// print info on a collection of parameters
+	:getParams <- func /[ ->table ->params ->fix
+		// extract metadata on a single parameter
+		:getParam <- func /( ->fix ->param
+			:getMeta <- func ->which
+				:key <- :l3.param. +s which
+				if ( :t <- ( l3.getMetadata { :value param } ) . key ) =? nil
+					:t = ""
+				t
+			:line <- [ fix param ]
+			:line <- line +a /( getMeta :type
+			:line <- line +a /( getMeta :default
+			:line <- line +a /( getMeta :rest
+			[ line ]
+		if params !=? nil
+			:type <- l3.getType /{ :value params
+			if type =? :map |? type =? :array
+				var :param forEach params
+					:table = table +a getParam /( fix /( param . 1
+			else
+				:table = table +a getParam params
+		table
+	
+	[ :prev :next ] <- [ ( var .@ :l3.func.previous ) ( var .@ :l3.func.next ) ]
+	:table <- [ [ :pre/post :name :@type :@default :@rest ] ]
+	:table = getParams /[ table prev :pre
+	:table = getParams /[ table next :post
+	print l3.formatTable { :arrayOfArrays table :dashesAfterFirst? true }
+:dumpFunction @doc /" Print info about a function
+
+
+:dumpEnum <- func ->var
+	print /" type: enum
+	:table <- [ ]
+	var :item forEach l3.getValue /{ :key var
+		:table = table +a [ [ "" ( item . 1 ) ] ]
+	print l3.formatTable { :arrayOfArrays table :spaces 2 }
+:dumpEnum @doc /" Print the values of an enum
+
+
+:dumpMeta <- func ->key
+	:table <- [ [ :key :value ] ]
+	:metadata <- l3.getMetadata { :key key }
+	var :pair forEach metadata
+		// handle docstrings separately because they're long
+		if ( pair . 0 ) =? :l3.value.doc
+			:table = table +a [ [ ( pair . 0 ) " <docstring> " ] ]
+		else
+			:table = table +a [ pair ]
+	print l3.formatTable { :arrayOfArrays table :dashesAfterFirst? true }
+	""
+:dumpMeta @doc /" Dump metadata for the given value attached to a key

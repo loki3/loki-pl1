@@ -210,7 +210,7 @@ namespace loki3.core
 		internal override bool AsBool { get { return m_val; } }
 		#endregion
 
-		public override string ToString() { return m_val.ToString(); }
+		public override string ToString() { return m_val ? "true" : "false"; }
 
 		private static ValueBool m_true = new ValueBool(true);
 		private static ValueBool m_false = new ValueBool(false);
