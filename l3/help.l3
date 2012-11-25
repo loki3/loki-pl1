@@ -11,7 +11,7 @@
 
 
 :helpAll <- func ->map
-	var :pair forEach map
+	:pair forEach map
 		help pair . 0
 :helpAll @doc /" Print out information on everything defined in the given scope
 
@@ -88,7 +88,7 @@
 		if params !=? nil
 			:type <- l3.getType /{ :value params
 			if type =any? [ :map :array ]
-				var :param forEach params
+				:param forEach params
 					if :map =? l3.getType /{ :value params
 						:table = table +a getParam /( fix /( param . 1
 					else
@@ -108,7 +108,7 @@
 :dumpEnum <- func ->var
 	print /" type: enum
 	:table <- [ ]
-	var :item forEach l3.getValue /{ :key var
+	:item forEach l3.getValue /{ :key var
 		:table = table +a [ [ "" ( item . 1 ) ] ]
 	print l3.formatTable { :arrayOfArrays table :spaces 2 }
 :dumpEnum @doc /" Print the values of an enum
@@ -133,7 +133,7 @@
 :dumpMeta <- func ->key
 	:table <- [ [ :key :value ] ]
 	:metadata <- l3.getMetadata { :key key }
-	var :pair forEach metadata
+	:pair forEach metadata
 		// handle docstrings separately because they're long
 		if ( pair . 0 ) =? :l3.value.doc
 			:table = table +a [ [ ( pair . 0 ) " <docstring> " ] ]
@@ -147,7 +147,7 @@
 :listByFilter <- func { :map ->map :filter? ( ->filter? @@type :function ) :perRow ( ->perRow @@default 3 ) :spaces ( ( ->spaces @@type :int ) @@default 1 ) }
 	[ :table :line ] <- [ nil nil ]
 	:current <- 0
-	var :pair forEach map
+	:pair forEach map
 		:key <- pair . 0
 		if ( filter? key )
 			if current =? perRow - 1
