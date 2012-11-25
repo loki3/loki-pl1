@@ -560,7 +560,8 @@ namespace loki3.builtin.test
 					string[] lines = {
 						":myarray <- makeArray",
 						"	:blah",
-						"	makeArray",
+						"	func ->a",
+						"		a + 2",
 						"	[ 1 2 ]",
 					};
 					LineConsumer requestor = new LineConsumer(lines);

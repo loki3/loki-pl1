@@ -73,7 +73,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :key :collection :body } -> run body for every item in collection</summary>
+		/// <summary>{ :key :collection [:delim] :body } -> run body for every item in collection</summary>
 		class ForEach : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new ForEach(); }
@@ -85,6 +85,7 @@ namespace loki3.builtin
 				Map map = new Map();
 				map["key"] = PatternData.Single("key");
 				map["collection"] = PatternData.Single("collection");
+				map["delim"] = PatternData.Single("delim", ValueType.String, new ValueString(""));
 				map["body"] = PatternData.Body();
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
@@ -136,18 +137,33 @@ namespace loki3.builtin
 				else if (collection is ValueLine)
 				{
 					List<DelimiterList> list = collection.AsLine;
-					foreach (DelimiterList dlist in list)
+
+					// if delimiter is specified, wrap each line w/ it
+					ValueDelimiter delim = scope.GetValue(new Token(map["delim"].AsString)) as ValueDelimiter;
+					if (delim != null)
 					{
-						List<Value> array = new List<Value>();
-						List<DelimiterNode> nodes = dlist.Nodes;
-						foreach (DelimiterNode node in nodes)
+						List<DelimiterList> delimList = new List<DelimiterList>();
+						int indent = (list.Count > 0 ? list[0].Indent : 0);
+						foreach (DelimiterList line in list)
 						{
-							Value v = node.Value;
-							if (v == null)
-								v = EvalNode.Do(node, scope, null, null);
-							array.Add(v);
+							DelimiterList newLine = line;
+							if (line.Indent == indent)
+							{
+								List<DelimiterNode> nodes = new List<DelimiterNode>();
+								nodes.Add(new DelimiterNodeList(new DelimiterList(delim, line.Nodes, line.Indent)));
+								newLine = new DelimiterList(delim, nodes, indent);
+							}
+							delimList.Add(newLine);
 						}
-						scope.SetValue(var, new ValueArray(array));
+						list = delimList;
+					}
+
+					// for each line, eval it then eval the body
+					ILineRequestor lines = new LineConsumer(list);
+					while (lines.HasCurrent())
+					{
+						Value value = EvalLines.DoOne(lines, scope);
+						scope.SetValue(var, value);
 						result = EvalBody.Do(valueBody, scope);
 					}
 				}

@@ -268,8 +268,8 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :makeArray <- func()
 	:array <- nil
-	var :line forEach body
-		:array = array +a line
+	:line forEach body
+		:array = array +a [ line ]
 	array
 :makeArray @doc /" Make an array where every line in the body is evaluated and becomes an element in the array
 :makeArray @body? true
@@ -279,12 +279,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // maps
 
 :makeMap <- func()
-	:array <- nil
-	var :line forEach body
-		[ :key :value ] <- [ nil nil ]
-		[ :key :value ] = line
-		:array = array +a [ key value ]
-	l3.createMap array
+	:map <- nil
+	:submap forEachDelim [ body :{ ]
+		:map = map +a submap
+	map
 :makeMap @doc /" Make a map where every line in the body is evaluated and the first element is the key and the second the value
 :makeMap @body? true
 
@@ -342,6 +340,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :forEach @body? true
 :forEach @doc /" Repeat loop for each item in collection.  Pattern is specified before forEach.  Collection is specified after forEach.
 
+:forEachDelim <- /( ->key infix /[ ->collection ->delim
+	l3.setScopeName /{ :name :loop
+	l3.forEach /{ :key key :collection collection :body body :delim delim
+:forEachDelim @body? true
+:forEachDelim @doc /" Repeat loop for each item in collection.  Pattern is specified before forEach.  Collection is specified after forEach.  Can specify a delimiter that determines how each line is interpreted.
+
 :break <- func()
 	l3.popScope /{ :name :loop
 :break @doc /" Pop the stack out of the current loop
@@ -353,7 +357,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :enum <- /( ( ->name @@type :string ) infix ( ->array @@type :array )
 	:list <- { }
 	:i <- 0
-	var :val forEach array
+	:val forEach array
 		:key <- name +s " . " +s val
 		// metadata on the value describing enum name & key
 		i @@ [ :l3.value.type name ]
