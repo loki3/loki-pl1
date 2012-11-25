@@ -37,11 +37,39 @@ namespace loki3.core
 			{
 				Value value = EvalList.Do(list.Nodes, scope, requestor);
 
+				// if only item on line was a func, see if it needs a body
 				ValueFunction func = value as ValueFunction;
 				if (func != null && func.RequiresBody())
 					// if line created a partial function that needs a body,
 					// eval all subsequent indented lines
 					value = EvalList.DoAddBody(func, scope, requestor);
+
+				// if only item was a map w/ one value, see if it needs a body
+				if (func == null && value is ValueMap)
+				{
+					Map map = value.AsMap;
+					if (map.Raw.Count == 1)
+					{
+						string key = "";
+						foreach (string k in map.Raw.Keys)
+							key = k;
+						func = map[key] as ValueFunction;
+						if (func != null && func.RequiresBody())
+							map[key] = EvalList.DoAddBody(func, scope, requestor);
+					}
+				}
+
+				// if only item was an array, see if last item needs a body
+				if (func == null && value is ValueArray)
+				{
+					List<Value> array = value.AsArray;
+					if (array.Count > 0)
+					{
+						func = array[array.Count - 1] as ValueFunction;
+						if (func != null && func.RequiresBody())
+							array[array.Count - 1] = EvalList.DoAddBody(func, scope, requestor);
+					}
+				}
 
 				requestor.Advance();
 

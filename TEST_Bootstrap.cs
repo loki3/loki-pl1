@@ -578,6 +578,8 @@ namespace loki3.builtin.test
 					string[] lines = {
 						":mymap <- makeMap",
 						"	:key1 5",
+						"	:func /( func ->a",
+						"		a + 2",
 						"	:key2 (| ## + 2 |)",
 					};
 					LineConsumer requestor = new LineConsumer(lines);
@@ -585,6 +587,7 @@ namespace loki3.builtin.test
 					Assert.True(result.AsMap != null);
 					Map mineMap = scope.GetValue(new Token("mymap")).AsMap;
 					Assert.AreEqual(5, mineMap["key1"].AsInt);
+					Assert.IsTrue(mineMap["func"] as ValueFunction != null);
 					Assert.IsTrue(mineMap["key2"] as ValueFunction != null);
 				}
 			}
