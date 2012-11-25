@@ -266,6 +266,28 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.filter { :array array :function function }
 :filter @doc /" Returns an array consisting of every member for which function returns true
 
+:makeArray <- func()
+	:array <- nil
+	var :line forEach body
+		:array = array +a line
+	array
+:makeArray @doc /" Make an array where every line in the body is evaluated and becomes an element in the array
+:makeArray @body? true
+
+
+//
+// maps
+
+:makeMap <- func()
+	:array <- nil
+	var :line forEach body
+		[ :key :value ] <- [ nil nil ]
+		[ :key :value ] = line
+		:array = array +a [ key value ]
+	l3.createMap array
+:makeMap @doc /" Make a map where every line in the body is evaluated and the first element is the key and the second the value
+:makeMap @body? true
+
 
 //
 // conditional

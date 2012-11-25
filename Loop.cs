@@ -133,6 +133,24 @@ namespace loki3.builtin
 						result = EvalBody.Do(valueBody, scope);
 					}
 				}
+				else if (collection is ValueLine)
+				{
+					List<DelimiterList> list = collection.AsLine;
+					foreach (DelimiterList dlist in list)
+					{
+						List<Value> array = new List<Value>();
+						List<DelimiterNode> nodes = dlist.Nodes;
+						foreach (DelimiterNode node in nodes)
+						{
+							Value v = node.Value;
+							if (v == null)
+								v = EvalNode.Do(node, scope, null, null);
+							array.Add(v);
+						}
+						scope.SetValue(var, new ValueArray(array));
+						result = EvalBody.Do(valueBody, scope);
+					}
+				}
 				return result;
 			}
 		}

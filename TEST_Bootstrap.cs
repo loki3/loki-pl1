@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using loki3.core;
 using NUnit.Framework;
 
@@ -538,6 +539,52 @@ namespace loki3.builtin.test
 					Assert.AreEqual(0, mineMap["mine.first"].AsInt);
 					Assert.AreEqual(1, mineMap["mine.second"].AsInt);
 					Assert.True(mineMap["mine.first"].Metadata != null);
+				}
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.Fail(e.ToString());
+			}
+		}
+
+		[Test]
+		public void TestBodies()
+		{
+			try
+			{
+				ScopeChain scope = new ScopeChain();
+				AllBuiltins.RegisterAll(scope);
+				EvalFile.Do("../../l3/bootstrap.l3", scope);
+
+				{
+					string[] lines = {
+						":myarray <- makeArray",
+						"	:blah",
+						"	makeArray",
+						"	[ 1 2 ]",
+					};
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.True(result.AsArray != null);
+					List<Value> array = scope.GetValue(new Token("myarray")).AsArray;
+					Assert.AreEqual(3, array.Count);
+					Assert.AreEqual("blah", array[0].AsString);
+					Assert.IsTrue(array[1] as ValueFunction != null);
+					Assert.AreEqual(2, array[2].AsArray.Count);
+				}
+
+				{
+					string[] lines = {
+						":mymap <- makeMap",
+						"	:key1 5",
+						"	:key2 (| ## + 2 |)",
+					};
+					LineConsumer requestor = new LineConsumer(lines);
+					Value result = EvalLines.Do(requestor, scope);
+					Assert.True(result.AsMap != null);
+					Map mineMap = scope.GetValue(new Token("mymap")).AsMap;
+					Assert.AreEqual(5, mineMap["key1"].AsInt);
+					Assert.IsTrue(mineMap["key2"] as ValueFunction != null);
 				}
 			}
 			catch (Loki3Exception e)
