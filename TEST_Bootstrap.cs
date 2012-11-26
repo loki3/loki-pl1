@@ -7,14 +7,25 @@ namespace loki3.builtin.test
 	[TestFixture]
 	class TEST_Bootstrap
 	{
+		/// <summary>Cache the scope w/ all built-in functions and bootstrap functions</summary>
+		static private IScope GetBootstrapScope()
+		{
+			if (m_scope == null)
+			{
+				m_scope = new ScopeChain();
+				AllBuiltins.RegisterAll(m_scope);
+				EvalFile.Do("../../l3/bootstrap.l3", m_scope);
+			}
+			return m_scope;
+		}
+		static private IScope m_scope = null;
+
 		[Test]
 		public void Test()
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				{	// test setting a value and adding metadata to it
 					Value a = TestSupport.ToValue(":a <- 3", scope);
@@ -83,9 +94,8 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
+				scope = new ScopeChain(scope);
 				EvalFile.Do("../../l3/unittest.l3", scope);
 				EvalFile.Do("../../l3/help.l3", scope);
 
@@ -105,9 +115,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				// define complex math
 				string[] lines = {
@@ -160,9 +168,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				string[] lines = {
 					":result <- 0",
@@ -209,9 +215,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				string[] lines = {
 					":result <- 0",
@@ -271,9 +275,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				string[] lines = {
 					":addUp <- func [ ( ->a @@type :int ) ( ->b @@default 5 ) ]",
@@ -315,9 +317,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
@@ -370,9 +370,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				{	// l3.loop
 					string[] lines = {
@@ -440,9 +438,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				{	// loop thru all items in an array
 					string[] lines = {
@@ -489,9 +485,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				{
 					string[] lines = {
@@ -524,9 +518,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				{
 					string[] lines = {
@@ -552,9 +544,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				ScopeChain scope = new ScopeChain();
-				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("../../l3/bootstrap.l3", scope);
+				IScope scope = GetBootstrapScope();
 
 				{
 					string[] lines = {
