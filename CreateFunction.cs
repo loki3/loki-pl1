@@ -184,6 +184,7 @@ namespace loki3.core
 
 				// create a new scope and add passed in arguments...
 				ScopeChain scope = new ScopeChain(parentScope);
+				scope.Function = this;
 				if (m_fullPattern != null && m_passed != null)
 					Utility.AddToScope(m_fullPattern, m_passed, scope);
 				// ...and the prev/next/body params we just extracted

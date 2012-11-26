@@ -41,7 +41,7 @@ namespace loki3.builtin
 				map["key"] = PatternData.Single("key");
 				map["value"] = PatternData.Single("value");
 				map["create?"] = PatternData.Single("create?", ValueType.Bool, ValueBool.True);
-				Utility.AddParamsForScopeToModify(map);
+				Utility.AddParamsForScopeToModify(map, true/*bIncludeMap*/);
 				Init(new ValueMap(map));
 			}
 
@@ -63,7 +63,7 @@ namespace loki3.builtin
 				PatternChecker.Do(value, key, true/*bShortPat*/, out match, out leftover);
 
 				// scope we're going to modify
-				IScope toModify = Utility.GetScopeToModify(map, scope);
+				IScope toModify = Utility.GetScopeToModify(map, scope, true/*bIncludeMap*/);
 
 				// add/modify scope
 				if (match != null)
@@ -111,7 +111,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>value -> new value</summary>
+		/// <summary>{ [ :key ] [ :value ] } -> new value</summary>
 		class Copy : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new Copy(); }
@@ -120,12 +120,26 @@ namespace loki3.builtin
 			{
 				SetDocString("Create a copy of a value.");
 
-				Init(PatternData.ArrayEnd("a"));
+				Map map = new Map();
+				map["key"] = PatternData.Single("key", ValueType.String, ValueNil.Nil);
+				map["value"] = PatternData.Single("value", ValueNil.Nil);
+				Init(new ValueMap(map));
 			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
-				return arg.Copy();
+				Map map = arg.AsMap;
+				Value value = map["value"];
+				if (value.IsNil)
+				{
+					Value key = map["key"];
+					if (!key.IsNil)
+						value = scope.GetValue(new Token(key.AsString));
+				}
+
+				if (value != null)
+					return value.Copy();
+				return ValueNil.Nil;
 			}
 		}
 

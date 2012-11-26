@@ -122,7 +122,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :@@rest @doc /" Associated parameter will be filled with the remainder of the parameter values
 
 :copy <- func ->value
-	l3.copy value
+	l3.copy /{ :value value
 :copy	@doc	/" Make a copy of a value
 
 :currentScope <- func()

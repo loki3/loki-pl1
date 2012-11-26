@@ -95,9 +95,9 @@ namespace loki3.core
 		///		:scope = current | parent | grandparent
 		///		:map   = if present, the map to modify
 		/// </summary>
-		internal static IScope GetScopeToModify(Map map, IScope scope)
+		internal static IScope GetScopeToModify(Map map, IScope scope, bool bIncludeMap)
 		{
-			ValueMap valueMap = map["map"] as ValueMap;
+			ValueMap valueMap = (bIncludeMap ? map["map"] as ValueMap : null);
 			// todo: turn this into an enum, at least "current" & "parent" & "grandparent"
 			bool bParentScope = (map["scope"].AsString == "parent");
 			bool bGrandparentScope = (map["scope"].AsString == "grandparent");
@@ -114,9 +114,10 @@ namespace loki3.core
 				toModify = scope;
 			return toModify;
 		}
-		internal static void AddParamsForScopeToModify(Map map)
+		internal static void AddParamsForScopeToModify(Map map, bool bIncludeMap)
 		{
-			map["map"] = PatternData.Single("map", ValueType.Map, ValueNil.Nil);
+			if (bIncludeMap)
+				map["map"] = PatternData.Single("map", ValueType.Map, ValueNil.Nil);
 			map["scope"] = PatternData.Single("scope", ValueType.String, new ValueString("current"));
 		}
 

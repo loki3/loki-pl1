@@ -15,6 +15,7 @@ namespace loki3.builtin
 		{
 			scope.SetValue("l3.getScope", new GetScope());
 			scope.SetValue("l3.setScopeName", new SetScopeName());
+			scope.SetValue("l3.getScopeFunctionMeta", new GetScopeFunctionMeta());
 			scope.SetValue("l3.popScope", new PopScope());
 		}
 
@@ -28,14 +29,14 @@ namespace loki3.builtin
 				SetDocString("Get a map representing the current scope.");
 
 				Map map = new Map();
-				Utility.AddParamsForScopeToModify(map);
+				Utility.AddParamsForScopeToModify(map, false/*bIncludeMap*/);
 				Init(new ValueMap(map));
 			}
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				Map map = arg.AsMap;
-				IScope theScope = Utility.GetScopeToModify(map, scope);
+				IScope theScope = Utility.GetScopeToModify(map, scope, false/*bIncludeMap*/);
 				return new ValueMap(theScope.AsMap);
 			}
 		}
@@ -51,9 +52,8 @@ namespace loki3.builtin
 
 				Map map = new Map();
 				map["name"] = PatternData.Single("name", ValueType.String);
-				map["scope"] = PatternData.Single("scope", ValueType.String, new ValueString("current"));
-				ValueMap vMap = new ValueMap(map);
-				Init(vMap);
+				Utility.AddParamsForScopeToModify(map, false/*bIncludeMap*/);
+				Init(new ValueMap(map));
 			}
 
 			internal override Value Eval(Value arg, IScope scope)
@@ -61,13 +61,37 @@ namespace loki3.builtin
 				// extract parameters
 				Map map = arg.AsMap;
 				string name = map["name"].AsString;
-				// todo: turn this into an enum, at least "current" & "parent"
-				bool bParentScope = (map["scope"].AsString == "parent");
+				IScope theScope = Utility.GetScopeToModify(map, scope, false/*bIncludeMap*/);
 
-				IScope toModify = (bParentScope && scope.Parent != null) ? scope.Parent : scope;
-
-				toModify.Name = name;
+				theScope.Name = name;
 				return map["name"];
+			}
+		}
+
+		/// <summary>{ :scope } -> get the metadata attached to the scope's function</summary>
+		class GetScopeFunctionMeta : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new GetScopeFunctionMeta(); }
+
+			internal GetScopeFunctionMeta()
+			{
+				SetDocString("Get the metadata attached to the scope's function.");
+
+				Map map = new Map();
+				Utility.AddParamsForScopeToModify(map, false/*bIncludeMap*/);
+				Init(new ValueMap(map));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				// extract parameters
+				Map map = arg.AsMap;
+				IScope theScope = Utility.GetScopeToModify(map, scope, false/*bIncludeMap*/);
+
+				ValueFunction func = theScope.Function;
+				if (func == null)
+					return ValueNil.Nil;
+				return new ValueMap(func.WritableMetadata);
 			}
 		}
 

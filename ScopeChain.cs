@@ -15,6 +15,9 @@ namespace loki3.core
 		/// <summary>Optional name for the scope</summary>
 		string Name { get; set; }
 
+		/// <summary>Optional function pointer for the scope</summary>
+		ValueFunction Function { get; set; }
+
 		/// <summary>Returns scope token exists on in the scope chain, or null</summary>
 		IScope Exists(string token);
 
@@ -73,6 +76,12 @@ namespace loki3.core
 			set { m_name = value; }
 		}
 
+		public ValueFunction Function
+		{
+			get { return m_function; }
+			set { m_function = value; }
+		}
+
 		public ValueDelimiter GetDelim(string start)
 		{
 			Value val;
@@ -103,5 +112,6 @@ namespace loki3.core
 		private IScope m_parent;
 		private Map m_values = new Map();
 		private string m_name = "";
+		private ValueFunction m_function = null;
 	}
 }

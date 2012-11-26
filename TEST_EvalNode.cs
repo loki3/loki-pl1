@@ -88,6 +88,11 @@ namespace loki3.core.test
 				get { return ""; }
 				set {}
 			}
+			public ValueFunction Function
+			{
+				get { return null; }
+				set {}
+			}
 			public ValueDelimiter GetDelim(string start) { return null; }
 			public IScope Exists(string token) { return null; }
 			public IScope Parent { get { return null; } }
