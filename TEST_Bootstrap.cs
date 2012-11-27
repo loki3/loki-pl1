@@ -443,7 +443,7 @@ namespace loki3.builtin.test
 				{	// loop thru all items in an array
 					string[] lines = {
 						":total <- 0",
-						"var :i forEach ( 1 .. 5 )",
+						":i forEach ( 1 .. 5 )",
 						"	:total = total + i",
 					};
 					LineConsumer requestor = new LineConsumer(lines);
@@ -454,7 +454,7 @@ namespace loki3.builtin.test
 				{	// loop thru all items in a map
 					string[] lines = {
 						":total <- 0",
-						"var :i forEach { :a 2 :b 4 }",
+						":i forEach { :a 2 :b 4 }",
 						"	:total = total + i . 1",
 					};
 					LineConsumer requestor = new LineConsumer(lines);
@@ -464,7 +464,7 @@ namespace loki3.builtin.test
 
 				{	// create a partial function to use for a later loop
 					string[] lines = {
-						":1to5 <- /( var :i forEach /( 5 .. 1",	// partial that needs a body
+						":1to5 <- /( :i forEach /( 5 .. 1",	// partial that needs a body
 						":total <- 0",
 						"1to5",
 						"	:total = total + i",
