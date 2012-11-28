@@ -1,0 +1,326 @@
+// unittests for bootstrap.l3
+
+:(		@unittest func()
+	14 assert=? ( 4 + 3 ) * 2
+	10 assert=? 4 + ( 3 * 2 )
+
+:[		@unittest func()
+	:array assert=? l3.getType { :value [ 1 2 ] }
+	4 assert=? l3.getCount [ 3 4 5 6 ]
+
+:{		@unittest func()
+	:map assert=? l3.getType { :value { :a 1 :b 2 } }
+	2 assert=? l3.getCount { :a 1 :b 2 }
+
+://		@unittest func()
+	// assertTrue? false
+	true
+
+:`		@unittest func()
+	8 assert=? l3.eval ` 5 + 3 `
+
+:/(		@unittest func()
+	10 assert=? 4 + /( 3 * 2
+
+:/[		@unittest func()
+	3 assert=? l3.getCount /[ 2 3 4
+
+:/{		@unittest func()
+	:map assert=? l3.getType /{ :value /{ :a 1 :b 2 
+
+:/`		@unittest func()
+	8 assert=? l3.eval /` 5 + 3
+
+:/*		@unittest func()
+	:a /* comment */ <- /* comment */ 5 + 3
+	8 assert=? a
+
+:"		@unittest func()
+	:asdf assert=? " asdf "
+
+:'		@unittest func()
+	:asdf assert=? ' asdf '
+
+:/"		@unittest func()
+	:asdf assert=? /" asdf
+
+:/'		@unittest func()
+	:asdf assert=? /' asdf
+
+:<-		@unittest func()
+	:a <- 5
+	5 assert=? a
+
+:=		@unittest func()
+	:a <- 5
+	:a = 4
+	4 assert=? a
+
+:var	@unittest func()
+	var :a = 5
+	5 assert=? a
+
+
+//
+// function definitions:
+
+:func	@unittest func()
+	:a <- func ->b
+		b + 2
+	7 assert=? func 5
+
+:infix	@unittest func()
+	:a <- /( ->b infix ->c
+		b + c
+	42 assert=? 40 a 2
+
+:postfix @unittest func()
+	:a <- /( ->b postfix
+		b + 2
+	5 assert=? 3 a
+
+:func()	@unittest func()
+	:a <- func()
+		3.5
+	3.5 assert=? a
+
+
+//
+// get & set
+
+:.		@unittest func()
+	4 assert=? { :a 3 :b 4 :c 5 } . :b
+	3 assert=? [ 6 5 4 3 2 ] . 3
+
+:@		@unittest func()
+	false
+
+:.@		@unittest func()
+	false
+
+:.@@	@unittest func()
+	false
+
+:@doc	@unittest func()
+	false
+
+:.@doc	@unittest func()
+	false
+
+:@order @unittest func()
+	false
+
+:@body? @unittest func()
+	false
+
+:@@ @unittest func()
+	false
+
+:@@type @unittest func()
+	false
+
+:@@default @unittest func()
+	false
+
+:@@rest @unittest func()
+	false
+
+:copy	@unittest func()
+	false
+
+:currentScope @unittest func()
+	false
+
+
+//
+// more function definitions
+
+:lambda	@unittest func()
+	false
+
+:((		@unittest func()
+	false
+
+:/((	@unittest func()
+	false
+
+:lambda1	@unittest func()
+	false
+
+:(|		@unittest func()
+	false
+
+:/(|	@unittest func()
+	false
+
+:lambda2	@unittest func()
+	false
+
+:(<		@unittest func()
+	false
+
+:/(<	@unittest func()
+	false
+
+
+//
+// logic
+
+:&? @unittest func()
+	false
+
+:|? @unittest func()
+	false
+
+:!? @unittest func()
+	false
+
+:=? @unittest func()
+	false
+
+:!=? @unittest func()
+	false
+
+:=any? @unittest func()
+	false
+
+
+//
+// arrays
+
+:.. @unittest func()
+	false
+
+:+a @unittest func()
+	false
+
+:+= @unittest func()
+	false
+
+:countOf @unittest func()
+	false
+
+:apply @unittest func()
+	false
+
+:foldLeft @unittest func()
+	false
+
+:foldRight @unittest func()
+	false
+
+:filter @unittest func()
+	false
+
+:makeArray @unittest func()
+	false
+
+
+//
+// maps
+
+:makeMap @unittest func()
+	false
+
+
+//
+// conditional
+
+:? @unittest func()
+	false
+
+:if @unittest func()
+	false
+
+:elsif @unittest func()
+	false
+
+:else @unittest func()
+	false
+
+
+//
+// loop
+
+:while @unittest func()
+	false
+
+:for @unittest func()
+	false
+
+:forEach @unittest func()
+	false
+
+:forEachDelim @unittest func()
+	false
+
+:break @unittest func()
+	false
+
+
+//
+// enumerated type
+
+:enum @unittest func()
+	false
+
+
+//
+// math
+
+:+ @unittest func()
+	false
+
+:- @unittest func()
+	false
+
+:* @unittest func()
+	false
+
+:/ @unittest func()
+	false
+
+:% @unittest func()
+	false
+
+:sqrt @unittest func()
+	false
+
+:<? @unittest func()
+	false
+
+:>? @unittest func()
+	false
+
+:min @unittest func()
+	false
+
+:max @unittest func()
+	false
+
+
+//
+// strings
+
+:=>str @unittest func()
+	false
+
+:+s @unittest func()
+	false
+
+:"" @unittest func()
+	false
+
+
+//
+// modules
+
+:import @unittest func()
+	false
+
+
+//
+// I/O
+
+:print @unittest func()
+	false
