@@ -90,7 +90,7 @@ namespace loki3.builtin.test
 		}
 
 		[Test]
-		public void VerifyDocStrings()
+		public void RunUnittests()
 		{
 			try
 			{
@@ -103,6 +103,11 @@ namespace loki3.builtin.test
 				Value a = TestSupport.ToValue("checkDocs currentScope", scope);
 				if (!a.AsArray[0].AsBool)	// make it obvious which functions need @doc
 					Assert.AreEqual("[ ]", a.AsArray[1].AsArray);
+
+				// currently this runs checkDocs as well
+				Value v = TestSupport.ToValue("unittest [ :../../l3/bootstrap.l3 :../../l3/bootstrap_tests.l3 ]", scope);
+				// if this fails, there may be output that describes which unittest & which assert
+				Assert.True(v.AsBool);
 			}
 			catch (Loki3Exception e)
 			{
