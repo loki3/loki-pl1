@@ -394,5 +394,10 @@ namespace loki3.core
 
 		internal override Value ValueCopy() { return new ValueRaw(m_val); }
 		#endregion
+
+		public override string ToString()
+		{
+			return m_val.ToString();
+		}
 	}
 }

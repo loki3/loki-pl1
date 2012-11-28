@@ -72,6 +72,7 @@
 	test
 :.@unittest	@doc /" Get the unittest attached to a value
 
+
 :assert=? <- /( ->expected infix ->actual
 	if expected !=? actual
 		print " FAILED : " +s unittestName
@@ -79,6 +80,26 @@
 		print " ...actual: " +s actual =>str
 		l3.popScope { :name :runUnittests :return false }
 :assert=? @doc /" Unittests can assert objects are equal.  If they're not, the unittest aborts & fails.
+
+:assertTrue? <- func ->cond
+	print /" in assertTrue
+	if !? l3.eval cond
+		print /" ...failed...
+		print " FAILED : " +s unittestName
+		print " ...expected: true "
+		print " .expression: " +s cond =>str
+		l3.popScope { :name :runUnittests :return false }
+:assertTrue? @doc /" Unittests can assert something is true.  If it's not, the unittest aborts & fails.
+
+:assertFalse? <- func ->cond
+	print /" in assertFalse
+	if l3.eval cond
+		print /" ...failed...
+		print " FAILED : " +s unittestName
+		print " ...expected: false "
+		print " .expression: " +s cond =>str
+		l3.popScope { :name :runUnittests :return false }
+:assertFalse? @doc /" Unittests can assert something is false.  If it's not, the unittest aborts & fails.
 
 
 :runUnittests <- func ->scope
