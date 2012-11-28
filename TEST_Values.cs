@@ -18,6 +18,7 @@ namespace loki3.builtin.test
 			scope.SetValue("[", new ValueDelimiter("[", "]", DelimiterType.AsArray));
 			scope.SetValue("'", new ValueDelimiter("'", "'", DelimiterType.AsString));
 			scope.SetValue("{", new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap()));
+			scope.SetValue("`", new ValueDelimiter("`", "`", DelimiterType.AsRaw));
 
 			return scope;
 		}
@@ -252,6 +253,39 @@ namespace loki3.builtin.test
 				Assert.AreEqual("myType", value.AsString);
 				value = TestSupport.ToValue("l3.getType { :value b :builtin? true }", scope);
 				Assert.AreEqual("int", value.AsString);
+			}
+		}
+
+		[Test]
+		public void TestEval()
+		{
+			IScope scope = CreateValueScope();
+			scope.SetValue("a", new ValueInt(42));
+
+			{	// atomic value
+				Value value = TestSupport.ToValue("l3.eval 5", scope);
+				Assert.AreEqual(5, value.AsInt);
+			}
+
+			{	// string
+				Value value = TestSupport.ToValue("l3.eval :a", scope);
+				Assert.AreEqual(42, value.AsInt);
+
+				value = TestSupport.ToValue("l3.eval ' 8 '", scope);
+				Assert.AreEqual(8, value.AsInt);
+			}
+
+			{	// raw
+				Value value = TestSupport.ToValue("l3.eval ` 8 `", scope);
+				Assert.AreEqual(8, value.AsInt);
+			}
+
+			{	// array
+				Value value = TestSupport.ToValue("l3.eval [ ' 8 ' ]", scope);
+				Assert.AreEqual(8, value.AsInt);
+
+				value = TestSupport.ToValue("l3.eval [ ` 8 ` ]", scope);
+				Assert.AreEqual(8, value.AsInt);
 			}
 		}
 	}

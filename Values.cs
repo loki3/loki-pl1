@@ -25,6 +25,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.getCount", new GetCount());
 			scope.SetValue("l3.getMetadata", new GetMetadata());
 			scope.SetValue("l3.getType", new GetTypeFunction());
+			scope.SetValue("l3.eval", new EvalValue());
 		}
 
 
@@ -440,6 +441,46 @@ namespace loki3.builtin
 
 				string type = (builtin ? ValueClasses.ClassOf(value.Type) : value.MetaType);
 				return new ValueString(type);
+			}
+		}
+
+		/// <summary>value -> evaluates the value</summary>
+		class EvalValue : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new EvalValue(); }
+
+			internal EvalValue()
+			{
+				SetDocString("Evals a string, array of strings, or array of raw value");
+				Value value = PatternData.Single("value");
+				Init(value);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				switch (arg.Type)
+				{
+					case ValueType.Array:
+					case ValueType.RawList:
+						return EvalBody.Do(arg, scope);
+					case ValueType.String:
+						DelimiterList dList = ParseLine.Do(arg.AsString, scope);
+						List<DelimiterList> list = new List<DelimiterList>();
+						list.Add(dList);
+						ValueLine line = new ValueLine(list);
+						return EvalBody.Do(line, scope);
+					case ValueType.Raw:
+						DelimiterList dList2 = (arg as ValueRaw).GetValue();
+						List<DelimiterList> list2 = new List<DelimiterList>();
+						list2.Add(dList2);
+						ValueLine line2 = new ValueLine(list2);
+						return EvalBody.Do(line2, scope);
+					case ValueType.Function:
+						ValueFunction function = arg as ValueFunction;
+						return function.Eval(null, null, scope, null, null);
+					default:
+						return arg;
+				}
 			}
 		}
 	}
