@@ -389,95 +389,6 @@ namespace loki3.builtin.test
 					Value result = EvalLines.Do(requestor, scope);
 					Assert.AreEqual(15, result.AsInt);
 				}
-
-				{	// while
-					string[] lines = {
-						":total <- 0",
-						":i <- 0",
-						"while /` i !=? 5",
-						"	:i = i + 1",
-						"	:total = total + i",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.AreEqual(15, result.AsInt);
-				}
-
-				{	// for
-					string[] lines = {
-						":total <- 0",
-						// todo: should be able to declare i inside for
-						":i <- 0",
-						"for /[ ` :i = 0 ` ` i !=? 5 ` ` :i = i + 1 `",
-						"	:total = total + i",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.AreEqual(10, result.AsInt);
-				}
-
-				{	// break
-					string[] lines = {
-						":total = 0",
-						":i = 0",
-						"while /` i !=? 8",
-						"	:i = i + 1",
-						"	if i =? 4",
-						"		break",
-						"	:total = total + i",
-						"total",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.AreEqual(6, result.AsInt);
-				}
-			}
-			catch (Loki3Exception e)
-			{
-				Assert.Fail(e.ToString());
-			}
-		}
-
-		[Test]
-		public void TestForEach()
-		{
-			try
-			{
-				IScope scope = GetBootstrapScope();
-
-				{	// loop thru all items in an array
-					string[] lines = {
-						":total <- 0",
-						":i forEach ( 1 .. 5 )",
-						"	:total = total + i",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.AreEqual(15, result.AsInt);
-				}
-
-				{	// loop thru all items in a map
-					string[] lines = {
-						":total <- 0",
-						":i forEach { :a 2 :b 4 }",
-						"	:total = total + i . 1",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.AreEqual(6, result.AsInt);
-				}
-
-				{	// create a partial function to use for a later loop
-					string[] lines = {
-						":1to5 <- /( :i forEach /( 5 .. 1",	// partial that needs a body
-						":total <- 0",
-						"1to5",
-						"	:total = total + i",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.AreEqual(15, result.AsInt);
-				}
 			}
 			catch (Loki3Exception e)
 			{
@@ -510,32 +421,6 @@ namespace loki3.builtin.test
 					LineConsumer requestor = new LineConsumer(lines);
 					Value result = EvalLines.Do(requestor, scope);
 					Assert.AreEqual("[ 2 4 6 ]", result.AsString);
-				}
-			}
-			catch (Loki3Exception e)
-			{
-				Assert.Fail(e.ToString());
-			}
-		}
-
-		[Test]
-		public void TestEnum()
-		{
-			try
-			{
-				IScope scope = GetBootstrapScope();
-
-				{
-					string[] lines = {
-						":mine enum [ :first :second ]",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.True(result.AsMap != null);
-					Map mineMap = scope.GetValue(new Token("mine")).AsMap;
-					Assert.AreEqual(0, mineMap["mine.first"].AsInt);
-					Assert.AreEqual(1, mineMap["mine.second"].AsInt);
-					Assert.True(mineMap["mine.first"].Metadata != null);
 				}
 			}
 			catch (Loki3Exception e)

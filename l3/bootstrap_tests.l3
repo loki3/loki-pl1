@@ -243,73 +243,108 @@
 // loop
 
 :while @unittest func()
-	false
+	:total <- 0
+	:i <- 0
+	while /` i !=? 5
+		:i = i + 1
+		:total = total + i
+	5  assert=? i
+	15 assert=? total
 
 :for @unittest func()
-	false
+	// todo: should be able to declare i inside for
+	:total <- 0
+	:i <- 0
+	for /[ ` :i = 0 ` ` i !=? 5 ` ` :i = i + 1 `
+		:total = total + i
+	10 assert=? total
 
 :forEach @unittest func()
-	false
+	:total <- 0
+	:i forEach ( 1 .. 5 )
+		:total = total + i
+	15 assert=? total
+	:total <- 0
+	:i forEach { :a 2 :b 4 }
+		:total = total + i . 1
+	6 assert=? total
 
 :forEachDelim @unittest func()
 	false
 
 :break @unittest func()
-	false
+	:total <- 0
+	:i <- 0
+	while /` i !=? 8
+		:i = i + 1
+		if i =? 4
+			break
+		:total = total + i
+	6 assert=? total
 
 
 //
 // enumerated type
 
 :enum @unittest func()
-	false
+	:asdf enum [ :qwert :yuiop ]
+	0		assert=? asdf.qwert
+	1		assert=? asdf.yuiop
+	:asdf	assert=? l3.getType /{ :value asdf.yuiop
 
 
 //
 // math
 
 :+ @unittest func()
-	false
+	42 assert=? 39 + 3
 
 :- @unittest func()
-	false
+	7 assert=? 10 - 3
 
 :* @unittest func()
-	false
+	10 assert=? 5 * 2
 
 :/ @unittest func()
-	false
+	3 assert=? 9 / 3
 
 :% @unittest func()
-	false
+	3 assert=? 15 % 4
 
 :sqrt @unittest func()
-	false
+	assertTrue? ( ( sqrt 4 ) - 2 ) <? 0.00000001
+	assertTrue? ( ( sqrt 2 ) - 1.414213562 ) <? 0.00000001
 
 :<? @unittest func()
-	false
+	assertTrue?  4 <? 5
+	assertFalse? 5 <? 4
 
 :>? @unittest func()
-	false
+	assertTrue?  5 >? 4
+	assertFalse? 4 >? 5
 
 :min @unittest func()
-	false
+	4 assert=? 4 min 7
 
 :max @unittest func()
-	false
+	7 assert=? 4 max 7
 
 
 //
 // strings
 
 :=>str @unittest func()
-	false
+	:5				assert=? 5 =>str
+	:5.5			assert=? 5.5 =>str
+	:5				assert=? :5 =>str
+	" [ 1 2 3 ] "	assert=? [ 1 2 3 ] =>str
 
 :+s @unittest func()
-	false
+	:qwert assert=? :qw +s :ert
 
 :"" @unittest func()
-	false
+	:string	assert=? l3.getType /{ :value ""
+	0		assert=? l3.getCount ""
 
 
 //
