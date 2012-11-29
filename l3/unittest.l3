@@ -99,6 +99,13 @@
 		l3.popScope { :name :runUnittests :return false }
 :assertFalse? @doc /" Unittests can assert something is false.  If it's not, the unittest aborts & fails.
 
+:assertFail <- func ->message
+	print /" ...failed...
+	print " FAILED : " +s unittestName
+	print " message: " +s message
+	l3.popScope { :name :runUnittests :return false }
+:assertFail @doc /" Unittests can say they fail immediately if this line of code is run.
+
 
 :runUnittests <- func ->scope
 	var :failures = [ ]

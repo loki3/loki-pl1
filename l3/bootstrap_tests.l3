@@ -213,30 +213,106 @@
 	false
 
 :makeArray @unittest func()
-	false
+	:a <- makeArray
+		:asdf
+		3.5
+		2
+	[ :asdf 3.5 2 ] assert=? a
 
 
 //
 // maps
 
 :makeMap @unittest func()
-	false
+	:a <- makeMap
+		:1 2
+		:3 4
+	{ :1 2 :3 4 } assert=? a
 
 
 //
 // conditional
 
 :? @unittest func()
-	false
+	2 assert=? true  ? [ 2 3 ]
+	3 assert=? false ? [ 2 3 ]
 
 :if @unittest func()
-	false
+	// if is run
+	:a <- false
+	if true
+		:a = true
+	assertTrue? a
+	// if is skipped
+	if false
+		assertFail /" if shouldn't have been called
 
 :elsif @unittest func()
-	false
+	// if is run, not elsif
+	:a <- 0
+	if true
+		:a = 1
+	elsif true
+		assertFail /" elsif shouldn't have been called
+	1 assert=? a
+	// elsif is run
+	:a <- 0
+	if false
+		assertFail /" if shouldn't have been called
+	elsif true
+		:a = 2
+	2 assert=? a
+	// if & elsif are skipped
+	:a <- 0
+	if false
+		assertFail /" if shouldn't have been called
+	elsif false
+		assertFail /" elsif shouldn't have been called
+	0 assert=? a
 
 :else @unittest func()
-	false
+	// if is run, not else
+	:a <- 0
+	if true
+		:a = 1
+	else
+		assertFail /" else shouldn't have been called
+	1 assert=? a
+	// else is run
+	:a <- 0
+	if false
+		assertFail /" if shouldn't have been called
+	else
+		:a = 2
+	2 assert=? a
+	
+	// if is run
+	:a <- 0
+	if true
+		:a = 1
+	elsif true
+		assertFail /" elsif shouldn't have been called
+	else
+		assertFail /" else shouldn't have been called
+	1 assert=? a
+	// elsif is run
+	:a <- 0
+	if false
+		assertFail /" if shouldn't have been called
+	elsif true
+		:a = 2
+	else
+		:a = 3
+	2 assert=? a
+	// else is run
+	:a <- 0
+	if false
+		assertFail /" if shouldn't have been called
+	elsif false
+		assertFail /" elsif shouldn't have been called
+	else
+		:a = 3
+	3 assert=? a
 
 
 //
@@ -270,7 +346,17 @@
 	6 assert=? total
 
 :forEachDelim @unittest func()
-	false
+	// create a function that turns a body into a map
+	:thing <- func()
+		:result <- nil
+		:map forEachDelim [ body :{ ]
+			:result = result +a map
+	:thing @body? true
+	// use that function to create a map
+	:test <- thing
+		:a 5
+		:b 7
+	{ :a 5 :b 7 } assert=? test
 
 :break @unittest func()
 	:total <- 0
