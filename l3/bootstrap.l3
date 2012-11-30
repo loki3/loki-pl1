@@ -197,7 +197,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :pre ->#1 :post ->#2 :body [ line ] }
 :lambda2	@doc	/" Create a single line infix function, assuming parameters are called #1 and #2, e.g. lambda2 ` #1 + #2 `
 
-:(< <- /( l3.createDelimiter /{ :start :(<  :end :|> :type :asRaw :function lambda2
+:(< <- /( l3.createDelimiter /{ :start :(<  :end :>) :type :asRaw :function lambda2
 :(<		@doc	/" Create a single line infix function, assuming parameters are called #1 and #2, e.g. (< #1 + #2 >)
 
 :/(< <- /( l3.createDelimiter /{ :start :/(<  :type :asRaw :function lambda2

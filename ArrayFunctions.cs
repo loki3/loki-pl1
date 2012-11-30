@@ -176,7 +176,7 @@ namespace loki3.builtin
 					Value val = array[i];
 					DelimiterNode node1 = new DelimiterNodeValue(last);
 					DelimiterNode node2 = new DelimiterNodeValue(val);
-					last = function.Eval(node1, node2, scope, null, null);
+					last = function.Eval(node2, node1, scope, null, null);
 				}
 				return last;
 			}

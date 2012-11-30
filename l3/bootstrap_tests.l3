@@ -189,28 +189,37 @@
 // arrays
 
 :.. @unittest func()
-	false
+	[ 3 4 5 6 ] assert=? ( 3 .. 6 )
 
 :+a @unittest func()
-	false
+	[ 3 4 5 6 ] assert=? [ 3 4 ] +a [ 5 6 ]
+	[ 3 4 5 6 ] assert=? [ 3 4 5 ] +a 6
+	[ 3 4 5 6 ] assert=? [ 3 4 5 6 ] +a [ ]
+	[ 3 4 5 6 ] assert=? [ 3 4 5 6 ] +a nil
 
 :+= @unittest func()
-	false
+	// array addition
+	:a <- [ 3 4 5 ]
+	// todo: perhaps it should be :a += 6
+	a += 6
+	[ 3 4 5 6 ] assert=? a
 
 :countOf @unittest func()
-	false
+	3 assert=? countOf /[ 5 6 8
+	2 assert=? countOf /{ :a 1 :b 3
+	5 assert=? countOf /" qwert
 
 :apply @unittest func()
-	false
+	[ 6 10 14 ] assert=? [ 3 5 7 ] apply (| ## * 2 |)
 
 :foldLeft @unittest func()
-	false
+	1 assert=? [ 27 9 3 ] foldLeft (< #1 / #2 >)
 
 :foldRight @unittest func()
-	false
+	9 assert=? [ 27 9 3 ] foldRight (< #1 / #2 >)
 
 :filter @unittest func()
-	false
+	[ 3 5 7 ] assert=? [ 2 3 4 5 6 7 8 ] filter (| ## % 2 =? 1 |)
 
 :makeArray @unittest func()
 	:a <- makeArray
