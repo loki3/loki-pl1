@@ -93,43 +93,87 @@
 	3 assert=? [ 6 5 4 3 2 ] . 3
 
 :@		@unittest func()
-	false
+	:a <- 1
+	:a @ [ :blah :something ]
+	:something assert=? ( l3.getMetadata { :key :a } ) . :blah
 
 :.@		@unittest func()
-	false
+	:a <- 1
+	:a @ [ :blah :something ]
+	:something assert=? :a .@ :blah
 
 :.@@	@unittest func()
-	false
+	:a <- 1
+	:a @ [ :blah :something ]
+	{ :blah :something } assert=? :a .@@
 
 :@doc	@unittest func()
-	false
+	:a <- 1
+	:a @doc :whatever
+	:whatever assert=? :a .@doc
 
 :.@doc	@unittest func()
-	false
+	:a <- 1.5
+	:a @doc :whatever
+	:whatever assert=? :a .@doc
 
 :@order @unittest func()
-	false
+	:a <- (| ## + 2 |)
+	// a should be applied after *
+	:a @order 5
+	12 assert=? a 5 * 2
+	// a should be applied before *
+	:a @order 1
+	14 assert=? a 5 * 2
 
 :@body? @unittest func()
-	false
+	:a <- func()
+		:result <- nil
+		:line forEach body
+			:result = result +a [ line ]
+	:a @body? true
+	:b <- a
+		3
+		4
+	[ 3 4 ] assert=? b
 
 :@@ @unittest func()
-	false
+	:a <- 1
+	a @@ [ :key 2 ]
+	2 assert=? :a .@ :key
 
 :@@type @unittest func()
-	false
+	:a <- 1
+	a @@type :int
+	:int assert=? :a .@ :l3.param.type
 
 :@@default @unittest func()
-	false
+	:a <- 1
+	a @@default 2
+	2 assert=? :a .@ :l3.param.default
 
 :@@rest @unittest func()
-	false
+	:a <- 1
+	a @@rest
+	true assert=? :a .@ :l3.param.rest
 
 :copy	@unittest func()
-	false
+	:a <- 1
+	1 assert=? copy a
+	:str assert=? copy :str
 
 :currentScope @unittest func()
-	false
+	// create accumulator outside the nested scope
+	:map <- { }
+	if true
+		// add some vars in this scope to examine
+		:a <- 1
+		:b <- 2
+		var :i forEach currentScope
+			// ignore vars that the forEach created
+			if ( ( i . 0 ) =? :a |? ( i . 0 ) =? :b )
+				:map = map +a { ( i . 0 ) ( i . 1 ) }
+	{ :a 1 :b 2 } assert=? map
 
 
 //
