@@ -66,7 +66,7 @@
 		:value <- l3.getValue /{ :key var
 		print l3.stringConcat /{ :spaces 1 :array /[ " value: " value
 	""
-:help @doc /" Print out a description of a variable, e.g. details on a function
+:help @doc /" Print out a description of the value attached to a key, e.g. details on a function
 
 
 :dumpFunction <- func ->var
@@ -173,3 +173,23 @@
 :listDelimiters <- func ->map
 	listByFilter { :map map :filter? (| :delimiter =? l3.getType { :key ## :builtin? true } |) :perRow 7 :spaces 3 }
 :listDelimiters @doc /" List all the delimiters in the given map
+
+
+:getDocs <- func()
+	:scope <- l3.getScope /{ :scope :parent
+	getDocsInScope scope
+:getDocs @doc /" Return all the docstrings attached to the values in the current scope
+
+:getDocsInScope <- func ->scope
+	:table <- [ ]
+	:f forEach scope
+		:key <- f . 0
+		if key .@doc !=? nil
+			table += [ key ( key .@doc ) ]
+	l3.formatTable { :arrayOfArrays table }
+:getDocsInScope @doc /" Return all the docstrings attached to the values in a given scope
+
+:getFileDocs <- func ->file
+	import file
+	getDocsInScope currentScope
+:getFileDocs @doc /" Return all the docstrings attached to the values in a given file

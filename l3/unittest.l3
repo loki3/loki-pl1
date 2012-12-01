@@ -48,17 +48,6 @@
 	[ ( ( countOf failures ) =? 0 ) failures ]
 :checkDocs @doc /" Check if everything in scope has doc metadata.  Returns [ success? arrayOfFailures ]
 
-:printDocs <- func ->scope
-	:f forEach scope
-		if ( f . 0 ) .@doc !=? nil
-			print ( f . 0 ) +s " -- " +s ( f . 0 ) .@doc
-:printDocs @doc /" Print all the docstrings attached to the values in this scope
-
-:printFileDocs <- func ->file
-	import file
-	printDocs currentScope
-:printFileDocs @doc /" Print all the docstrings attached to the values in a given file
-
 
 :@unittest <- /( ->object infix ->function
 	object @ /[ :l3.value.unittest function

@@ -132,6 +132,7 @@ namespace loki3.builtin
 						table += "\n";
 
 					int totalWidth = 0;
+					int nColumns = lineCache.Count;
 					int iColumn = 0;
 					foreach (string s in lineCache)
 					{
@@ -139,7 +140,10 @@ namespace loki3.builtin
 						int width = widths[iColumn] + spaces;
 						totalWidth += width;
 
-						table += s + new string(' ', width - len);
+						table += s;
+						// don't tack on trailing spaces for last column
+						if (iColumn < nColumns - 1)
+							table += new string(' ', width - len);
 
 						iColumn++;
 					}
