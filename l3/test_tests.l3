@@ -41,3 +41,17 @@
 	( isWeekend days.thursday )	assert=? false
 	( isWeekend days.friday )	assert=? false
 	( isWeekend days.sunday )	assert=? true
+
+:repeat @unittest func()
+	:sum <- func ->n
+		:add <- func [ ->a ->b ]
+			( a >? 0 ) ? /[ [ ( a + b ) ( add [ ( a - 1 ) ] ) ]  [ b nil ]
+		repeat [ 0 ( add [ n ] ) ]
+	10 assert=? sum 4
+	55 assert=? sum 10
+
+:! @unittest func()
+	1       assert=? 0 !
+	1       assert=? 1 !
+	24      assert=? 4 !
+	3628800 assert=? 10 !
