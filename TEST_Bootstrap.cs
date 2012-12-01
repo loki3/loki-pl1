@@ -27,44 +27,9 @@ namespace loki3.builtin.test
 			{
 				IScope scope = GetBootstrapScope();
 
-				{	// test setting a value and adding metadata to it
-					Value a = TestSupport.ToValue(":a <- 3", scope);
-					TestSupport.ToValue(":a @ [ :tag :hello ]", scope);
-					Assert.AreEqual("hello", a.Metadata["tag"].AsString);
-				}
-
-				{	// test modifying the doc string on a function
-					Value a = TestSupport.ToValue(":= @doc :testing", scope);
-					Assert.AreEqual("testing", scope.AsMap["="].Metadata["l3.value.doc"].AsString);
-				}
-
-				{	// test infix addition
-					Value value = TestSupport.ToValue("5 + 7", scope);
-					Assert.AreEqual(12, value.AsInt);
-				}
-
 				{	// a function that needs params but doesn't get them is just a function
 					Value value = TestSupport.ToValue("+", scope);
 					Assert.AreEqual(ValueType.Function, value.Type);
-				}
-
-				{	// test function definition
-					Value value = TestSupport.ToValue("sqrt 4", scope);
-					Assert.AreEqual(2, value.AsFloat);
-				}
-
-				{	// test comparison
-					Value a = TestSupport.ToValue("a", scope);
-					Assert.AreNotEqual(4, a.AsInt);
-					Value value = TestSupport.ToValue("4 =? a", scope);
-					Assert.IsFalse(value.AsBool);
-				}
-
-				{	// test value-to-array comparison
-					Value value = TestSupport.ToValue("4 =any? [ 3 4 5 ]", scope);
-					Assert.IsTrue(value.AsBool);
-					value = TestSupport.ToValue("4 =any? [ 3 7 5 ]", scope);
-					Assert.IsFalse(value.AsBool);
 				}
 
 				{	// test eval order
@@ -72,15 +37,6 @@ namespace loki3.builtin.test
 					Assert.AreEqual(7, value.AsInt);
 					value = TestSupport.ToValue("2 + 2 * 3", scope);
 					Assert.AreEqual(8, value.AsInt);
-				}
-
-				{	// array concat
-					Value value = TestSupport.ToValue("[ 1 2 ] += 3", scope);
-					System.Collections.Generic.List<Value> values = value.AsArray;
-					Assert.AreEqual(3, values.Count);
-					Assert.AreEqual(1, values[0].AsInt);
-					Assert.AreEqual(2, values[1].AsInt);
-					Assert.AreEqual(3, values[2].AsInt);
 				}
 			}
 			catch (Loki3Exception e)
@@ -160,53 +116,6 @@ namespace loki3.builtin.test
 				{
 					Value value = TestSupport.ToValue("( 1 +i 3 i ) +c complex [ 4 6 ]", scope);
 					Assert.AreEqual("{ :real 5 , :imaginary 9 }", value.ToString());
-				}
-			}
-			catch (Loki3Exception e)
-			{
-				Assert.Fail(e.ToString());
-			}
-		}
-
-		[Test]
-		public void TestIf()
-		{
-			try
-			{
-				IScope scope = GetBootstrapScope();
-
-				string[] lines = {
-					":result <- 0",
-					"if flag1?",
-					"	:result = 1",
-					"elsif flag2?",
-					"	:result = 2",
-					"else",
-					"	:result = 3",
-				};
-
-				{	// if block is run
-					scope.SetValue("flag1?", ValueBool.True);
-					scope.SetValue("flag2?", ValueBool.True);
-					LineConsumer requestor = new LineConsumer(lines);
-					EvalLines.Do(requestor, scope);
-					Assert.AreEqual(1, scope.GetValue(new Token("result")).AsInt);
-				}
-
-				{	// elsif block is run
-					scope.SetValue("flag1?", ValueBool.False);
-					scope.SetValue("flag2?", ValueBool.True);
-					LineConsumer requestor = new LineConsumer(lines);
-					EvalLines.Do(requestor, scope);
-					Assert.AreEqual(2, scope.GetValue(new Token("result")).AsInt);
-				}
-
-				{	// else block is run
-					scope.SetValue("flag1?", ValueBool.False);
-					scope.SetValue("flag2?", ValueBool.False);
-					LineConsumer requestor = new LineConsumer(lines);
-					EvalLines.Do(requestor, scope);
-					Assert.AreEqual(3, scope.GetValue(new Token("result")).AsInt);
 				}
 			}
 			catch (Loki3Exception e)
@@ -388,87 +297,6 @@ namespace loki3.builtin.test
 					LineConsumer requestor = new LineConsumer(lines);
 					Value result = EvalLines.Do(requestor, scope);
 					Assert.AreEqual(15, result.AsInt);
-				}
-			}
-			catch (Loki3Exception e)
-			{
-				Assert.Fail(e.ToString());
-			}
-		}
-
-		[Test]
-		public void TestFunctions()
-		{
-			try
-			{
-				IScope scope = GetBootstrapScope();
-
-				{
-					string[] lines = {
-						":double <- (( :x ` x * 2 ` ))",
-						"double 21",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.AreEqual(42, result.AsInt);
-				}
-
-				{
-					string[] lines = {
-						":a <- [ 1 2 3 ] apply /(( :x /` x * 2",
-						"a =>str"
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.AreEqual("[ 2 4 6 ]", result.AsString);
-				}
-			}
-			catch (Loki3Exception e)
-			{
-				Assert.Fail(e.ToString());
-			}
-		}
-
-		[Test]
-		public void TestBodies()
-		{
-			try
-			{
-				IScope scope = GetBootstrapScope();
-
-				{
-					string[] lines = {
-						":myarray <- makeArray",
-						"	:blah",
-						"	func ->a",
-						"		a + 2",
-						"	[ 1 2 ]",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.True(result.AsArray != null);
-					List<Value> array = scope.GetValue(new Token("myarray")).AsArray;
-					Assert.AreEqual(3, array.Count);
-					Assert.AreEqual("blah", array[0].AsString);
-					Assert.IsTrue(array[1] as ValueFunction != null);
-					Assert.AreEqual(2, array[2].AsArray.Count);
-				}
-
-				{
-					string[] lines = {
-						":mymap <- makeMap",
-						"	:key1 5",
-						"	:func /( func ->a",
-						"		a + 2",
-						"	:key2 (| ## + 2 |)",
-					};
-					LineConsumer requestor = new LineConsumer(lines);
-					Value result = EvalLines.Do(requestor, scope);
-					Assert.True(result.AsMap != null);
-					Map mineMap = scope.GetValue(new Token("mymap")).AsMap;
-					Assert.AreEqual(5, mineMap["key1"].AsInt);
-					Assert.IsTrue(mineMap["func"] as ValueFunction != null);
-					Assert.IsTrue(mineMap["key2"] as ValueFunction != null);
 				}
 			}
 			catch (Loki3Exception e)
