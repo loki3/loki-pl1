@@ -24,7 +24,9 @@ namespace loki_pl1
 					}
 					catch (Loki3Exception error)
 					{
-						Console.WriteLine(error.ToString());
+						scope.SetValue("lastError", new ValueMap(error.Errors));
+						Value v = loki3.builtin.test.TestSupport.ToValue("prettify lastError", scope);
+						Console.WriteLine("LOKI3 ERROR:\n" + v.AsString);
 					}
 					catch (Exception error)
 					{

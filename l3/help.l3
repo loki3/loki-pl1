@@ -193,3 +193,11 @@
 	import file
 	getDocsInScope currentScope
 :getFileDocs @doc /" Return all the docstrings attached to the values in a given file
+
+
+:prettify <- func ->map
+	:table <- [ ]
+	:i forEach map
+		table += i
+	l3.formatTable { :arrayOfArrays table }
+:prettify @doc /" Return a map as a simple table represented by a string
