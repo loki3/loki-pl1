@@ -86,8 +86,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // set the doc string on a value
 :@doc <- /( ->object infix ->docString
 	object @ /[ :l3.value.doc docString
-
-// get the doc string attached to a value
 :.@doc <- /( ->object postfix
 	:metadata <- l3.getMetadata { :key object }
 	:doc <- nil
@@ -358,6 +356,33 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// strings
+
+:=>str <- /( ->val postfix
+	l3.toString ( val )
+:=>str @order 2
+:=>str @doc /" Convert a value to a string
+
+// todo: switch to + when overloading is supported
+:+s <- /( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
+	l3.stringConcat /{ :array /[ str1 str2
+:+s @doc /" Concatenate two strings
+
+:"" <- " "
+:"" @doc /" TEMP: an empty string, needed until string delimiters handle white space correctly
+
+:""" <- func()
+	:list <- [ ]
+	:str forEachDelim [ body :" ]
+		list += str
+	l3.stringConcat /{ :array list :spaces 1
+:""" @body? true
+:""" @doc """
+	Use the indented lines following this function as a single string.
+	Useful for long strings such as @doc.
+
+
+//
 // enumerated type
 
 :enum <- /( ( ->name @@type :string ) infix ( ->array @@type :array )
@@ -415,23 +440,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :max <- /(< ( #1 >? #2 ) ? [ #1 #2 ]
 :max @doc /" Returns the largest of two values.
-
-
-//
-// strings
-
-:=>str <- /( ->val postfix
-	l3.toString ( val )
-:=>str @order 2
-:=>str @doc /" Convert a value to a string
-
-// todo: switch to + when overloading is supported
-:+s <- /( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
-	l3.stringConcat /{ :array /[ str1 str2
-:+s @doc /" Concatenate two strings
-
-:"" <- " "
-:"" @doc /" TEMP: an empty string, needed until string delimiters handle white space correctly
 
 
 //
