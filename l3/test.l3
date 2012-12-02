@@ -70,7 +70,12 @@ var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	while ` nil !=? f `
 		[ :a :f ] = f [ a ]
 	a
-:repeat @doc /" Turns a recursive function into an interative loop.  The passed function must take an iteration value and a result value and return a new result and a partial function bound to the next iteration value but still requiring the result value.  When the computation is finished, the returned function should be nil.
+:repeat @doc """
+	Turns a recursive function into an interative loop.
+	The passed function must take an iteration value and a result value
+	and return a new result and a partial function bound to the next
+	iteration value but still requiring the result value.
+	When the computation is finished, the returned function should be nil.
 
 :! <- /( ->n postfix
 	:fact <- func [ ->a ->b ]

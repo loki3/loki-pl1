@@ -37,7 +37,9 @@
 		print " ---- " +s name +s /" : failed
 		print failures
 	success?
-:testFunction @doc /" Run a function and output failures if any.  Takes a function that returns [ success? arrayOfFailures ], the name of the test, and a scope to operate on.
+:testFunction @doc """
+	Run a function and output failures if any.
+	Takes a function that returns [ success? arrayOfFailures ] , the name of the test, and a scope to operate on.
 
 
 :checkDocs <- func ->scope
@@ -46,7 +48,9 @@
 		if ( f . 0 ) .@doc =? nil
 			failures += f . 0
 	[ ( ( countOf failures ) =? 0 ) failures ]
-:checkDocs @doc /" Check if everything in scope has doc metadata.  Returns [ success? arrayOfFailures ]
+:checkDocs @doc """
+	Check if everything in scope has doc metadata.
+	Returns [ success? arrayOfFailures ]
 
 
 :@unittest <- /( ->object infix ->function
@@ -73,7 +77,9 @@
 		print " ...actual: " +s actual =>str
 		l3.popScope { :name :runUnittests :return false }
 :assert=? @order 5
-:assert=? @doc /" Unittests can assert objects are equal.  If they're not, the unittest aborts & fails.
+:assert=? @doc """
+	Unittests can assert objects are equal.
+	If they're not, the current unittest function aborts & fails.
 
 :assertTrue? <- func ->cond
 	if !? l3.eval cond
@@ -83,7 +89,9 @@
 		print " .expression: " +s cond =>str
 		l3.popScope { :name :runUnittests :return false }
 :assertTrue? @order 5
-:assertTrue? @doc /" Unittests can assert something is true.  If it's not, the unittest aborts & fails.
+:assertTrue? @doc """
+	Unittests can assert something is true.
+	If it's not, the current unittest function aborts & fails.
 
 :assertFalse? <- func ->cond
 	if l3.eval cond
@@ -93,7 +101,9 @@
 		print " .expression: " +s cond =>str
 		l3.popScope { :name :runUnittests :return false }
 :assertFalse? @order 5
-:assertFalse? @doc /" Unittests can assert something is false.  If it's not, the unittest aborts & fails.
+:assertFalse? @doc """
+	Unittests can assert something is false.
+	If it's not, the current unittest function aborts & fails.
 
 :assertFail <- func ->message
 	print /" ...failed...
@@ -117,4 +127,6 @@
 		if !? success?
 			failures += unittestName
 	[ ( ( countOf failures ) =? 0 ) failures ]
-:runUnittests @doc /" Run .@unittest on every value in the scope.  A unittest fails if it isn't present or if an assert fails.
+:runUnittests @doc """
+	Run .@unittest on every value in the scope.
+	A unittest fails if it isn't present or if an assert fails inside it.
