@@ -26,14 +26,14 @@ Parse/eval follows these steps:
 * **Consumes adjacent nodes:** Evaluating a node may call a function that consumes the nodes immediately before and/or after it, and possibly the "body" immediately following the line (i.e. the block of lines indented relative to the current line)
 * **Repeat:** Evaluation continues in precedence order (left-most wins a tie), until there is no more evaluation to do
 
-The following shows a sample line, which gets tokenized based on white space.  *a* and *c* are both lists that get interpreted based on custom code.  *b* and *d* are infix functions which consume the nodes on either side of them.  Since they have equal precedence, *b* is evaluated first, consuming *a* and *c* in the process.  Then *d* is applied, using the previous result and *e* to compute the final value.
+The following shows a sample line, which gets tokenized based on white space.  *a* and *c* are both lists that get interpreted based on custom code.  *b*, *d*, and *f* are infix functions which consume the nodes on either side of them.  Since *f* has highest precedence, it's evaluated first.  _3 * 2_ gets replaced by 6.  Next, *b* and *d* have equal precedence, so *b*, the left-most, is evaluated first, consuming *a* and *c* in the process.  Then *d* is applied, using the previous results from both sides to compute the final value.
 
 ```
-( 1 .. 4 ) fold (< #1 * #2 + #2 >) + 3
-|        |  |   |                | | |
- --------   |    ----------------  | |
-     |      |            |         | |
-     a      b            c         d e
+( 1 .. 4 ) fold (< #1 * #2 + #2 >) + 3 * 2
+|        |  |   |                | | | | |
+ --------   |    ----------------  | | | |
+     |      |            |         | | | |
+     a      b            c         d e f g
 ```
 
 The language defines these parse/eval rules and combines this with a set of built-in functions.  The syntax of the language is then bootstrapped from these basic rules plus the built-in functions.  Even functionality such as assignment, if statements, and function definitions are bootstrapped.  This makes the entire syntax very flexible.

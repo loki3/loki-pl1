@@ -74,7 +74,7 @@ namespace loki3.core
 				switch (type)
 				{
 					case DelimiterType.AsString:
-						value = new ValueString(list.Nodes[0].Token.Value);
+						value = new ValueString(list.Original);
 						break;
 					case DelimiterType.AsValue:
 						value = EvalList.Do(list.Nodes, scope);

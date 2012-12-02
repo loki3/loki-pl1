@@ -8,16 +8,18 @@ namespace loki3.core
 	/// </summary>
 	internal class DelimiterList
 	{
-		internal DelimiterList(ValueDelimiter delim, List<DelimiterNode> nodes, int indent)
+		internal DelimiterList(ValueDelimiter delim, List<DelimiterNode> nodes, int indent, string original)
 		{
 			m_delimiter = delim;
 			m_nodes = nodes;
 			m_indent = indent;
+			m_original = original;
 		}
 
 		internal ValueDelimiter Delimiter { get { return m_delimiter; } }
 		internal List<DelimiterNode> Nodes { get { return m_nodes; } }
 		internal int Indent { get { return m_indent; } }
+		internal string Original { get { return m_original; } }
 
 		public override string ToString()
 		{
@@ -33,6 +35,7 @@ namespace loki3.core
 		private ValueDelimiter m_delimiter;
 		private List<DelimiterNode> m_nodes;
 		private int m_indent;
+		private string m_original;
 	}
 
 	/// <summary>

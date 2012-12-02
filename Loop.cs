@@ -150,8 +150,8 @@ namespace loki3.builtin
 							if (line.Indent == indent)
 							{
 								List<DelimiterNode> nodes = new List<DelimiterNode>();
-								nodes.Add(new DelimiterNodeList(new DelimiterList(delim, line.Nodes, line.Indent)));
-								newLine = new DelimiterList(delim, nodes, indent);
+								nodes.Add(new DelimiterNodeList(new DelimiterList(delim, line.Nodes, line.Indent, line.Original)));
+								newLine = new DelimiterList(delim, nodes, indent, line.Original);
 							}
 							delimList.Add(newLine);
 						}

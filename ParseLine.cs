@@ -45,10 +45,10 @@ namespace loki3.core
 			string[] strs = str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 			int indent = Utility.CountIndent(str);
 			int end;
-			return Do(indent, strs, 0, ValueDelimiter.Line, delims, requestor, out end);
+			return Do(indent, str, strs, 0, ValueDelimiter.Line, delims, requestor, out end);
 		}
 
-		private static DelimiterList Do(int indent, string[] strs, int iStart, ValueDelimiter thisDelim,
+		private static DelimiterList Do(int indent, string original, string[] strs, int iStart, ValueDelimiter thisDelim,
 			IParseLineDelimiters delims, ILineRequestor requestor, out int iEnd)
 		{
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
@@ -67,33 +67,28 @@ namespace loki3.core
 			}
 			else if (type == DelimiterType.AsString)
 			{	// simply search for end and stuff everything in the middle into a single token
-				// todo: leave the whitespace alone
-				string all = "";
 				iEnd = -1;
 				for (int i = iStart; i < strs.Length; i++)
 				{
-					string s = strs[i];
-					if (s == thisDelim.End)
+					if (strs[i] == thisDelim.End)
 					{
 						iEnd = i;
 						break;
 					}
-					if (i != iStart)
-						all += " ";
-					all += s;
 				}
 
 				// no specified end delim means take the remainder of the line
 				if (thisDelim.End == "")
-					iEnd = strs.Length - 1;
+					iEnd = strs.Length;
 
 				// if we found end, wrap entire string in a single node
 				if (iEnd != -1)
 				{
-					Token token = new Token(all);
+					string subStr = GetSubStr(iStart, iEnd, strs);
+					Token token = new Token(subStr);
 					DelimiterNode node = new DelimiterNodeToken(token);
 					nodes.Add(node);
-					return new DelimiterList(thisDelim, nodes, indent);
+					return new DelimiterList(thisDelim, nodes, indent, subStr);
 				}
 			}
 			else // Value, Array && Raw
@@ -106,7 +101,8 @@ namespace loki3.core
 					if (s == thisDelim.End)
 					{	// end delimiter
 						iEnd = i;
-						return new DelimiterList(thisDelim, nodes, indent);
+						string subStr = GetSubStr(iStart, iEnd, strs);
+						return new DelimiterList(thisDelim, nodes, indent, subStr);
 					}
 
 					// is it a stand alone starting delimiter?
@@ -114,7 +110,7 @@ namespace loki3.core
 					if (subDelim != null)
 					{	// start delimiter
 						int end;
-						DelimiterList sublist = Do(0, strs, i + 1, subDelim, delims, requestor, out end);
+						DelimiterList sublist = Do(0, original, strs, i + 1, subDelim, delims, requestor, out end);
 						if (sublist != null)
 						{
 							DelimiterNodeList node = new DelimiterNodeList(sublist);
@@ -136,7 +132,24 @@ namespace loki3.core
 				throw new Loki3Exception().AddMissingEndDelimiter(thisDelim);
 
 			iEnd = strs.Length;
-			return new DelimiterList(thisDelim, nodes, indent);
+			string trimmed = original.TrimStart(' ', '\t');
+			return new DelimiterList(thisDelim, nodes, indent, trimmed);
+		}
+
+		/// <summary>
+		/// Get a portion of the nodes as a string
+		/// TODO: recreate from the original string so whitespace is preserved
+		/// </summary>
+		private static string GetSubStr(int start, int end, string[] strs)
+		{
+			string subStr = "";
+			for (int i = start; i < end; i++)
+			{
+				if (i != start)
+					subStr += " ";
+				subStr += strs[i];
+			}
+			return subStr;
 		}
 	}
 }
