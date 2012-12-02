@@ -36,6 +36,8 @@ The following shows a sample line, which gets tokenized based on white space.  *
      a      b            c         d e
 ```
 
+The language defines these parse/eval rules and combines this with a set of built-in functions.  The syntax of the language is then bootstrapped from these basic rules plus the built-in functions.  Even functionality such as assignment, if statements, and function definitions are bootstrapped.  This makes the entire syntax very flexible.
+
 
 DSLs
 ----
