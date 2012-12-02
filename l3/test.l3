@@ -39,6 +39,7 @@ var :fizzbuzz3 = func()
 
 var :i = /( ->y postfix
 	{ :x 0 :y y }
+:i @order 2
 :i @doc /" Creates a complex number
 
 var :+c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
@@ -66,7 +67,7 @@ var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 
 
 :repeat <- func [ ->a ->f ]
-	while ` f !=? nil `
+	while ` nil !=? f `
 		[ :a :f ] = f [ a ]
 	a
 :repeat @doc /" Turns a recursive function into an interative loop.  The passed function must take an iteration value and a result value and return a new result and a partial function bound to the next iteration value but still requiring the result value.  When the computation is finished, the returned function should be nil.
@@ -75,4 +76,5 @@ var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	:fact <- func [ ->a ->b ]
 		( a >? 0 ) ? /[ [ ( a * b ) ( fact [ ( a - 1 ) ] ) ]  [ b nil ]
 	repeat [ 1 ( fact [ n ] ) ]
+:! @order 2
 :! @doc /" Factorial operator defined recursively but executed iteratively

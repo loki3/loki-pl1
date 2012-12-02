@@ -61,6 +61,10 @@
 	test
 :.@unittest	@doc /" Get the unittest attached to a value
 
+:stubFunc <- func()
+	true
+:stubFunc @doc /" Used for stubbing out unneeded unittests
+
 
 :assert=? <- /( ->expected infix ->actual
 	if expected !=? actual
@@ -68,6 +72,7 @@
 		print " .expected: " +s expected =>str
 		print " ...actual: " +s actual =>str
 		l3.popScope { :name :runUnittests :return false }
+:assert=? @order 5
 :assert=? @doc /" Unittests can assert objects are equal.  If they're not, the unittest aborts & fails.
 
 :assertTrue? <- func ->cond
@@ -77,6 +82,7 @@
 		print " ...expected: true "
 		print " .expression: " +s cond =>str
 		l3.popScope { :name :runUnittests :return false }
+:assertTrue? @order 5
 :assertTrue? @doc /" Unittests can assert something is true.  If it's not, the unittest aborts & fails.
 
 :assertFalse? <- func ->cond
@@ -86,6 +92,7 @@
 		print " ...expected: false "
 		print " .expression: " +s cond =>str
 		l3.popScope { :name :runUnittests :return false }
+:assertFalse? @order 5
 :assertFalse? @doc /" Unittests can assert something is false.  If it's not, the unittest aborts & fails.
 
 :assertFail <- func ->message

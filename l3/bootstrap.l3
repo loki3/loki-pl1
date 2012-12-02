@@ -130,6 +130,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :currentScope @doc /" Get a map representing the current scope
 
 
+// bump up precedence of .
+:. @order 2
+
+
 //
 // add documentation to functions that have been previously definied
 
@@ -300,6 +304,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.setValue { :key :l3.coFunction.if.done? :value do? :scope :parent }
 	do?
 :if @body? true
+:if @order 5
 :if @doc /" If condition is met, do body
 
 :elsif <- func ( ->do? @@type :bool )
@@ -308,6 +313,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.ifBody /{ :do? doThis? :body /[ /` l3.setValue /{ :key :l3.coFunction.if.done? :value true :scope :parent
 	doThis?
 :elsif @body? true
+:elsif @order 5
 :elsif @doc /" If previous if and elsifs failed and this condition is met, do body
 
 :else <- func()
@@ -416,6 +422,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :=>str <- /( ->val postfix
 	l3.toString ( val )
+:=>str @order 2
 :=>str @doc /" Convert a value to a string
 
 // todo: switch to + when overloading is supported
@@ -439,4 +446,5 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // I/O
 
 :print <- /(| l3.print /{ :value ##
+:print @order 5
 :print @doc /" Print a value as a string

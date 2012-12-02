@@ -168,7 +168,7 @@ namespace loki3.core
 				int max = Int32.MaxValue;
 				int count = m_nodes.Count;
 				int empties = 0;
-				for (int i = count - 1; i >= 0; --i)
+				for (int i = 0; i < count; ++i)
 				{
 					NodeEval node = m_nodes[i];
 					if (!node.HasValue && !node.IsEmpty)

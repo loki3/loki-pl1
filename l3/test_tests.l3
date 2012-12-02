@@ -24,14 +24,14 @@
 	{ :x -12 :y 0 } assert=? 4 i *c 3 i
 
 // stub out tests & docstrings for the enum & its values
-:days				@unittest (| true |)
-( :days.sunday		@unittest (| true |) ) @doc /"
-( :days.monday		@unittest (| true |) ) @doc /"
-( :days.tuesday		@unittest (| true |) ) @doc /"
-( :days.wednesday	@unittest (| true |) ) @doc /"
-( :days.thursday	@unittest (| true |) ) @doc /"
-( :days.friday		@unittest (| true |) ) @doc /"
-( :days.saturday	@unittest (| true |) ) @doc /"
+:days			@unittest ( stubFunc )
+:days.sunday	@unittest ( stubFunc ) @doc /"
+:days.monday	@unittest ( stubFunc ) @doc /"
+:days.tuesday	@unittest ( stubFunc ) @doc /"
+:days.wednesday	@unittest ( stubFunc ) @doc /"
+:days.thursday	@unittest ( stubFunc ) @doc /"
+:days.friday	@unittest ( stubFunc ) @doc /"
+:days.saturday	@unittest ( stubFunc ) @doc /"
 
 :isWeekend @unittest func()
 	( isWeekend days.sunday )	assert=? true
