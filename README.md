@@ -26,14 +26,14 @@ Parse/eval follows these steps:
 * **Consumes adjacent nodes:** Evaluating a node may call a function that consumes the nodes immediately before and/or after it, and possibly the "body" immediately following the line (i.e. the block of lines indented relative to the current line)
 * **Repeat:** Evaluation continues in precedence order (left-most wins a tie), until there is no more evaluation to do
 
+The following shows a sample line, which gets tokenized based on white space.  *a* and *c* are both lists that get interpreted based on custom code.  *b* and *d* are infix functions which consume the nodes on either side of them.  Since they have equal precedence, *b* is evaluated first, consuming *a* and *c* in the process.  Then *d* is applied, using the previous result and *e* to compute the final value.
+
 ```
-// defines an infix operator that uses a built-in function to create a range
-:.. <- ( ->start infix ->end )
-    l3.createRange { :start start :end end }
-```
-```
-// the following assigns [ 3 4 5 6 7 ] to a
-:a <- 3 .. 7
+( 1 .. 4 ) fold (< #1 * #2 + #2 >) + 3
+|        |  |   |                | | |
+ --------   |    ----------------  | |
+     |      |            |         | |
+     a      b            c         d e
 ```
 
 
@@ -45,9 +45,19 @@ Domain Specific Languages (DSLs) can be created in Loki.  Some of the features t
 * **Custom delimiters:**  You can define your own delimiters, including functions that will be called to interpret the contents.  Imagine custom delimiters that know how to handle HTML escaping or can create your own collection behavior.
 * **Function bodies:**  A body is simply the indented lines that follow the current line.  The called function can interpret those lines however it sees fit, making it easy to intuitively declare custom data structures.
 
+```
+// defines an infix operator that uses a built-in function to create a range
+:.. <- ( ->start infix ->end )
+    l3.createRange { :start start :end end }
+```
+```
+// the following assigns [ 3 4 5 6 7 ] to a
+:a <- 3 .. 7
+```
 Here's an example showing how you could leverage bodies for creating maps:
 
 ```
+// defines a function that takes a body and turns it into a map
 :makeMap <- func()
 	:map <- nil
 	:submap forEachDelim [ body :{ ]
@@ -68,7 +78,7 @@ Pattern Matching
 Pattern matching is a common technique in functional programming languages.  It allows you to easily deconstruct a complex data structure, assigning pieces into variables, and skipping the assignment if the given value doesn't match the pattern.  In Loki, pattern matching is used for assignment, multiple return values, function parameters, function overloading (NYI), case statements (NYI), and exceptions (NYI).
 
 ```
-// assign 1 into a and 2 into b
+// assign 1 into :a and 2 into :b
 [ :a :b ] <- [ 1 2 ]
 ```
 
@@ -80,8 +90,8 @@ Here's an example that adds two complex numbers represented by maps.  The values
 :* <- ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	{ :x ( x1 * x2 - y1 * y2 ) :y ( x1 * y2 + x2 * y1 ) }
 
-// sample usage: a will be { :x -4 , :y 7 }
-:a <- { :x 2 :y 3 } *c { :x 1 :y 2 }
+// sample usage: :a will be { :x -4 , :y 7 }
+:a <- { :x 2 :y 3 } * { :x 1 :y 2 }
 ```
 
 
@@ -116,10 +126,12 @@ Functions are values just like ints or strings, meaning that they can be assigne
 The following shows how factorials could be computed by applying multiplication across a list:
 
 ```
+// defines a postfix function that takes a single parameter
 :! <- ( ->n postfix )
 	( 1 .. n ) fold (< #1 * #2 >)
 
-// a will be 4*3*2*1 = 24
+// uses the previous function definition
+// :a will be 4*3*2*1 = 24
 :a <- 4 !
 ```
 
