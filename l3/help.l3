@@ -46,10 +46,11 @@
 	// print general info
 	print /"
 	:type <- l3.getType { :key var }
+	:cat <- var .@cat
 	:fixType <- getFixType
 	:otherMeta <- getOtherMeta
 	print :============
-	print l3.stringConcat /{ :spaces 1 :array /[ :# var :@type type fixType otherMeta
+	print l3.stringConcat /{ :spaces 1 :array /[ :# var :@type type :@cat cat fixType otherMeta
 	:doc <- var .@doc
 	print ( doc =? nil ) ? [ " <no docstring> " doc ]
 	
@@ -173,6 +174,10 @@
 :listDelimiters <- func ->map
 	listByFilter { :map map :filter? (| :delimiter =? l3.getType { :key ## :builtin? true } |) :perRow 7 :spaces 3 }
 :listDelimiters @cat :help @doc /" List all the delimiters in the given map
+
+:listByCat <- ( ->cat infix ->map )
+	listByFilter { :map map :filter? (| ( ## .@cat ) =? cat |) }
+:listByCat @cat :help @doc /" List all the values in a given category and map
 
 
 :getDocs <- func()
