@@ -100,6 +100,7 @@ namespace loki3.core
 		#region Keys
 		internal static string keyOrder = "l3.value.order";
 		internal static string keyDoc = "l3.value.doc";
+		internal static string keyCat = "l3.value.cat";
 		internal static string keyType = "l3.value.type";
 		internal static string keyEnumKey = "l3.enum.key";
 		#endregion

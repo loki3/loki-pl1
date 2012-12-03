@@ -13,7 +13,7 @@
 :helpAll <- func ->map
 	:pair forEach map
 		help pair . 0
-:helpAll @doc /" Print out information on everything defined in the given scope
+:helpAll @cat :help @doc /" Print out information on everything defined in the given scope
 
 :help <- func ->var
 	
@@ -66,7 +66,7 @@
 		:value <- l3.getValue /{ :key var
 		print l3.stringConcat /{ :spaces 1 :array /[ " value: " value
 	""
-:help @doc /" Print out a description of the value attached to a key, e.g. details on a function
+:help @cat :help @doc /" Print out a description of the value attached to a key, e.g. details on a function
 
 
 :dumpFunction <- func ->var
@@ -102,7 +102,7 @@
 	:table = getParams /[ table prev :pre
 	:table = getParams /[ table next :post
 	print l3.formatTable { :arrayOfArrays table :dashesAfterFirst? true }
-:dumpFunction @doc /" Print info about a function
+:dumpFunction @cat :help @doc /" Print info about a function
 
 
 :dumpEnum <- func ->var
@@ -111,7 +111,7 @@
 	:item forEach l3.getValue /{ :key var
 		:table = table +a [ [ "" ( item . 1 ) ] ]
 	print l3.formatTable { :arrayOfArrays table :spaces 2 }
-:dumpEnum @doc /" Print the values of an enum
+:dumpEnum @cat :help @doc /" Print the values of an enum
 
 
 :dumpDelimiter <- func ->var
@@ -127,7 +127,7 @@
 	if ( function ) !=? nil
 		print /" applies the following function to the contents:
 		help :function
-:dumpDelimiter @doc /" Print the values of a delimiter
+:dumpDelimiter @cat :help @doc /" Print the values of a delimiter
 
 
 :dumpMeta <- func ->key
@@ -141,7 +141,7 @@
 			:table = table +a [ pair ]
 	print l3.formatTable { :arrayOfArrays table :dashesAfterFirst? true }
 	""
-:dumpMeta @doc /" Dump metadata for the given value attached to a key
+:dumpMeta @cat :help @doc /" Dump metadata for the given value attached to a key
 
 
 :listByFilter <- func { :map ->map :filter? ( ->filter? @@type :function ) :perRow ( ->perRow @@default 3 ) :spaces ( ( ->spaces @@type :int ) @@default 1 ) }
@@ -160,25 +160,25 @@
 	if table !=? nil
 		print l3.formatTable { :arrayOfArrays table :spaces spaces }
 	""
-:listByFilter @doc /" List all the functions that pass a filter
+:listByFilter @cat :help @doc /" List all the functions that pass a filter
 
 :listFunctions <- func ->map
 	listByFilter { :map map :filter? (| :function =? l3.getType { :key ## :builtin? true } |) }
-:listFunctions @doc /" List all the functions in the given map
+:listFunctions @cat :help @doc /" List all the functions in the given map
 
 :listEnums <- func ->map
 	listByFilter { :map map :filter? (| :enum =? l3.getType { :key ## } |) }
-:listEnums @doc /" List all the enums in the given map
+:listEnums @cat :help @doc /" List all the enums in the given map
 
 :listDelimiters <- func ->map
 	listByFilter { :map map :filter? (| :delimiter =? l3.getType { :key ## :builtin? true } |) :perRow 7 :spaces 3 }
-:listDelimiters @doc /" List all the delimiters in the given map
+:listDelimiters @cat :help @doc /" List all the delimiters in the given map
 
 
 :getDocs <- func()
 	:scope <- l3.getScope /{ :scope :parent
 	getDocsInScope scope
-:getDocs @doc /" Return all the docstrings attached to the values in the current scope
+:getDocs @cat :help @doc /" Return all the docstrings attached to the values in the current scope
 
 :getDocsInScope <- func ->scope
 	:table <- [ ]
@@ -187,12 +187,12 @@
 		if key .@doc !=? nil
 			table += [ key ( key .@doc ) ]
 	l3.formatTable { :arrayOfArrays table }
-:getDocsInScope @doc /" Return all the docstrings attached to the values in a given scope
+:getDocsInScope @cat :help @doc /" Return all the docstrings attached to the values in a given scope
 
 :getFileDocs <- func ->file
 	import file
 	getDocsInScope currentScope
-:getFileDocs @doc /" Return all the docstrings attached to the values in a given file
+:getFileDocs @cat :help @doc /" Return all the docstrings attached to the values in a given file
 
 
 :prettify <- func ->map
@@ -200,4 +200,4 @@
 	:i forEach map
 		table += i
 	l3.formatTable { :arrayOfArrays table }
-:prettify @doc /" Return a map as a simple table represented by a string
+:prettify @cat :help @doc /" Return a map as a simple table represented by a string

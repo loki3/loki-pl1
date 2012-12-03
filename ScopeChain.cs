@@ -15,9 +15,6 @@ namespace loki3.core
 		/// <summary>Optional name for the scope</summary>
 		string Name { get; }
 
-		/// <summary>Optional category to add to the metadata of all values defined in this scope</summary>
-		string Category { get; }
-
 		/// <summary>Returns scope token exists on in the scope chain, or null</summary>
 		IScope Exists(string token);
 
@@ -81,11 +78,6 @@ namespace loki3.core
 			get { return m_valueMap.Metadata == null ? "" : m_valueMap.Metadata.GetOptionalT(keyName, ""); }
 		}
 
-		public string Category
-		{
-			get { return m_valueMap.Metadata == null ? "" : m_valueMap.Metadata.GetOptionalT(keyCategory, ""); }
-		}
-
 		public ValueDelimiter GetDelim(string start)
 		{
 			Value val;
@@ -126,7 +118,6 @@ namespace loki3.core
 
 		#region Keys
 		internal static string keyName = "l3.scope.name";
-		internal static string keyCategory = "l3.scope.category";
 		internal static string keyFunction = "l3.scope.function";
 		#endregion
 

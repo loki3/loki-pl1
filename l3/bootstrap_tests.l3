@@ -127,6 +127,16 @@
 	:a @doc :whatever
 	:whatever assert=? :a .@doc
 
+:@cat	@unittest func()
+	:a <- 1
+	:a @cat :something
+	:something assert=? :a .@cat
+
+:.@cat	@unittest func()
+	:a <- 1.5
+	:a @cat :something
+	:something assert=? :a .@cat
+
 :@order @unittest func()
 	:a <- (| ## + 2 |)
 	// a should be applied after *
