@@ -13,16 +13,19 @@ namespace loki3.core
 		void SetValue(string token, Value value);
 
 		/// <summary>Optional name for the scope</summary>
-		string Name { get; set; }
+		string Name { get; }
 
-		/// <summary>Optional function pointer for the scope</summary>
-		ValueFunction Function { get; set; }
+		/// <summary>Optional category to add to the metadata of all values defined in this scope</summary>
+		string Category { get; }
 
 		/// <summary>Returns scope token exists on in the scope chain, or null</summary>
 		IScope Exists(string token);
 
 		/// <summary>Get parent scope, if any</summary>
 		IScope Parent { get; }
+
+		/// <summary>Get current scope as a value</summary>
+		Value AsValue { get; }
 
 		/// <summary>Get current scope as a map</summary>
 		Map AsMap { get; }
@@ -39,6 +42,7 @@ namespace loki3.core
 		{
 			m_parent = parent;
 			m_values = new Map();
+			m_valueMap = new ValueMap(m_values);
 		}
 
 		/// <summary>Treat a map as a scope</summary>
@@ -46,6 +50,7 @@ namespace loki3.core
 		{
 			m_parent = null;
 			m_values = map;
+			m_valueMap = new ValueMap(m_values);
 		}
 
 		/// <summary>Create a scope with no parent</summary>
@@ -53,6 +58,7 @@ namespace loki3.core
 		{
 			m_parent = null;
 			m_values = new Map();
+			m_valueMap = new ValueMap(m_values);
 		}
 
 		#region IScope Members
@@ -72,14 +78,12 @@ namespace loki3.core
 
 		public string Name
 		{
-			get { return m_name; }
-			set { m_name = value; }
+			get { return m_valueMap.Metadata == null ? "" : m_valueMap.Metadata.GetOptionalT(keyName, ""); }
 		}
 
-		public ValueFunction Function
+		public string Category
 		{
-			get { return m_function; }
-			set { m_function = value; }
+			get { return m_valueMap.Metadata == null ? "" : m_valueMap.Metadata.GetOptionalT(keyCategory, ""); }
 		}
 
 		public ValueDelimiter GetDelim(string start)
@@ -102,6 +106,11 @@ namespace loki3.core
 			get { return m_parent; }
 		}
 
+		public Value AsValue
+		{
+			get { return m_valueMap; }
+		}
+
 		public Map AsMap
 		{
 			get { return m_values; }
@@ -109,9 +118,20 @@ namespace loki3.core
 
 		#endregion
 
+		/// <summary>Sets an optional function pointer for the scope</summary>
+		public ValueFunction Function
+		{
+			set { m_valueMap.WritableMetadata[keyFunction] = value; }
+		}
+
+		#region Keys
+		internal static string keyName = "l3.scope.name";
+		internal static string keyCategory = "l3.scope.category";
+		internal static string keyFunction = "l3.scope.function";
+		#endregion
+
 		private IScope m_parent;
-		private Map m_values = new Map();
-		private string m_name = "";
-		private ValueFunction m_function = null;
+		private Map m_values;
+		private ValueMap m_valueMap;
 	}
 }

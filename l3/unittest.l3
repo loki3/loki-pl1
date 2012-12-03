@@ -119,7 +119,7 @@
 		var :unittestName = f . 0
 		var :success? = if true
 			// asserts will exit this scope & the above 'if' will return false
-			l3.setScopeName { :name :runUnittests }
+			setScopeName :runUnittests
 			// run the test
 			if unittestName .@unittest =? nil		// fail if no test
 				failures += unittestName

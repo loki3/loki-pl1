@@ -185,6 +185,8 @@
 				:map = map +a { ( i . 0 ) ( i . 1 ) }
 	{ :a 1 :b 2 } assert=? map
 
+:setScopeName @unittest stubFunc
+
 
 //
 // more function definitions

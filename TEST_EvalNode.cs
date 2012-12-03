@@ -83,19 +83,12 @@ namespace loki3.core.test
 				return null;
 			}
 			public void SetValue(string token, Value value) { }
-			public string Name
-			{
-				get { return ""; }
-				set {}
-			}
-			public ValueFunction Function
-			{
-				get { return null; }
-				set {}
-			}
+			public string Name { get { return ""; } }
+			public string Category { get { return ""; } }
 			public ValueDelimiter GetDelim(string start) { return null; }
 			public IScope Exists(string token) { return null; }
 			public IScope Parent { get { return null; } }
+			public Value AsValue { get { return null; } }
 			public Map AsMap { get { return null; } }
 		}
 
