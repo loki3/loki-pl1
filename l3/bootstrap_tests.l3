@@ -91,6 +91,16 @@
 :.		@unittest func()
 	4 assert=? { :a 3 :b 4 :c 5 } . :b
 	3 assert=? [ 6 5 4 3 2 ] . 3
+	// map default
+	:a <- { :a 9 :b 12 } @@default 42
+	12 assert=? a . :b
+	42 assert=? a . :notThere
+	// array default
+	:b <- [ 200 400 ] @@default 314
+	200 assert=? b . 0
+	400 assert=? b . 1
+	314 assert=? b . 2
+	314 assert=? b . -1
 
 :@		@unittest func()
 	:a <- 1
