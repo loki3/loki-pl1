@@ -132,7 +132,7 @@ namespace loki3.builtin
 				Map meta = value.Metadata;
 				Value result = null;
 				if (meta == null || !meta.TryGetValue(PatternData.keyDefault, out result))
-					throw new Loki3Exception().AddMissingKey(key);
+					return ValueNil.Nil;
 				return result;
 			}
 		}

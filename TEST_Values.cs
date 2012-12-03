@@ -138,17 +138,11 @@ namespace loki3.builtin.test
 				Assert.AreEqual(4, value.AsInt);
 			}
 
-			// asking for a key that doesn't exist throws an exception...
-			bool bThrown = false;
-			try
+			// asking for a key that doesn't exist returns nil...
 			{
-				TestSupport.ToValue("l3.getValue { :object aMap :key :notThere }", scope);
+				Value value = TestSupport.ToValue("l3.getValue { :object aMap :key :notThere }", scope);
+				Assert.IsTrue(value.IsNil);
 			}
-			catch (Loki3Exception)
-			{
-				bThrown = true;
-			}
-			Assert.IsTrue(bThrown);
 
 			// ...unless the collection has a default
 			{
