@@ -227,20 +227,22 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // logic
 
 :&? <- /(< l3.and? [ #1 #2 ]
-:&? @order 4
+:&? @order 5
 :&? @cat :logic @doc /" Return true if both values are true
 
 :|? <- /(< l3.or? [ #1 #2 ]
-:|? @order 4
+:|? @order 5
 :|? @cat :logic @doc /" Return true if either value is true
 
 :!? <- /(| l3.not? ##
 :!? @cat :logic @doc /" Returns true if value is false or false if value is true
 
 :=? <- /(< l3.equal? [ #1 #2 ]
+:=? @order 4
 :=? @cat :logic @doc /" Return true if two values are equal
 
 :!=? <- /(< !? l3.equal? [ #1 #2 ]
+:!=? @order 4
 :!=? @cat :logic @doc /" Return true if two values are not equal
 
 :=any? <- /( ->value infix ( ->array @@type :array )

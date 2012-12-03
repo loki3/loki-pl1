@@ -167,6 +167,8 @@ namespace loki3.core
 		internal override Value ValueCopy() { return new ValueNil(); }
 		#endregion
 
+		public override string ToString() { return "nil"; }
+
 		private static ValueNil m_nil = new ValueNil();
 	}
 
