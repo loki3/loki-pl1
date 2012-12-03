@@ -101,14 +101,39 @@ namespace loki3.builtin
 
 				if (obj.IsNil)
 					return scope.GetValue(new Token(key.AsString));
+
 				ValueMap objMap = obj as ValueMap;
 				if (objMap != null)
-					return objMap.AsMap.GetOptional(key.AsString, ValueNil.Nil);
+				{
+					string keystr = key.AsString;
+					Value result = null;
+					if (!objMap.AsMap.TryGetValue(keystr, out result))
+						// if key isn't present, return map's default value
+						return GetDefault(obj, key);
+					return result;
+				}
+
 				ValueArray objArr = obj as ValueArray;
 				if (objArr != null)
+				{
+					List<Value> array = objArr.AsArray;
+					int i = key.AsInt;
+					if (i < 0 || i >= array.Count)
+						// if index is out of bounds, return array's default value
+						return GetDefault(obj, key);
 					return objArr.AsArray[key.AsInt];
+				}
 				// todo: better error
 				throw new Loki3Exception().AddWrongType(ValueType.Map, obj.Type);
+			}
+
+			private Value GetDefault(Value value, Value key)
+			{
+				Map meta = value.Metadata;
+				Value result = null;
+				if (meta == null || !meta.TryGetValue(PatternData.keyDefault, out result))
+					throw new Loki3Exception().AddMissingKey(key);
+				return result;
 			}
 		}
 

@@ -120,7 +120,8 @@ namespace loki3.builtin.test
 			Map map = new Map();
 			map["one"] = new ValueInt(1);
 			map["two"] = new ValueInt(2);
-			scope.SetValue("aMap", new ValueMap(map));
+			ValueMap vMap = new ValueMap(map);
+			scope.SetValue("aMap", vMap);
 
 			List<Value> array = new List<Value>();
 			array.Add(new ValueInt(2));
@@ -135,6 +136,25 @@ namespace loki3.builtin.test
 			{
 				Value value = TestSupport.ToValue("l3.getValue { :object anArray :key 1 }", scope);
 				Assert.AreEqual(4, value.AsInt);
+			}
+
+			// asking for a key that doesn't exist throws an exception...
+			bool bThrown = false;
+			try
+			{
+				TestSupport.ToValue("l3.getValue { :object aMap :key :notThere }", scope);
+			}
+			catch (Loki3Exception)
+			{
+				bThrown = true;
+			}
+			Assert.IsTrue(bThrown);
+
+			// ...unless the collection has a default
+			{
+				vMap.WritableMetadata[PatternData.keyDefault] = new ValueInt(42);
+				Value value = TestSupport.ToValue("l3.getValue { :object aMap :key :notThere }", scope);
+				Assert.AreEqual(42, value.AsInt);
 			}
 		}
 

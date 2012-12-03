@@ -269,7 +269,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :filter @doc /" Returns an array consisting of every member for which function returns true
 
 :makeArray <- func()
-	:array <- nil
+	:array <- [ ]
 	:line forEach body
 		:array = array +a [ line ]
 	array
@@ -281,7 +281,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // maps
 
 :makeMap <- func()
-	:map <- nil
+	:map <- { }
 	:submap forEachDelim [ body :{ ]
 		:map = map +a submap
 	map
@@ -295,6 +295,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // ternary operator
 :? <- /( ( ->do? @@type :bool ) infix [ ->doIfTrue ->doIfFalse ]
 	l3.ifValue /{ :do? do? :ifTrue doIfTrue :ifFalse doIfFalse
+:? @order 4
 :? @doc /" If condition is met, return first value, else return second value
 
 :if <- func ( ->do? @@type :bool )
