@@ -12,7 +12,8 @@
 
 :helpAll <- func ->map
 	:pair forEach map
-		help pair . 0
+		print help pair . 0
+	""
 :helpAll @cat :help @doc /" Print out information on everything defined in the given scope
 
 :help <- func ->var
@@ -43,30 +44,30 @@
 			:s = l3.stringConcat /{ :spaces 1 :array /[ s /" (requires body)
 		s
 	
-	// print general info
-	print /"
+	// get general info
+	:result <- \n
 	:type <- l3.getType { :key var }
 	:cat <- var .@cat
 	:fixType <- getFixType
 	:otherMeta <- getOtherMeta
-	print :============
-	print l3.stringConcat /{ :spaces 1 :array /[ :# var :@type type :@cat cat fixType otherMeta
+	:result = result +s :============
+	:result = result +s \n +s /( l3.stringConcat /{ :spaces 1 :array /[ :# var :@type type :@cat cat fixType otherMeta
 	:doc <- var .@doc
-	print ( doc =? nil ) ? [ " <no docstring> " doc ]
+	:result = result +s \n +s /( ( doc =? nil ) ? [ " <no docstring> " doc ]
 	
 	// print type specific info
 	:type <- l3.getType { :key var }
 	if type =? :function
-		print ""
-		dumpFunction var
+		:result = result +s \n +s \n +s /( dumpFunction var
 	elsif type =? :enum
-		dumpEnum var
+		:result = result +s \n +s /" type: enum
+		:result = result +s \n +s /( dumpEnum var
 	elsif type =? :delimiter
-		dumpDelimiter var
+		:result = result +s \n +s /( dumpDelimiter var
 	else
 		:value <- l3.getValue /{ :key var
-		print l3.stringConcat /{ :spaces 1 :array /[ " value: " value
-	""
+		:result = result +s \n +s /( l3.stringConcat /{ :spaces 1 :array /[ " value: " value
+	result
 :help @cat :help @doc /" Print out a description of the value attached to a key, e.g. details on a function
 
 
@@ -85,7 +86,7 @@
 			:line <- line +a /( getMeta :type
 			:line <- line +a /( getMeta :default
 			:line <- line +a /( getMeta :rest
-			[ line ]
+			line
 		if params !=? nil
 			:type <- l3.getType /{ :value params
 			if type =any? [ :map :array ]
@@ -98,69 +99,62 @@
 				:table = table +a getParam params
 		table
 	
+	:result <- ""
 	[ :prev :next ] <- [ ( var .@ :l3.func.previous ) ( var .@ :l3.func.next ) ]
-	:table <- [ [ :pre/post :name :@type :@default :@rest ] ]
-	:table = getParams /[ table prev :pre
-	:table = getParams /[ table next :post
-	print l3.formatTable { :arrayOfArrays table :dashesAfterFirst? true }
+	if ( ( prev !=? nil ) |? ( next !=? nil ) )
+		:table <- [ :pre/post :name :@type :@default :@rest ]
+		:table = getParams /[ table prev :pre
+		:table = getParams /[ table next :post
+		:result = l3.formatTable { :array table :columns 5 :dashesAfterFirst? true }
+	result
 :dumpFunction @cat :help @doc /" Print info about a function
 
 
 :dumpEnum <- func ->var
-	print /" type: enum
 	:table <- [ ]
 	:item forEach l3.getValue /{ :key var
-		:table = table +a [ [ "" ( item . 1 ) ] ]
-	print l3.formatTable { :arrayOfArrays table :spaces 2 }
+		:table = table +a [ "" ( item . 1 ) ]
+	l3.formatTable { :array table :columns 2 :spaces 2 }
 :dumpEnum @cat :help @doc /" Print the values of an enum
 
 
 :dumpDelimiter <- func ->var
 	:start    <- var .@ :l3.delim.start
 	:end      <- var .@ :l3.delim.end
-	print l3.stringConcat /{ :spaces 1 :array /[ :type: :delimiter start end
+	:result   <- l3.stringConcat /{ :spaces 1 :array /[ :type: :delimiter start end
 	
 	:delimEnum <- /[ :comment :string :value :array :raw
 	:type      <- delimEnum . ( var .@ :l3.delim.type )
-	print l3.stringConcat /{ :spaces 1 :array /[ " parse as: " type
+	:result = result +s \n +s l3.stringConcat /{ :spaces 1 :array /[ " parse as: " type
 	
 	:function <- var .@ :l3.delim.function
 	if ( function ) !=? nil
-		print /" applies the following function to the contents:
-		help :function
+		:result = result +s \n +s /" applies the following function to the contents:
+		:result = result +s \n +s /( help :function
+	result
 :dumpDelimiter @cat :help @doc /" Print the values of a delimiter
 
 
 :dumpMeta <- func ->key
-	:table <- [ [ :key :value ] ]
+	:table <- [ :key :value ]
 	:metadata <- l3.getMetadata { :key key }
 	:pair forEach metadata
 		// handle docstrings separately because they're long
 		if ( pair . 0 ) =? :l3.value.doc
-			:table = table +a [ [ ( pair . 0 ) " <docstring> " ] ]
+			:table = table +a [ ( pair . 0 ) " <docstring> " ]
 		else
-			:table = table +a [ pair ]
-	print l3.formatTable { :arrayOfArrays table :dashesAfterFirst? true }
-	""
+			:table = table +a pair
+	l3.formatTable { :array table :columns 2 :dashesAfterFirst? true }
 :dumpMeta @cat :help @doc /" Dump metadata for the given value attached to a key
 
 
 :listByFilter <- func { :map ->map :filter? ( ->filter? @@type :function ) :perRow ( ->perRow @@default 3 ) :spaces ( ( ->spaces @@type :int ) @@default 1 ) }
-	[ :table :line ] <- [ nil nil ]
-	:current <- 0
+	:table <- [ ]
 	:pair forEach map
 		:key <- pair . 0
 		if ( filter? key )
-			if current =? perRow - 1
-				:table = table +a [ line ]
-				:line = nil
-			:current = ( current + 1 ) % perRow
-			:line = line +a [ key ]
-	if line !=? nil
-		:table = table +a [ line ]
-	if table !=? nil
-		print l3.formatTable { :arrayOfArrays table :spaces spaces }
-	""
+			:table = table +a key
+	l3.formatTable { :array table :columns perRow :spaces spaces }
 :listByFilter @cat :help @doc /" List all the functions that pass a filter
 
 :listFunctions <- func ->map
@@ -190,8 +184,8 @@
 	:f forEach scope
 		:key <- f . 0
 		if key .@doc !=? nil
-			table += [ key ( key .@doc ) ]
-	l3.formatTable { :arrayOfArrays table }
+			:table = table +a [ :> key ( key .@doc ) ]
+	l3.formatTable { :array table :columns 3 }
 :getDocsInScope @cat :help @doc /" Return all the docstrings attached to the values in a given scope
 
 :getFileDocs <- func ->file
@@ -203,6 +197,6 @@
 :prettify <- func ->map
 	:table <- [ ]
 	:i forEach map
-		table += i
-	l3.formatTable { :arrayOfArrays table }
+		:table = table +a i
+	l3.formatTable { :array table :columns 2 }
 :prettify @cat :help @doc /" Return a map as a simple table represented by a string

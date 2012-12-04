@@ -14,6 +14,7 @@ namespace loki3.builtin
 		internal static void Register(IScope scope)
 		{
 			scope.SetValue("l3.toString", new ConvertToString());
+			scope.SetValue("l3.intToChar", new IntToChar());
 			scope.SetValue("l3.stringConcat", new StringConcat());
 			scope.SetValue("l3.formatTable", new FormatTable());
 		}
@@ -33,6 +34,26 @@ namespace loki3.builtin
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				return new ValueString(arg.ToString());
+			}
+		}
+
+		/// <summary>:a -> convert an int to a character in a string</summary>
+		class IntToChar : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new IntToChar(); }
+
+			internal IntToChar()
+			{
+				SetDocString("Convert an int to a character in a string.");
+				Init(PatternData.Single("a", ValueType.Int));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				int a = arg.AsInt;
+				if (a == 13)
+					return new ValueString("\n");
+				return new ValueString(System.Char.ConvertFromUtf32(a));
 			}
 		}
 
@@ -74,17 +95,18 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :arrayOfArrays [:dashesAfterFirst?] [:spaces] } -> a string that's a formatted table of the arrays of arrays</summary>
+		/// <summary>{ :array :columns [:dashesAfterFirst?] [:spaces] } -> a string that's the array formatted w/ the given number of columns</summary>
 		class FormatTable : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new FormatTable(); }
 
 			internal FormatTable()
 			{
-				SetDocString("Creates a string that's a formatted table of the arrays of arrays.");
+				SetDocString("Creates a string that's the array formatted w/ the given number of columns.");
 
 				Map map = new Map();
-				map["arrayOfArrays"] = PatternData.Single("arrayOfArrays", ValueType.Array);
+				map["array"] = PatternData.Single("array", ValueType.Array);
+				map["columns"] = PatternData.Single("columns", ValueType.Int);
 				map["dashesAfterFirst?"] = PatternData.Single("dashesAfterFirst?", ValueType.Bool, ValueBool.False);
 				map["spaces"] = PatternData.Single("spaces", ValueType.Int, new ValueInt(1));
 				ValueMap vMap = new ValueMap(map);
@@ -95,65 +117,60 @@ namespace loki3.builtin
 			{
 				// extract parameters
 				Map map = arg.AsMap;
-				List<Value> array = map["arrayOfArrays"].AsArray;
+				List<Value> array = map["array"].AsArray;
+				int columns = map["columns"].AsInt;
 				bool dashesAfterFirst = map["dashesAfterFirst?"].AsBool;
 				int spaces = map["spaces"].AsInt;
 
 				// first figure out how wide each column should be
 				List<int> widths = new List<int>();
-				List<List<string>> cache = new List<List<string>>();
+				for (int i = 0; i < columns; i++)
+					widths.Add(0);
+				List<string> cache = new List<string>();
+				int iColumn = 0;
 				foreach (Value line in array)
 				{
-					List<Value> lineArray = line.AsArray;
-					List<string> lineCache = new List<string>();
-					int iColumn = 0;
-					foreach (Value val in lineArray)
-					{
-						string s = val.ToString();
-						lineCache.Add(s);
-						int len = s.Length;
-						if (widths.Count < iColumn + 1)
-							widths.Add(len);
-						else if (len > widths[iColumn])
-							widths[iColumn] = len;
-						iColumn++;
-					}
-					cache.Add(lineCache);
+					string s = line.ToString();
+					cache.Add(s);
+
+					int len = s.Length;
+					if (len > widths[iColumn])
+						widths[iColumn] = len;
+
+					iColumn = (iColumn+1) % columns;
 				}
 
 				// second build up entire table using calced widths
 				string table = "";
 				bool bFirstLine = true;
-				foreach (List<string> lineCache in cache)
+				int lineWidth = 0;
+				iColumn = 0;
+				foreach (string line in cache)
 				{
-					if (bFirstLine)
-						bFirstLine = false;
-					else
-						table += "\n";
+					int len = line.Length;
+					int width = widths[iColumn] + spaces;
+					lineWidth += width;
 
-					int totalWidth = 0;
-					int nColumns = lineCache.Count;
-					int iColumn = 0;
-					foreach (string s in lineCache)
-					{
-						int len = s.Length;
-						int width = widths[iColumn] + spaces;
-						totalWidth += width;
+					table += line;
+					// don't tack on trailing spaces for last column
+					if (iColumn < columns - 1)
+						table += new string(' ', width - len);
 
-						table += s;
-						// don't tack on trailing spaces for last column
-						if (iColumn < nColumns - 1)
-							table += new string(' ', width - len);
+					iColumn = (iColumn + 1) % columns;
 
-						iColumn++;
-					}
-
-					// add a row of dashes if needed
-					if (dashesAfterFirst)
+					// add a row of dashes after first line if needed
+					if (iColumn == 0 && bFirstLine && dashesAfterFirst)
 					{
 						table += "\n";
-						table += new string('-', totalWidth - spaces);
+						table += new string('-', lineWidth - spaces);
+						table += "\n";
 						dashesAfterFirst = false;
+					}
+					else if (iColumn == 0)
+					{
+						bFirstLine = false;
+						table += "\n";
+						lineWidth = 0;
 					}
 				}
 

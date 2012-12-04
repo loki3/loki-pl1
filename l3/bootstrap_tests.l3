@@ -488,6 +488,8 @@
 		text
 	" this is some multiline text " assert=? a
 
+:\n @unittest stubFunc
+
 
 //
 // enumerated type

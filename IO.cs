@@ -36,7 +36,11 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				Value val = map["value"];
-				System.Console.WriteLine(val.ToString());
+				string s = val.ToString();
+				if (s[s.Length-1] == '\n')
+					System.Console.Write(s);
+				else
+					System.Console.WriteLine(s);
 				return val;
 			}
 		}
