@@ -2,64 +2,64 @@
 var :fizzBuzz1 = [ ]
 var :i forEach ( 1 .. 20 )
 	if ( i % 15 =? 0 )
-		fizzBuzz1 += /" fizzbuzz
-	elsif /( i % 3 =? 0
-		fizzBuzz1 += /" fizz
-	elsif /( i % 5 =? 0
-		fizzBuzz1 += /" buzz
+		fizzBuzz1 += ." fizzbuzz
+	elsif .( i % 3 =? 0
+		fizzBuzz1 += ." fizz
+	elsif .( i % 5 =? 0
+		fizzBuzz1 += ." buzz
 	else
 		fizzBuzz1 += i
-:fizzBuzz1 @doc /" fizzbuzz using a simple loop
+:fizzBuzz1 @doc ." fizzbuzz using a simple loop
 
 var :fizzBuzz2 = [ ]
 var :i forEach ( 1 .. 20 )
-	[ :str1 :fizz? ] v= ( i % 3 =? 0 ) ? /[ [ :fizz true ] [ " " false ]
-	[ :str2 :buzz? ] v= ( i % 5 =? 0 ) ? /[ [ :buzz true ] [ " " false ]
-	fizzBuzz2 += /( ( fizz? |? buzz? ) ? /[ ( str1 +s str2 ) i
-:fizzBuzz2 @doc /" fizzbuzz using multiple return values
+	[ :str1 :fizz? ] v= ( i % 3 =? 0 ) ? .[ [ :fizz true ] [ " " false ]
+	[ :str2 :buzz? ] v= ( i % 5 =? 0 ) ? .[ [ :buzz true ] [ " " false ]
+	fizzBuzz2 += .( ( fizz? |? buzz? ) ? .[ ( str1 +s str2 ) i
+:fizzBuzz2 @doc ." fizzbuzz using multiple return values
 
 var :fizzbuzz3 = func()
 	var :zzz = [ ]
 	var :i forEach ( 1 .. 20 )
 		if ( i % 15 =? 0 )
-			zzz += /" fizzbuzz
-		elsif /( i % 3 =? 0
-			zzz += /" fizz
-		elsif /( i % 5 =? 0
-			zzz += /" buzz
+			zzz += ." fizzbuzz
+		elsif .( i % 3 =? 0
+			zzz += ." fizz
+		elsif .( i % 5 =? 0
+			zzz += ." buzz
 		else
 			zzz += i
 	zzz
-:fizzbuzz3 @doc /" fizzbuzz using a function in a simple loop
+:fizzbuzz3 @doc ." fizzbuzz using a function in a simple loop
 
 
 //
 // complex numbers
 // todo: consolidate function names once overloading is implemented
 
-var :i = /( ->y postfix
+var :i = .( ->y postfix
 	{ :x 0 :y y }
 :i @order 2
-:i @doc /" Creates a complex number
+:i @doc ." Creates a complex number
 
 var :+c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	{ :x ( x1 + x2 ) :y ( y1 + y2 ) }
-:+c @doc /" Adds together two complex numbers of the form { :x # :y # }
+:+c @doc ." Adds together two complex numbers of the form { :x # :y # }
 
 var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	{ :x ( x1 * x2 - y1 * y2 ) :y ( x1 * y2 + x2 * y1 ) }
-:*c @doc /" Multiples together two complex numbers of the form { :x # :y # }
+:*c @doc ." Multiples together two complex numbers of the form { :x # :y # }
 
 
 //
 // an enum representing the days of the week
 
-:days enum /[ :sunday :monday :tuesday :wednesday :thursday :friday :saturday
-:days @doc /" an enum representing the days of the week
+:days enum .[ :sunday :monday :tuesday :wednesday :thursday :friday :saturday
+:days @doc ." an enum representing the days of the week
 
 :isWeekend v= func ( ->day @@type :days )
 	( day =? days.sunday ) |? ( day =? days.saturday )
-:isWeekend @doc /" true if the day is Saturday or Sunday
+:isWeekend @doc ." true if the day is Saturday or Sunday
 
 
 //
@@ -77,9 +77,9 @@ var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	iteration value but still requiring the result value.
 	When the computation is finished, the returned function should be nil.
 
-:! v= /( ->n postfix
+:! v= .( ->n postfix
 	:fact v= func [ ->a ->b ]
-		( a >? 0 ) ? /[ [ ( a * b ) ( fact [ ( a - 1 ) ] ) ]  [ b nil ]
+		( a >? 0 ) ? .[ [ ( a * b ) ( fact [ ( a - 1 ) ] ) ]  [ b nil ]
 	repeat [ 1 ( fact [ n ] ) ]
 :! @order 2
-:! @doc /" Factorial operator defined recursively but executed iteratively
+:! @doc ." Factorial operator defined recursively but executed iteratively

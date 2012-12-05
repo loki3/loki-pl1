@@ -1,7 +1,7 @@
 // unittests for test.l3
 
-:fizzbuzz20 v= /[ 1 2 :fizz 4 :buzz :fizz 7 8 :fizz :buzz 11 :fizz 13 14 :fizzbuzz 16 17 :fizz 19 :buzz
-:fizzbuzz20 @doc /" Expected output for fizzbuzz from 1 to 20
+:fizzbuzz20 v= .[ 1 2 :fizz 4 :buzz :fizz 7 8 :fizz :buzz 11 :fizz 13 14 :fizzbuzz 16 17 :fizz 19 :buzz
+:fizzbuzz20 @doc ." Expected output for fizzbuzz from 1 to 20
 :fizzbuzz20 @unittest true
 
 :fizzBuzz1 @unittest func()
@@ -25,13 +25,13 @@
 
 // stub out tests & docstrings for the enum & its values
 :days			@unittest ( stubFunc )
-:days.sunday	@unittest ( stubFunc ) @doc /"
-:days.monday	@unittest ( stubFunc ) @doc /"
-:days.tuesday	@unittest ( stubFunc ) @doc /"
-:days.wednesday	@unittest ( stubFunc ) @doc /"
-:days.thursday	@unittest ( stubFunc ) @doc /"
-:days.friday	@unittest ( stubFunc ) @doc /"
-:days.saturday	@unittest ( stubFunc ) @doc /"
+:days.sunday	@unittest ( stubFunc ) @doc ."
+:days.monday	@unittest ( stubFunc ) @doc ."
+:days.tuesday	@unittest ( stubFunc ) @doc ."
+:days.wednesday	@unittest ( stubFunc ) @doc ."
+:days.thursday	@unittest ( stubFunc ) @doc ."
+:days.friday	@unittest ( stubFunc ) @doc ."
+:days.saturday	@unittest ( stubFunc ) @doc ."
 
 :isWeekend @unittest func()
 	( isWeekend days.sunday )	assert=? true
@@ -45,7 +45,7 @@
 :repeat @unittest func()
 	:sum v= func ->n
 		:add v= func [ ->a ->b ]
-			( a >? 0 ) ? /[ [ ( a + b ) ( add [ ( a - 1 ) ] ) ]  [ b nil ]
+			( a >? 0 ) ? .[ [ ( a + b ) ( add [ ( a - 1 ) ] ) ]  [ b nil ]
 		repeat [ 0 ( add [ n ] ) ]
 	10 assert=? sum 4
 	55 assert=? sum 10

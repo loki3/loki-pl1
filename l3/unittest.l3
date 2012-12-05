@@ -14,27 +14,27 @@
 	import targetFile
 	import testFile
 	// stub out doc & unittest so local vars don't affect results
-	:targetFile @doc /"
-	:testFile @doc /"
+	:targetFile @doc ."
+	:testFile @doc ."
 	:targetFile @unittest true
 	:testFile @unittest true
 	// run tests on local scope
 	unittestScope currentScope
-:unittest @cat :unittest @doc /" For a given implementation file, run all the tests defined in a test file.
+:unittest @cat :unittest @doc ." For a given implementation file, run all the tests defined in a test file.
 
 :unittestScope v= func ->scope
 	var :success? = true
-	:success? = success? &? testFunction /[ checkDocs :checkDocs scope
-	:success? = success? &? testFunction /[ runUnittests :runUnittests scope
+	:success? = success? &? testFunction .[ checkDocs :checkDocs scope
+	:success? = success? &? testFunction .[ runUnittests :runUnittests scope
 	success?
-:unittestScope @cat :unittest @doc /" Run tests and check for docstrings on everything in scope
+:unittestScope @cat :unittest @doc ." Run tests and check for docstrings on everything in scope
 
-:testFunction v= func /[ ->function ->name ->scope
+:testFunction v= func .[ ->function ->name ->scope
 	[ :success? :failures ] v= function scope
 	if success?
-		print " ---- " +s name +s /" : succeeded
+		print " ---- " +s name +s ." : succeeded
 	else
-		print " ---- " +s name +s /" : failed
+		print " ---- " +s name +s ." : failed
 		print failures
 	success?
 :testFunction @cat :unittest @doc """
@@ -53,24 +53,24 @@
 	Returns [ success? arrayOfFailures ]
 
 
-:@unittest v= /( ->object infix ->function
-	object @ /[ :l3.value.unittest function
-:@unittest	@cat :unittest @doc /" Attach a unittest to a value
+:@unittest v= .( ->object infix ->function
+	object @ .[ :l3.value.unittest function
+:@unittest	@cat :unittest @doc ." Attach a unittest to a value
 
-:.@unittest v= /( ->object postfix
+:.@unittest v= .( ->object postfix
 	:metadata v= l3.getMetadata { :key object }
 	:test v= nil
 	if metadata !=? nil
-		:test = l3.getValue /{ :object metadata :key :l3.value.unittest
+		:test = l3.getValue .{ :object metadata :key :l3.value.unittest
 	test
-:.@unittest	@cat :unittest @doc /" Get the unittest attached to a value
+:.@unittest	@cat :unittest @doc ." Get the unittest attached to a value
 
 :stubFunc v= func()
 	true
-:stubFunc @cat :unittest @doc /" Used for stubbing out unneeded unittests
+:stubFunc @cat :unittest @doc ." Used for stubbing out unneeded unittests
 
 
-:assert=? v= /( ->expected infix ->actual
+:assert=? v= .( ->expected infix ->actual
 	if expected !=? actual
 		print " FAILED : " +s unittestName
 		print " .expected: " +s expected =>str
@@ -83,7 +83,7 @@
 
 :assertTrue? v= func ->cond
 	if !? l3.eval cond
-		print /" ...failed...
+		print ." ...failed...
 		print " FAILED : " +s unittestName
 		print " ...expected: true "
 		print " .expression: " +s cond =>str
@@ -95,7 +95,7 @@
 
 :assertFalse? v= func ->cond
 	if l3.eval cond
-		print /" ...failed...
+		print ." ...failed...
 		print " FAILED : " +s unittestName
 		print " ...expected: false "
 		print " .expression: " +s cond =>str
@@ -106,11 +106,11 @@
 	If it's not, the current unittest function aborts & fails.
 
 :assertFail v= func ->message
-	print /" ...failed...
+	print ." ...failed...
 	print " FAILED : " +s unittestName
 	print " message: " +s message
 	l3.popScope { :name :runUnittests :return false }
-:assertFail @cat :unittest @doc /" Unittests can say they fail immediately if this line of code is run.
+:assertFail @cat :unittest @doc ." Unittests can say they fail immediately if this line of code is run.
 
 
 :runUnittests v= func ->scope

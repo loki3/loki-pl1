@@ -85,14 +85,14 @@ namespace loki3.builtin.test
 					"	{ :real x :imaginary y }",
 					":complex @order 1",
 					// 5 i -> 5i
-					":i v= /( ->y postfix",
+					":i v= .( ->y postfix",
 					"	{ :real 0 :imaginary y }",
 					":i @order 1",
 					// addition
 					// todo: adjust when we have function overloading & default values
-					":+c v= /( { :real ->x1 :imaginary ->y1 } infix { :real ->x2 :imaginary ->y2 }",
+					":+c v= .( { :real ->x1 :imaginary ->y1 } infix { :real ->x2 :imaginary ->y2 }",
 					"	{ :real ( x1 + x2 ) :imaginary ( y1 + y2 ) }",
-					":+i v= /( ->x1 infix { :real ->x2 :imaginary ->y2 }",
+					":+i v= .( ->x1 infix { :real ->x2 :imaginary ->y2 }",
 					"	{ :real ( x1 + x2 ) :imaginary y2 }",
 				};
 				LineConsumer requestor = new LineConsumer(lines);
@@ -290,7 +290,7 @@ namespace loki3.builtin.test
 					string[] lines = {
 						":total v= 0",
 						":i v= 0",
-						"l3.loop /{ :check /` i !=? 5",
+						"l3.loop .{ :check .` i !=? 5",
 						"	:i = i + 1",
 						"	:total = total + i",
 					};

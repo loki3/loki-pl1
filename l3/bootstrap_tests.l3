@@ -19,17 +19,17 @@
 :`		@unittest func()
 	8 assert=? l3.eval ` 5 + 3 `
 
-:/(		@unittest func()
-	10 assert=? 4 + /( 3 * 2
+:.(		@unittest func()
+	10 assert=? 4 + .( 3 * 2
 
-:/[		@unittest func()
-	3 assert=? l3.getCount /[ 2 3 4
+:.[		@unittest func()
+	3 assert=? l3.getCount .[ 2 3 4
 
-:/{		@unittest func()
-	:map assert=? l3.getType /{ :value /{ :a 1 :b 2 
+:.{		@unittest func()
+	:map assert=? l3.getType .{ :value .{ :a 1 :b 2 
 
-:/`		@unittest func()
-	8 assert=? l3.eval /` 5 + 3
+:.`		@unittest func()
+	8 assert=? l3.eval .` 5 + 3
 
 :/*		@unittest func()
 	:a /* comment */ v= /* comment */ 5 + 3
@@ -41,11 +41,11 @@
 :'		@unittest func()
 	:asdf assert=? ' asdf '
 
-:/"		@unittest func()
-	:asdf assert=? /" asdf
+:."		@unittest func()
+	:asdf assert=? ." asdf
 
-:/'		@unittest func()
-	:asdf assert=? /' asdf
+:.'		@unittest func()
+	:asdf assert=? .' asdf
 
 :v=		@unittest func()
 	:a v= 5
@@ -70,12 +70,12 @@
 	7 assert=? func 5
 
 :infix	@unittest func()
-	:a v= /( ->b infix ->c
+	:a v= .( ->b infix ->c
 		b + c
 	42 assert=? 40 a 2
 
 :postfix @unittest func()
-	:a v= /( ->b postfix
+	:a v= .( ->b postfix
 		b + 2
 	5 assert=? 3 a
 
@@ -202,7 +202,7 @@
 // more function definitions
 
 :lambda	@unittest func()
-	:2+ v= /( lambda /[ :x /` 2 + x
+	:2+ v= .( lambda .[ :x .` 2 + x
 	3 assert=? 2+ 1
 
 :((		@unittest func()
@@ -211,32 +211,32 @@
 	:mult v= (( [ :a :b ] ` a * b ` ))
 	12 assert=? mult [ 6 2 ]
 
-:/((	@unittest func()
-	:2+ v= /(( :x ` 2 + x `
+:.((	@unittest func()
+	:2+ v= .(( :x ` 2 + x `
 	3 assert=? 2+ 1
 
 :lambda1	@unittest func()
-	:2+ v= /( lambda1 /` ## + 2
+	:2+ v= .( lambda1 .` ## + 2
 	3 assert=? 2+ 1
 
 :(|		@unittest func()
 	:2+ v= (| ## + 2 |)
 	3 assert=? 2+ 1
 
-:/(|	@unittest func()
-	:2+ v= /(| ## + 2
+:.(|	@unittest func()
+	:2+ v= .(| ## + 2
 	3 assert=? 2+ 1
 
 :lambda2	@unittest func()
-	:div v= /( lambda2 ` #1 / #2 `
+	:div v= .( lambda2 ` #1 / #2 `
 	3 assert=? 6 div 2
 
 :(<		@unittest func()
 	:div v= (< #1 / #2 >)
 	3 assert=? 6 div 2
 
-:/(<	@unittest func()
-	:div v= /(< #1 / #2
+:.(<	@unittest func()
+	:div v= .(< #1 / #2
 	3 assert=? 6 div 2
 
 
@@ -292,9 +292,9 @@
 	[ 3 4 5 6 ] assert=? a
 
 :countOf @unittest func()
-	3 assert=? countOf /[ 5 6 8
-	2 assert=? countOf /{ :a 1 :b 3
-	5 assert=? countOf /" qwert
+	3 assert=? countOf .[ 5 6 8
+	2 assert=? countOf .{ :a 1 :b 3
+	5 assert=? countOf ." qwert
 
 :apply @unittest func()
 	[ 6 10 14 ] assert=? [ 3 5 7 ] apply (| ## * 2 |)
@@ -341,7 +341,7 @@
 	assertTrue? a
 	// if is skipped
 	if false
-		assertFail /" if shouldn't have been called
+		assertFail ." if shouldn't have been called
 
 :elsif @unittest func()
 	// if is run, not elsif
@@ -349,21 +349,21 @@
 	if true
 		:a = 1
 	elsif true
-		assertFail /" elsif shouldn't have been called
+		assertFail ." elsif shouldn't have been called
 	1 assert=? a
 	// elsif is run
 	:a v= 0
 	if false
-		assertFail /" if shouldn't have been called
+		assertFail ." if shouldn't have been called
 	elsif true
 		:a = 2
 	2 assert=? a
 	// if & elsif are skipped
 	:a v= 0
 	if false
-		assertFail /" if shouldn't have been called
+		assertFail ." if shouldn't have been called
 	elsif false
-		assertFail /" elsif shouldn't have been called
+		assertFail ." elsif shouldn't have been called
 	0 assert=? a
 
 :else @unittest func()
@@ -372,12 +372,12 @@
 	if true
 		:a = 1
 	else
-		assertFail /" else shouldn't have been called
+		assertFail ." else shouldn't have been called
 	1 assert=? a
 	// else is run
 	:a v= 0
 	if false
-		assertFail /" if shouldn't have been called
+		assertFail ." if shouldn't have been called
 	else
 		:a = 2
 	2 assert=? a
@@ -387,14 +387,14 @@
 	if true
 		:a = 1
 	elsif true
-		assertFail /" elsif shouldn't have been called
+		assertFail ." elsif shouldn't have been called
 	else
-		assertFail /" else shouldn't have been called
+		assertFail ." else shouldn't have been called
 	1 assert=? a
 	// elsif is run
 	:a v= 0
 	if false
-		assertFail /" if shouldn't have been called
+		assertFail ." if shouldn't have been called
 	elsif true
 		:a = 2
 	else
@@ -403,9 +403,9 @@
 	// else is run
 	:a v= 0
 	if false
-		assertFail /" if shouldn't have been called
+		assertFail ." if shouldn't have been called
 	elsif false
-		assertFail /" elsif shouldn't have been called
+		assertFail ." elsif shouldn't have been called
 	else
 		:a = 3
 	3 assert=? a
@@ -417,7 +417,7 @@
 :while @unittest func()
 	:total v= 0
 	:i v= 0
-	while /` i !=? 5
+	while .` i !=? 5
 		:i = i + 1
 		:total = total + i
 	5  assert=? i
@@ -427,7 +427,7 @@
 	// todo: should be able to declare i inside for
 	:total v= 0
 	:i v= 0
-	for /[ ` :i = 0 ` ` i !=? 5 ` ` :i = i + 1 `
+	for .[ ` :i = 0 ` ` i !=? 5 ` ` :i = i + 1 `
 		:total = total + i
 	10 assert=? total
 
@@ -457,7 +457,7 @@
 :break @unittest func()
 	:total v= 0
 	:i v= 0
-	while /` i !=? 8
+	while .` i !=? 8
 		:i = i + 1
 		if i =? 4
 			break
@@ -478,7 +478,7 @@
 	:qwert assert=? :qw +s :ert
 
 :"" @unittest func()
-	:string	assert=? l3.getType /{ :value ""
+	:string	assert=? l3.getType .{ :value ""
 	0		assert=? l3.getCount ""
 
 :""" @unittest func()
@@ -498,7 +498,7 @@
 	:asdf enum [ :qwert :yuiop ]
 	0		assert=? asdf.qwert
 	1		assert=? asdf.yuiop
-	:asdf	assert=? l3.getType /{ :value asdf.yuiop
+	:asdf	assert=? l3.getType .{ :value asdf.yuiop
 
 
 //
