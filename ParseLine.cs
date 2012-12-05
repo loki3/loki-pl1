@@ -88,7 +88,7 @@ namespace loki3.core
 					Token token = new Token(subStr);
 					DelimiterNode node = new DelimiterNodeToken(token);
 					nodes.Add(node);
-					return new DelimiterList(thisDelim, nodes, indent, subStr);
+					return new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr);
 				}
 			}
 			else // Value, Array && Raw
@@ -102,7 +102,7 @@ namespace loki3.core
 					{	// end delimiter
 						iEnd = i;
 						string subStr = GetSubStr(iStart, iEnd, strs);
-						return new DelimiterList(thisDelim, nodes, indent, subStr);
+						return new DelimiterList(thisDelim, nodes, indent, strs[iStart-1], subStr);
 					}
 
 					// is it a stand alone starting delimiter?
@@ -133,7 +133,7 @@ namespace loki3.core
 
 			iEnd = strs.Length;
 			string trimmed = original.TrimStart(' ', '\t');
-			return new DelimiterList(thisDelim, nodes, indent, trimmed);
+			return new DelimiterList(thisDelim, nodes, indent, "", trimmed);
 		}
 
 		/// <summary>

@@ -13,7 +13,7 @@ namespace loki3.builtin.test
 			ScopeChain scope = new ScopeChain();
 			Logic.Register(scope);
 
-			scope.SetValue("[", new ValueDelimiter("[", "]", DelimiterType.AsArray));
+			scope.SetValue("[", new ValueDelimiter("]", DelimiterType.AsArray));
 
 			return scope;
 		}

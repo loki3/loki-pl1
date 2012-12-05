@@ -12,7 +12,7 @@ namespace loki3.builtin.test
 			ScopeChain scope = new ScopeChain();
 			Math.Register(scope);
 
-			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			ValueDelimiter square = new ValueDelimiter("]", DelimiterType.AsArray);
 			scope.SetValue("[", square);
 
 			return scope;

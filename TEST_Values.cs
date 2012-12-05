@@ -14,11 +14,11 @@ namespace loki3.builtin.test
 			ScopeChain scope = new ScopeChain();
 			Values.Register(scope);
 
-			scope.SetValue("(", new ValueDelimiter("(", ")", DelimiterType.AsValue));
-			scope.SetValue("[", new ValueDelimiter("[", "]", DelimiterType.AsArray));
-			scope.SetValue("'", new ValueDelimiter("'", "'", DelimiterType.AsString));
-			scope.SetValue("{", new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap()));
-			scope.SetValue("`", new ValueDelimiter("`", "`", DelimiterType.AsRaw));
+			scope.SetValue("(", new ValueDelimiter(")", DelimiterType.AsValue));
+			scope.SetValue("[", new ValueDelimiter("]", DelimiterType.AsArray));
+			scope.SetValue("'", new ValueDelimiter("'", DelimiterType.AsString));
+			scope.SetValue("{", new ValueDelimiter("}", DelimiterType.AsArray, new CreateMap()));
+			scope.SetValue("`", new ValueDelimiter("`", DelimiterType.AsRaw));
 
 			return scope;
 		}
@@ -213,7 +213,7 @@ namespace loki3.builtin.test
 
 			{	// {} should mean create a map from the contents
 				// first add the + function to the current scope
-				Value value = TestSupport.ToValue("l3.setValue { :key :{ :value ( l3.createDelimiter { :start :{  :end :} :type :asArray :function l3.createMap } ) }", scope);
+				Value value = TestSupport.ToValue("l3.setValue { :key :{ :value ( l3.createDelimiter { :end :} :type :asArray :function l3.createMap } ) }", scope);
 				ValueDelimiter delimi = value as ValueDelimiter;
 
 				// next, use it

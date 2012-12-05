@@ -1,14 +1,14 @@
 l3.createEvalDelimiter :()
 l3.createArrayDelimiter :[]
-l3.setValue ( l3.createMap [ :key :{ :value ( l3.createDelimiter l3.createMap [ :start :{  :end :} :type :asArray :function l3.createMap ] ) ] )
-l3.setValue { :key :// :value ( l3.createDelimiter { :start ://  :type :asComment } ) }
+l3.setValue ( l3.createMap [ :key :{ :value ( l3.createDelimiter l3.createMap [ :end :} :type :asArray :function l3.createMap ] ) ] )
+l3.setValue { :key :// :value ( l3.createDelimiter { :type :asComment } ) }
 
 // the first lines created () as the value delimiter,
 // [] as the array delimiter, {} as the map delimeter,
 // and // as the remainder-of-line comment delimiter
 
 // raw delimiter
-l3.setValue { :key :` :value ( l3.createDelimiter { :start :`  :end :` :type :asRaw } ) }
+l3.setValue { :key :` :value ( l3.createDelimiter { :end :` :type :asRaw } ) }
 
 // create a new variable and assign a value
 l3.setValue { :key :v= :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? true } ` ] } ) }
@@ -20,27 +20,27 @@ l3.setValue { :key :var :value ( l3.createFunction { :post ->name :order 2 :body
 l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? false } ` ] } ) }
 
 // remainder of line is a value
-:.( v= ( l3.createDelimiter { :start :.(  :type :asValue } )
+:.( v= ( l3.createDelimiter { :type :asValue } )
 
 // remainder of line is an array
-:.[ v= .( l3.createDelimiter { :start :.[  :type :asArray }
+:.[ v= .( l3.createDelimiter { :type :asArray }
 
 // remainder of line is a map
-:.{ v= .( l3.createDelimiter { :start :.{  :type :asArray :function l3.createMap }
+:.{ v= .( l3.createDelimiter { :type :asArray :function l3.createMap }
 
 // remainder of line is raw
-:.` v= .( l3.createDelimiter .{ :start :.`  :type :asRaw
+:.` v= .( l3.createDelimiter .{ :type :asRaw
 
 // range comment delimiter
-:/* v= .( l3.createDelimiter .{ :start :/*  :end :*/ :type :asComment
+:/* v= .( l3.createDelimiter .{ :end :*/ :type :asComment
 
 // string delimiter
-:" v= .( l3.createDelimiter .{ :start :"  :end :" :type :asString
-:' v= .( l3.createDelimiter .{ :start :'  :end :' :type :asString
+:" v= .( l3.createDelimiter .{ :end :" :type :asString
+:' v= .( l3.createDelimiter .{ :end :' :type :asString
 
 // remainder of line is a string
-:." v= .( l3.createDelimiter .{ :start :."  :type :asString
-:.' v= .( l3.createDelimiter .{ :start :.'  :type :asString
+:." v= .( l3.createDelimiter .{ :type :asString
+:.' v= .( l3.createDelimiter .{ :type :asString
 
 
 //
@@ -190,10 +190,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :post pattern :body ( [ line1 ] +a more ) }
 :lambda	@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. lambda [ :x ` 2 + x ` ]
 
-:(( v= .( l3.createDelimiter .{ :start :((  :end :)) :type :asArray :function lambda
+:(( v= .( l3.createDelimiter .{ :end :)) :type :asArray :function lambda
 :((		@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
 
-:.(( v= .( l3.createDelimiter .{ :start :.((  :type :asArray :function lambda
+:.(( v= .( l3.createDelimiter .{ :type :asArray :function lambda
 :.((	@cat :function @doc ." Remainder of line is a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
 
 
@@ -203,10 +203,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :post ->## :body [ line ] }
 :lambda1	@cat :function @doc ." Creates a single line prefix function, assuming parameter is called ##, e.g. lambda1 ` 2 + ## `
 
-:(| v= .( l3.createDelimiter .{ :start :(|  :end :|) :type :asRaw :function lambda1
+:(| v= .( l3.createDelimiter .{ :end :|) :type :asRaw :function lambda1
 :(|		@cat :function @doc ." Create a single line prefix function, assuming parameter is called ##, e.g. (| 2 + ## |)
 
-:.(| v= .( l3.createDelimiter .{ :start :.(|  :type :asRaw :function lambda1
+:.(| v= .( l3.createDelimiter .{ :type :asRaw :function lambda1
 :.(|	@cat :function @doc ." Create a single line prefix function, assuming parameter is called ##, e.g. .(| 2 + ##
 
 
@@ -216,10 +216,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :pre ->#1 :post ->#2 :body [ line ] }
 :lambda2	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. lambda2 ` #1 + #2 `
 
-:(< v= .( l3.createDelimiter .{ :start :(<  :end :>) :type :asRaw :function lambda2
+:(< v= .( l3.createDelimiter .{ :end :>) :type :asRaw :function lambda2
 :(<		@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. (< #1 + #2 >)
 
-:.(< v= .( l3.createDelimiter .{ :start :.(<  :type :asRaw :function lambda2
+:.(< v= .( l3.createDelimiter .{ :type :asRaw :function lambda2
 :.(<	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. .(< #1 + #2
 
 

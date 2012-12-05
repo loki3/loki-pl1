@@ -8,11 +8,12 @@ namespace loki3.core
 	/// </summary>
 	internal class DelimiterList
 	{
-		internal DelimiterList(ValueDelimiter delim, List<DelimiterNode> nodes, int indent, string original)
+		internal DelimiterList(ValueDelimiter delim, List<DelimiterNode> nodes, int indent, string startDelim, string original)
 		{
 			m_delimiter = delim;
 			m_nodes = nodes;
 			m_indent = indent;
+			m_startDelim = startDelim;	// if known
 			m_original = original;
 		}
 
@@ -24,7 +25,7 @@ namespace loki3.core
 		public override string ToString()
 		{
 			string s = new string('\t', m_indent);
-			s += m_delimiter.Start + " ";
+			s += m_startDelim + " ";
 			foreach (DelimiterNode node in m_nodes)
 				s += node.ToString() + " ";
 			if (m_delimiter.End.Length > 0)
@@ -35,6 +36,7 @@ namespace loki3.core
 		private ValueDelimiter m_delimiter;
 		private List<DelimiterNode> m_nodes;
 		private int m_indent;
+		private string m_startDelim;
 		private string m_original;
 	}
 

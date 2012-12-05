@@ -12,11 +12,11 @@ namespace loki3.builtin.test
 			ScopeChain scope = new ScopeChain();
 			String.Register(scope);
 
-			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			ValueDelimiter square = new ValueDelimiter("]", DelimiterType.AsArray);
 			scope.SetValue("[", square);
-			ValueDelimiter str = new ValueDelimiter("'", "'", DelimiterType.AsString);
+			ValueDelimiter str = new ValueDelimiter("'", DelimiterType.AsString);
 			scope.SetValue("'", str);
-			ValueDelimiter curly = new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap());
+			ValueDelimiter curly = new ValueDelimiter("}", DelimiterType.AsArray, new CreateMap());
 			scope.SetValue("{", curly);
 
 			return scope;

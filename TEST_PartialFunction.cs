@@ -56,9 +56,9 @@ namespace loki3.core.test
 			scope.SetValue("subtract-map", new SubtractMap());
 			scope.SetValue("create-map", new CreateMap());
 
-			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			ValueDelimiter square = new ValueDelimiter("]", DelimiterType.AsArray);
 			scope.SetValue("[", square);
-			ValueDelimiter curly = new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap());
+			ValueDelimiter curly = new ValueDelimiter("}", DelimiterType.AsArray, new CreateMap());
 			scope.SetValue("{", curly);
 
 			return scope;

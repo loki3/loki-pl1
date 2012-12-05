@@ -177,11 +177,11 @@ namespace loki3.core.test
 		[Test]
 		public void TestDelimitedString()
 		{
-			ValueDelimiter delim = new ValueDelimiter("'", "'", DelimiterType.AsString);
+			ValueDelimiter delim = new ValueDelimiter("'", DelimiterType.AsString);
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
 			string str = "this is a test";
 			nodes.Add(ToNode(str));
-			DelimiterList list = new DelimiterList(delim, nodes, 0, str);
+			DelimiterList list = new DelimiterList(delim, nodes, 0, "'", str);
 			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
 			IScope scope = new TestScope();
@@ -201,12 +201,12 @@ namespace loki3.core.test
 		[Test]
 		public void TestArray()
 		{
-			ValueDelimiter delim = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			ValueDelimiter delim = new ValueDelimiter("]", DelimiterType.AsArray);
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
 			nodes.Add(ToNode("3"));
 			nodes.Add(ToNode("7"));
 			nodes.Add(ToNode("3"));
-			DelimiterList list = new DelimiterList(delim, nodes, 0, "3 7 3");
+			DelimiterList list = new DelimiterList(delim, nodes, 0, "[", "3 7 3");
 			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
 			IScope scope = new TestScope();
@@ -246,12 +246,12 @@ namespace loki3.core.test
 		public void TestDelimiterFunction()
 		{
 			ValueFunction function = new AddFunction();
-			ValueDelimiter delim = new ValueDelimiter("<", ">", DelimiterType.AsArray, function);
+			ValueDelimiter delim = new ValueDelimiter(">", DelimiterType.AsArray, function);
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
 			nodes.Add(ToNode("3"));
 			nodes.Add(ToNode("6"));
 			nodes.Add(ToNode("9"));
-			DelimiterList list = new DelimiterList(delim, nodes, 0, "3 6 9");
+			DelimiterList list = new DelimiterList(delim, nodes, 0, "<", "3 6 9");
 			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
 			IScope scope = new TestScope();

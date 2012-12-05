@@ -120,7 +120,7 @@
 
 
 :dumpDelimiter v= func ->var
-	:start    v= var .@ :l3.delim.start
+	:start    v= var
 	:end      v= var .@ :l3.delim.end
 	:result   v= l3.stringConcat .{ :spaces 1 :array .[ :type: :delimiter start end
 	

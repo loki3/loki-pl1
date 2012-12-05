@@ -24,10 +24,10 @@ namespace loki3.core.test
 				return null;
 			}
 
-			private ValueDelimiter m_square = new ValueDelimiter("[", "]");
-			private ValueDelimiter m_fancy = new ValueDelimiter("<[", "]>");
-			private ValueDelimiter m_double = new ValueDelimiter("{{", "}}", DelimiterType.AsString);
-			private ValueDelimiter m_comment = new ValueDelimiter("/*", "*/", DelimiterType.AsComment);
+			private ValueDelimiter m_square = new ValueDelimiter("]");
+			private ValueDelimiter m_fancy = new ValueDelimiter("]>");
+			private ValueDelimiter m_double = new ValueDelimiter("}}", DelimiterType.AsString);
+			private ValueDelimiter m_comment = new ValueDelimiter("*/", DelimiterType.AsComment);
 		}
 
 		[Test]
@@ -71,7 +71,7 @@ namespace loki3.core.test
 				Assert.AreEqual("ghjkl", list.Nodes[2].Token.Value);
 
 				DelimiterList sublist = list.Nodes[1].List;
-				Assert.AreEqual("(", sublist.Delimiter.Start);
+				Assert.AreEqual(")", sublist.Delimiter.End);
 				Assert.AreEqual(2, sublist.Nodes.Count);
 				Assert.AreEqual("qwert", sublist.Nodes[0].Token.Value);
 				Assert.AreEqual("yuiop", sublist.Nodes[1].Token.Value);
@@ -85,13 +85,13 @@ namespace loki3.core.test
 				Assert.AreEqual("e", list.Nodes[2].Token.Value);
 
 				DelimiterList sublist = list.Nodes[1].List;
-				Assert.AreEqual("(", sublist.Delimiter.Start);
+				Assert.AreEqual(")", sublist.Delimiter.End);
 				Assert.AreEqual(3, sublist.Nodes.Count);
 				Assert.AreEqual("b", sublist.Nodes[0].Token.Value);
 				Assert.AreEqual("d", sublist.Nodes[2].Token.Value);
 
 				DelimiterList subsublist = sublist.Nodes[1].List;
-				Assert.AreEqual("<[", subsublist.Delimiter.Start);
+				Assert.AreEqual("]>", subsublist.Delimiter.End);
 				Assert.AreEqual(1, subsublist.Nodes.Count);
 				Assert.AreEqual("c", subsublist.Nodes[0].Token.Value);
 			}
@@ -104,13 +104,13 @@ namespace loki3.core.test
 				Assert.AreEqual("e", list.Nodes[2].Token.Value);
 
 				DelimiterList sublist = list.Nodes[1].List;
-				Assert.AreEqual("(", sublist.Delimiter.Start);
+				Assert.AreEqual(")", sublist.Delimiter.End);
 				Assert.AreEqual(3, sublist.Nodes.Count);
 				Assert.AreEqual("b", sublist.Nodes[0].Token.Value);
 				Assert.AreEqual("d", sublist.Nodes[2].Token.Value);
 
 				DelimiterList subsublist = sublist.Nodes[1].List;
-				Assert.AreEqual("(", subsublist.Delimiter.Start);
+				Assert.AreEqual(")", subsublist.Delimiter.End);
 				Assert.AreEqual(1, subsublist.Nodes.Count);
 				Assert.AreEqual("c", subsublist.Nodes[0].Token.Value);
 			}
@@ -129,7 +129,7 @@ namespace loki3.core.test
 				Assert.AreEqual("ghjkl", list.Nodes[2].Token.Value);
 
 				DelimiterList sublist = list.Nodes[1].List;
-				Assert.AreEqual("{{", sublist.Delimiter.Start);
+				Assert.AreEqual("}}", sublist.Delimiter.End);
 				Assert.AreEqual(1, sublist.Nodes.Count);
 				Assert.AreEqual("qwert ( yuiop", sublist.Nodes[0].Token.Value);
 			}

@@ -13,8 +13,8 @@ namespace loki3.builtin.test
 			Module.Register(scope);
 			Values.Register(scope);
 
-			scope.SetValue("'", new ValueDelimiter("'", "'", DelimiterType.AsString));
-			scope.SetValue("{", new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap()));
+			scope.SetValue("'", new ValueDelimiter("'", DelimiterType.AsString));
+			scope.SetValue("{", new ValueDelimiter("}", DelimiterType.AsArray, new CreateMap()));
 
 			return scope;
 		}

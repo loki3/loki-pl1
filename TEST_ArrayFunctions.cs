@@ -13,8 +13,8 @@ namespace loki3.builtin.test
 			ArrayFunctions.Register(scope);
 			scope.SetValue("create-map", new CreateMap());
 
-			scope.SetValue("[", new ValueDelimiter("[", "]", DelimiterType.AsArray));
-			scope.SetValue("{", new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap()));
+			scope.SetValue("[", new ValueDelimiter("]", DelimiterType.AsArray));
+			scope.SetValue("{", new ValueDelimiter("}", DelimiterType.AsArray, new CreateMap()));
 			return scope;
 		}
 

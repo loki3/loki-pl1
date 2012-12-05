@@ -64,7 +64,7 @@ namespace loki3.core.test
 		{
 			ScopeChain scope = new ScopeChain();
 			scope.SetValue("+", new TestSum());
-			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			ValueDelimiter square = new ValueDelimiter("]", DelimiterType.AsArray);
 			scope.SetValue("[", square);
 
 			{	// create postfix function that takes [ a b ]
@@ -90,9 +90,9 @@ namespace loki3.core.test
 		{
 			ScopeChain scope = new ScopeChain();
 			scope.SetValue("+", new TestSum());
-			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			ValueDelimiter square = new ValueDelimiter("]", DelimiterType.AsArray);
 			scope.SetValue("[", square);
-			ValueDelimiter curly = new ValueDelimiter("{", "}", DelimiterType.AsArray, new CreateMap());
+			ValueDelimiter curly = new ValueDelimiter("}", DelimiterType.AsArray, new CreateMap());
 			scope.SetValue("{", curly);
 
 			{	// create postfix function that takes { :a :b }

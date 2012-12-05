@@ -19,35 +19,34 @@ namespace loki3.core
 	internal class ValueDelimiter : Value
 	{
 		/// <summary>
-		/// Specify the start and end strings for a delimiter
+		/// Specify the end string for a delimiter
 		/// </summary>
-		internal ValueDelimiter(string start, string end)
+		internal ValueDelimiter(string end)
 		{
-			Init(start, end, DelimiterType.AsValue, null);
+			Init(end, DelimiterType.AsValue, null);
 		}
 		/// <summary>
-		/// Specify the start and end strings for a delimiter
+		/// Specify the end string for a delimiter
 		/// and whether contents should be tokenized or left as-is
 		/// </summary>
-		internal ValueDelimiter(string start, string end, DelimiterType type)
+		internal ValueDelimiter(string end, DelimiterType type)
 		{
-			Init(start, end, type, null);
+			Init(end, type, null);
 		}
 		/// <summary>
 		/// Delimited contents will be passed off to function to be evaluated
 		/// </summary>
 		/// <param name="function">function must take a next parameter of specified type</param>
-		internal ValueDelimiter(string start, string end, DelimiterType type, ValueFunction function)
+		internal ValueDelimiter(string end, DelimiterType type, ValueFunction function)
 		{
-			Init(start, end, type, function);
+			Init(end, type, function);
 		}
 
 		private ValueDelimiter() { }
 
-		private void Init(string start, string end, DelimiterType type, ValueFunction function)
+		private void Init(string end, DelimiterType type, ValueFunction function)
 		{
 			Map meta = WritableMetadata;
-			meta[keyDelimStart] = new ValueString(start);
 			meta[keyDelimEnd] = new ValueString(end);
 			meta[keyDelimType] = new ValueInt((int)type);
 			if (function != null)
@@ -70,14 +69,11 @@ namespace loki3.core
 		#endregion
 
 		#region Keys
-		internal static string keyDelimStart = "l3.delim.start";
 		internal static string keyDelimEnd = "l3.delim.end";
 		internal static string keyDelimType = "l3.delim.type";
 		internal static string keyDelimFunction = "l3.delim.function";
 		#endregion
 
-		/// <summary>characters used to start delimited section</summary>
-		internal string Start { get { return Metadata[keyDelimStart].AsString; } }
 		/// <summary>characters used to end delimited section, empty means use rest of line</summary>
 		internal string End { get { return Metadata[keyDelimEnd].AsString; } }
 		/// <summary>true if section should be tokenized, false for as-is</summary>
@@ -97,7 +93,7 @@ namespace loki3.core
 		/// <summary>Basic "don't eval yet" delimiters</summary>
 		static internal ValueDelimiter Basic { get { return m_basic; } }
 
-		static private ValueDelimiter m_line = new ValueDelimiter("", "");
-		static private ValueDelimiter m_basic = new ValueDelimiter("(", ")");
+		static private ValueDelimiter m_line = new ValueDelimiter("");
+		static private ValueDelimiter m_basic = new ValueDelimiter(")");
 	}
 }

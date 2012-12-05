@@ -291,7 +291,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :start :end [:type] [function] } -> delimiter</summary>
+		/// <summary>{ :end [:type] [function] } -> delimiter</summary>
 		class CreateDelimiter : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new CreateDelimiter(); }
@@ -301,7 +301,6 @@ namespace loki3.builtin
 				SetDocString("Create a delimiter, with start and end strings.\nOptionally specify how the contents should be interpreted and/or a function to be run on the contents.");
 
 				Map map = new Map();
-				map["start"] = PatternData.Single("start", ValueType.String);
 				map["end"] = PatternData.Single("end", ValueType.String, new ValueString(""));
 				map["type"] = PatternData.Single("type", new ValueNil());
 				map["function"] = PatternData.Single("function", ValueType.Function, new ValueNil());
@@ -314,7 +313,6 @@ namespace loki3.builtin
 				Map map = arg.AsMap;
 
 				// extract optional & required parameters
-				string start = map["start"].AsString;
 				string end = map["end"].AsString;
 				Value typeval = map.GetOptional("type", null);
 				Value funcval = map.GetOptional("function", null);
@@ -334,7 +332,7 @@ namespace loki3.builtin
 						type = DelimiterType.AsRaw;
 				}
 
-				return new ValueDelimiter(start, end, type, function);
+				return new ValueDelimiter(end, type, function);
 			}
 		}
 
@@ -362,7 +360,7 @@ namespace loki3.builtin
 				string end = delims.Substring(delims.Length / 2, delims.Length - delims.Length / 2);
 
 				// create the delimiter & store it on the current scope
-				ValueDelimiter value = new ValueDelimiter(start, end, DelimiterType);
+				ValueDelimiter value = new ValueDelimiter(end, DelimiterType);
 				scope.SetValue(start, value);
 				return value;
 			}

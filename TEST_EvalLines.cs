@@ -57,7 +57,7 @@ namespace loki3.core.test
 			scope.SetValue("subtract", new SubtractArray());
 			scope.SetValue("add", new AddUpBody());
 
-			ValueDelimiter square = new ValueDelimiter("[", "]", DelimiterType.AsArray);
+			ValueDelimiter square = new ValueDelimiter("]", DelimiterType.AsArray);
 			scope.SetValue("[", square);
 
 			return scope;
