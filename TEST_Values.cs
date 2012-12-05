@@ -110,6 +110,13 @@ namespace loki3.builtin.test
 				Assert.AreEqual(22, scope.AsMap["second"].AsInt);
 				Assert.AreEqual(33, scope.AsMap["third"].AsInt);
 			}
+
+			{	// special case: initialize every token in array to nil
+				Value value = TestSupport.ToValue("l3.setValue { :key [ :first :second :third ] :value nil :create? true }", scope);
+				Assert.IsTrue(scope.AsMap["first"].IsNil);
+				Assert.IsTrue(scope.AsMap["second"].IsNil);
+				Assert.IsTrue(scope.AsMap["third"].IsNil);
+			}
 		}
 
 		[Test]

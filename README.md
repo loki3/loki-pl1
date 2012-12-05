@@ -49,24 +49,24 @@ Domain Specific Languages (DSLs) can be created in Loki3.  Some of the features 
 
 ```
 // defines an infix operator that uses a built-in function to create a range
-:.. <- ( ->start infix ->end )
+var :.. = ( ->start infix ->end )
     l3.createRange { :start start :end end }
 
 // the following assigns [ 3 4 5 6 7 ] to a
-:a <- 3 .. 7
+var :a = 3 .. 7
 ```
 Here's an example showing how you could leverage bodies for creating maps:
 
 ```
 // defines a function that takes a body and turns it into a map
-:makeMap <- func()
-	:map <- nil
+var :makeMap = func()
+	var :map = nil
 	:submap forEachDelim [ body :{ ]
 		:map = map +a submap
 	map
 
 // :a will contain the map { :key1 42 :key2 (sqrt) }, where (sqrt) is a function
-:a <- makeMap
+var :a = makeMap
     :key1   42
     :key2   ( sqrt )
 ```
@@ -79,7 +79,7 @@ Pattern matching is a common technique in functional programming languages.  It 
 
 ```
 // assign 1 into :a and 2 into :b
-[ :a :b ] <- [ 1 2 ]
+var [ :a :b ] = [ 1 2 ]
 ```
 
 Here's an example that adds two complex numbers represented by maps.  The values for each key are pulled out automatically using pattern matching.
@@ -87,11 +87,11 @@ Here's an example that adds two complex numbers represented by maps.  The values
 ```
 // the following deconstructs two incoming maps, recombining the pieces,
 // effectively multiplying together two complex numbers
-:* <- ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
+var :* = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	{ :x ( x1 * x2 - y1 * y2 ) :y ( x1 * y2 + x2 * y1 ) }
 
 // sample usage: :a will be { :x -4 , :y 7 }
-:a <- { :x 2 :y 3 } * { :x 1 :y 2 }
+var :a = { :x 2 :y 3 } * { :x 1 :y 2 }
 ```
 
 
@@ -102,7 +102,7 @@ Metadata can be attached to any value.  Special metadata provides additional ins
 
 ```
 // @doc is used to attach documentation to values, including functions
-:square <- func ->a
+var :square = func ->a
     a * a
 :square @doc /" Function which squares its input value
 ```
@@ -111,7 +111,7 @@ The following example shows metadata being attached to function parameters to ai
 
 ```
 // function will only be called if parameter is a number
-:square <- func ( ->a @@type :number )
+var :square = func ( ->a @@type :number )
     a * a
 ```
 
@@ -127,10 +127,10 @@ The following shows how factorials could be computed by applying multiplication 
 
 ```
 // defines a postfix function that takes a single parameter
-:! <- ( ->n postfix )
+var :! = ( ->n postfix )
 	( 1 .. n ) fold (< #1 * #2 >)
 
 // uses the previous function definition
 // :a will be 4*3*2*1 = 24
-:a <- 4 !
+var :a = 4 !
 ```

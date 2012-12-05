@@ -69,6 +69,11 @@ namespace loki3.builtin
 				// add/modify scope
 				if (match != null)
 					Utility.AddToScope(key, match, toModify, bCreate);
+				else if (key is ValueArray && value.IsNil)
+				{	// special case: initialize every token in array to nil
+					foreach (Value v in key.AsArray)
+						Utility.AddToScope(v, value, toModify, bCreate);
+				}
 				return value;
 			}
 		}
