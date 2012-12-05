@@ -13,8 +13,8 @@ var :i forEach ( 1 .. 20 )
 
 var :fizzBuzz2 = [ ]
 var :i forEach ( 1 .. 20 )
-	[ :str1 :fizz? ] <- ( i % 3 =? 0 ) ? /[ [ :fizz true ] [ " " false ]
-	[ :str2 :buzz? ] <- ( i % 5 =? 0 ) ? /[ [ :buzz true ] [ " " false ]
+	[ :str1 :fizz? ] v= ( i % 3 =? 0 ) ? /[ [ :fizz true ] [ " " false ]
+	[ :str2 :buzz? ] v= ( i % 5 =? 0 ) ? /[ [ :buzz true ] [ " " false ]
 	fizzBuzz2 += /( ( fizz? |? buzz? ) ? /[ ( str1 +s str2 ) i
 :fizzBuzz2 @doc /" fizzbuzz using multiple return values
 
@@ -57,7 +57,7 @@ var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 :days enum /[ :sunday :monday :tuesday :wednesday :thursday :friday :saturday
 :days @doc /" an enum representing the days of the week
 
-:isWeekend <- func ( ->day @@type :days )
+:isWeekend v= func ( ->day @@type :days )
 	( day =? days.sunday ) |? ( day =? days.saturday )
 :isWeekend @doc /" true if the day is Saturday or Sunday
 
@@ -66,7 +66,7 @@ var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 // a mechanism for defining a function recursively but having it execute iteratively
 
 
-:repeat <- func [ ->a ->f ]
+:repeat v= func [ ->a ->f ]
 	while ` nil !=? f `
 		[ :a :f ] = f [ a ]
 	a
@@ -77,8 +77,8 @@ var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	iteration value but still requiring the result value.
 	When the computation is finished, the returned function should be nil.
 
-:! <- /( ->n postfix
-	:fact <- func [ ->a ->b ]
+:! v= /( ->n postfix
+	:fact v= func [ ->a ->b ]
 		( a >? 0 ) ? /[ [ ( a * b ) ( fact [ ( a - 1 ) ] ) ]  [ b nil ]
 	repeat [ 1 ( fact [ n ] ) ]
 :! @order 2

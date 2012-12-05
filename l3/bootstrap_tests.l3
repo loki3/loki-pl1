@@ -32,7 +32,7 @@
 	8 assert=? l3.eval /` 5 + 3
 
 :/*		@unittest func()
-	:a /* comment */ <- /* comment */ 5 + 3
+	:a /* comment */ v= /* comment */ 5 + 3
 	8 assert=? a
 
 :"		@unittest func()
@@ -47,12 +47,12 @@
 :/'		@unittest func()
 	:asdf assert=? /' asdf
 
-:<-		@unittest func()
-	:a <- 5
+:v=		@unittest func()
+	:a v= 5
 	5 assert=? a
 
 :=		@unittest func()
-	:a <- 5
+	:a v= 5
 	:a = 4
 	4 assert=? a
 
@@ -65,22 +65,22 @@
 // function definitions:
 
 :func	@unittest func()
-	:a <- func ->b
+	:a v= func ->b
 		b + 2
 	7 assert=? func 5
 
 :infix	@unittest func()
-	:a <- /( ->b infix ->c
+	:a v= /( ->b infix ->c
 		b + c
 	42 assert=? 40 a 2
 
 :postfix @unittest func()
-	:a <- /( ->b postfix
+	:a v= /( ->b postfix
 		b + 2
 	5 assert=? 3 a
 
 :func()	@unittest func()
-	:a <- func()
+	:a v= func()
 		3.5
 	3.5 assert=? a
 
@@ -92,53 +92,53 @@
 	4 assert=? { :a 3 :b 4 :c 5 } . :b
 	3 assert=? [ 6 5 4 3 2 ] . 3
 	// map default
-	:a <- { :a 9 :b 12 } @@default 42
+	:a v= { :a 9 :b 12 } @@default 42
 	12 assert=? a . :b
 	42 assert=? a . :notThere
 	// array default
-	:b <- [ 200 400 ] @@default 314
+	:b v= [ 200 400 ] @@default 314
 	200 assert=? b . 0
 	400 assert=? b . 1
 	314 assert=? b . 2
 	314 assert=? b . -1
 
 :@		@unittest func()
-	:a <- 1
+	:a v= 1
 	:a @ [ :blah :something ]
 	:something assert=? ( l3.getMetadata { :key :a } ) . :blah
 
 :.@		@unittest func()
-	:a <- 1
+	:a v= 1
 	:a @ [ :blah :something ]
 	:something assert=? :a .@ :blah
 
 :.@@	@unittest func()
-	:a <- 1
+	:a v= 1
 	:a @ [ :blah :something ]
 	{ :blah :something } assert=? :a .@@
 
 :@doc	@unittest func()
-	:a <- 1
+	:a v= 1
 	:a @doc :whatever
 	:whatever assert=? :a .@doc
 
 :.@doc	@unittest func()
-	:a <- 1.5
+	:a v= 1.5
 	:a @doc :whatever
 	:whatever assert=? :a .@doc
 
 :@cat	@unittest func()
-	:a <- 1
+	:a v= 1
 	:a @cat :something
 	:something assert=? :a .@cat
 
 :.@cat	@unittest func()
-	:a <- 1.5
+	:a v= 1.5
 	:a @cat :something
 	:something assert=? :a .@cat
 
 :@order @unittest func()
-	:a <- (| ## + 2 |)
+	:a v= (| ## + 2 |)
 	// a should be applied after *
 	:a @order 5
 	12 assert=? a 5 * 2
@@ -147,48 +147,48 @@
 	14 assert=? a 5 * 2
 
 :@body? @unittest func()
-	:a <- func()
-		:result <- nil
+	:a v= func()
+		:result v= nil
 		:line forEach body
 			:result = result +a [ line ]
 	:a @body? true
-	:b <- a
+	:b v= a
 		3
 		4
 	[ 3 4 ] assert=? b
 
 :@@ @unittest func()
-	:a <- 1
+	:a v= 1
 	a @@ [ :key 2 ]
 	2 assert=? :a .@ :key
 
 :@@type @unittest func()
-	:a <- 1
+	:a v= 1
 	a @@type :int
 	:int assert=? :a .@ :l3.param.type
 
 :@@default @unittest func()
-	:a <- 1
+	:a v= 1
 	a @@default 2
 	2 assert=? :a .@ :l3.param.default
 
 :@@rest @unittest func()
-	:a <- 1
+	:a v= 1
 	a @@rest
 	true assert=? :a .@ :l3.param.rest
 
 :copy	@unittest func()
-	:a <- 1
+	:a v= 1
 	1 assert=? copy a
 	:str assert=? copy :str
 
 :currentScope @unittest func()
 	// create accumulator outside the nested scope
-	:map <- { }
+	:map v= { }
 	if true
 		// add some vars in this scope to examine
-		:a <- 1
-		:b <- 2
+		:a v= 1
+		:b v= 2
 		var :i forEach currentScope
 			// ignore vars that the forEach created
 			if ( ( i . 0 ) =? :a |? ( i . 0 ) =? :b )
@@ -202,41 +202,41 @@
 // more function definitions
 
 :lambda	@unittest func()
-	:2+ <- /( lambda /[ :x /` 2 + x
+	:2+ v= /( lambda /[ :x /` 2 + x
 	3 assert=? 2+ 1
 
 :((		@unittest func()
-	:2+ <- (( :x ` 2 + x ` ))
+	:2+ v= (( :x ` 2 + x ` ))
 	3 assert=? 2+ 1
-	:mult <- (( [ :a :b ] ` a * b ` ))
+	:mult v= (( [ :a :b ] ` a * b ` ))
 	12 assert=? mult [ 6 2 ]
 
 :/((	@unittest func()
-	:2+ <- /(( :x ` 2 + x `
+	:2+ v= /(( :x ` 2 + x `
 	3 assert=? 2+ 1
 
 :lambda1	@unittest func()
-	:2+ <- /( lambda1 /` ## + 2
+	:2+ v= /( lambda1 /` ## + 2
 	3 assert=? 2+ 1
 
 :(|		@unittest func()
-	:2+ <- (| ## + 2 |)
+	:2+ v= (| ## + 2 |)
 	3 assert=? 2+ 1
 
 :/(|	@unittest func()
-	:2+ <- /(| ## + 2
+	:2+ v= /(| ## + 2
 	3 assert=? 2+ 1
 
 :lambda2	@unittest func()
-	:div <- /( lambda2 ` #1 / #2 `
+	:div v= /( lambda2 ` #1 / #2 `
 	3 assert=? 6 div 2
 
 :(<		@unittest func()
-	:div <- (< #1 / #2 >)
+	:div v= (< #1 / #2 >)
 	3 assert=? 6 div 2
 
 :/(<	@unittest func()
-	:div <- /(< #1 / #2
+	:div v= /(< #1 / #2
 	3 assert=? 6 div 2
 
 
@@ -286,7 +286,7 @@
 
 :+= @unittest func()
 	// array addition
-	:a <- [ 3 4 5 ]
+	:a v= [ 3 4 5 ]
 	// todo: perhaps it should be :a += 6
 	a += 6
 	[ 3 4 5 6 ] assert=? a
@@ -309,7 +309,7 @@
 	[ 3 5 7 ] assert=? [ 2 3 4 5 6 7 8 ] filter (| ## % 2 =? 1 |)
 
 :makeArray @unittest func()
-	:a <- makeArray
+	:a v= makeArray
 		:asdf
 		3.5
 		2
@@ -320,7 +320,7 @@
 // maps
 
 :makeMap @unittest func()
-	:a <- makeMap
+	:a v= makeMap
 		:1 2
 		:3 4
 	{ :1 2 :3 4 } assert=? a
@@ -335,7 +335,7 @@
 
 :if @unittest func()
 	// if is run
-	:a <- false
+	:a v= false
 	if true
 		:a = true
 	assertTrue? a
@@ -345,21 +345,21 @@
 
 :elsif @unittest func()
 	// if is run, not elsif
-	:a <- 0
+	:a v= 0
 	if true
 		:a = 1
 	elsif true
 		assertFail /" elsif shouldn't have been called
 	1 assert=? a
 	// elsif is run
-	:a <- 0
+	:a v= 0
 	if false
 		assertFail /" if shouldn't have been called
 	elsif true
 		:a = 2
 	2 assert=? a
 	// if & elsif are skipped
-	:a <- 0
+	:a v= 0
 	if false
 		assertFail /" if shouldn't have been called
 	elsif false
@@ -368,14 +368,14 @@
 
 :else @unittest func()
 	// if is run, not else
-	:a <- 0
+	:a v= 0
 	if true
 		:a = 1
 	else
 		assertFail /" else shouldn't have been called
 	1 assert=? a
 	// else is run
-	:a <- 0
+	:a v= 0
 	if false
 		assertFail /" if shouldn't have been called
 	else
@@ -383,7 +383,7 @@
 	2 assert=? a
 	
 	// if is run
-	:a <- 0
+	:a v= 0
 	if true
 		:a = 1
 	elsif true
@@ -392,7 +392,7 @@
 		assertFail /" else shouldn't have been called
 	1 assert=? a
 	// elsif is run
-	:a <- 0
+	:a v= 0
 	if false
 		assertFail /" if shouldn't have been called
 	elsif true
@@ -401,7 +401,7 @@
 		:a = 3
 	2 assert=? a
 	// else is run
-	:a <- 0
+	:a v= 0
 	if false
 		assertFail /" if shouldn't have been called
 	elsif false
@@ -415,8 +415,8 @@
 // loop
 
 :while @unittest func()
-	:total <- 0
-	:i <- 0
+	:total v= 0
+	:i v= 0
 	while /` i !=? 5
 		:i = i + 1
 		:total = total + i
@@ -425,38 +425,38 @@
 
 :for @unittest func()
 	// todo: should be able to declare i inside for
-	:total <- 0
-	:i <- 0
+	:total v= 0
+	:i v= 0
 	for /[ ` :i = 0 ` ` i !=? 5 ` ` :i = i + 1 `
 		:total = total + i
 	10 assert=? total
 
 :forEach @unittest func()
-	:total <- 0
+	:total v= 0
 	:i forEach ( 1 .. 5 )
 		:total = total + i
 	15 assert=? total
-	:total <- 0
+	:total v= 0
 	:i forEach { :a 2 :b 4 }
 		:total = total + i . 1
 	6 assert=? total
 
 :forEachDelim @unittest func()
 	// create a function that turns a body into a map
-	:thing <- func()
-		:result <- nil
+	:thing v= func()
+		:result v= nil
 		:map forEachDelim [ body :{ ]
 			:result = result +a map
 	:thing @body? true
 	// use that function to create a map
-	:test <- thing
+	:test v= thing
 		:a 5
 		:b 7
 	{ :a 5 :b 7 } assert=? test
 
 :break @unittest func()
-	:total <- 0
-	:i <- 0
+	:total v= 0
+	:i v= 0
 	while /` i !=? 8
 		:i = i + 1
 		if i =? 4
@@ -482,7 +482,7 @@
 	0		assert=? l3.getCount ""
 
 :""" @unittest func()
-	:a <- """
+	:a v= """
 		this is
 		some multiline
 		text

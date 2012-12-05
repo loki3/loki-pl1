@@ -81,18 +81,18 @@ namespace loki3.builtin.test
 				// define complex math
 				string[] lines = {
 					// complex [ 1 2 ] -> 1+2i
-					":complex <- func [ ->x ->y ]",
+					":complex v= func [ ->x ->y ]",
 					"	{ :real x :imaginary y }",
 					":complex @order 1",
 					// 5 i -> 5i
-					":i <- /( ->y postfix",
+					":i v= /( ->y postfix",
 					"	{ :real 0 :imaginary y }",
 					":i @order 1",
 					// addition
 					// todo: adjust when we have function overloading & default values
-					":+c <- /( { :real ->x1 :imaginary ->y1 } infix { :real ->x2 :imaginary ->y2 }",
+					":+c v= /( { :real ->x1 :imaginary ->y1 } infix { :real ->x2 :imaginary ->y2 }",
 					"	{ :real ( x1 + x2 ) :imaginary ( y1 + y2 ) }",
-					":+i <- /( ->x1 infix { :real ->x2 :imaginary ->y2 }",
+					":+i v= /( ->x1 infix { :real ->x2 :imaginary ->y2 }",
 					"	{ :real ( x1 + x2 ) :imaginary y2 }",
 				};
 				LineConsumer requestor = new LineConsumer(lines);
@@ -132,7 +132,7 @@ namespace loki3.builtin.test
 				IScope scope = GetBootstrapScope();
 
 				string[] lines = {
-					":result <- 0",
+					":result v= 0",
 					"if flag1?",
 					"	if flag2?",
 					"		:result = 1",
@@ -192,7 +192,7 @@ namespace loki3.builtin.test
 				IScope scope = GetBootstrapScope();
 
 				string[] lines = {
-					":addUp <- func [ ( ->a @@type :int ) ( ->b @@default 5 ) ]",
+					":addUp v= func [ ( ->a @@type :int ) ( ->b @@default 5 ) ]",
 					"	a + b",
 				};
 				LineConsumer requestor = new LineConsumer(lines);
@@ -235,7 +235,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = TestSupport.ToValue("{ :a :a :remainder ( :remainder @@rest ) } <- { :a 4 :b 5 :c 6 }", nested);
+					Value value = TestSupport.ToValue("{ :a :a :remainder ( :remainder @@rest ) } v= { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -248,7 +248,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = TestSupport.ToValue("[ ->a ( ->remainder @@rest ) ] <- { :a 4 :b 5 :c 6 }", nested);
+					Value value = TestSupport.ToValue("[ ->a ( ->remainder @@rest ) ] v= { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -261,7 +261,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = TestSupport.ToValue("[ ->a ( ->remainder @@rest ) ] <- [ 7 8 9 ]", nested);
+					Value value = TestSupport.ToValue("[ ->a ( ->remainder @@rest ) ] v= [ 7 8 9 ]", nested);
 					// value should be [ 7 8 9 ]
 					Assert.AreEqual(3, value.AsArray.Count);
 					// nested should now contain "a" and "remainder"
@@ -288,8 +288,8 @@ namespace loki3.builtin.test
 
 				{	// l3.loop
 					string[] lines = {
-						":total <- 0",
-						":i <- 0",
+						":total v= 0",
+						":i v= 0",
 						"l3.loop /{ :check /` i !=? 5",
 						"	:i = i + 1",
 						"	:total = total + i",

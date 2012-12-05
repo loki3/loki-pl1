@@ -11,7 +11,7 @@ l3.setValue { :key :// :value ( l3.createDelimiter { :start ://  :type :asCommen
 l3.setValue { :key :` :value ( l3.createDelimiter { :start :`  :end :` :type :asRaw } ) }
 
 // create a new variable and assign a value
-l3.setValue { :key :<- :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? true } ` ] } ) }
+l3.setValue { :key :v= :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? true } ` ] } ) }
 
 // create a new variable with a value of nil
 l3.setValue { :key :var :value ( l3.createFunction { :post ->name :order 2 :body [ ` l3.setValue { :key name :value nil :scope :parent :create? true } ` ` name ` ] } ) }
@@ -20,46 +20,46 @@ l3.setValue { :key :var :value ( l3.createFunction { :post ->name :order 2 :body
 l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? false } ` ] } ) }
 
 // remainder of line is a value (like Haskell's $)
-:/( <- ( l3.createDelimiter { :start :/(  :type :asValue } )
+:/( v= ( l3.createDelimiter { :start :/(  :type :asValue } )
 
 // remainder of line is an array
-:/[ <- /( l3.createDelimiter { :start :/[  :type :asArray }
+:/[ v= /( l3.createDelimiter { :start :/[  :type :asArray }
 
 // remainder of line is a map
-:/{ <- /( l3.createDelimiter { :start :/{  :type :asArray :function l3.createMap }
+:/{ v= /( l3.createDelimiter { :start :/{  :type :asArray :function l3.createMap }
 
 // remainder of line is raw
-:/` <- /( l3.createDelimiter /{ :start :/`  :type :asRaw
+:/` v= /( l3.createDelimiter /{ :start :/`  :type :asRaw
 
 // range comment delimiter
-:/* <- /( l3.createDelimiter /{ :start :/*  :end :*/ :type :asComment
+:/* v= /( l3.createDelimiter /{ :start :/*  :end :*/ :type :asComment
 
 // string delimiter
-:" <- /( l3.createDelimiter /{ :start :"  :end :" :type :asString
-:' <- /( l3.createDelimiter /{ :start :'  :end :' :type :asString
+:" v= /( l3.createDelimiter /{ :start :"  :end :" :type :asString
+:' v= /( l3.createDelimiter /{ :start :'  :end :' :type :asString
 
 // remainder of line is a string
-:/" <- /( l3.createDelimiter /{ :start :/"  :type :asString
-:/' <- /( l3.createDelimiter /{ :start :/'  :type :asString
+:/" v= /( l3.createDelimiter /{ :start :/"  :type :asString
+:/' v= /( l3.createDelimiter /{ :start :/'  :type :asString
 
 
 //
 // function definitions:
 
 // a function which creates a prefix function
-:func <- l3.createFunction { :post ->pattern }
+:func v= l3.createFunction { :post ->pattern }
 	l3.createFunction { :post pattern }
 
 // a function which creates an infix function
-:infix <- /( l3.createFunction { :pre ->pattern1 :post ->pattern2 }
+:infix v= /( l3.createFunction { :pre ->pattern1 :post ->pattern2 }
 	l3.createFunction { :pre pattern1 :post pattern2 }
 
 // a function which creates a postfix function
-:postfix <- /( l3.createFunction { :pre ->pattern }
+:postfix v= /( l3.createFunction { :pre ->pattern }
 	l3.createFunction { :pre pattern }
 
 // a function with no parameters which may decide to execute its body
-:func() <- l3.createFunction { }
+:func() v= l3.createFunction { }
 	l3.createFunction { }
 
 
@@ -67,80 +67,80 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // get & set
 
 // member access using the . infix
-:. <- /( ->a infix ->b
+:. v= /( ->a infix ->b
 	l3.getValue /{ :object a :key b
 
 // modify a value's metadata
-:@ <- /( ->object infix [ ->key ->value ]
+:@ v= /( ->object infix [ ->key ->value ]
 	l3.setValue /{ :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value
 	object
 
 // get all the metadata attached to a value
-:.@@ <- /( ->object postfix
+:.@@ v= /( ->object postfix
 	l3.getMetadata { :key object }
 
 // get a particular piece of metadata attached to a value
-:.@ <- /( ->object infix ->key
+:.@ v= /( ->object infix ->key
 	l3.getValue /{ :object ( l3.getMetadata { :key object } ) :key key
 
 // set the doc string on a value
-:@doc <- /( ->object infix ->docString
+:@doc v= /( ->object infix ->docString
 	object @ /[ :l3.value.doc docString
 
-:.@doc <- /( ->object postfix
-	:metadata <- l3.getMetadata { :key object }
-	:doc <- nil
+:.@doc v= /( ->object postfix
+	:metadata v= l3.getMetadata { :key object }
+	:doc v= nil
 	if metadata !=? nil
 		:doc = l3.getValue /{ :object metadata :key :l3.value.doc
 	doc
 :.@doc	@doc	/" Get the documentation attached to a value
 
-:@cat <- /( ->object infix ->catString
+:@cat v= /( ->object infix ->catString
 	object @ /[ :l3.value.cat catString
 :@cat @cat :metadata @doc /" Set the category string on a value
 
-:.@cat <- /( ->object postfix
-	:metadata <- l3.getMetadata { :key object }
-	:cat <- nil
+:.@cat v= /( ->object postfix
+	:metadata v= l3.getMetadata { :key object }
+	:cat v= nil
 	if metadata !=? nil
 		:cat = l3.getValue /{ :object metadata :key :l3.value.cat
 	cat
 :.@cat @cat :metadata @doc	/" Get the category attached to a value
 
-:@order <- /( ->object infix ->order
+:@order v= /( ->object infix ->order
 	object @ /[ :l3.value.order order
 :@order @cat :metadata @doc /" Add evaluation order to a value
 
-:@body? <- /( ->object infix ->body?
+:@body? v= /( ->object infix ->body?
 	object @ /[ :body? body?
 :@body? @cat :metadata @doc /" Declare that a function requires a body
 
-:@@ <- /( ->object infix [ ->key ->value ]
+:@@ v= /( ->object infix [ ->key ->value ]
 	l3.setValue /{ :map ( l3.getMetadata { :value object :writable? true } ) :key key :value value
 	object
 :@@ @cat :metadata @doc /" Set metadata on a value, e.g. a parameter
 
-:@@type <- /( ->object infix ->type
+:@@type v= /( ->object infix ->type
 	object @@ /[ :l3.param.type type
 :@@type @cat :metadata @doc /" Restrict a parameter to a specific type
 
-:@@default <- /( ->object infix ->default
+:@@default v= /( ->object infix ->default
 	object @@ /[ :l3.param.default default
 :@@default @cat :metadata @doc /" Set the default value for a parameter if not present
 
-:@@rest <- /( ->object postfix
+:@@rest v= /( ->object postfix
 	object @@ /[ :l3.param.rest true
 :@@rest @cat :metadata @doc /" Associated parameter will be filled with the remainder of the parameter values
 
-:copy <- func ->value
+:copy v= func ->value
 	l3.copy /{ :value value
 :copy @cat :create @doc	/" Make a copy of a value
 
-:currentScope <- func()
+:currentScope v= func()
 	l3.getScope /{ :scope :parent
 :currentScope @cat :scope @doc /" Get a map representing the current scope
 
-:setScopeName <- func ->name
+:setScopeName v= func ->name
 	l3.getScope { :scope :parent } @@ /[ :l3.scope.name name
 :setScopeName @cat :scope @doc /" Assign a name to the current scope.  Useful for popping back to this scope.
 
@@ -166,7 +166,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :'		@cat :delimiter @doc /" Delimiter around a string
 :/"		@cat :delimiter @doc /" Remainder of line is a string
 :/'		@cat :delimiter @doc /" Remainder of line is a string
-:<-		@cat :assign    @doc /" Create a new key/value pair in the current scope
+:v=		@cat :assign    @doc /" Create a new key/value pair in the current scope
 :=		@cat :assign    @doc /" Assign a value to a key
 :var	@cat :assign    @doc /" Create a new variable in the current scope
 :func	@cat :function  @doc /" Define a function that takes parameters after the function name
@@ -186,66 +186,66 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // definitions that take a pattern and one or more lines of code
 
-:lambda <- func [ ->pattern ->line1 ( ->more @@rest ) ]
+:lambda v= func [ ->pattern ->line1 ( ->more @@rest ) ]
 	l3.createFunction { :post pattern :body ( [ line1 ] +a more ) }
 :lambda	@cat :function @doc	/" Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. lambda [ :x ` 2 + x ` ]
 
-:(( <- /( l3.createDelimiter /{ :start :((  :end :)) :type :asArray :function lambda
+:(( v= /( l3.createDelimiter /{ :start :((  :end :)) :type :asArray :function lambda
 :((		@cat :function @doc	/" Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
 
-:/(( <- /( l3.createDelimiter /{ :start :/((  :type :asArray :function lambda
+:/(( v= /( l3.createDelimiter /{ :start :/((  :type :asArray :function lambda
 :/((	@cat :function @doc	/" Remainder of line is a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
 
 
 // definitions that create a prefix function, assume parameter is called ## and takes a single line of code
 
-:lambda1 <- func ->line
+:lambda1 v= func ->line
 	l3.createFunction { :post ->## :body [ line ] }
 :lambda1	@cat :function @doc	/" Creates a single line prefix function, assuming parameter is called ##, e.g. lambda1 ` 2 + ## `
 
-:(| <- /( l3.createDelimiter /{ :start :(|  :end :|) :type :asRaw :function lambda1
+:(| v= /( l3.createDelimiter /{ :start :(|  :end :|) :type :asRaw :function lambda1
 :(|		@cat :function @doc	/" Create a single line prefix function, assuming parameter is called ##, e.g. (| 2 + ## |)
 
-:/(| <- /( l3.createDelimiter /{ :start :/(|  :type :asRaw :function lambda1
+:/(| v= /( l3.createDelimiter /{ :start :/(|  :type :asRaw :function lambda1
 :/(|	@cat :function @doc	/" Create a single line prefix function, assuming parameter is called ##, e.g. /(| 2 + ##
 
 
 // definitions that create an infix function, assume parameters are called #1 and #2 and takes a single line of code
 
-:lambda2 <- func ->line
+:lambda2 v= func ->line
 	l3.createFunction { :pre ->#1 :post ->#2 :body [ line ] }
 :lambda2	@cat :function @doc	/" Create a single line infix function, assuming parameters are called #1 and #2, e.g. lambda2 ` #1 + #2 `
 
-:(< <- /( l3.createDelimiter /{ :start :(<  :end :>) :type :asRaw :function lambda2
+:(< v= /( l3.createDelimiter /{ :start :(<  :end :>) :type :asRaw :function lambda2
 :(<		@cat :function @doc	/" Create a single line infix function, assuming parameters are called #1 and #2, e.g. (< #1 + #2 >)
 
-:/(< <- /( l3.createDelimiter /{ :start :/(<  :type :asRaw :function lambda2
+:/(< v= /( l3.createDelimiter /{ :start :/(<  :type :asRaw :function lambda2
 :/(<	@cat :function @doc	/" Create a single line infix function, assuming parameters are called #1 and #2, e.g. /(< #1 + #2
 
 
 //
 // logic
 
-:&? <- /(< l3.and? [ #1 #2 ]
+:&? v= /(< l3.and? [ #1 #2 ]
 :&? @order 5
 :&? @cat :logic @doc /" Return true if both values are true
 
-:|? <- /(< l3.or? [ #1 #2 ]
+:|? v= /(< l3.or? [ #1 #2 ]
 :|? @order 5
 :|? @cat :logic @doc /" Return true if either value is true
 
-:!? <- /(| l3.not? ##
+:!? v= /(| l3.not? ##
 :!? @cat :logic @doc /" Returns true if value is false or false if value is true
 
-:=? <- /(< l3.equal? [ #1 #2 ]
+:=? v= /(< l3.equal? [ #1 #2 ]
 :=? @order 4
 :=? @cat :logic @doc /" Return true if two values are equal
 
-:!=? <- /(< !? l3.equal? [ #1 #2 ]
+:!=? v= /(< !? l3.equal? [ #1 #2 ]
 :!=? @order 4
 :!=? @cat :logic @doc /" Return true if two values are not equal
 
-:=any? <- /( ->value infix ( ->array @@type :array )
+:=any? v= /( ->value infix ( ->array @@type :array )
 	l3.anyEqual? [ value array ]
 :=any? @cat :logic @doc /" Return true if value is equal to anything in array
 
@@ -253,42 +253,42 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // arrays
 
-:.. <- /( ( ->start @@type :number ) infix ( ->end @@type :number )
+:.. v= /( ( ->start @@type :number ) infix ( ->end @@type :number )
 	l3.createRange { :start start :end end }
 :.. @cat :array @doc /" Creates an array starting with one value and ending with another
 
-:+a <- /( ->array1 infix ->array2
+:+a v= /( ->array1 infix ->array2
 	l3.combine /[ array1 array2
 :+a @cat :array @doc /" Combine two arrays
 
-:+= <- /( ( ->array @@type :array ) infix ->value
+:+= v= /( ( ->array @@type :array ) infix ->value
 	l3.addToArray /{ :array array :value value
 :+= @cat :array @doc /" Add a value to an array
 
-:countOf <- /( func ->value
+:countOf v= /( func ->value
 	l3.getCount value
 :countOf @cat :array @doc /" Add a value to an array
 
-:apply <- /( ( ->array @@type :array ) infix ( ->function @@type :function )
+:apply v= /( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.apply { :array array :function function }
 :apply @cat :array @doc /" Apply function to every element of array.  Function takes a single value.  Returns the new array.
 
-:foldLeft <- /( ( ->array @@type :array ) infix ( ->function @@type :function )
+:foldLeft v= /( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.foldLeft { :array array :function function }
 :foldLeft @cat :array @doc /" ((a[0] function a[1]) function a[2]) etc.  Returns a single value.
 
-:fold <- /( foldLeft
+:fold v= /( foldLeft
 
-:foldRight <- /( ( ->array @@type :array ) infix ( ->function @@type :function )
+:foldRight v= /( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.foldRight { :array array :function function }
 :foldRight @cat :array @doc /" (a[0] function (a[1] function a[2])) etc.  Returns a single value.
 
-:filter <- /( ( ->array @@type :array ) infix ( ->function @@type :function )
+:filter v= /( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.filter { :array array :function function }
 :filter @cat :array @doc /" Returns an array consisting of every member for which function returns true
 
-:makeArray <- func()
-	:array <- [ ]
+:makeArray v= func()
+	:array v= [ ]
 	:line forEach body
 		:array = array +a [ line ]
 	array
@@ -299,8 +299,8 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // maps
 
-:makeMap <- func()
-	:map <- { }
+:makeMap v= func()
+	:map v= { }
 	:submap forEachDelim [ body :{ ]
 		:map = map +a submap
 	map
@@ -312,12 +312,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // conditional
 
 // ternary operator
-:? <- /( ( ->do? @@type :bool ) infix [ ->doIfTrue ->doIfFalse ]
+:? v= /( ( ->do? @@type :bool ) infix [ ->doIfTrue ->doIfFalse ]
 	l3.ifValue /{ :do? do? :ifTrue doIfTrue :ifFalse doIfFalse
 :? @order 4
 :? @cat :if @doc /" If condition is met, return first value, else return second value
 
-:if <- func ( ->do? @@type :bool )
+:if v= func ( ->do? @@type :bool )
 	l3.ifBody /{ :do? do? :body body
 	l3.setValue { :key :l3.coFunction.if.done? :value do? :scope :parent }
 	do?
@@ -325,8 +325,8 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :if @order 5
 :if @cat :if @doc /" If condition is met, do body
 
-:elsif <- func ( ->do? @@type :bool )
-	:doThis? <- /( ( !? l3.coFunction.if.done? ) &? do?
+:elsif v= func ( ->do? @@type :bool )
+	:doThis? v= /( ( !? l3.coFunction.if.done? ) &? do?
 	l3.ifBody /{ :do? doThis? :body body
 	l3.ifBody /{ :do? doThis? :body /[ /` l3.setValue /{ :key :l3.coFunction.if.done? :value true :scope :parent
 	doThis?
@@ -334,8 +334,8 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :elsif @order 5
 :elsif @cat :if @doc /" If previous if and elsifs failed and this condition is met, do body
 
-:else <- func()
-	:doThis? <- /( !? l3.coFunction.if.done?
+:else v= func()
+	:doThis? v= /( !? l3.coFunction.if.done?
 	l3.ifBody /{ :do? doThis? :body body
 	doThis?
 :else @body? true
@@ -345,32 +345,32 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // loop
 
-:while <- func ( ->cond @@type :rawLines )
+:while v= func ( ->cond @@type :rawLines )
 	setScopeName :loop
 	l3.loop /{ :check cond :body body
 :while @body? true
 :while @cat :loop @doc /" Repeat loop while condition is true
 
-:for <- func /[ ->start ->cond ->change
+:for v= func /[ ->start ->cond ->change
 	start
 	setScopeName :loop
 	l3.loop /{ :check cond :change change :body body
 :for @body? true
 :for @cat :loop @doc /" Call initialization code, then repeat loop while condition is true, evaluating final expression each time
 
-:forEach <- /( ->key infix ->collection
+:forEach v= /( ->key infix ->collection
 	setScopeName :loop
 	l3.forEach /{ :key key :collection collection :body body
 :forEach @body? true
 :forEach @cat :loop @doc /" Repeat loop for each item in collection.  Pattern is specified before forEach.  Collection is specified after forEach.
 
-:forEachDelim <- /( ->key infix /[ ->collection ->delim
+:forEachDelim v= /( ->key infix /[ ->collection ->delim
 	setScopeName :loop
 	l3.forEach /{ :key key :collection collection :body body :delim delim
 :forEachDelim @body? true
 :forEachDelim @cat :loop @doc /" Repeat loop for each item in collection.  Pattern is specified before forEach.  Collection is specified after forEach.  Can specify a delimiter that determines how each line is interpreted.
 
-:break <- func()
+:break v= func()
 	l3.popScope /{ :name :loop
 :break @cat :loop @doc /" Pop the stack out of the current loop
 
@@ -378,21 +378,21 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // strings
 
-:=>str <- /( ->val postfix
+:=>str v= /( ->val postfix
 	l3.toString ( val )
 :=>str @order 2
 :=>str @cat :string @doc /" Convert a value to a string
 
 // todo: switch to + when overloading is supported
-:+s <- /( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
+:+s v= /( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
 	l3.stringConcat /{ :array /[ str1 str2
 :+s @cat :string @doc /" Concatenate two strings
 
-:"" <- " "
+:"" v= " "
 :"" @cat :string @doc /" TEMP: an empty string, needed until string delimiters handle white space correctly
 
-:""" <- func()
-	:list <- [ ]
+:""" v= func()
+	:list v= [ ]
 	:str forEachDelim [ body :" ]
 		list += str
 	l3.stringConcat /{ :array list :spaces 1
@@ -401,17 +401,17 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	Use the indented lines following this function as a single string.
 	Useful for long strings such as @doc.
 
-:\n <- l3.intToChar 13
+:\n v= l3.intToChar 13
 :\n @cat :string @doc /" Represents a newline in a string
 
 //
 // enumerated type
 
-:enum <- /( ( ->name @@type :string ) infix ( ->array @@type :array )
-	:list <- { }
-	:i <- 0
+:enum v= /( ( ->name @@type :string ) infix ( ->array @@type :array )
+	:list v= { }
+	:i v= 0
 	:val forEach array
-		:key <- name +s " . " +s val
+		:key v= name +s " . " +s val
 		// metadata on the value describing enum name & key
 		i @@ [ :l3.value.type name ]
 		i @@ [ :l3.enum.key key ]
@@ -420,7 +420,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		l3.setValue { :key key :value i :scope :grandparent }
 		:i = i + 1
 	// store entire map on scope that called this function
-	:value <- l3.setValue { :key name :value list :scope :parent }
+	:value v= l3.setValue { :key name :value list :scope :parent }
 	// metadata on the enum
 	value @@ [ :l3.value.type " enum " ]
 	list
@@ -430,44 +430,44 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // math
 
-:+ <- /(< l3.add [ #1 #2 ]
+:+ v= /(< l3.add [ #1 #2 ]
 :+ @cat :math @doc /" Add two numbers
 
-:- <- /(< l3.subtract [ #1 #2 ]
+:- v= /(< l3.subtract [ #1 #2 ]
 :- @cat :math @doc /" Subtract one number from another
 
-:* <- /(< l3.multiply [ #1 #2 ]
+:* v= /(< l3.multiply [ #1 #2 ]
 :* @order 2
 :* @cat :math @doc /" Multiply two numbers
 
-:/ <- /(< l3.divide [ #1 #2 ]
+:/ v= /(< l3.divide [ #1 #2 ]
 :/ @order 2
 :/ @cat :math @doc /" Divide the first number by the second number
 
-:% <- /(< l3.modulo [ #1 #2 ]
+:% v= /(< l3.modulo [ #1 #2 ]
 :% @order 2
 :% @cat :math @doc /" First number modulo the second number
 
-:sqrt <- /(| l3.sqrt ##
+:sqrt v= /(| l3.sqrt ##
 :sqrt @cat :math @doc /" Compute the square root of a number
 
-:<? <- /(< l3.lt [ #1 #2 ]
+:<? v= /(< l3.lt [ #1 #2 ]
 :<? @cat :math @doc /" True if a < b
 
-:>? <- /(< l3.gt [ #1 #2 ]
+:>? v= /(< l3.gt [ #1 #2 ]
 :>? @cat :math @doc /" True if a > b
 
-:min <- /(< ( #1 <? #2 ) ? [ #1 #2 ]
+:min v= /(< ( #1 <? #2 ) ? [ #1 #2 ]
 :min @cat :math @doc /" Returns the smallest of two values.
 
-:max <- /(< ( #1 >? #2 ) ? [ #1 #2 ]
+:max v= /(< ( #1 >? #2 ) ? [ #1 #2 ]
 :max @cat :math @doc /" Returns the largest of two values.
 
 
 //
 // modules
 
-:import <- /( func ( ->file @@type :string )
+:import v= /( func ( ->file @@type :string )
 	l3.loadModule { :file file :scope " parent " }
 :import @cat :module @doc /" Run the code from the given file
 
@@ -475,6 +475,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // I/O
 
-:print <- /(| l3.print /{ :value ##
+:print v= /(| l3.print /{ :value ##
 :print @order 5
 :print @cat :io @doc /" Print a value as a string

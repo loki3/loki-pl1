@@ -9,7 +9,7 @@
 //		doSomething
 //
 
-:unittest <- func [ ->targetFile ->testFile ]
+:unittest v= func [ ->targetFile ->testFile ]
 	// import files into local scope
 	import targetFile
 	import testFile
@@ -22,15 +22,15 @@
 	unittestScope currentScope
 :unittest @cat :unittest @doc /" For a given implementation file, run all the tests defined in a test file.
 
-:unittestScope <- func ->scope
+:unittestScope v= func ->scope
 	var :success? = true
 	:success? = success? &? testFunction /[ checkDocs :checkDocs scope
 	:success? = success? &? testFunction /[ runUnittests :runUnittests scope
 	success?
 :unittestScope @cat :unittest @doc /" Run tests and check for docstrings on everything in scope
 
-:testFunction <- func /[ ->function ->name ->scope
-	[ :success? :failures ] <- function scope
+:testFunction v= func /[ ->function ->name ->scope
+	[ :success? :failures ] v= function scope
 	if success?
 		print " ---- " +s name +s /" : succeeded
 	else
@@ -42,7 +42,7 @@
 	Takes a function that returns [ success? arrayOfFailures ] , the name of the test, and a scope to operate on.
 
 
-:checkDocs <- func ->scope
+:checkDocs v= func ->scope
 	var :failures = [ ]
 	:f forEach scope
 		if ( f . 0 ) .@doc =? nil
@@ -53,24 +53,24 @@
 	Returns [ success? arrayOfFailures ]
 
 
-:@unittest <- /( ->object infix ->function
+:@unittest v= /( ->object infix ->function
 	object @ /[ :l3.value.unittest function
 :@unittest	@cat :unittest @doc /" Attach a unittest to a value
 
-:.@unittest <- /( ->object postfix
-	:metadata <- l3.getMetadata { :key object }
-	:test <- nil
+:.@unittest v= /( ->object postfix
+	:metadata v= l3.getMetadata { :key object }
+	:test v= nil
 	if metadata !=? nil
 		:test = l3.getValue /{ :object metadata :key :l3.value.unittest
 	test
 :.@unittest	@cat :unittest @doc /" Get the unittest attached to a value
 
-:stubFunc <- func()
+:stubFunc v= func()
 	true
 :stubFunc @cat :unittest @doc /" Used for stubbing out unneeded unittests
 
 
-:assert=? <- /( ->expected infix ->actual
+:assert=? v= /( ->expected infix ->actual
 	if expected !=? actual
 		print " FAILED : " +s unittestName
 		print " .expected: " +s expected =>str
@@ -81,7 +81,7 @@
 	Unittests can assert objects are equal.
 	If they're not, the current unittest function aborts & fails.
 
-:assertTrue? <- func ->cond
+:assertTrue? v= func ->cond
 	if !? l3.eval cond
 		print /" ...failed...
 		print " FAILED : " +s unittestName
@@ -93,7 +93,7 @@
 	Unittests can assert something is true.
 	If it's not, the current unittest function aborts & fails.
 
-:assertFalse? <- func ->cond
+:assertFalse? v= func ->cond
 	if l3.eval cond
 		print /" ...failed...
 		print " FAILED : " +s unittestName
@@ -105,7 +105,7 @@
 	Unittests can assert something is false.
 	If it's not, the current unittest function aborts & fails.
 
-:assertFail <- func ->message
+:assertFail v= func ->message
 	print /" ...failed...
 	print " FAILED : " +s unittestName
 	print " message: " +s message
@@ -113,7 +113,7 @@
 :assertFail @cat :unittest @doc /" Unittests can say they fail immediately if this line of code is run.
 
 
-:runUnittests <- func ->scope
+:runUnittests v= func ->scope
 	var :failures = [ ]
 	:f forEach scope
 		var :unittestName = f . 0
