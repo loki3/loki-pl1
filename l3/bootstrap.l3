@@ -269,9 +269,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.getCount value
 :countOf @cat :array @doc ." Add a value to an array
 
-:apply v= .( ( ->array @@type :array ) infix ( ->function @@type :function )
-	l3.apply { :array array :function function }
-:apply @cat :array @doc ." Apply function to every element of array.  Function takes a single value.  Returns the new array.
+// todo: input type of array or map
+:apply v= .( ->input infix ( ->function @@type :function )
+	l3.apply { :input input :function function }
+:apply @cat :array @doc ." Apply function to every element of a collection.  Functions for arrays take a single value.  Functions for maps are infix.  Returns the new collection.
 
 :foldLeft v= .( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.foldLeft { :array array :function function }

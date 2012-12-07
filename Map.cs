@@ -5,6 +5,9 @@ namespace loki3.core
 {
 	internal class Map
 	{
+		internal Map() { }
+		internal Map(Dictionary<string, Value> dict) { m_val = dict; }
+
 		internal bool ContainsKey(string key)
 		{
 			return m_val != null && m_val.ContainsKey(key);

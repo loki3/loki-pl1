@@ -298,6 +298,7 @@
 
 :apply @unittest func()
 	[ 6 10 14 ] assert=? [ 3 5 7 ] apply (| ## * 2 |)
+	{ :a 42 :b 17 } assert=? { :a 84 :b 34 } apply (| ## * 2 |)
 
 :foldLeft @unittest func()
 	1 assert=? [ 27 9 3 ] foldLeft (< #1 / #2 >)

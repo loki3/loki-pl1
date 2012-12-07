@@ -34,6 +34,20 @@ namespace loki3.builtin.test
 			}
 		}
 
+		/// <summary>Infix function that doubles the 'next' param</summary>
+		class DoubleIn : ValueFunction
+		{
+			internal override Value ValueCopy() { return new DoubleIn(); }
+
+			internal DoubleIn() { Init(PatternData.Single("a"), PatternData.Single("b", ValueType.Int)); }
+
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+			{
+				Value value2 = EvalNode.Do(next, scope, nodes, requestor);
+				return new ValueInt(value2.AsInt * 2);
+			}
+		}
+
 		/// <summary>Function that adds previous and next ints</summary>
 		class TestSum : ValueFunction
 		{
@@ -99,14 +113,30 @@ namespace loki3.builtin.test
 			ArrayFunctions.Register(scope);
 
 			scope.SetValue("2x", new Double());
-			scope.SetValue("+", new TestSum());
+			scope.SetValue("2x-in", new DoubleIn());
 
 			{
-				Value value = TestSupport.ToValue("l3.apply { :array [ 1 2 ] :function 2x }", scope);
+				Value value = TestSupport.ToValue("l3.apply { :input [ 1 2 ] :function 2x }", scope);
 				List<Value> array = value.AsArray;
 				Assert.AreEqual(2, array.Count);
 				Assert.AreEqual(2, array[0].AsInt);
 				Assert.AreEqual(4, array[1].AsInt);
+			}
+
+			{	// function on a map can be infix...
+				Value value = TestSupport.ToValue("l3.apply { :input { :a 3 :b 8 } :function 2x-in }", scope);
+				Map map = value.AsMap;
+				Assert.AreEqual(2, map.Count);
+				Assert.AreEqual(6, map["a"].AsInt);
+				Assert.AreEqual(16, map["b"].AsInt);
+			}
+
+			{	// ...or prefix as for an array, which only applies to the value
+				Value value = TestSupport.ToValue("l3.apply { :input { :a 3 :b 8 } :function 2x }", scope);
+				Map map = value.AsMap;
+				Assert.AreEqual(2, map.Count);
+				Assert.AreEqual(6, map["a"].AsInt);
+				Assert.AreEqual(16, map["b"].AsInt);
 			}
 		}
 

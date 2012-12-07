@@ -4,7 +4,7 @@ using loki3.core;
 namespace loki3.builtin
 {
 	/// <summary>
-	/// Built-in functions that operate on arrays
+	/// Built-in functions that operate on arrays and maps
 	/// </summary>
 	class ArrayFunctions
 	{
@@ -29,7 +29,7 @@ namespace loki3.builtin
 
 			internal Combine()
 			{
-				SetDocString("Concatenates two arrays.");
+				SetDocString("Concatenates two arrays or maps.");
 				List<Value> list = new List<Value>();
 				list.Add(PatternData.Single("a"));
 				list.Add(PatternData.Single("b"));
@@ -73,17 +73,18 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :array :function } -> apply function to every element of array</summary>
+		/// <summary>{ :input :function } -> apply function to every element of a collection</summary>
 		class Apply : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new Apply(); }
 
 			internal Apply()
 			{
-				SetDocString("Apply function to every element of array.  Function takes a single value.  Returns the new array.");
+				SetDocString("Apply function to every element of a collection.  Functions for arrays take a single value.  Functions for maps are infix or prefix.  Returns the new collection.");
 
 				Map map = new Map();
-				map["array"] = PatternData.Single("array", ValueType.Array);
+				// todo: array | map
+				map["input"] = PatternData.Single("input");
 				map["function"] = PatternData.Single("function", ValueType.Function);
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
@@ -92,17 +93,39 @@ namespace loki3.builtin
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				Map map = arg.AsMap;
-				List<Value> array = map["array"].AsArray;
+				Value input = map["input"];
 				ValueFunction function = map["function"] as ValueFunction;
 
-				List<Value> newarray = new List<Value>(array.Count);
-				foreach (Value val in array)
+				if (input is ValueArray)
 				{
-					DelimiterNode node = new DelimiterNodeValue(val);
-					Value newval = function.Eval(null, node, scope, null, null);
-					newarray.Add(newval);
+					List<Value> array = input.AsArray;
+
+					List<Value> newarray = new List<Value>(array.Count);
+					foreach (Value val in array)
+					{
+						DelimiterNode node = new DelimiterNodeValue(val);
+						Value newval = function.Eval(null, node, scope, null, null);
+						newarray.Add(newval);
+					}
+					return new ValueArray(newarray);
 				}
-				return new ValueArray(newarray);
+				else if (input is ValueMap)
+				{
+					Dictionary<string, Value> dict = input.AsMap.Raw;
+					Dictionary<string, Value> newdict = new Dictionary<string,Value>();
+
+					bool bPre = (function is ValueFunctionPre);
+					foreach (string key in dict.Keys)
+					{
+						DelimiterNode prev = (bPre ? null : new DelimiterNodeValue(new ValueString(key)));
+						DelimiterNode next = new DelimiterNodeValue(dict[key]);
+						Value newval = function.Eval(prev, next, scope, null, null);
+						newdict[key] = newval;
+					}
+					return new ValueMap(new Map(newdict));
+				}
+				// todo: error should say array | map
+				throw new Loki3Exception().AddWrongType(ValueType.Array, input.Type);
 			}
 		}
 
