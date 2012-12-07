@@ -405,6 +405,8 @@ namespace loki3.builtin
 					count = arg.AsArray.Count;
 				else if (arg is ValueMap)
 					count = arg.AsMap.Count;
+				else if (arg is ValueRaw)
+					count = (arg as ValueRaw).GetValue().Nodes.Count;
 				return new ValueInt(count);
 			}
 		}
