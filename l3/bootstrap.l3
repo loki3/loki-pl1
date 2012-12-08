@@ -315,6 +315,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.mapToMap { :map map :filter? filter? }
 :filterMap @cat :map @doc ." Returns a map consisting of every member for which function returns true
 
+:mapToArray v= .( ( ->map @@type :map ) infix ( ->transform @@type :function )
+	l3.mapToArray { :map map :transform transform }
+:mapToArray @cat :map @doc ." Apply function to every element of a map.  If function is infix, it's handed key and value.  If it's prefix, it's handed the value.  Returns a new array.
+
+:filterMapToArray v= .( ( ->map @@type :map ) infix ( ->filter? @@type :function )
+	l3.mapToArray { :map map :filter? filter? }
+:filterMapToArray @cat :map @doc ." Returns an array consisting of every value in the map for which function returns true
+
 
 //
 // conditional

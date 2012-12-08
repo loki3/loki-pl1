@@ -66,13 +66,14 @@ namespace loki3.builtin.test
 
 
 		[Test]
-		public void TestMapApply()
+		public void TestMapToMap()
 		{
 			IScope scope = CreateScope();
 			MapFunctions.Register(scope);
 
 			scope.SetValue("2x", new Double());
 			scope.SetValue("2x-in", new DoubleIn());
+			scope.SetValue("even?", new IsEven());
 
 			{	// function on a map can be infix...
 				Value value = TestSupport.ToValue("l3.mapToMap { :map { :a 3 :b 8 } :transform 2x-in }", scope);
@@ -89,15 +90,6 @@ namespace loki3.builtin.test
 				Assert.AreEqual(6, map["a"].AsInt);
 				Assert.AreEqual(16, map["b"].AsInt);
 			}
-		}
-
-		[Test]
-		public void TestMapFilter()
-		{
-			IScope scope = CreateScope();
-			MapFunctions.Register(scope);
-
-			scope.SetValue("even?", new IsEven());
 
 			{
 				Value value = TestSupport.ToValue("l3.mapToMap { :map { :a 3 :b 4 :c 7 :d 8 } :filter? even? }", scope);
@@ -105,6 +97,41 @@ namespace loki3.builtin.test
 				Assert.AreEqual(2, map.Count);
 				Assert.AreEqual(4, map["b"].AsInt);
 				Assert.AreEqual(8, map["d"].AsInt);
+			}
+		}
+
+		[Test]
+		public void TestMapToArray()
+		{
+			IScope scope = CreateScope();
+			MapFunctions.Register(scope);
+
+			scope.SetValue("2x", new Double());
+			scope.SetValue("2x-in", new DoubleIn());
+			scope.SetValue("even?", new IsEven());
+
+			{	// function on a map can be infix...
+				Value value = TestSupport.ToValue("l3.mapToArray { :map { :a 3 :b 8 } :transform 2x-in }", scope);
+				List<Value> array = value.AsArray;
+				Assert.AreEqual(2, array.Count);
+				Assert.AreEqual(6, array[0].AsInt);
+				Assert.AreEqual(16, array[1].AsInt);
+			}
+
+			{	// ...or prefix as for an array, which only applies to the value
+				Value value = TestSupport.ToValue("l3.mapToArray { :map { :a 3 :b 8 } :transform 2x }", scope);
+				List<Value> array = value.AsArray;
+				Assert.AreEqual(2, array.Count);
+				Assert.AreEqual(6, array[0].AsInt);
+				Assert.AreEqual(16, array[1].AsInt);
+			}
+
+			{
+				Value value = TestSupport.ToValue("l3.mapToArray { :map { :a 3 :b 4 :c 7 :d 8 } :filter? even? }", scope);
+				List<Value> array = value.AsArray;
+				Assert.AreEqual(2, array.Count);
+				Assert.AreEqual(4, array[0].AsInt);
+				Assert.AreEqual(8, array[1].AsInt);
 			}
 		}
 	}

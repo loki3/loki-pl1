@@ -332,6 +332,13 @@
 	{ :b 2 :d 6 } assert=? { :a 1 :b 2 :c 3 :d 6 } filterMap (| ## % 2 =? 0 |)
 	{ :c 3 }      assert=? { :a 1 :b 2 :c 3 :d 6 } filterMap (< #1 =? :c >)
 
+:mapToArray @unittest func()
+	[ 42 17 ] assert=? { :a 84 :b 34 } mapToArray (| ## / 2 |)
+
+:filterMapToArray @unittest func()
+	[ 2 6 ] assert=? { :a 1 :b 2 :c 3 :d 6 } filterMapToArray (| ## % 2 =? 0 |)
+	[ 3 ]   assert=? { :a 1 :b 2 :c 3 :d 6 } filterMapToArray (< #1 =? :c >)
+
 
 //
 // conditional
