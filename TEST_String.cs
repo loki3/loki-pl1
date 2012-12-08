@@ -49,5 +49,19 @@ namespace loki3.builtin.test
 				Assert.AreEqual("1     23\n--------\n1234  4\n", value.AsString);
 			}
 		}
+
+		[Test]
+		public void TestFormatTable2()
+		{
+			IScope scope = CreateStringScope();
+			{
+				Value value = TestSupport.ToValue("l3.formatTable2 { :arrayOfArrays [ [ 1 23 ] [ 1234 4 ] ] }", scope);
+				Assert.AreEqual("1    23\n1234 4\n", value.AsString);
+			}
+			{
+				Value value = TestSupport.ToValue("l3.formatTable2 { :arrayOfArrays [ [ 1 23 ] [ 1234 4 ] ] :dashesAfterFirst? true :spaces 2 }", scope);
+				Assert.AreEqual("1     23\n--------\n1234  4\n", value.AsString);
+			}
+		}
 	}
 }
