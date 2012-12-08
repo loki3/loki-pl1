@@ -101,7 +101,7 @@ namespace loki3.builtin.test
 			scope.SetValue("2x", new Double());
 
 			{
-				Value value = TestSupport.ToValue("l3.apply { :array [ 1 2 ] :function 2x }", scope);
+				Value value = TestSupport.ToValue("l3.arrayToArray { :array [ 1 2 ] :transform 2x }", scope);
 				List<Value> array = value.AsArray;
 				Assert.AreEqual(2, array.Count);
 				Assert.AreEqual(2, array[0].AsInt);
@@ -137,7 +137,7 @@ namespace loki3.builtin.test
 			scope.SetValue("even?", new IsEven());
 
 			{
-				Value value = TestSupport.ToValue("l3.filter { :array [ 3 4 7 8 9 11 12 ] :function even? }", scope);
+				Value value = TestSupport.ToValue("l3.arrayToArray { :array [ 3 4 7 8 9 11 12 ] :filter? even? }", scope);
 				List<Value> array = value.AsArray;
 				Assert.AreEqual(3, array.Count);
 				Assert.AreEqual(4, array[0].AsInt);

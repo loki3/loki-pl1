@@ -15,10 +15,9 @@ namespace loki3.builtin
 		{
 			scope.SetValue("l3.combine", new Combine());
 			scope.SetValue("l3.addToArray", new AddToArray());
-			scope.SetValue("l3.apply", new Apply());
+			scope.SetValue("l3.arrayToArray", new ArrayToArray());
 			scope.SetValue("l3.foldLeft", new FoldLeft());
 			scope.SetValue("l3.foldRight", new FoldRight());
-			scope.SetValue("l3.filter", new Filter());
 		}
 
 
@@ -73,18 +72,19 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :array :function } -> apply function to every element of an array</summary>
-		class Apply : ValueFunctionPre
+		/// <summary>{ :array :filter? :transform } -> return a filtered and transformed array</summary>
+		class ArrayToArray : ValueFunctionPre
 		{
-			internal override Value ValueCopy() { return new Apply(); }
+			internal override Value ValueCopy() { return new ArrayToArray(); }
 
-			internal Apply()
+			internal ArrayToArray()
 			{
-				SetDocString("Apply function to every element of an array.  Functions take a single value.  Returns the new array.");
+				SetDocString("Return a new array, where elements from the original array are present if filter returns true.  The values are transformed by the given function.");
 
 				Map map = new Map();
 				map["array"] = PatternData.Single("array", ValueType.Array);
-				map["function"] = PatternData.Single("function", ValueType.Function);
+				map["filter?"] = PatternData.Single("filter?", ValueType.Function, ValueNil.Nil);
+				map["transform"] = PatternData.Single("transform", ValueType.Function, ValueNil.Nil);
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}
@@ -93,14 +93,22 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				List<Value> array = map["array"].AsArray;
-				ValueFunction function = map["function"] as ValueFunction;
+				ValueFunction filter = map["filter?"] as ValueFunction;
+				ValueFunction transform = map["transform"] as ValueFunction;
+				if (filter == null && transform == null)
+					return map["array"];
 
 				List<Value> newarray = new List<Value>(array.Count);
 				foreach (Value val in array)
 				{
 					DelimiterNode node = new DelimiterNodeValue(val);
-					Value newval = function.Eval(null, node, scope, null, null);
-					newarray.Add(newval);
+
+					// if we should use this value...
+					if (filter == null || filter.Eval(null, node, scope, null, null).AsBool)
+					{	// ...transform if appropriate
+						Value newval = (transform == null ? val : transform.Eval(null, node, scope, null, null));
+						newarray.Add(newval);
+					}
 				}
 				return new ValueArray(newarray);
 			}
@@ -179,40 +187,6 @@ namespace loki3.builtin
 					last = function.Eval(node2, node1, scope, null, null);
 				}
 				return last;
-			}
-		}
-
-		/// <summary>{ :array :function } -> [ elements for which function returns true ]</summary>
-		class Filter : ValueFunctionPre
-		{
-			internal override Value ValueCopy() { return new Filter(); }
-
-			internal Filter()
-			{
-				SetDocString("Any members of array for which the function returns true are added to a new array.  Returns the new array.");
-
-				Map map = new Map();
-				map["array"] = PatternData.Single("array", ValueType.Array);
-				map["function"] = PatternData.Single("function", ValueType.Function);
-				ValueMap vMap = new ValueMap(map);
-				Init(vMap);
-			}
-
-			internal override Value Eval(Value arg, IScope scope)
-			{
-				Map map = arg.AsMap;
-				List<Value> array = map["array"].AsArray;
-				ValueFunction function = map["function"] as ValueFunction;
-
-				List<Value> newarray = new List<Value>(array.Count);
-				foreach (Value val in array)
-				{
-					DelimiterNode node = new DelimiterNodeValue(val);
-					Value check = function.Eval(null, node, scope, null, null);
-					if (check.AsBool)
-						newarray.Add(val);
-				}
-				return new ValueArray(newarray);
 			}
 		}
 	}
