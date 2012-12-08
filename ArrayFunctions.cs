@@ -73,18 +73,17 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :input :function } -> apply function to every element of a collection</summary>
+		/// <summary>{ :array :function } -> apply function to every element of an array</summary>
 		class Apply : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new Apply(); }
 
 			internal Apply()
 			{
-				SetDocString("Apply function to every element of a collection.  Functions for arrays take a single value.  Functions for maps are infix or prefix.  Returns the new collection.");
+				SetDocString("Apply function to every element of an array.  Functions take a single value.  Returns the new array.");
 
 				Map map = new Map();
-				// todo: array | map
-				map["input"] = PatternData.Single("input");
+				map["array"] = PatternData.Single("array", ValueType.Array);
 				map["function"] = PatternData.Single("function", ValueType.Function);
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
@@ -93,39 +92,17 @@ namespace loki3.builtin
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				Map map = arg.AsMap;
-				Value input = map["input"];
+				List<Value> array = map["array"].AsArray;
 				ValueFunction function = map["function"] as ValueFunction;
 
-				if (input is ValueArray)
+				List<Value> newarray = new List<Value>(array.Count);
+				foreach (Value val in array)
 				{
-					List<Value> array = input.AsArray;
-
-					List<Value> newarray = new List<Value>(array.Count);
-					foreach (Value val in array)
-					{
-						DelimiterNode node = new DelimiterNodeValue(val);
-						Value newval = function.Eval(null, node, scope, null, null);
-						newarray.Add(newval);
-					}
-					return new ValueArray(newarray);
+					DelimiterNode node = new DelimiterNodeValue(val);
+					Value newval = function.Eval(null, node, scope, null, null);
+					newarray.Add(newval);
 				}
-				else if (input is ValueMap)
-				{
-					Dictionary<string, Value> dict = input.AsMap.Raw;
-					Dictionary<string, Value> newdict = new Dictionary<string,Value>();
-
-					bool bPre = (function is ValueFunctionPre);
-					foreach (string key in dict.Keys)
-					{
-						DelimiterNode prev = (bPre ? null : new DelimiterNodeValue(new ValueString(key)));
-						DelimiterNode next = new DelimiterNodeValue(dict[key]);
-						Value newval = function.Eval(prev, next, scope, null, null);
-						newdict[key] = newval;
-					}
-					return new ValueMap(new Map(newdict));
-				}
-				// todo: error should say array | map
-				throw new Loki3Exception().AddWrongType(ValueType.Array, input.Type);
+				return new ValueArray(newarray);
 			}
 		}
 
@@ -205,7 +182,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :array :function } -> apply function to every element of array</summary>
+		/// <summary>{ :array :function } -> [ elements for which function returns true ]</summary>
 		class Filter : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new Filter(); }

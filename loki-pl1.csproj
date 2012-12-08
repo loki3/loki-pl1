@@ -52,6 +52,7 @@
     <Compile Include="Logic.cs" />
     <Compile Include="Loop.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="MapFunctions.cs" />
     <Compile Include="Math.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="PartialFunction.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="TEST_EvalLines.cs" />
     <Compile Include="TEST_EvalList.cs" />
     <Compile Include="TEST_Logic.cs" />
+    <Compile Include="TEST_MapFunctions.cs" />
     <Compile Include="TEST_Math.cs" />
     <Compile Include="TEST_Module.cs" />
     <Compile Include="TEST_PartialFunction.cs" />
