@@ -13,23 +13,23 @@ namespace loki3.builtin
 		/// </summary>
 		internal static void Register(IScope scope)
 		{
-			scope.SetValue("l3.applyMap", new ApplyMap());
-			scope.SetValue("l3.filterMap", new FilterMap());
+			scope.SetValue("l3.mapToMap", new MapToMap());
 		}
 
 
-		/// <summary>{ :map :function } -> apply function to every element of a map</summary>
-		class ApplyMap : ValueFunctionPre
+		/// <summary>{ :map :filter? :transform } -> return a filtered and transformed map</summary>
+		class MapToMap : ValueFunctionPre
 		{
-			internal override Value ValueCopy() { return new ApplyMap(); }
+			internal override Value ValueCopy() { return new MapToMap(); }
 
-			internal ApplyMap()
+			internal MapToMap()
 			{
-				SetDocString("Apply function to every element of a map.  Functions are infix or prefix.  Returns the new map.");
+				SetDocString("Return a new map, where elements from the original map are present if filter returns true.  The values are transformed by the given function.");
 
 				Map map = new Map();
 				map["map"] = PatternData.Single("map", ValueType.Map);
-				map["function"] = PatternData.Single("function", ValueType.Function);
+				map["filter?"] = PatternData.Single("filter?", ValueType.Function, ValueNil.Nil);
+				map["transform"] = PatternData.Single("transform", ValueType.Function, ValueNil.Nil);
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}
@@ -38,56 +38,26 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				Map inputMap = map["map"].AsMap;
-				ValueFunction function = map["function"] as ValueFunction;
+				ValueFunction filter = map["filter?"] as ValueFunction;
+				ValueFunction transform = map["transform"] as ValueFunction;
+				if (filter == null && transform == null)
+					return map["map"];
 
 				Dictionary<string, Value> dict = inputMap.Raw;
 				Dictionary<string, Value> newdict = new Dictionary<string, Value>();
 
-				bool bPre = (function is ValueFunctionPre);
+				bool bPre = (filter is ValueFunctionPre || transform is ValueFunctionPre);
 				foreach (string key in dict.Keys)
 				{
 					DelimiterNode prev = (bPre ? null : new DelimiterNodeValue(new ValueString(key)));
 					DelimiterNode next = new DelimiterNodeValue(dict[key]);
-					Value newval = function.Eval(prev, next, scope, null, null);
-					newdict[key] = newval;
-				}
-				return new ValueMap(new Map(newdict));
-			}
-		}
 
-		/// <summary>{ :map :function } -> { any values for which the function returns true }</summary>
-		class FilterMap : ValueFunctionPre
-		{
-			internal override Value ValueCopy() { return new FilterMap(); }
-
-			internal FilterMap()
-			{
-				SetDocString("Any values of map for which the function returns true are added to a new map.  Returns the new map.");
-
-				Map map = new Map();
-				map["map"] = PatternData.Single("map", ValueType.Map);
-				map["function"] = PatternData.Single("function", ValueType.Function);
-				ValueMap vMap = new ValueMap(map);
-				Init(vMap);
-			}
-
-			internal override Value Eval(Value arg, IScope scope)
-			{
-				Map map = arg.AsMap;
-				Map inputMap = map["map"].AsMap;
-				ValueFunction function = map["function"] as ValueFunction;
-
-				Dictionary<string, Value> dict = inputMap.Raw;
-				Dictionary<string, Value> newdict = new Dictionary<string, Value>();
-
-				bool bPre = (function is ValueFunctionPre);
-				foreach (string key in dict.Keys)
-				{
-					DelimiterNode prev = (bPre ? null : new DelimiterNodeValue(new ValueString(key)));
-					DelimiterNode next = new DelimiterNodeValue(dict[key]);
-					Value check = function.Eval(prev, next, scope, null, null);
-					if (check.AsBool)
-						newdict[key] = dict[key];
+					// if we should use this value...
+					if (filter == null || filter.Eval(prev, next, scope, null, null).AsBool)
+					{	// ...transform if appropriate
+						Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, null, null));
+						newdict[key] = newval;
+					}
 				}
 				return new ValueMap(new Map(newdict));
 			}

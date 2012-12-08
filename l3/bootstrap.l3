@@ -307,12 +307,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :makeMap @cat :map @doc ." Make a map where every line in the body is evaluated and the first element is the key and the second the value
 :makeMap @body? true
 
-:applyMap v= .( ( ->map @@type :map ) infix ( ->function @@type :function )
-	l3.applyMap { :map map :function function }
+:applyMap v= .( ( ->map @@type :map ) infix ( ->transform @@type :function )
+	l3.mapToMap { :map map :transform transform }
 :applyMap @cat :map @doc ." Apply function to every element of a map.  If function is infix, it's handed key and value.  If it's prefix, it's handed the value.  Returns the new map.
 
-:filterMap v= .( ( ->map @@type :map ) infix ( ->function @@type :function )
-	l3.filterMap { :map map :function function }
+:filterMap v= .( ( ->map @@type :map ) infix ( ->filter? @@type :function )
+	l3.mapToMap { :map map :filter? filter? }
 :filterMap @cat :map @doc ." Returns a map consisting of every member for which function returns true
 
 

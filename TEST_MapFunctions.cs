@@ -75,7 +75,7 @@ namespace loki3.builtin.test
 			scope.SetValue("2x-in", new DoubleIn());
 
 			{	// function on a map can be infix...
-				Value value = TestSupport.ToValue("l3.applyMap { :map { :a 3 :b 8 } :function 2x-in }", scope);
+				Value value = TestSupport.ToValue("l3.mapToMap { :map { :a 3 :b 8 } :transform 2x-in }", scope);
 				Map map = value.AsMap;
 				Assert.AreEqual(2, map.Count);
 				Assert.AreEqual(6, map["a"].AsInt);
@@ -83,7 +83,7 @@ namespace loki3.builtin.test
 			}
 
 			{	// ...or prefix as for an array, which only applies to the value
-				Value value = TestSupport.ToValue("l3.applyMap { :map { :a 3 :b 8 } :function 2x }", scope);
+				Value value = TestSupport.ToValue("l3.mapToMap { :map { :a 3 :b 8 } :transform 2x }", scope);
 				Map map = value.AsMap;
 				Assert.AreEqual(2, map.Count);
 				Assert.AreEqual(6, map["a"].AsInt);
@@ -100,7 +100,7 @@ namespace loki3.builtin.test
 			scope.SetValue("even?", new IsEven());
 
 			{
-				Value value = TestSupport.ToValue("l3.filterMap { :map { :a 3 :b 4 :c 7 :d 8 } :function even? }", scope);
+				Value value = TestSupport.ToValue("l3.mapToMap { :map { :a 3 :b 4 :c 7 :d 8 } :filter? even? }", scope);
 				Map map = value.AsMap;
 				Assert.AreEqual(2, map.Count);
 				Assert.AreEqual(4, map["b"].AsInt);
