@@ -76,7 +76,7 @@
 		print " .expected: " +s expected =>str
 		print " ...actual: " +s actual =>str
 		l3.popScope { :name :runUnittests :return false }
-:assert=? @order 5
+:assert=? @order 6
 :assert=? @cat :unittest @doc """
 	Unittests can assert objects are equal.
 	If they're not, the current unittest function aborts & fails.
@@ -88,7 +88,7 @@
 		print " ...expected: true "
 		print " .expression: " +s cond =>str
 		l3.popScope { :name :runUnittests :return false }
-:assertTrue? @order 5
+:assertTrue? @order 6
 :assertTrue? @cat :unittest @doc """
 	Unittests can assert something is true.
 	If it's not, the current unittest function aborts & fails.
@@ -100,7 +100,7 @@
 		print " ...expected: false "
 		print " .expression: " +s cond =>str
 		l3.popScope { :name :runUnittests :return false }
-:assertFalse? @order 5
+:assertFalse? @order 6
 :assertFalse? @cat :unittest @doc """
 	Unittests can assert something is false.
 	If it's not, the current unittest function aborts & fails.

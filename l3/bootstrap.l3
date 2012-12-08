@@ -17,7 +17,7 @@ l3.setValue { :key :v= :value ( l3.createFunction { :pre ->key :post ->value :or
 l3.setValue { :key :var :value ( l3.createFunction { :post ->name :order 2 :body [ ` l3.setValue { :key name :value nil :scope :parent :create? true } ` ` name ` ] } ) }
 
 // assignment
-l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? false } ` ] } ) }
+l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 6 :body [ ` l3.setValue { :key key :value value :scope :parent :create? false } ` ] } ) }
 
 // remainder of line is a value
 :.( v= ( l3.createDelimiter { :type :asValue } )
