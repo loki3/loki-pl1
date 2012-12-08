@@ -77,19 +77,19 @@ namespace loki3.builtin
 				Map inputMap = map["map"].AsMap;
 				ValueFunction function = map["function"] as ValueFunction;
 
-#if true
-				return null;
-#else
-				List<Value> newarray = new List<Value>(array.Count);
-				foreach (Value val in array)
+				Dictionary<string, Value> dict = inputMap.Raw;
+				Dictionary<string, Value> newdict = new Dictionary<string, Value>();
+
+				bool bPre = (function is ValueFunctionPre);
+				foreach (string key in dict.Keys)
 				{
-					DelimiterNode node = new DelimiterNodeValue(val);
-					Value check = function.Eval(null, node, scope, null, null);
+					DelimiterNode prev = (bPre ? null : new DelimiterNodeValue(new ValueString(key)));
+					DelimiterNode next = new DelimiterNodeValue(dict[key]);
+					Value check = function.Eval(prev, next, scope, null, null);
 					if (check.AsBool)
-						newarray.Add(val);
+						newdict[key] = dict[key];
 				}
-				return new ValueArray(newarray);
-#endif
+				return new ValueMap(new Map(newdict));
 			}
 		}
 	}

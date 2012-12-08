@@ -99,15 +99,13 @@ namespace loki3.builtin.test
 
 			scope.SetValue("even?", new IsEven());
 
-#if false
 			{
-				Value value = TestSupport.ToValue("l3.mapFilter { :map { :a 3 :b 4 :c 7 :d 8 } :function even? }", scope);
+				Value value = TestSupport.ToValue("l3.filterMap { :map { :a 3 :b 4 :c 7 :d 8 } :function even? }", scope);
 				Map map = value.AsMap;
 				Assert.AreEqual(2, map.Count);
-				Assert.AreEqual(4, map["a"].AsInt);
-				Assert.AreEqual(8, map["b"].AsInt);
+				Assert.AreEqual(4, map["b"].AsInt);
+				Assert.AreEqual(8, map["d"].AsInt);
 			}
-#endif
 		}
 	}
 }
