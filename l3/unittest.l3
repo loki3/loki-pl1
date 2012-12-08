@@ -43,10 +43,7 @@
 
 
 :checkDocs v= func ->scope
-	var :failures = [ ]
-	:f forEach scope
-		if ( f . 0 ) .@doc =? nil
-			failures += f . 0
+	var :failures = scope filterMap (< #1 .@doc =? nil >) mapToArray (< #1 >)
 	[ ( ( countOf failures ) =? 0 ) failures ]
 :checkDocs @cat :unittest @doc """
 	Check if everything in scope has doc metadata.
