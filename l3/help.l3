@@ -12,8 +12,7 @@
 
 :helpAll v= func()
 	:map v= l3.getScope .{ :scope :parent
-	:pair forEach map
-		print help pair . 0
+	map applyMap .(< print help #1
 	""
 :helpAll @cat :help @doc ." Print out information on everything defined in the given scope
 
@@ -150,11 +149,10 @@
 
 
 :listByFilter v= func { :map ->map :filter? ( ->filter? @@type :function ) :perRow ( ->perRow @@default 3 ) :spaces ( ( ->spaces @@type :int ) @@default 1 ) }
+	:submap v= map filterMap .(< filter? #1
 	:table v= [ ]
-	:pair forEach map
-		:key v= pair . 0
-		if ( filter? key )
-			:table = table +a key
+	:pair forEach submap
+		:table = table +a pair . 0
 	l3.formatTable { :array table :columns perRow :spaces spaces }
 :listByFilter @cat :help @doc ." List all the functions that pass a filter
 
@@ -181,11 +179,11 @@
 :getDocs @cat :help @doc ." Return all the docstrings attached to the values in the current scope
 
 :getDocsInScope v= func ->scope
+	:submap v= scope filterMap .(< #1 .@doc !=? nil
 	:table v= [ ]
-	:f forEach scope
+	:f forEach submap
 		:key v= f . 0
-		if key .@doc !=? nil
-			:table = table +a [ :> key ( key .@doc ) ]
+		:table = table +a [ :> key ( key .@doc ) ]
 	l3.formatTable { :array table :columns 3 }
 :getDocsInScope @cat :help @doc ." Return all the docstrings attached to the values in a given scope
 
