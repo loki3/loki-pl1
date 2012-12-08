@@ -47,10 +47,10 @@ namespace loki3.builtin
 				Dictionary<string, Value> dict = inputMap.Raw;
 				Dictionary<string, Value> newdict = new Dictionary<string, Value>();
 
-				bool bPre = (filter is ValueFunctionPre || transform is ValueFunctionPre);
+				bool bPre = ((filter != null && filter.ConsumesPrevious) || (transform != null && transform.ConsumesPrevious));
 				foreach (string key in dict.Keys)
 				{
-					DelimiterNode prev = (bPre ? null : new DelimiterNodeValue(new ValueString(key)));
+					DelimiterNode prev = (bPre ? new DelimiterNodeValue(new ValueString(key)) : null);
 					DelimiterNode next = new DelimiterNodeValue(dict[key]);
 
 					// if we should use this value...
