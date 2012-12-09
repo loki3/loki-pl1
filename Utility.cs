@@ -97,6 +97,9 @@ namespace loki3.core
 		/// </summary>
 		internal static IScope GetScopeToModify(Map map, IScope scope, bool bIncludeMap)
 		{
+			if (!map.ContainsKey("map") && !map.ContainsKey("scope"))
+				return scope;
+
 			ValueMap valueMap = (bIncludeMap ? map["map"] as ValueMap : null);
 			// todo: turn this into an enum, at least "current" & "parent" & "grandparent"
 			bool bParentScope = (map["scope"].AsString == "parent");

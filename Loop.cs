@@ -95,11 +95,11 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 
-				// todo: generalize key for pattern matching
-				string var = map["key"].AsString;
 				Value collection = map["collection"];
 				// todo: consolidate these bodies, one from an explicit param & one from the following lines
 				Value valueBody = map.ContainsKey("body") ? map["body"] : map["l3.func.body"];
+
+				PatternAssign assign = new PatternAssign(map, scope, true/*bCreate*/);
 
 				// todo: abstract iteration to avoid these ifs
 				Value result = ValueNil.Nil;
@@ -108,7 +108,7 @@ namespace loki3.builtin
 					string s = collection.AsString;
 					foreach (char c in s)
 					{
-						scope.SetValue(var, new ValueString(c.ToString()));
+						assign.Assign(new ValueString(c.ToString()));
 						result = EvalBody.Do(valueBody, scope);
 					}
 				}
@@ -117,7 +117,7 @@ namespace loki3.builtin
 					List<Value> list = collection.AsArray;
 					foreach (Value v in list)
 					{
-						scope.SetValue(var, v);
+						assign.Assign(v);
 						result = EvalBody.Do(valueBody, scope);
 					}
 				}
@@ -129,8 +129,8 @@ namespace loki3.builtin
 						List<Value> list = new List<Value>();
 						list.Add(new ValueString(key));
 						list.Add(dict[key]);
-						
-						scope.SetValue(var, new ValueArray(list));
+
+						assign.Assign(new ValueArray(list));
 						result = EvalBody.Do(valueBody, scope);
 					}
 				}
@@ -163,7 +163,7 @@ namespace loki3.builtin
 					while (lines.HasCurrent())
 					{
 						Value value = EvalLines.DoOne(lines, scope);
-						scope.SetValue(var, value);
+						assign.Assign(value);
 						result = EvalBody.Do(valueBody, scope);
 					}
 				}

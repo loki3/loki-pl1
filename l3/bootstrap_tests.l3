@@ -446,13 +446,23 @@
 	10 assert=? total
 
 :forEach @unittest func()
+	// loop thru array
 	:total v= 0
 	:i forEach ( 1 .. 5 )
 		:total = total + i
 	15 assert=? total
+	// loop thru map
 	:total v= 0
 	:i forEach { :a 2 :b 4 }
 		:total = total + i . 1
+	6 assert=? total
+	// pattern match against map
+	:str v= ""
+	:total v= 0
+	[ :key :value ] forEach { :a 2 :b 4 }
+		:str = str +s key
+		:total = total + value
+	:ab assert=? str
 	6 assert=? total
 
 :forEachDelim @unittest func()

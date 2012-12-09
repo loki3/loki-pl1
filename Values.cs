@@ -50,31 +50,8 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 
-				// extract parameters
-				Value key = map["key"];
-				Value value = map["value"];
-				bool bCreate = map["create?"].AsBool;
-
-				// key must be a type that can be used for pattern matching
-				if (key.Type != ValueType.String && key.Type != ValueType.Array && key.Type != ValueType.Map)
-					throw new Loki3Exception().AddWrongType(ValueType.String, key.Type);
-
-				// find the matches in the pattern, ignoring the leftover
-				Value match, leftover;
-				PatternChecker.Do(value, key, true/*bShortPat*/, out match, out leftover);
-
-				// scope we're going to modify
-				IScope toModify = Utility.GetScopeToModify(map, scope, true/*bIncludeMap*/);
-
-				// add/modify scope
-				if (match != null)
-					Utility.AddToScope(key, match, toModify, bCreate);
-				else if (key is ValueArray && value.IsNil)
-				{	// special case: initialize every token in array to nil
-					foreach (Value v in key.AsArray)
-						Utility.AddToScope(v, value, toModify, bCreate);
-				}
-				return value;
+				PatternAssign assign = new PatternAssign(map, scope);
+				return assign.Assign(map["value"]);
 			}
 		}
 
