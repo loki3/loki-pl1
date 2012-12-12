@@ -69,6 +69,8 @@ namespace loki3.core
 		}
 
 		internal override Value ValueCopy() { return new ValueLine(m_list); }
+
+		internal override int Count { get { return m_list.Count; } }
 #endregion
 
 		private List<DelimiterList> m_list;

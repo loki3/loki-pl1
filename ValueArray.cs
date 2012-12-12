@@ -34,6 +34,8 @@ namespace loki3.core
 		}
 
 		internal override List<Value> AsArray { get { return m_val; } }
+
+		internal override int Count { get { return m_val.Count; } }
 		#endregion
 
 		internal override Value ValueCopy() { return new ValueArray(new List<Value>(m_val)); }

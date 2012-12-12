@@ -76,6 +76,9 @@ namespace loki3.core
 		internal virtual Map AsMap { get { throw new Loki3Exception().AddWrongType(ValueType.Map, Type); } }
 		internal virtual List<DelimiterList> AsLine { get { throw new Loki3Exception().AddWrongType(ValueType.RawList, Type); } }
 
+		// dealing with values that are collections
+		internal virtual int Count { get { return 1; } }
+
 		/// <summary>Get this value's metadata.  May be null.</summary>
 		internal Map Metadata { get { return m_metadata; } }
 
@@ -347,6 +350,8 @@ namespace loki3.core
 		}
 
 		internal override Map AsMap { get { return m_val; } }
+
+		internal override int Count { get { return m_val.Count; } }
 		#endregion
 
 		/// <summary>Get a value by key</summary>
