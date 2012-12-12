@@ -71,6 +71,7 @@
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="TEST_EvalLines.cs" />
     <Compile Include="TEST_EvalList.cs" />
+    <Compile Include="TEST_FunctionOverload.cs" />
     <Compile Include="TEST_Logic.cs" />
     <Compile Include="TEST_MapFunctions.cs" />
     <Compile Include="TEST_Math.cs" />
