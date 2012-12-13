@@ -116,7 +116,7 @@ namespace loki3.core
 				int currentLevel = currentV.Metadata[keyOverloadLevel].AsInt;
 				if (level > currentLevel)
 				{
-					list.Insert(i, currentV);
+					list.Insert(i, function);
 					bAdded = true;
 					break;
 				}

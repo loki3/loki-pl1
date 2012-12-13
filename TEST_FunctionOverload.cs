@@ -13,8 +13,9 @@ namespace loki3.core.test
 		{
 			internal override Value ValueCopy() { return null; }
 
-			internal Add(ValueType type1, ValueType type2)
+			internal Add(ValueType type1, ValueType type2, int additional)
 			{
+				m_additional = additional;
 				List<Value> list = new List<Value>();
 				list.Add(PatternData.Single("a", type1));
 				list.Add(PatternData.Single("b", type2));
@@ -27,9 +28,11 @@ namespace loki3.core.test
 				Value v1 = list[0];
 				Value v2 = list[1];
 				if (v1.Type == loki3.core.ValueType.Int && v2.Type == loki3.core.ValueType.Int)
-					return new ValueInt(v1.AsInt + v2.AsInt);
-				return new ValueFloat(v1.AsForcedFloat + v2.AsForcedFloat);
+					return new ValueInt(v1.AsInt + v2.AsInt + m_additional);
+				return new ValueFloat(v1.AsForcedFloat + v2.AsForcedFloat + m_additional);
 			}
+
+			private int m_additional;
 		}
 
 		/// <summary>
@@ -61,7 +64,7 @@ namespace loki3.core.test
 			IScope scope = new ScopeChain();
 
 			{	// add a single function & make sure it's called at right time & fails at right time
-				ValueFunction numInt = new Add(ValueType.Number, ValueType.Int);
+				ValueFunction numInt = new Add(ValueType.Number, ValueType.Int, 0);
 				overload.Add(numInt);
 				Value a = overload.Eval(null, MakePair(3, 4, true, true), scope, null, null);
 				Assert.AreEqual(7, a.AsInt);
@@ -71,6 +74,27 @@ namespace loki3.core.test
 				bool bThrew = false;
 				try
 				{
+					overload.Eval(null, MakePair(3, 4, false, false), scope, null, null);
+				}
+				catch (Loki3Exception)
+				{
+					bThrew = true;
+				}
+				Assert.IsTrue(bThrew);
+			}
+
+			{	// add a second function & make sure both succeed & fail at right time
+				// this one is more specific so should get called first when signature matches
+				ValueFunction intInt = new Add(ValueType.Int, ValueType.Int, 1);
+				overload.Add(intInt);
+				Value a = overload.Eval(null, MakePair(3, 4, true, true), scope, null, null);
+				Assert.AreEqual(8, a.AsInt);	// calls 2nd version
+				Value b = overload.Eval(null, MakePair(3, 5, false, true), scope, null, null);
+				Assert.AreEqual(8, b.AsFloat);	// calls 1st version
+
+				bool bThrew = false;
+				try
+				{	// still no match for this one
 					overload.Eval(null, MakePair(3, 4, false, false), scope, null, null);
 				}
 				catch (Loki3Exception)
