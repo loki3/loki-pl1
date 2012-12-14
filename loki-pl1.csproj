@@ -47,7 +47,7 @@
     <Compile Include="EvalNode.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Conditional.cs" />
-    <Compile Include="FunctionOverload.cs" />
+    <Compile Include="ValueFunctionOverload.cs" />
     <Compile Include="ILineRequestor.cs" />
     <Compile Include="IO.cs" />
     <Compile Include="Logic.cs" />
@@ -71,7 +71,7 @@
     <Compile Include="TEST_EvalBuiltin.cs" />
     <Compile Include="TEST_EvalLines.cs" />
     <Compile Include="TEST_EvalList.cs" />
-    <Compile Include="TEST_FunctionOverload.cs" />
+    <Compile Include="TEST_ValueFunctionOverload.cs" />
     <Compile Include="TEST_Logic.cs" />
     <Compile Include="TEST_MapFunctions.cs" />
     <Compile Include="TEST_Math.cs" />

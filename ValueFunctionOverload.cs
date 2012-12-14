@@ -7,7 +7,7 @@ namespace loki3.core
 	/// When trying to eval, look for first full match.  If none, look for
 	/// first partial match.
 	/// </summary>
-	internal class FunctionOverload
+	internal class ValueFunctionOverload : ValueFunction
 	{
 		/// <summary>Add a new overload to the list</summary>
 		internal void Add(ValueFunction function)
@@ -32,7 +32,7 @@ namespace loki3.core
 		}
 
 		/// <summary>Examine overloads to figure out which function to eval</summary>
-		internal Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 		{
 			// if we've got a single function, simply use it
 			List<Value> functions = m_functions.AsArray;
@@ -86,6 +86,28 @@ namespace loki3.core
 		#region Keys
 		internal static string keyOverloadLevel = "l3.func.overloadLevel";
 		#endregion
+
+
+		#region Value
+		internal override bool Equals(Value v)
+		{
+			ValueFunction other = v as ValueFunction;
+			return (other == null ? false : this == other);
+		}
+
+		internal override Value ValueCopy()
+		{
+			ValueFunctionOverload copy = new ValueFunctionOverload();
+			List<Value> array = new List<Value>();
+			foreach (Value f in m_functions.AsArray)
+				array.Add(f);
+			copy.m_functions = new ValueArray(array);
+			copy.m_bConsumesPrevious = m_bConsumesPrevious;
+			copy.m_bConsumesNext = m_bConsumesNext;
+			return copy;
+		}
+		#endregion
+
 
 		/// <summary>Figure out how specific overload is and add to sorted list</summary>
 		private void AddFunction(ValueFunction function)

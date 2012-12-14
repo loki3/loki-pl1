@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace loki3.core.test
 {
 	[TestFixture]
-	class TEST_FunctionOverload
+	class TEST_ValueFunctionOverload
 	{
 		/// <summary>Add two ints, floats or numbers</summary>
 		class Add : ValueFunctionPre
@@ -68,7 +68,7 @@ namespace loki3.core.test
 		[Test]
 		public void TestBasic()
 		{
-			FunctionOverload overload = new FunctionOverload();
+			ValueFunctionOverload overload = new ValueFunctionOverload();
 			IScope scope = new ScopeChain();
 
 			{	// add a single function & make sure it's called at right time & fails at right time
