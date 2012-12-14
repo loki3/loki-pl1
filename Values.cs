@@ -212,13 +212,16 @@ namespace loki3.builtin
 					int step = vStep.AsInt;
 					if ((start < end && step < 0) || (start > end && step > 0))
 						step = -step;
-					if (start < end)
+
+					if (start == end)
+						list.Add(new ValueInt(start));
+					else if (start < end)
 						for (int i = start; i <= end; i += step)
 							list.Add(new ValueInt(i));
 					else
 						for (int i = start; i >= end; i += step)
 							list.Add(new ValueInt(i));
-			}
+				}
 				else
 				{	// if anything is a float, output is floats
 					double start = vStart.AsForcedFloat;
