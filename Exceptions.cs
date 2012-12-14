@@ -60,6 +60,14 @@ namespace loki3.core
 			return this;
 		}
 
+		/// <summary>Function overload is of a different "fix" type</summary>
+		internal Loki3Exception AddWrongFix(string expected, string actual)
+		{
+			m_map[keyExpectedFix] = new ValueString(expected);
+			m_map[keyActualFix] = new ValueString(actual);
+			return this;
+		}
+
 
 		/// <summary>Tack on the function where the error occurred</summary>
 		internal Loki3Exception AddFunction(string function)
@@ -121,6 +129,10 @@ namespace loki3.core
 		internal static string keyExpectedPattern = "l3.error.expectedPattern";
 		/// <summary>Actual pattern</summary>
 		internal static string keyActualPattern = "l3.error.actualPattern";
+		/// <summary>Overloaded function was expected to be in/post/prefix</summary>
+		internal static string keyExpectedFix = "l3.error.expectedFix";
+		/// <summary>Overloaded function was actually in/post/prefix</summary>
+		internal static string keyActualFix = "l3.error.actualFix";
 
 		/// <summary>Function where error occurred</summary>
 		internal static string keyFunction = "l3.error.function";

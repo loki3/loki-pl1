@@ -22,7 +22,11 @@ namespace loki3.core
 			{	// other functions must match fix
 				if (m_bConsumesPrevious != function.ConsumesPrevious
 					|| m_bConsumesNext != function.ConsumesNext)
-					throw new Loki3Exception();		// todo: add exception info
+				{
+					string expected = GetFix(m_bConsumesPrevious, m_bConsumesNext);
+					string actual = GetFix(function.ConsumesPrevious, function.ConsumesNext);
+					throw new Loki3Exception().AddWrongFix(expected, actual);
+				}
 				AddFunction(function);
 			}
 		}
@@ -170,6 +174,13 @@ namespace loki3.core
 			else if (theType == ValueClasses.ClassOf(ValueType.Number))
 				return 1;
 			return 2;
+		}
+
+		private string GetFix(bool pre, bool post)
+		{
+			if (pre)
+				return (post ? "infix" : "postfix");
+			return (post ? "prefix" : "nofix");
 		}
 
 		/// <summary>The range of points a param can have</summary>

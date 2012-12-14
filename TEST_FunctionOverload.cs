@@ -35,6 +35,14 @@ namespace loki3.core.test
 			private int m_additional;
 		}
 
+		/// <summary>Empty postfix function</summary>
+		class Post : ValueFunctionPost
+		{
+			internal override Value ValueCopy() { return null; }
+			internal Post() { Init(PatternData.Single("blah")); }
+			internal override Value Eval(Value arg, IScope scope) { return null; }
+		}
+
 		/// <summary>
 		/// Make a parameter that's an array of two values,
 		/// each of which could be an int or float
@@ -99,6 +107,22 @@ namespace loki3.core.test
 				}
 				catch (Loki3Exception)
 				{
+					bThrew = true;
+				}
+				Assert.IsTrue(bThrew);
+			}
+
+			{	// try adding a postfix function to the overload
+				bool bThrew = false;
+				try
+				{
+					ValueFunction post = new Post();
+					overload.Add(post);
+				}
+				catch (Loki3Exception e)
+				{
+					Assert.AreEqual("prefix", e.Errors[Loki3Exception.keyExpectedFix].ToString());
+					Assert.AreEqual("postfix", e.Errors[Loki3Exception.keyActualFix].ToString());
 					bThrew = true;
 				}
 				Assert.IsTrue(bThrew);
