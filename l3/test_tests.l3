@@ -55,3 +55,20 @@
 	1       assert=? 1 !
 	24      assert=? 4 !
 	3628800 assert=? 10 !
+
+
+:fib1 @unittest func()
+	1	assert=? fib1 0
+	1	assert=? fib1 1
+	2	assert=? fib1 2
+	3	assert=? fib1 3
+	5	assert=? fib1 4
+	8	assert=? fib1 5
+
+:fib2 @unittest func()
+	1	assert=? fib2 0
+	1	assert=? fib2 1
+	2	assert=? fib2 2
+	3	assert=? fib2 3
+	5	assert=? fib2 4
+	8	assert=? fib2 5

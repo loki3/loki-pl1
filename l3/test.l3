@@ -65,7 +65,6 @@ var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 //
 // a mechanism for defining a function recursively but having it execute iteratively
 
-
 :repeat v= func [ ->a ->f ]
 	while ` nil !=? f `
 		[ :a :f ] = f [ a ]
@@ -83,3 +82,27 @@ var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	repeat [ 1 ( fact [ n ] ) ]
 :! @order 2
 :! @doc ." Factorial operator defined recursively but executed iteratively
+
+
+//
+// Fibonacci numbers
+
+:fib1 v= func ->n
+	[ :f1 :f2 ] v= [ 1 1 ]
+	if n >? 1
+		:i forEach ( 2 .. n )
+			:temp v= f1 + f2
+			:f1 = f2
+			:f2 = temp
+	f2
+:fib1 @doc ." Iterative computation of Fibonacci numbers
+
+// todo: this could be improved with lazy eval of parameters to ?
+// or with a return (to avoid assignment)
+:fib2 v= func ->n
+	:sub v= func .[ ->f1 ->f2 ->i
+		if i !=? n
+			:f2 = sub .[ f2 ( f1 + f2 ) ( i + 1 )
+		f2
+	sub .[ 0 1 0
+:fib2 @doc ." Recursive computation of Fibonacci numbers
