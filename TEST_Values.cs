@@ -120,6 +120,31 @@ namespace loki3.builtin.test
 		}
 
 		[Test]
+		public void TestOverload()
+		{
+			IScope scope = CreateValueScope();
+
+			{	// add non-overloaded functions
+				Value value = TestSupport.ToValue("l3.setValue { :key :a :value l3.setValue :overload? false }", scope);
+				Assert.IsNotNull(scope.AsMap["a"] as ValueFunction);
+				Assert.IsNull(scope.AsMap["a"] as ValueFunctionOverload);
+
+				value = TestSupport.ToValue("l3.setValue { :key :a :value l3.getValue :overload? false }", scope);
+				Assert.IsNotNull(scope.AsMap["a"] as ValueFunction);
+				Assert.IsNull(scope.AsMap["a"] as ValueFunctionOverload);
+			}
+
+			{	// add function overloads
+				Value value = TestSupport.ToValue("l3.setValue { :key :b :value l3.setValue :overload? true }", scope);
+				Assert.IsNotNull(scope.AsMap["b"] as ValueFunction);
+
+				value = TestSupport.ToValue("l3.setValue { :key :b :value l3.getValue :overload? true }", scope);
+				Assert.IsNotNull(scope.AsMap["b"] as ValueFunction);
+				Assert.IsNotNull(scope.AsMap["b"] as ValueFunctionOverload);
+			}
+		}
+
+		[Test]
 		public void TestGetValue()
 		{
 			IScope scope = CreateValueScope();

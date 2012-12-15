@@ -62,8 +62,8 @@ namespace loki3.core
 		internal static string keyBody = "l3.func.body";
 		#endregion
 
-		internal bool ConsumesPrevious { get { return Metadata.ContainsKey(keyPreviousPattern); } }
-		internal bool ConsumesNext { get { return Metadata.ContainsKey(keyNextPattern); } }
+		internal virtual bool ConsumesPrevious { get { return Metadata.ContainsKey(keyPreviousPattern); } }
+		internal virtual bool ConsumesNext { get { return Metadata.ContainsKey(keyNextPattern); } }
 
 		/// <summary>Retrieve the body off the argument</summary>
 		internal static List<DelimiterList> GetBody(Value arg)

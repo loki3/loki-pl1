@@ -5,12 +5,14 @@ namespace loki3.core
 	internal class Utility
 	{
 		/// <summary>Add the values from the matched pattern to the scope</summary>
-		internal static void AddToScope(Value pattern, Value match, IScope scope, bool bCreate)
+		/// <param name="bCreate">should key be created in current scope if it doesn't exist?</param>
+		/// <param name="bOverload">if value is a function, determines whether it's added to override list on key</param>
+		internal static void AddToScope(Value pattern, Value match, IScope scope, bool bCreate, bool bOverload)
 		{
 			if (pattern is ValueString)
 			{
 				if (!pattern.IsNil)
-					SetOnScope(scope, pattern.AsString, match, bCreate);
+					SetOnScope(scope, pattern.AsString, match, bCreate, bOverload);
 			}
 			else if (pattern is ValueMap && match is ValueMap)
 			{	// add matched dictionary to current scope
@@ -18,7 +20,7 @@ namespace loki3.core
 				Map matmap = match.AsMap;
 				foreach (string key in matmap.Raw.Keys)
 					if (!patmap[key].IsNil)
-						SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate);
+						SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate, bOverload);
 			}
 			else if (pattern is ValueArray && match is ValueArray)
 			{	// add matched array values to current scope
@@ -27,19 +29,19 @@ namespace loki3.core
 				int count = System.Math.Min(patarray.Count, matcharray.Count);
 				for (int i = 0; i < count; i++)
 					if (!patarray[i].IsNil)
-						SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate);
+						SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate, bOverload);
 			}
 			else if (pattern is ValueArray && match is ValueMap)
 			{
 				Map matmap = match.AsMap;
 				foreach (string key in matmap.Raw.Keys)
-					SetOnScope(scope, key, matmap[key], bCreate);
+					SetOnScope(scope, key, matmap[key], bCreate, bOverload);
 			}
 		}
 		/// <summary>Add the values from the matched pattern to the scope</summary>
 		internal static void AddToScope(Value pattern, Value match, IScope scope)
 		{
-			AddToScope(pattern, match, scope, true);
+			AddToScope(pattern, match, scope, true/*bCreate*/, false/*bOverload*/);
 		}
 
 		/// <summary>Add values from one scope onto another</summary>
@@ -55,7 +57,7 @@ namespace loki3.core
 		/// If bCreate, always set value on current scope,
 		/// else, change value on scope value exists on or throw exception if it doesn't exist
 		/// </summary>
-		internal static void SetOnScope(IScope scope, string key, Value value, bool bCreate)
+		internal static void SetOnScope(IScope scope, string key, Value value, bool bCreate, bool bOverload)
 		{
 			// figure out the scope to modify
 			IScope where;
@@ -68,6 +70,31 @@ namespace loki3.core
 				where = scope.Exists(key);
 				if (where == null)
 					throw new Loki3Exception().AddBadToken(new Token(key));
+			}
+
+			// if we're setting a function, it may be an overload
+			if (bOverload && value.Type == ValueType.Function && where.AsMap.ContainsKey(key))
+			{
+				Value existing = where.AsMap[key];
+				if (existing != null)
+				{
+					ValueFunctionOverload overload = null;
+					if (existing.Type == ValueType.Function)
+					{	// change function value into an overload value
+						overload = existing as ValueFunctionOverload;
+						if (overload == null)
+						{
+							overload = new ValueFunctionOverload(existing as ValueFunction);
+							overload.Add(value as ValueFunction);
+							where.SetValue(key, overload);
+						}
+						else
+						{
+							overload.Add(value as ValueFunction);
+						}
+						return;
+					}
+				}
 			}
 
 			where.SetValue(key, value);

@@ -9,6 +9,12 @@ namespace loki3.core
 	/// </summary>
 	internal class ValueFunctionOverload : ValueFunction
 	{
+		internal ValueFunctionOverload() { }
+		internal ValueFunctionOverload(ValueFunction function)
+		{
+			Add(function);
+		}
+
 		/// <summary>Add a new overload to the list</summary>
 		internal void Add(ValueFunction function)
 		{
@@ -82,6 +88,9 @@ namespace loki3.core
 			// eval the best match we found
 			return best.Eval(prev, next, scope, nodes, requestor);
 		}
+
+		internal override bool ConsumesPrevious { get { return m_bConsumesPrevious; } }
+		internal override bool ConsumesNext { get { return m_bConsumesNext; } }
 
 		#region Keys
 		internal static string keyOverloadLevel = "l3.func.overloadLevel";
