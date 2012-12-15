@@ -22,6 +22,7 @@ namespace loki3.core
 			{	// first function decides if it's pre/in/postfix
 				m_bConsumesPrevious = function.ConsumesPrevious;
 				m_bConsumesNext = function.ConsumesNext;
+				m_bRequiresBody = function.RequiresBody();
 				AddFunction(function);
 			}
 			else
@@ -33,6 +34,9 @@ namespace loki3.core
 					string actual = GetFix(function.ConsumesPrevious, function.ConsumesNext);
 					throw new Loki3Exception().AddWrongFix(expected, actual);
 				}
+				// other function must have same body requirement
+				if (m_bRequiresBody != function.RequiresBody())
+					throw new Loki3Exception().AddMissingBody(function);
 				AddFunction(function);
 			}
 		}
@@ -89,8 +93,11 @@ namespace loki3.core
 			return best.Eval(prev, next, scope, nodes, requestor);
 		}
 
+		#region	ValueFunction
 		internal override bool ConsumesPrevious { get { return m_bConsumesPrevious; } }
 		internal override bool ConsumesNext { get { return m_bConsumesNext; } }
+		internal override bool RequiresBody() { return m_bRequiresBody; }
+		#endregion
 
 		#region Keys
 		internal static string keyOverloadLevel = "l3.func.overloadLevel";
@@ -220,5 +227,6 @@ namespace loki3.core
 		private ValueArray m_functions = new ValueArray(new List<Value>());
 		private bool m_bConsumesPrevious = false;
 		private bool m_bConsumesNext = false;
+		private bool m_bRequiresBody = false;
 	}
 }

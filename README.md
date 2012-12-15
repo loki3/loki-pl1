@@ -62,7 +62,7 @@ Here's an example showing how you could leverage bodies for creating maps:
 var :makeMap = func()
 	var :map = nil
 	:submap forEachDelim [ body :{ ]
-		:map = map +a submap
+		:map = map + submap
 	map
 
 // :a will contain the map { :key1 42 :key2 (sqrt) }, where (sqrt) is a function

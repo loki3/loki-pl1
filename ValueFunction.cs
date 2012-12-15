@@ -74,7 +74,7 @@ namespace loki3.core
 			return map[keyBody].AsLine;
 		}
 		/// <summary>Does function require body?</summary>
-		internal bool RequiresBody()
+		internal virtual bool RequiresBody()
 		{
 			if (!ConsumesNext)
 				return false;

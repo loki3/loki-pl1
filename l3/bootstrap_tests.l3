@@ -175,7 +175,7 @@
 	:a v= func()
 		:result v= nil
 		:line forEach body
-			:result = result +a [ line ]
+			:result = result + [ line ]
 	:a @body? true
 	:b v= a
 		3
@@ -217,7 +217,7 @@
 		var :i forEach currentScope
 			// ignore vars that the forEach created
 			if ( ( i . 0 ) =? :a |? ( i . 0 ) =? :b )
-				:map = map +a { ( i . 0 ) ( i . 1 ) }
+				:map = map + { ( i . 0 ) ( i . 1 ) }
 	{ :a 1 :b 2 } assert=? map
 
 :setScopeName @unittest stubFunc
@@ -314,11 +314,11 @@
 :.. @unittest func()
 	[ 3 4 5 6 ] assert=? ( 3 .. 6 )
 
-:+a @unittest func()
-	[ 3 4 5 6 ] assert=? [ 3 4 ] +a [ 5 6 ]
-	[ 3 4 5 6 ] assert=? [ 3 4 5 ] +a 6
-	[ 3 4 5 6 ] assert=? [ 3 4 5 6 ] +a [ ]
-	[ 3 4 5 6 ] assert=? [ 3 4 5 6 ] +a nil
+:+ @unittest func()
+	[ 3 4 5 6 ] assert=? [ 3 4 ] + [ 5 6 ]
+	[ 3 4 5 6 ] assert=? [ 3 4 5 ] + 6
+	[ 3 4 5 6 ] assert=? [ 3 4 5 6 ] + [ ]
+	[ 3 4 5 6 ] assert=? [ 3 4 5 6 ] + nil
 
 :+= @unittest func()
 	// array addition
@@ -506,7 +506,7 @@
 	:thing v= func()
 		:result v= nil
 		:map forEachDelim [ body :{ ]
-			:result = result +a map
+			:result = result + map
 	:thing @body? true
 	// use that function to create a map
 	:test v= thing

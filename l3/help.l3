@@ -83,20 +83,20 @@
 					:t = ""
 				t
 			:line v= [ fix param ]
-			:line = line +a .( getMeta :type
-			:line = line +a .( getMeta :default
-			:line = line +a .( getMeta :rest
+			:line = line + .( getMeta :type
+			:line = line + .( getMeta :default
+			:line = line + .( getMeta :rest
 			line
 		if params !=? nil
 			:type v= l3.getType .{ :value params
 			if type =any? [ :map :array ]
 				:param forEach params
 					if :map =? l3.getType .{ :value params
-						:table = table +a getParam .( fix .( param . 1
+						:table = table + getParam .( fix .( param . 1
 					else
-						:table = table +a getParam .( fix param
+						:table = table + getParam .( fix param
 			else
-				:table = table +a getParam params
+				:table = table + getParam params
 		table
 	
 	:result v= ""
@@ -139,9 +139,9 @@
 	:pair forEach metadata
 		// handle docstrings separately because they're long
 		if ( pair . 0 ) =? :l3.value.doc
-			:table = table +a [ ( pair . 0 ) " <docstring> " ]
+			:table = table + [ ( pair . 0 ) " <docstring> " ]
 		else
-			:table = table +a pair
+			:table = table + pair
 	l3.formatTable { :array table :columns 2 :dashesAfterFirst? true }
 :dumpMeta @cat :help @doc ." Dump metadata for the given value attached to a key
 
