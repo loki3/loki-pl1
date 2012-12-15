@@ -112,7 +112,7 @@
 
 :runUnittests v= func ->scope
 	var :failures = [ ]
-	[ :unittestName :_ ] forEach scope
+	[ :unittestName _ ] forEach scope
 		var :success? = if true
 			// asserts will exit this scope & the above 'if' will return false
 			setScopeName :runUnittests

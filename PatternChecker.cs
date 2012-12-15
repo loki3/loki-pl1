@@ -20,6 +20,8 @@ namespace loki3.core
 		{
 			match = null;
 			leftover = null;
+			if (pattern.IsNil)
+				return true;	// trivial match, ignore input
 
 			switch (input.Type)
 			{

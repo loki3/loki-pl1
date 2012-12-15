@@ -241,6 +241,17 @@
 
 
 //
+// types
+
+:_ @unittest func()
+	nil assert=? _
+	// _ in pattern matching means ignore the value
+	[ :a _ :b ] v= [ 3 5 7 ]
+	3 assert=? a
+	7 assert=? b
+
+
+//
 // logic
 
 :&? @unittest func()

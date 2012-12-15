@@ -224,6 +224,13 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// types
+
+:_ v= nil
+:_ @doc ." Represents nil.  Useful in pattern matching for ignoring a value.
+
+
+//
 // logic
 
 :&? v= .(< l3.and? [ #1 #2 ]

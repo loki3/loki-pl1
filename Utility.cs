@@ -9,14 +9,16 @@ namespace loki3.core
 		{
 			if (pattern is ValueString)
 			{
-				SetOnScope(scope, pattern.AsString, match, bCreate);
+				if (!pattern.IsNil)
+					SetOnScope(scope, pattern.AsString, match, bCreate);
 			}
 			else if (pattern is ValueMap && match is ValueMap)
 			{	// add matched dictionary to current scope
 				Map patmap = pattern.AsMap;
 				Map matmap = match.AsMap;
 				foreach (string key in matmap.Raw.Keys)
-					SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate);
+					if (!patmap[key].IsNil)
+						SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate);
 			}
 			else if (pattern is ValueArray && match is ValueArray)
 			{	// add matched array values to current scope
@@ -24,7 +26,8 @@ namespace loki3.core
 				List<Value> matcharray = match.AsArray;
 				int count = System.Math.Min(patarray.Count, matcharray.Count);
 				for (int i = 0; i < count; i++)
-					SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate);
+					if (!patarray[i].IsNil)
+						SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate);
 			}
 			else if (pattern is ValueArray && match is ValueMap)
 			{
@@ -54,17 +57,20 @@ namespace loki3.core
 		/// </summary>
 		internal static void SetOnScope(IScope scope, string key, Value value, bool bCreate)
 		{
+			// figure out the scope to modify
+			IScope where;
 			if (bCreate)
 			{
-				scope.SetValue(key, value);
+				where = scope;
 			}
 			else
 			{
-				IScope where = scope.Exists(key);
+				where = scope.Exists(key);
 				if (where == null)
 					throw new Loki3Exception().AddBadToken(new Token(key));
-				where.SetValue(key, value);
 			}
+
+			where.SetValue(key, value);
 		}
 
 		/// <summary>If :key is present, lookup value, else if :value is present, return value.</summary>
