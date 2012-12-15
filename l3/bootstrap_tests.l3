@@ -51,6 +51,31 @@
 	:a v= 5
 	5 assert=? a
 
+:f=		@unittest func()
+	// try overloads on different numbers of parameters
+	:f f= .(( :a ` a + 1 `
+	5 assert=? f 4
+	:f f= .(( [ :a :b :c ] ` a + b + c `
+	5 assert=? f 4
+	9 assert=? f .[ 4 2 3
+	:f f= .(( [ :a :b ] ` a * b `
+	5 assert=? f 4
+	8 assert=? f .[ 4 2
+	9 assert=? f .[ 4 2 3
+	
+	// try overloads based on type
+	// general
+	:g f= .(( :a ` a + 1 `
+	5 assert=? g 4
+	// most specific
+	:g f= .(( ( :a @@type :float ) ` a + 3 `
+	5 assert=? g 4
+	7 assert=? g 4.0
+	// intermediate
+	:g f= .(( ( :a @@type :number ) ` a + 2 `
+	6 assert=? g 4
+	7 assert=? g 4.0
+
 :=		@unittest func()
 	:a v= 5
 	:a = 4

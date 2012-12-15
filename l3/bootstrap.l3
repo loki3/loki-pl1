@@ -13,6 +13,9 @@ l3.setValue { :key :` :value ( l3.createDelimiter { :end :` :type :asRaw } ) }
 // create a new variable and assign a value
 l3.setValue { :key :v= :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? true } ` ] } ) }
 
+// same as v= but allows for function overloading
+l3.setValue { :key :f= :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? true :overload? true } ` ] } ) }
+
 // create a new variable with a value of nil
 l3.setValue { :key :var :value ( l3.createFunction { :post ->name :order 2 :body [ ` l3.setValue { :key name :value nil :scope :parent :create? true } ` ` name ` ] } ) }
 
@@ -167,6 +170,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :."		@cat :delimiter @doc ." Remainder of line is a string
 :.'		@cat :delimiter @doc ." Remainder of line is a string
 :v=		@cat :assign    @doc ." Create a new key/value pair in the current scope
+:f=		@cat :assign    @doc ." Create a new key/value pair in the current scope, like v= but functions can be overloaded
 :=		@cat :assign    @doc ." Assign a value to a key
 :var	@cat :assign    @doc ." Create a new variable in the current scope
 :func	@cat :function  @doc ." Define a function that takes parameters after the function name

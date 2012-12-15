@@ -241,7 +241,10 @@ namespace loki3.core
 		internal override bool Equals(Value v)
 		{
 			ValueInt other = v as ValueInt;
-			return (other == null ? false : m_val == other.m_val);
+			if (other != null)
+				return m_val == other.m_val;
+			ValueFloat otherF = v as ValueFloat;
+			return (otherF == null ? false : m_val == otherF.GetValue());
 		}
 
 		internal override Value ValueCopy() { return new ValueInt(m_val); }
@@ -278,7 +281,10 @@ namespace loki3.core
 		internal override bool Equals(Value v)
 		{
 			ValueFloat other = v as ValueFloat;
-			return (other == null ? false : m_val == other.m_val);
+			if (other != null)
+				return m_val == other.m_val;
+			ValueInt otherI = v as ValueInt;
+			return (otherI == null ? false : m_val == otherI.GetValue());
 		}
 
 		internal override Value ValueCopy() { return new ValueFloat(m_val); }
