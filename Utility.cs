@@ -73,11 +73,29 @@ namespace loki3.core
 			}
 
 			// if we're setting a function, it may be an overload
-			if (bOverload && value.Type == ValueType.Function && where.AsMap.ContainsKey(key))
+			if (bOverload && value.Type == ValueType.Function)
 			{
-				Value existing = where.AsMap[key];
-				if (existing != null)
+				// first, if there's nothing there, see if key exists on an ancestor scope
+				bool bFound = where.AsMap.ContainsKey(key);
+				if (!bFound)
 				{
+					IScope ancestor = scope.Exists(key);
+					if (ancestor != null)
+					{
+						Value existing = ancestor.AsMap[key];
+						if (existing.Type == ValueType.Function)
+						{	// copy function(s) to this scope so we can overload it
+							// and yet this definition only exists in this scope
+							Value copiedToThisScope = existing.Copy();
+							where.SetValue(key, copiedToThisScope);
+							bFound = true;
+						}
+					}
+				}
+
+				if (bFound)
+				{
+					Value existing = where.AsMap[key];
 					ValueFunctionOverload overload = null;
 					if (existing.Type == ValueType.Function)
 					{	// change function value into an overload value

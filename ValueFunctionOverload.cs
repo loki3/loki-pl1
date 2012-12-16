@@ -23,6 +23,7 @@ namespace loki3.core
 				m_bConsumesPrevious = function.ConsumesPrevious;
 				m_bConsumesNext = function.ConsumesNext;
 				m_bRequiresBody = function.RequiresBody();
+				WritableMetadata[ValueFunction.keyOrder] = function.Metadata[ValueFunction.keyOrder];
 				AddFunction(function);
 			}
 			else

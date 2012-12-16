@@ -16,12 +16,12 @@
 :i @unittest func()
 	{ :x 0 :y 3 } assert=? 3 i
 
-:+c @unittest func()
-	{ :x 4 :y 6 } assert=? { :x 1 :y 2 } +c { :x 3 :y 4 }
-	{ :x 3 :y 8 } assert=? 4 i +c { :x 3 :y 4 }
+:+ @unittest func()
+	{ :x 4 :y 6 } assert=? { :x 1 :y 2 } + { :x 3 :y 4 }
+	{ :x 3 :y 8 } assert=? 4 i + { :x 3 :y 4 }
 
-:*c @unittest func()
-	{ :x -12 :y 0 } assert=? 4 i *c 3 i
+:* @unittest func()
+	{ :x -12 :y 0 } assert=? 4 i * 3 i
 
 // stub out tests & docstrings for the enum & its values
 :days			@unittest ( stubFunc )

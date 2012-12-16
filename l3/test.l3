@@ -35,20 +35,19 @@ var :fizzbuzz3 = func()
 
 //
 // complex numbers
-// todo: consolidate function names once overloading is implemented
 
 var :i = .( ->y postfix
 	{ :x 0 :y y }
-:i @order 2
+:i @order 1
 :i @doc ." Creates a complex number
 
-var :+c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
+:+ f= ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	{ :x ( x1 + x2 ) :y ( y1 + y2 ) }
-:+c @doc ." Adds together two complex numbers of the form { :x # :y # }
+:+ @doc ." Adds together two complex numbers of the form { :x # :y # }
 
-var :*c = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
+:* f= ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	{ :x ( x1 * x2 - y1 * y2 ) :y ( x1 * y2 + x2 * y1 ) }
-:*c @doc ." Multiples together two complex numbers of the form { :x # :y # }
+:* @doc ." Multiples together two complex numbers of the form { :x # :y # }
 
 
 //
