@@ -19,6 +19,8 @@
 :+ @unittest func()
 	{ :x 4 :y 6 } assert=? { :x 1 :y 2 } + { :x 3 :y 4 }
 	{ :x 3 :y 8 } assert=? 4 i + { :x 3 :y 4 }
+	{ :x 1 :y 2 } assert=? 1 + 2 i
+	{ :x 1 :y 2 } assert=? 2 i + 1
 
 :* @unittest func()
 	{ :x -12 :y 0 } assert=? 4 i * 3 i

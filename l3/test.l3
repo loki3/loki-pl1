@@ -36,13 +36,17 @@ var :fizzbuzz3 = func()
 //
 // complex numbers
 
-var :i = .( ->y postfix
+:i v= .( ->y postfix
 	{ :x 0 :y y }
 :i @order 1
 :i @doc ." Creates a complex number
 
 :+ f= ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	{ :x ( x1 + x2 ) :y ( y1 + y2 ) }
+:+ f= ( { :x ->x1 :y ->y1 } infix ( ->x2 @@type :number ) )
+	{ :x ( x1 + x2 ) :y y1 }
+:+ f= ( ( ->x1 @@type :number ) infix { :x ->x2 :y ->y2 } )
+	{ :x ( x1 + x2 ) :y y2 }
 :+ @doc ." Adds together two complex numbers of the form { :x # :y # }
 
 :* f= ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
