@@ -91,8 +91,11 @@ namespace loki3.core
 			if (patternString != null)
 			{
 				PatternData data = new PatternData(patternString);
-				match = input;
-				return true;
+				if (data.Type != ValueClasses.ClassOf(ValueType.String))
+				{	// match as long as pattern doesn't say it wants type:string
+					match = input;
+					return true;
+				}
 			}
 
 			ValueArray patternArray = pattern as ValueArray;

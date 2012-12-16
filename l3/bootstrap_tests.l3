@@ -496,7 +496,7 @@
 	:str v= ""
 	:total v= 0
 	[ :key :value ] forEach { :a 2 :b 4 }
-		:str = str +s key
+		:str = str + key
 		:total = total + value
 	:ab assert=? str
 	6 assert=? total
@@ -534,8 +534,8 @@
 	:5				assert=? :5 =>str
 	" [ 1 2 3 ] "	assert=? [ 1 2 3 ] =>str
 
-:+s @unittest func()
-	:qwert assert=? :qw +s :ert
+:+ @unittest func()
+	:qwert assert=? :qw + :ert
 
 :"" @unittest func()
 	:string	assert=? l3.getType .{ :value ""

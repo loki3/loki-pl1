@@ -50,23 +50,23 @@
 	:cat v= var .@cat
 	:fixType v= getFixType
 	:otherMeta v= getOtherMeta
-	:result = result +s :============
-	:result = result +s \n +s .( l3.stringConcat .{ :spaces 1 :array .[ :# var :@type type :@cat cat fixType otherMeta
+	:result = result + :============
+	:result = result + \n + .( l3.stringConcat .{ :spaces 1 :array .[ :# var :@type type :@cat cat fixType otherMeta
 	:doc v= var .@doc
-	:result = result +s \n +s .( ( doc =? nil ) ? [ " <no docstring> " doc ]
+	:result = result + \n + .( ( doc =? nil ) ? [ " <no docstring> " doc ]
 	
 	// print type specific info
 	:type v= l3.getType { :key var }
 	if type =? :function
-		:result = result +s \n +s \n +s .( dumpFunction var
+		:result = result + \n + \n + .( dumpFunction var
 	elsif type =? :enum
-		:result = result +s \n +s ." type: enum
-		:result = result +s \n +s .( dumpEnum var
+		:result = result + \n + ." type: enum
+		:result = result + \n + .( dumpEnum var
 	elsif type =? :delimiter
-		:result = result +s \n +s .( dumpDelimiter var
+		:result = result + \n + .( dumpDelimiter var
 	else
 		:value v= l3.getValue .{ :key var
-		:result = result +s \n +s .( l3.stringConcat .{ :spaces 1 :array .[ " value: " value
+		:result = result + \n + .( l3.stringConcat .{ :spaces 1 :array .[ " value: " value
 	result
 :help @cat :help @doc ." Print out a description of the value attached to a key, e.g. details on a function
 
@@ -78,7 +78,7 @@
 		// extract metadata on a single parameter
 		:getParam v= func .( ->fix ->param
 			:getMeta v= func ->which
-				:key v= :l3.param. +s which
+				:key v= :l3.param. + which
 				if ( :t v= ( l3.getMetadata { :value param } ) . key ) =? nil
 					:t = ""
 				t
@@ -123,12 +123,12 @@
 	
 	:delimEnum v= .[ :comment :string :value :array :raw
 	:type      v= delimEnum . ( var .@ :l3.delim.type )
-	:result = result +s \n +s l3.stringConcat .{ :spaces 1 :array .[ " parse as: " type
+	:result = result + \n + l3.stringConcat .{ :spaces 1 :array .[ " parse as: " type
 	
 	:function v= var .@ :l3.delim.function
 	if ( function ) !=? nil
-		:result = result +s \n +s ." applies the following function to the contents:
-		:result = result +s \n +s .( help :function
+		:result = result + \n + ." applies the following function to the contents:
+		:result = result + \n + .( help :function
 	result
 :dumpDelimiter @cat :help @doc ." Print the values of a delimiter
 

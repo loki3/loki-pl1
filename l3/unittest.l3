@@ -32,9 +32,9 @@
 :testFunction v= func .[ ->function ->name ->scope
 	[ :success? :failures ] v= function scope
 	if success?
-		print " ---- " +s name +s ." : succeeded
+		print " ---- " + name + ." : succeeded
 	else
-		print " ---- " +s name +s ." : failed
+		print " ---- " + name + ." : failed
 		print failures
 	success?
 :testFunction @cat :unittest @doc """
@@ -69,9 +69,9 @@
 
 :assert=? v= .( ->expected infix ->actual
 	if expected !=? actual
-		print " FAILED : " +s unittestName
-		print " .expected: " +s expected =>str
-		print " ...actual: " +s actual =>str
+		print " FAILED : " + unittestName
+		print " .expected: " + expected =>str
+		print " ...actual: " + actual =>str
 		l3.popScope { :name :runUnittests :return false }
 :assert=? @order 6
 :assert=? @cat :unittest @doc """
@@ -81,9 +81,9 @@
 :assertTrue? v= func ->cond
 	if !? l3.eval cond
 		print ." ...failed...
-		print " FAILED : " +s unittestName
+		print " FAILED : " + unittestName
 		print " ...expected: true "
-		print " .expression: " +s cond =>str
+		print " .expression: " + cond =>str
 		l3.popScope { :name :runUnittests :return false }
 :assertTrue? @order 6
 :assertTrue? @cat :unittest @doc """
@@ -93,9 +93,9 @@
 :assertFalse? v= func ->cond
 	if l3.eval cond
 		print ." ...failed...
-		print " FAILED : " +s unittestName
+		print " FAILED : " + unittestName
 		print " ...expected: false "
-		print " .expression: " +s cond =>str
+		print " .expression: " + cond =>str
 		l3.popScope { :name :runUnittests :return false }
 :assertFalse? @order 6
 :assertFalse? @cat :unittest @doc """
@@ -104,8 +104,8 @@
 
 :assertFail v= func ->message
 	print ." ...failed...
-	print " FAILED : " +s unittestName
-	print " message: " +s message
+	print " FAILED : " + unittestName
+	print " message: " + message
 	l3.popScope { :name :runUnittests :return false }
 :assertFail @cat :unittest @doc ." Unittests can say they fail immediately if this line of code is run.
 

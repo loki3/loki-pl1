@@ -15,7 +15,7 @@ var :fizzBuzz2 = [ ]
 var :i forEach ( 1 .. 20 )
 	[ :str1 :fizz? ] v= ( i % 3 =? 0 ) ? .[ [ :fizz true ] [ " " false ]
 	[ :str2 :buzz? ] v= ( i % 5 =? 0 ) ? .[ [ :buzz true ] [ " " false ]
-	fizzBuzz2 += .( ( fizz? |? buzz? ) ? .[ ( str1 +s str2 ) i
+	fizzBuzz2 += .( ( fizz? |? buzz? ) ? .[ ( str1 + str2 ) i
 :fizzBuzz2 @doc ." fizzbuzz using multiple return values
 
 var :fizzbuzz3 = func()

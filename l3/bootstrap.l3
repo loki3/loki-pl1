@@ -418,10 +418,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :=>str @order 2
 :=>str @cat :string @doc ." Convert a value to a string
 
-// todo: switch to + when overloading is supported
-:+s v= .( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
+:+ f= .( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
 	l3.stringConcat .{ :array .[ str1 str2
-:+s @cat :string @doc ." Concatenate two strings
+:+ @cat :string @doc ." Concatenate two strings
 
 :"" v= " "
 :"" @cat :string @doc ." TEMP: an empty string, needed until string delimiters handle white space correctly
@@ -446,7 +445,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	:list v= { }
 	:i v= 0
 	:val forEach array
-		:key v= name +s " . " +s val
+		:key v= name + " . " + val
 		// metadata on the value describing enum name & key
 		i @@ [ :l3.value.type name ]
 		i @@ [ :l3.enum.key key ]
