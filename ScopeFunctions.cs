@@ -15,6 +15,7 @@ namespace loki3.builtin
 		{
 			scope.SetValue("l3.getScope", new GetScope());
 			scope.SetValue("l3.popScope", new PopScope());
+			scope.SetValue("l3.callWithScope", new CallWithScope());
 		}
 
 		/// <summary>Get the current scope</summary>
@@ -63,6 +64,44 @@ namespace loki3.builtin
 				Value returnValue = map["return"];
 
 				throw new PopStackException(name, returnValue);
+			}
+		}
+
+		/// <summary>Call a function using a given scope</summary>
+		class CallWithScope : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new CallWithScope(); }
+
+			internal CallWithScope()
+			{
+				SetDocString("Call a function using a given scope.");
+
+				Map map = new Map();
+				map["function"] = PatternData.Single("function", ValueType.Function);
+				map["map"] = PatternData.Single("map", ValueType.Map);
+				map["previous"] = PatternData.Single("previous", ValueNil.Nil);
+				map["next"] = PatternData.Single("next", ValueNil.Nil);
+				Init(new ValueMap(map));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+				ValueFunction function = map["function"] as ValueFunction;
+				ValueMap mapOrScope = map["map"] as ValueMap;
+				Value prevValue = map["previous"];
+				Value nextValue = map["next"];
+
+				// either use the scope the map represents
+				// or dummy up a scope for the passed in map
+				IScope where = mapOrScope.Scope;
+				if (where == null)
+					where = new ScopeChain(mapOrScope.AsMap);
+
+				DelimiterNodeValue prev = (prevValue == ValueNil.Nil ? null : new DelimiterNodeValue(prevValue));
+				DelimiterNodeValue next = (nextValue == ValueNil.Nil ? null : new DelimiterNodeValue(nextValue));
+				Value value = function.Eval(prev, next, where, null, null);
+				return value;
 			}
 		}
 	}

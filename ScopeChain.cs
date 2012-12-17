@@ -40,6 +40,7 @@ namespace loki3.core
 			m_parent = parent;
 			m_values = new Map();
 			m_valueMap = new ValueMap(m_values);
+			m_valueMap.Scope = this;
 		}
 
 		/// <summary>Treat a map as a scope</summary>
@@ -48,6 +49,7 @@ namespace loki3.core
 			m_parent = null;
 			m_values = map;
 			m_valueMap = new ValueMap(m_values);
+			m_valueMap.Scope = this;
 		}
 
 		/// <summary>Create a scope with no parent</summary>
@@ -56,6 +58,7 @@ namespace loki3.core
 			m_parent = null;
 			m_values = new Map();
 			m_valueMap = new ValueMap(m_values);
+			m_valueMap.Scope = this;
 		}
 
 		#region IScope Members

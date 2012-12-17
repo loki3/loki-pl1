@@ -100,12 +100,8 @@ var :fizzbuzz3 = func()
 	f2
 :fib1 @doc ." Iterative computation of Fibonacci numbers
 
-// todo: this could be improved with lazy eval of parameters to ?
-// or with a return (to avoid assignment)
 :fib2 v= func ->n
 	:sub v= func .[ ->f1 ->f2 ->i
-		if i !=? n
-			:f2 = sub .[ f2 ( f1 + f2 ) ( i + 1 )
-		f2
+		( i =? n ) ? .[ f2 .` sub .[ f2 ( f1 + f2 ) ( i + 1 )
 	sub .[ 0 1 0
 :fib2 @doc ." Recursive computation of Fibonacci numbers

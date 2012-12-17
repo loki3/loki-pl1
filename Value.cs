@@ -380,6 +380,18 @@ namespace loki3.core
 		}
 
 		public override string ToString() { return m_val.ToString(); }
+
+		#region Scope
+		/// <summary>
+		/// If this map represents a scope, get the corresponding IScope
+		/// </summary>
+		internal IScope Scope
+		{
+			get { return m_scope; }
+			set { m_scope = value; }
+		}
+		private IScope m_scope = null;
+		#endregion
 	}
 
 	/// <summary>
