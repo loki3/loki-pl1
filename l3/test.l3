@@ -87,6 +87,12 @@ var :fizzbuzz3 = func()
 :! @doc ." Factorial operator defined recursively but executed iteratively
 
 
+// simple factorial
+:!2 v= ( ->n postfix )
+	( n <? 1 ) ? .[ 1 .` ( 1 .. n ) fold (< #1 * #2 >)
+:!2 @doc ." Factorial operator using a functional pattern
+
+
 //
 // Fibonacci numbers
 
@@ -94,9 +100,7 @@ var :fizzbuzz3 = func()
 	[ :f1 :f2 ] v= [ 1 1 ]
 	if n >? 1
 		:i forEach ( 2 .. n )
-			:temp v= f1 + f2
-			:f1 = f2
-			:f2 = temp
+			[ :f1 :f2 ] = [ f2 ( f1 + f2 ) ]
 	f2
 :fib1 @doc ." Iterative computation of Fibonacci numbers
 

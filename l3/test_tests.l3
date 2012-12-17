@@ -52,25 +52,32 @@
 	10 assert=? sum 4
 	55 assert=? sum 10
 
-:! @unittest func()
+
+:testFactorial v= func()
 	1       assert=? 0 !
 	1       assert=? 1 !
 	24      assert=? 4 !
 	3628800 assert=? 10 !
+:testFactorial @unittest ( stubFunc ) @doc ." general testing for a factorial function
+
+:! @unittest func()
+	testFactorial
+
+:!2 @unittest func()
+	testFactorial
 
 
-:fib1 @unittest func()
+:testFib v= func()
 	1	assert=? fib1 0
 	1	assert=? fib1 1
 	2	assert=? fib1 2
 	3	assert=? fib1 3
 	5	assert=? fib1 4
 	8	assert=? fib1 5
+:testFib @unittest ( stubFunc ) @doc ." general testing for a Fibonacci function
+
+:fib1 @unittest func()
+	testFib
 
 :fib2 @unittest func()
-	1	assert=? fib2 0
-	1	assert=? fib2 1
-	2	assert=? fib2 2
-	3	assert=? fib2 3
-	5	assert=? fib2 4
-	8	assert=? fib2 5
+	testFib
