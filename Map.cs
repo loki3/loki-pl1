@@ -107,7 +107,13 @@ namespace loki3.core
 						bFirst = false;
 					else
 						s += " , ";
-					s += ":" + key + " " + m_val[key].ToString();
+					s += ":" + key + " ";
+
+					ValueMap checkMap = m_val[key] as ValueMap;
+					if (checkMap != null && checkMap.AsMap == this)
+						s += "<self>";	// can't print self
+					else
+						s += m_val[key].ToString();
 				}
 			}
 			s += " }";
