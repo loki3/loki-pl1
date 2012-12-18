@@ -29,6 +29,8 @@ namespace loki3.builtin
 
 				Map map = new Map();
 				Utility.AddParamsForScopeToModify(map, false/*bIncludeMap*/);
+				// wrap the returned scope in a new child scope?
+				map["createChild?"] = PatternData.Single("createChild?", ValueType.Bool, ValueBool.False);
 				Init(new ValueMap(map));
 			}
 
@@ -36,6 +38,8 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				IScope theScope = Utility.GetScopeToModify(map, scope, false/*bIncludeMap*/);
+				if (map["createChild?"].AsBool)
+					theScope = new ScopeChain(theScope);
 				return theScope.AsValue;
 			}
 		}

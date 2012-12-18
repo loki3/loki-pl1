@@ -183,7 +183,7 @@ namespace loki3.core
 				}
 
 				// create a new scope and add passed in arguments...
-				ScopeChain scope = new ScopeChain(parentScope);
+				ScopeChain scope = (ShouldCreateScope ? new ScopeChain(parentScope) : parentScope as ScopeChain);
 				scope.Function = this;
 				if (m_fullPattern != null && m_passed != null)
 					Utility.AddToScope(m_fullPattern, m_passed, scope);
