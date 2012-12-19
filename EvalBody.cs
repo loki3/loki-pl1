@@ -49,7 +49,16 @@ namespace loki3.core
 				if (indent == line.Indent)
 				{	// only run lines that are at the original indentation
 					ILineRequestor requestor = Utility.GetSubLineRequestor(parsedLines, i, out i);
-					retval = EvalList.Do(line.Nodes, scope, requestor);
+					try
+					{
+						retval = EvalList.Do(line.Nodes, scope, requestor);
+					}
+					catch (Loki3Exception e)
+					{	// this line is the correct context if there isn't already one there
+						if (!e.Errors.ContainsKey(Loki3Exception.keyLineContents))
+							e.AddLine(line.Original);
+						throw e;
+					}
 				}
 			}
 			return (retval == null ? new ValueNil() : retval);

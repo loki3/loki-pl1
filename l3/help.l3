@@ -92,11 +92,11 @@
 			if type =any? [ :map :array ]
 				:param forEach params
 					if :map =? l3.getType .{ :value params
-						:table = table + getParam .( fix .( param . 1
+						:table = table + .( getParam .( fix .( param . 1
 					else
-						:table = table + getParam .( fix param
+						:table = table + .( getParam .( fix param
 			else
-				:table = table + getParam params
+				:table = table + .( getParam params
 		table
 	
 	:result v= ""
@@ -123,7 +123,7 @@
 	
 	:delimEnum v= .[ :comment :string :value :array :raw
 	:type      v= delimEnum . ( var .@ :l3.delim.type )
-	:result = result + \n + l3.stringConcat .{ :spaces 1 :array .[ " parse as: " type
+	:result = result + \n + .( l3.stringConcat .{ :spaces 1 :array .[ " parse as: " type
 	
 	:function v= var .@ :l3.delim.function
 	if ( function ) !=? nil
