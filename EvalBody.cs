@@ -57,6 +57,8 @@ namespace loki3.core
 					{	// this line is the correct context if there isn't already one there
 						if (!e.Errors.ContainsKey(Loki3Exception.keyLineContents))
 							e.AddLine(line.Original);
+						if (requestor != null && !e.Errors.ContainsKey(Loki3Exception.keyLineNumber))
+							e.AddLineNumber(requestor.GetCurrentLineNumber());
 						throw e;
 					}
 				}
