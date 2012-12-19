@@ -16,8 +16,8 @@ l3.setValue { :key :v= :value ( l3.createFunction { :pre ->key :post ->value :or
 // same as v= but allows for function overloading
 l3.setValue { :key :f= :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? true :overload? true } ` ] } ) }
 
-// create a new variable with a value of nil
-l3.setValue { :key :var :value ( l3.createFunction { :post ->name :order 2 :body [ ` l3.setValue { :key name :value nil :scope :parent :create? true } ` ` name ` ] } ) }
+// create a new variable with a value of nil, doesn't overwrite if it already exists
+l3.setValue { :key :var :value ( l3.createFunction { :post ->name :order 2 :body [ ` l3.setValue { :key name :value nil :scope :parent :create? true :initOnly? true } ` ` name ` ] } ) }
 
 // assignment
 l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 6 :body [ ` l3.setValue { :key key :value value :scope :parent :create? false } ` ] } ) }

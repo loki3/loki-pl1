@@ -117,6 +117,18 @@ namespace loki3.builtin.test
 				Assert.IsTrue(scope.AsMap["second"].IsNil);
 				Assert.IsTrue(scope.AsMap["third"].IsNil);
 			}
+
+			{	// if initOnly?, don't overwrite existing values
+				Value value = TestSupport.ToValue("l3.setValue { :key [ :aa :bb ] :value [ 2 3 ] :create? true :initOnly? true }", scope);
+				Assert.AreEqual(2, scope.AsMap["aa"].AsInt);
+				Assert.AreEqual(3, scope.AsMap["bb"].AsInt);
+				value = TestSupport.ToValue("l3.setValue { :key [ :aa :bb ] :value [ 4 5 ] :create? true :initOnly? true }", scope);
+				Assert.AreEqual(2, scope.AsMap["aa"].AsInt);
+				Assert.AreEqual(3, scope.AsMap["bb"].AsInt);
+				value = TestSupport.ToValue("l3.setValue { :key [ :bb :cc ] :value nil :create? true :initOnly? true }", scope);
+				Assert.AreEqual(3, scope.AsMap["bb"].AsInt);
+				Assert.IsTrue(scope.AsMap["cc"].IsNil);
+			}
 		}
 
 		[Test]

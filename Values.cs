@@ -29,7 +29,7 @@ namespace loki3.builtin
 		}
 
 
-		/// <summary>{ :key :value [:create?] [:map] [:scope] [:overload?] } -> value  and stores the key value pair on the specified map or scope</summary>
+		/// <summary>{ :key :value [:create?] [:map] [:scope] [:overload?] [onlyInit?] } -> value  and stores the key value pair on the specified map or scope</summary>
 		class SetValue : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new SetValue(); }
@@ -44,6 +44,8 @@ namespace loki3.builtin
 				map["create?"] = PatternData.Single("create?", ValueType.Bool, ValueBool.True);
 				// used if value is a function - overload? then add it to functions on this key, else make it the only function for this key
 				map["overload?"] = PatternData.Single("overload?", ValueType.Bool, ValueBool.False);
+				// if initOnly? && (key already exists), then don't change the value
+				map["initOnly?"] = PatternData.Single("initOnly?", ValueType.Bool, ValueBool.False);
 				Utility.AddParamsForScopeToModify(map, true/*bIncludeMap*/);
 				Init(new ValueMap(map));
 			}
@@ -51,9 +53,10 @@ namespace loki3.builtin
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				Map map = arg.AsMap;
+				bool bInitOnly = map["initOnly?"].AsBool;
 
 				PatternAssign assign = new PatternAssign(map, scope);
-				return assign.Assign(map["value"]);
+				return assign.Assign(map["value"], bInitOnly);
 			}
 		}
 
