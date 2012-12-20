@@ -268,5 +268,35 @@ namespace loki3.core
 			}
 			return new LineConsumer(subLines, true/*isSubset*/);
 		}
+
+		/// <summary>
+		/// Evals a string, array of strings, or array of raw value");
+		/// </summary>
+		internal static Value EvalValue(Value value, IScope scope)
+		{
+			switch (value.Type)
+			{
+				case ValueType.Array:
+				case ValueType.RawList:
+					return EvalBody.Do(value, scope);
+				case ValueType.String:
+					DelimiterList dList = ParseLine.Do(value.AsString, scope);
+					List<DelimiterList> list = new List<DelimiterList>();
+					list.Add(dList);
+					ValueLine line = new ValueLine(list);
+					return EvalBody.Do(line, scope);
+				case ValueType.Raw:
+					DelimiterList dList2 = (value as ValueRaw).GetValue();
+					List<DelimiterList> list2 = new List<DelimiterList>();
+					list2.Add(dList2);
+					ValueLine line2 = new ValueLine(list2);
+					return EvalBody.Do(line2, scope);
+				case ValueType.Function:
+					ValueFunction function = value as ValueFunction;
+					return function.Eval(null, null, scope, null, null);
+				default:
+					return value;
+			}
+		}
 	}
 }

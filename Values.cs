@@ -473,29 +473,7 @@ namespace loki3.builtin
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
-				switch (arg.Type)
-				{
-					case ValueType.Array:
-					case ValueType.RawList:
-						return EvalBody.Do(arg, scope);
-					case ValueType.String:
-						DelimiterList dList = ParseLine.Do(arg.AsString, scope);
-						List<DelimiterList> list = new List<DelimiterList>();
-						list.Add(dList);
-						ValueLine line = new ValueLine(list);
-						return EvalBody.Do(line, scope);
-					case ValueType.Raw:
-						DelimiterList dList2 = (arg as ValueRaw).GetValue();
-						List<DelimiterList> list2 = new List<DelimiterList>();
-						list2.Add(dList2);
-						ValueLine line2 = new ValueLine(list2);
-						return EvalBody.Do(line2, scope);
-					case ValueType.Function:
-						ValueFunction function = arg as ValueFunction;
-						return function.Eval(null, null, scope, null, null);
-					default:
-						return arg;
-				}
+				return Utility.EvalValue(arg, scope);
 			}
 		}
 	}
