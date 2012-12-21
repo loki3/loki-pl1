@@ -544,6 +544,26 @@
 
 
 //
+// iterators
+
+:=eachIn @unittest func()
+	// test array iterator
+	:total v= 0
+	l3.debug.break
+	:i =eachIn [ 4 1 3 6 10 ]
+		:total = total + i
+	24 assert=? total
+	// test iterator over two arrays
+	:str v= ""
+	[ :i :j ] =eachIn [ [ 3 4 ] [ 5 6 7 ] ]
+		:str = str + .( ( i =>str ) + " , " + ( j =>str ) + " - "
+	" 3,5-3,6-3,7-4,5-4,6-4,7- " assert=? str
+
+:iterator @unittest func()
+	true
+
+
+//
 // strings
 
 :=>str @unittest func()

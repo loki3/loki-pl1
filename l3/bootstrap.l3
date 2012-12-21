@@ -425,6 +425,46 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// iterators
+
+// function that allows for looping with an iterator
+:=eachIn v= .( ->pattern infix ->input
+	// one scope for the iterator and one for the body of the loop
+	:iterScope v= l3.getScope .{ :scope :parent :createChild? true
+	:loopScope v= l3.getScope .{ :scope :parent :createChild? true
+	// store body because there will be a different body inside the loop
+	:eachInBody v= body
+	// a simple way to execute common code before the loop and inside it
+	:doIterator v= .` l3.callWithScope { :function ( iterator ) :map iterScope :next input }
+	:result v= l3.eval doIterator
+	while .` result !=? nil
+		l3.setValue { :key pattern :value result :map loopScope :create? true }
+		l3.evalWithScope { :value eachInBody :map loopScope }
+		:result v= l3.eval doIterator
+	nil
+:=eachIn @body? true
+:=eachIn @cat :loop @doc ." Repeat loop for each item in a collection that supports an iterator.  Pattern is specified before =eachIn.  Collection is specified after =eachIn.
+
+// specific iterator overloads
+
+:iterator f= func ( ->array @@type :array )
+	[ :i :count ] i= [ -1 ( array .size ) ]
+	:i = i + 1
+	( i <? count ) ? [ ` array . i ` nil ]
+:iterator @iterator
+:iterator @cat :iterator @doc ." Iterate over all items in a collection.
+
+:iterator f= func .[ ( ->array1 @@type :array ) ( ->array2 @@type :array )
+	[ :i :j ] i= [ 0 -1 ]
+	[ :count1 :count2 ] i= [ ( array1 .size ) ( array2 .size ) ]
+	:j = j + 1
+	if j >=? count2
+		[ :i :j ] = [ ( i + 1 ) 0 ]
+	( i <? count1 ) ? [ ` [ ( array1 . i ) ( array2 . j ) ] ` nil ]
+
+
+
+//
 // strings
 
 :=>str v= .( ->val postfix

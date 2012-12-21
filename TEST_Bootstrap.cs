@@ -25,7 +25,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				IScope scope = GetBootstrapScope();
+				IScope scope = new ScopeChain(GetBootstrapScope());
 
 				{	// a function that needs params but doesn't get them is just a function
 					Value value = TestSupport.ToValue("enum", scope);
@@ -50,8 +50,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				IScope scope = GetBootstrapScope();
-				scope = new ScopeChain(scope);
+				IScope scope = new ScopeChain(GetBootstrapScope());
 				EvalFile.Do("../../l3/unittest.l3", scope);
 				EvalFile.Do("../../l3/help.l3", scope);
 
@@ -76,7 +75,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				IScope scope = GetBootstrapScope();
+				IScope scope = new ScopeChain(GetBootstrapScope());
 
 				// define complex math
 				string[] lines = {
@@ -129,7 +128,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				IScope scope = GetBootstrapScope();
+				IScope scope = new ScopeChain(GetBootstrapScope());
 
 				string[] lines = {
 					":result v= 0",
@@ -189,7 +188,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				IScope scope = GetBootstrapScope();
+				IScope scope = new ScopeChain(GetBootstrapScope());
 
 				string[] lines = {
 					":addUp v= func [ ( ->a @@type :int ) ( ->b @@default 5 ) ]",
@@ -231,7 +230,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				IScope scope = GetBootstrapScope();
+				IScope scope = new ScopeChain(GetBootstrapScope());
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
@@ -284,7 +283,7 @@ namespace loki3.builtin.test
 		{
 			try
 			{
-				IScope scope = GetBootstrapScope();
+				IScope scope = new ScopeChain(GetBootstrapScope());
 
 				{	// l3.loop
 					string[] lines = {
