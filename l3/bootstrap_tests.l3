@@ -239,6 +239,13 @@
 	[ :c :b ] i= [ 9 22 ]
 	5 assert=? b
 	9 assert=? c
+	// make sure nested scope doesn't use outter scope
+	:val v= 1
+	if true
+		1 assert=? val
+		:val i= 2
+		2 assert=? val
+	1 assert=? val
 
 
 //

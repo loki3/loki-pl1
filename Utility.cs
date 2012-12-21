@@ -116,7 +116,7 @@ namespace loki3.core
 				}
 			}
 
-			if (!bInitOnly || where.Exists(key) == null)
+			if (!bInitOnly || !where.AsMap.ContainsKey(key))
 				where.SetValue(key, value);
 		}
 
