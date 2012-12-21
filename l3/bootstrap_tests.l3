@@ -182,6 +182,16 @@
 		4
 	[ 3 4 ] assert=? b
 
+:@type @unittest func()
+	:a v= 1
+	:a @type :int
+	:int assert=? :a .@ :l3.value.type
+
+:@iterator @unittest func()
+	:a v= (| ## + 1 |)
+	:a @iterator
+	:iterator assert=? :a .@ :l3.value.type
+
 :@@ @unittest func()
 	:a v= 1
 	a @@ [ :key 2 ]
@@ -221,6 +231,14 @@
 	{ :a 1 :b 2 } assert=? map
 
 :setScopeName @unittest stubFunc
+
+:i= @unittest func()
+	[ :a :b ] i= [ 4 5 ]
+	4 assert=? a
+	5 assert=? b
+	[ :c :b ] i= [ 9 22 ]
+	5 assert=? b
+	9 assert=? c
 
 
 //
