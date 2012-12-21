@@ -278,9 +278,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.addToArray .{ :array array :value value
 :+= @cat :array @doc ." Add a value to an array
 
-:countOf v= .( func ->value
+:.size v= .( ->value postfix
 	l3.getCount value
-:countOf @cat :array @doc ." Add a value to an array
+:.size @cat :array @doc ." Return the number of elements in a collection.
 
 :apply v= .( ( ->array @@type :array ) infix ( ->function @@type :function )
 	l3.arrayToArray { :array array :transform function }
@@ -490,8 +490,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :<? v= .(< l3.lt [ #1 #2 ]
 :<? @cat :math @doc ." True if a < b
 
+:<=? v= .(< l3.lt [ #1 #2 ] |? #1 =? #2
+:<=? @cat :math @doc ." True if a <= b
+
 :>? v= .(< l3.gt [ #1 #2 ]
 :>? @cat :math @doc ." True if a > b
+
+:>=? v= .(< l3.gt [ #1 #2 ] |? #1 =? #2
+:>=? @cat :math @doc ." True if a >= b
 
 :min v= .(< ( #1 <? #2 ) ? [ #1 #2 ]
 :min @cat :math @doc ." Returns the smallest of two values.

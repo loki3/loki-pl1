@@ -44,7 +44,7 @@
 
 :checkDocs v= func ->scope
 	var :failures = scope filterMap (< #1 .@doc =? nil >) mapToArray (< #1 >)
-	[ ( ( countOf failures ) =? 0 ) failures ]
+	[ ( ( failures .size ) =? 0 ) failures ]
 :checkDocs @cat :unittest @doc """
 	Check if everything in scope has doc metadata.
 	Returns [ success? arrayOfFailures ]
@@ -122,7 +122,7 @@
 		// fail if function asserted
 		if !? success?
 			failures += unittestName
-	[ ( ( countOf failures ) =? 0 ) failures ]
+	[ ( ( failures .size ) =? 0 ) failures ]
 :runUnittests @cat :unittest @doc """
 	Run .@unittest on every value in the scope.
 	A unittest fails if it isn't present or if an assert fails inside it.
