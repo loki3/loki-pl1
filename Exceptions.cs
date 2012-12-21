@@ -9,6 +9,9 @@ namespace loki3.core
 	/// </summary>
 	internal class Loki3Exception : Exception
 	{
+		internal Loki3Exception() { m_map = new Map(); }
+		internal Loki3Exception(Map map) { m_map = map; }
+
 		/// <summary>A start delimiter was found without an end delimiter</summary>
 		internal Loki3Exception AddMissingEndDelimiter(ValueDelimiter delim)
 		{
@@ -144,7 +147,7 @@ namespace loki3.core
 		internal static string keyFileName = "l3.error.fileName";
 		#endregion
 
-		private Map m_map = new Map();
+		private Map m_map;
 	}
 
 

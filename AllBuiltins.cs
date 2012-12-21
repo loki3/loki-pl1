@@ -10,6 +10,7 @@ namespace loki3.builtin
 		{
 			ArrayFunctions.Register(scope);
 			Conditional.Register(scope);
+			DebugFunctions.Register(scope);
 			IO.Register(scope);
 			Logic.Register(scope);
 			Loop.Register(scope);

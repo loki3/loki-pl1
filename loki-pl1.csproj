@@ -37,6 +37,7 @@
     <Compile Include="AllBuiltins.cs" />
     <Compile Include="ArrayFunctions.cs" />
     <Compile Include="CreateFunction.cs" />
+    <Compile Include="DebugFunctions.cs" />
     <Compile Include="DelimiterNode.cs" />
     <Compile Include="DelimiterList.cs" />
     <Compile Include="EvalBody.cs" />
