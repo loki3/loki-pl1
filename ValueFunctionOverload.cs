@@ -23,7 +23,10 @@ namespace loki3.core
 				m_bConsumesPrevious = function.ConsumesPrevious;
 				m_bConsumesNext = function.ConsumesNext;
 				m_bRequiresBody = function.RequiresBody();
-				WritableMetadata[ValueFunction.keyOrder] = function.Metadata[ValueFunction.keyOrder];
+				// copy all metadata except parameters from single function to overload
+				foreach (string key in function.Metadata.Raw.Keys)
+					if (key != ValueFunction.keyPreviousPattern && key != ValueFunction.keyNextPattern)
+						WritableMetadata[key] = function.Metadata[key];
 				AddFunction(function);
 			}
 			else
@@ -38,6 +41,9 @@ namespace loki3.core
 				// other function must have same body requirement
 				if (m_bRequiresBody != function.RequiresBody())
 					throw new Loki3Exception().AddMissingBody(function);
+				// copy all metadata from overload to new function
+				foreach (string key in Metadata.Raw.Keys)
+					function.WritableMetadata[key] = Metadata[key];
 				AddFunction(function);
 			}
 		}
@@ -52,6 +58,12 @@ namespace loki3.core
 				ValueFunction single = functions[0] as ValueFunction;
 				return single.Eval(prev, next, scope, nodes, requestor);
 			}
+
+			// if they didn't pass any parameters, then we eval as ourselves
+			// todo: if this is infix & one param is passed, bind it to create a partial
+			// (note: we could also try to create partials based on the contents of prev or next)
+			if ((m_bConsumesPrevious && prev == null) || (m_bConsumesNext && next == null))
+				return this;
 
 			// todo: avoid evaling twice (or is it cached behind the scenes?)
 			// and pattern matching twice for the successfull function
