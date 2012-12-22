@@ -146,12 +146,18 @@
 :dumpMeta @cat :help @doc ." Dump metadata for the given value attached to a key
 
 
-:dumpStack v= func()
-	:i =eachIn .( l3.getScope .{ :scope :parent
-		print :i .@ :l3.scope.calledFunction
-		if i .size <? 20
-			print i
-:dumpStack @cat :help @doc ." Dump the stack, listing function names and variables that are defined in each scope.
+:dumpStack v= func ->scope
+	:table v= [ :function :scope ]
+	:i =eachIn scope
+		:function v= :i .@ :l3.scope.calledFunction
+		:context  v= .( i .size <? 20 ? [ i " <many values> " ]
+		:table = table + [ function context ]
+	l3.formatTable { :array table :columns 2 :dashesAfterFirst? true }
+:dumpStack @cat :help @doc ." Dump the given stack, listing function names and variables that are defined in each scope.
+
+:dumpCurrentStack v= func()
+	dumpStack .( l3.getScope .{ :scope :parent
+:dumpCurrentStack @cat :help @doc ." Dump the current stack, listing function names and variables that are defined in each scope.
 
 
 :listFunctions v= func ->map

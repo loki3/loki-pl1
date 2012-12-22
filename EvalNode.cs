@@ -54,6 +54,8 @@ namespace loki3.core
 					{	// this function is the correct context if there isn't already one there
 						if (!e.Errors.ContainsKey(Loki3Exception.keyFunction))
 							e.AddFunction(token.Value);
+						if (!e.Errors.ContainsKey(Loki3Exception.keyScope))
+							e.AddScope(scope);
 						throw e;
 					}
 				}

@@ -27,6 +27,12 @@ namespace loki_pl1
 						scope.SetValue("lastError", new ValueMap(error.Errors));
 						Value v = loki3.builtin.test.TestSupport.ToValue("prettify lastError", scope);
 						Console.WriteLine("LOKI3 ERROR:\n" + v.AsString);
+						if (error.Errors.ContainsKey(Loki3Exception.keyScope))
+						{
+							scope.SetValue("lastScope", error.Errors[Loki3Exception.keyScope]);
+							v = loki3.builtin.test.TestSupport.ToValue("dumpStack lastScope", scope);
+							Console.WriteLine("STACK:\n" + v.AsString);
+						}
 					}
 					catch (Exception error)
 					{

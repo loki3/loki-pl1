@@ -101,6 +101,13 @@ namespace loki3.core
 			return this;
 		}
 
+		/// <summary>Tack on the file where the error occurred</summary>
+		internal Loki3Exception AddScope(IScope scope)
+		{
+			m_map[keyScope] = scope.AsValue;
+			return this;
+		}
+
 
 		/// <summary>Get collection of all errors</summary>
 		internal Map Errors { get { return m_map; } }
@@ -145,6 +152,8 @@ namespace loki3.core
 		internal static string keyLineContents = "l3.error.lineContents";
 		/// <summary>File where error occurred</summary>
 		internal static string keyFileName = "l3.error.fileName";
+		/// <summary>Current stack when error occurred</summary>
+		internal static string keyScope = "l3.error.scope";
 		#endregion
 
 		private Map m_map;
