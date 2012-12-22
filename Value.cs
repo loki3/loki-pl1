@@ -419,6 +419,8 @@ namespace loki3.core
 		}
 
 		internal override Value ValueCopy() { return new ValueRaw(m_val); }
+
+		internal override int Count { get { return GetValue().Nodes.Count; } }
 		#endregion
 
 		public override string ToString()

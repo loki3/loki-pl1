@@ -269,6 +269,32 @@ namespace loki3.builtin.test
 		}
 
 		[Test]
+		public void TestGetCount()
+		{
+			IScope scope = CreateValueScope();
+
+			{	// array
+				Value value = TestSupport.ToValue("l3.getCount [ 3 1 7 9 ]", scope);
+				Assert.AreEqual(4, value.AsInt);
+			}
+
+			{	// map
+				Value value = TestSupport.ToValue("l3.getCount { :a 3 :b 7 }", scope);
+				Assert.AreEqual(2, value.AsInt);
+			}
+
+			{	// function
+				TestSupport.ToValue("l3.setValue { :key :blah :value l3.setValue :overload? false }", scope);
+				Value value = TestSupport.ToValue("l3.getCount ( blah )", scope);
+				Assert.AreEqual(1, value.AsInt);
+
+				TestSupport.ToValue("l3.setValue { :key :blah :value l3.getValue :overload? true }", scope);
+				value = TestSupport.ToValue("l3.getCount ( blah )", scope);
+				Assert.AreEqual(2, value.AsInt);
+			}
+		}
+
+		[Test]
 		public void TestGetMetadata()
 		{
 			IScope scope = CreateValueScope();

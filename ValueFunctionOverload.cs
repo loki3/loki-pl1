@@ -135,6 +135,8 @@ namespace loki3.core
 			copy.m_bConsumesNext = m_bConsumesNext;
 			return copy;
 		}
+
+		internal override int Count { get { return m_functions.Count; } }
 		#endregion
 
 
