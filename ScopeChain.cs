@@ -26,6 +26,9 @@ namespace loki3.core
 
 		/// <summary>Get current scope as a map</summary>
 		Map AsMap { get; }
+
+		/// <summary>Set the name of the child function called from this scope</summary>
+		string FunctionName { set; }
 	}
 
 	/// <summary>
@@ -37,28 +40,30 @@ namespace loki3.core
 		/// <summary>Chain a new scope off a parent scope</summary>
 		internal ScopeChain(IScope parent)
 		{
-			m_parent = parent;
-			m_values = new Map();
-			m_valueMap = new ValueMap(m_values);
-			m_valueMap.Scope = this;
+			Init(parent, new Map());
 		}
 
 		/// <summary>Treat a map as a scope</summary>
 		internal ScopeChain(Map map)
 		{
-			m_parent = null;
-			m_values = map;
-			m_valueMap = new ValueMap(m_values);
-			m_valueMap.Scope = this;
+			Init(null, map);
 		}
 
 		/// <summary>Create a scope with no parent</summary>
 		internal ScopeChain()
 		{
-			m_parent = null;
-			m_values = new Map();
+			Init(null, new Map());
+		}
+
+		private void Init(IScope parent, Map map)
+		{
+			m_parent = parent;
+			m_values = map;
 			m_valueMap = new ValueMap(m_values);
 			m_valueMap.Scope = this;
+			m_valueMap.WritableMetadata[keyParent] = (parent == null ? ValueNil.Nil : parent.AsValue);
+			m_valueMap.WritableMetadata[Value.keyType] = s_type;
+			m_valueMap.WritableMetadata[keyName] = s_defaultName;
 		}
 
 		#region IScope Members
@@ -111,6 +116,11 @@ namespace loki3.core
 			get { return m_values; }
 		}
 
+		public string FunctionName
+		{
+			set { m_valueMap.WritableMetadata[keyCalledFunction] = new ValueString(value); }
+		}
+
 		#endregion
 
 		/// <summary>Sets an optional function pointer for the scope</summary>
@@ -122,7 +132,12 @@ namespace loki3.core
 		#region Keys
 		internal static string keyName = "l3.scope.name";
 		internal static string keyFunction = "l3.scope.function";
+		internal static string keyCalledFunction = "l3.scope.calledFunction";
+		internal static string keyParent = "l3.scope.parent";
 		#endregion
+
+		private static Value s_type = new ValueString("scope");
+		private static Value s_defaultName = new ValueString("");
 
 		private IScope m_parent;
 		private Map m_values;

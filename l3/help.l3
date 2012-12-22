@@ -146,6 +146,14 @@
 :dumpMeta @cat :help @doc ." Dump metadata for the given value attached to a key
 
 
+:dumpStack v= func()
+	:i =eachIn .( l3.getScope .{ :scope :parent
+		print :i .@ :l3.scope.calledFunction
+		if i .size <? 20
+			print i
+:dumpStack @cat :help @doc ." Dump the stack, listing function names and variables that are defined in each scope.
+
+
 :listFunctions v= func ->map
 	:table v= map filterMap (< :function =? l3.getType { :key #1 :builtin? true } >) mapToArray (< #1 >)
 	l3.formatTable { :array table :columns 3 }

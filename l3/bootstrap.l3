@@ -462,6 +462,13 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		[ :i :j ] = [ ( i + 1 ) 0 ]
 	( i <? count1 ) ? [ ` [ ( array1 . i ) ( array2 . j ) ] ` nil ]
 
+:iterator f= func ( ->scope @@type :scope )
+	:current i= nil
+	if current =? nil
+		:current = scope
+	else
+		:current = :current .@ :l3.scope.parent
+	current
 
 
 //

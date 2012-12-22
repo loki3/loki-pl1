@@ -90,6 +90,7 @@ namespace loki3.core.test
 			public IScope Parent { get { return null; } }
 			public Value AsValue { get { return null; } }
 			public Map AsMap { get { return null; } }
+			public string FunctionName { set { } }
 		}
 
 		/// <summary>Returns previous and next values as ints</summary>

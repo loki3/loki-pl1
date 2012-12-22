@@ -43,6 +43,8 @@ namespace loki3.core
 					DelimiterNode previous = (function.ConsumesPrevious ? nodes.GetPrevious() : null);
 					DelimiterNode next = (function.ConsumesNext ? nodes.GetNext() : null);
 
+					scope.FunctionName = token.Value;
+
 					// evaluate
 					try
 					{
