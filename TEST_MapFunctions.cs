@@ -134,5 +134,35 @@ namespace loki3.builtin.test
 				Assert.AreEqual(8, array[1].AsInt);
 			}
 		}
+
+		[Test]
+		public void TestMapKeys()
+		{
+			IScope scope = CreateScope();
+			MapFunctions.Register(scope);
+
+			{	// function on a map can be infix...
+				Value value = TestSupport.ToValue("l3.getMapKeys { :a 5 :b :blah }", scope);
+				List<Value> array = value.AsArray;
+				Assert.AreEqual(2, array.Count);
+				Assert.AreEqual("a", array[0].AsString);
+				Assert.AreEqual("b", array[1].AsString);
+			}
+		}
+
+		[Test]
+		public void TestMapValues()
+		{
+			IScope scope = CreateScope();
+			MapFunctions.Register(scope);
+
+			{	// function on a map can be infix...
+				Value value = TestSupport.ToValue("l3.getMapValues { :a 5 :b :blah }", scope);
+				List<Value> array = value.AsArray;
+				Assert.AreEqual(2, array.Count);
+				Assert.AreEqual(5, array[0].AsInt);
+				Assert.AreEqual("blah", array[1].AsString);
+			}
+		}
 	}
 }

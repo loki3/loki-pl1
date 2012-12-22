@@ -15,6 +15,8 @@ namespace loki3.builtin
 		{
 			scope.SetValue("l3.mapToMap", new MapToMap());
 			scope.SetValue("l3.mapToArray", new MapToArray());
+			scope.SetValue("l3.getMapKeys", new GetMapKeys());
+			scope.SetValue("l3.getMapValues", new GetMapValues());
 		}
 
 
@@ -107,6 +109,50 @@ namespace loki3.builtin
 					}
 				}
 				return new ValueArray(newarray);
+			}
+		}
+
+		/// <summary>get an array of map keys</summary>
+		class GetMapKeys : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new GetMapKeys(); }
+
+			internal GetMapKeys()
+			{
+				SetDocString("Return an array of all the map's keys.");
+				Init(PatternData.Single("map", ValueType.Map));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+				List<Value> array = new List<Value>();
+				Dictionary<string, Value>.KeyCollection keys = map.Raw.Keys;
+				foreach (string key in keys)
+					array.Add(new ValueString(key));
+				return new ValueArray(array);
+			}
+		}
+
+		/// <summary>get an array of map values</summary>
+		class GetMapValues : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new GetMapValues(); }
+
+			internal GetMapValues()
+			{
+				SetDocString("Return an array of all the map's values.");
+				Init(PatternData.Single("map", ValueType.Map));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+				List<Value> array = new List<Value>();
+				Dictionary<string, Value>.KeyCollection keys = map.Raw.Keys;
+				foreach (string key in keys)
+					array.Add(map[key]);
+				return new ValueArray(array);
 			}
 		}
 	}
