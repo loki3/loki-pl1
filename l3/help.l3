@@ -56,9 +56,16 @@
 	:result = result + \n + .( ( doc =? nil ) ? [ " <no docstring> " doc ]
 	
 	// print type specific info
-	:type v= l3.getType { :key var }
+	:type v= l3.getType { :key var :builtin? true }
 	if type =? :function
-		:result = result + \n + \n + .( dumpFunction var
+		:result = result + \n
+		:function v= ( l3.getValue { :key var } )
+		:overloads v= ( function ) .size
+		if overloads >? 1
+			:result = result + :overloads: + ( overloads  =>str ) + \n
+		:f =eachIn ( function )
+			:temp v= ( f )
+			:result = result + \n + .( dumpFunction :temp
 	elsif type =? :enum
 		:result = result + \n + ." type: enum
 		:result = result + \n + .( dumpEnum var
@@ -71,7 +78,7 @@
 :help @cat :help @doc ." Print out a description of the value attached to a key, e.g. details on a function
 
 
-:dumpFunction v= func ->var
+:dumpFunction v= func ( ->var @@type :string )
 	
 	// print info on a collection of parameters
 	:getParams v= func .[ ->table ->params ->fix
@@ -90,7 +97,7 @@
 		if params !=? nil
 			:type v= l3.getType .{ :value params
 			if type =any? [ :map :array ]
-				:param forEach params
+				:param =eachIn params
 					if :map =? l3.getType .{ :value params
 						:table = table + .( getParam .( fix .( param . 1
 					else
@@ -136,7 +143,7 @@
 :dumpMeta v= func ->key
 	:table v= [ :key :value ]
 	:metadata v= l3.getMetadata { :key key }
-	:pair forEach metadata
+	:pair =eachIn metadata
 		// handle docstrings separately because they're long
 		if ( pair . 0 ) =? :l3.value.doc
 			:table = table + [ ( pair . 0 ) " <docstring> " ]
