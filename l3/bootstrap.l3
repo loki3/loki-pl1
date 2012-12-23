@@ -485,6 +485,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	:i = i + 1
 	( i <? count ) ? [ ( ( f ) . i ) nil ]
 
+:iterator f= func ( ->lines @@type :rawLines )
+	[ :i :count ] i= [ -1 ( lines .size ) ]
+	:i = i + 1
+	( i <? count ) ? [ ` lines . i ` nil ]
+
 
 //
 // strings

@@ -587,6 +587,15 @@
 	:i =eachIn ( functions )
 		:count = count + 1
 	2 assert=? count
+	
+	// test function body
+	:testFunc v= func()
+		one line
+		second line
+	:count v= 0
+	:i =eachIn ( l3.getFunctionBody { :key :testFunc } )
+		:count = count + ( i .size )   // count words
+	4 assert=? count
 
 // see the :eachIn test
 :iterator @unittest stubFunc
