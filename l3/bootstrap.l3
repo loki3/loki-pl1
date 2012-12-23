@@ -436,11 +436,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	:eachInBody v= body
 	// a simple way to execute common code before the loop and inside it
 	:doIterator v= .` l3.callWithScope { :function ( iterator ) :map iterScope :next input }
-	:result v= l3.eval doIterator
-	while .` result !=? nil
-		l3.setValue { :key pattern :value result :map loopScope :create? true }
+	:result v= ( l3.eval doIterator )
+	while .` ( result ) !=? nil
+		l3.setValue { :key pattern :value ( result ) :map loopScope :create? true }
 		l3.evalWithScope { :value eachInBody :map loopScope }
-		:result v= l3.eval doIterator
+		:result v= ( l3.eval doIterator )
 	nil
 :=eachIn @body? true
 :=eachIn @cat :loop @doc ." Repeat loop for each item in a collection that supports an iterator.  Pattern is specified before =eachIn.  Collection is specified after =eachIn.
@@ -479,6 +479,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	else
 		:current = :current .@ :l3.scope.parent
 	current
+
+:iterator f= func ( ->f @@type :function )
+	[ :i :count ] i= [ -1 ( ( f ) .size ) ]
+	:i = i + 1
+	( i <? count ) ? [ ( ( f ) . i ) nil ]
 
 
 //

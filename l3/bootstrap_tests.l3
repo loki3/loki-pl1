@@ -573,6 +573,20 @@
 		:total = total + i . 1
 	:abc assert=? str
 	7.5 assert=? total
+	
+	// test over functions & overloads
+	:functions v= func ( ->a @@type :array )
+		1
+	:count v= 0
+	:i =eachIn ( functions )
+		:count = count + 1
+	1 assert=? count
+	:functions f= func ( ->a @@type :map )
+		2
+	:count v= 0
+	:i =eachIn ( functions )
+		:count = count + 1
+	2 assert=? count
 
 // see the :eachIn test
 :iterator @unittest stubFunc

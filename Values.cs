@@ -108,8 +108,27 @@ namespace loki3.builtin
 					if (i < 0 || i >= array.Count)
 						// if index is out of bounds, return array's default value
 						return GetDefault(obj, key);
-					return objArr.AsArray[key.AsInt];
+					return objArr.AsArray[i];
 				}
+
+				ValueFunctionOverload overload = obj as ValueFunctionOverload;
+				if (overload != null)
+				{
+					int i = key.AsInt;
+					if (i < 0 || i >= overload.Count)
+						// if index is out of bounds, return default value
+						return GetDefault(obj, key);
+					return overload.GetFunction(i);
+				}
+				ValueFunction function = obj as ValueFunction;
+				if (function != null)
+				{
+					int i = key.AsInt;
+					if (i != 0)
+						return ValueNil.Nil;
+					return function;
+				}
+
 				// todo: better error
 				throw new Loki3Exception().AddWrongType(ValueType.Map, obj.Type);
 			}

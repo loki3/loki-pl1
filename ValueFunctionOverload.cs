@@ -139,6 +139,8 @@ namespace loki3.core
 		internal override int Count { get { return m_functions.Count; } }
 		#endregion
 
+		internal ValueFunction GetFunction(int i) { return m_functions.AsArray[i] as ValueFunction; }
+
 
 		/// <summary>Figure out how specific overload is and add to sorted list</summary>
 		private void AddFunction(ValueFunction function)
