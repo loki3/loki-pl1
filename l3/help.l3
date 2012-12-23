@@ -116,6 +116,10 @@
 	result
 :dumpFunction @cat :help @doc ." Print info about a function
 
+:dumpBody v= func ( ->name @@type :string )
+	( l3.getFunctionBody { :key name } ) fold (< ( #1 =>str ) + ( #2 =>str ) + \n >)
+:dumpBody @cat :help @doc ." Get the body of a function
+
 
 :dumpEnum v= func ->var
 	:table v= ( l3.getValue { :key var } ) mapToArray (< [ "" #2 ] >)

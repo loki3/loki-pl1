@@ -34,6 +34,8 @@ namespace loki3.builtin
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
+				if (arg.Type == ValueType.String)
+					return arg;
 				return new ValueString(arg.ToString());
 			}
 		}
