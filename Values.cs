@@ -25,6 +25,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.getCount", new GetCount());
 			scope.SetValue("l3.getMetadata", new GetMetadata());
 			scope.SetValue("l3.getType", new GetTypeFunction());
+			scope.SetValue("l3.getFunctionBody", new GetFunctionBody());
 			scope.SetValue("l3.eval", new EvalValue());
 		}
 
@@ -471,6 +472,58 @@ namespace loki3.builtin
 
 				string type = (builtin ? ValueClasses.ClassOf(value.Type) : value.MetaType);
 				return new ValueString(type);
+			}
+		}
+
+		/// <summary>{ [:key] [:function] } -> the body of the function</summary>
+		class GetFunctionBody : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new GetFunctionBody(); }
+
+			internal GetFunctionBody()
+			{
+				SetDocString("Get the body of a function.");
+
+				Map map = new Map();
+				map["key"] = PatternData.Single("key", ValueType.String, ValueNil.Nil);
+				map["function"] = PatternData.Single("function", ValueType.Function, ValueNil.Nil);
+				Init(new ValueMap(map));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+
+				// get parameter
+				Value value = map["function"];
+				if (value.IsNil)
+				{
+					Value valueKey = map["key"];
+					if (!valueKey.IsNil)
+					{
+						string key = valueKey.AsString;
+						IScope container = scope.Exists(key);
+						if (container == null)
+							throw new Loki3Exception().AddMissingKey(map["key"]);
+						value = container.GetValue(new Token(key));
+					}
+				}
+				if (value.IsNil)
+					throw new Loki3Exception().AddMissingKey(new ValueString("function"));
+
+				// fetch body of function
+				ValueFunction function = value as ValueFunction;
+				if (function == null)
+					throw new Loki3Exception().AddWrongType(ValueType.Function, value.Type);
+				List<DelimiterList> body = function.GetBody(scope);
+				if (body == null)
+					return ValueNil.Nil;
+
+				// make an array
+				List<Value> array = new List<Value>();
+				foreach (DelimiterList line in body)
+					array.Add(new ValueRaw(line));
+				return new ValueArray(array);
 			}
 		}
 

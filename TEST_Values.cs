@@ -341,6 +341,34 @@ namespace loki3.builtin.test
 		}
 
 		[Test]
+		public void TestGetFunctionBody()
+		{
+			IScope scope = CreateValueScope();
+
+			{	// built-in function doesn't have a body
+				Value value = TestSupport.ToValue("l3.getFunctionBody { :key :l3.getFunctionBody }", scope);
+				Assert.IsTrue(value.IsNil);
+			}
+
+			{	// get user defined function body
+				string[] lines = {
+					"l3.setValue { :key :v= :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? true } ` ] } ) }",
+					":myFunc v= l3.createFunction { :post ->a }",
+					"	some code",
+					"	more code",
+				};
+				LineConsumer requestor = new LineConsumer(lines);
+				EvalLines.Do(requestor, scope);
+
+				Value value = TestSupport.ToValue("l3.getFunctionBody { :key :myFunc }", scope);
+				Assert.AreEqual(2, value.Count);
+
+				value = TestSupport.ToValue("l3.getFunctionBody { :function ( myFunc ) }", scope);
+				Assert.AreEqual(2, value.Count);
+			}
+		}
+
+		[Test]
 		public void TestEval()
 		{
 			IScope scope = CreateValueScope();

@@ -208,6 +208,12 @@ namespace loki3.core
 				}
 			}
 
+			internal override List<DelimiterList> GetBody(IScope scope)
+			{
+				EnsureParsed(scope);
+				return m_parsedLines;
+			}
+
 			/// <summary>If we haven't already parsed our lines, do so now</summary>
 			private void EnsureParsed(IParseLineDelimiters delims)
 			{

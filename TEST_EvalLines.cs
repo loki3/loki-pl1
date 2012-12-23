@@ -39,7 +39,7 @@ namespace loki3.core.test
 
 			internal override Value Eval(Value arg, IScope scope)
 			{
-				List<DelimiterList> body = ValueFunction.GetBody(arg);
+				List<DelimiterList> body = ValueFunction.ExtractBody(arg);
 				LineConsumer consumer = new LineConsumer(body);
 				int total = 0;
 				while (consumer.HasCurrent())

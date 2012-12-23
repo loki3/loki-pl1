@@ -71,7 +71,7 @@ namespace loki3.core
 		}
 
 		/// <summary>Retrieve the body off the argument</summary>
-		internal static List<DelimiterList> GetBody(Value arg)
+		internal static List<DelimiterList> ExtractBody(Value arg)
 		{
 			Map map = arg.AsMap;
 			if (map == null || !map.ContainsKey(keyBody))
@@ -89,6 +89,9 @@ namespace loki3.core
 			Map map = next.AsMap;
 			return map.ContainsKey("body");
 		}
+
+		/// <summary>If this is a user defined function, get the body</summary>
+		internal virtual List<DelimiterList> GetBody(IScope scope) { return null; }
 
 		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor);
 	}
