@@ -626,6 +626,8 @@
 
 :\n @unittest stubFunc
 
+:\t @unittest stubFunc
+
 
 //
 // enumerated type
