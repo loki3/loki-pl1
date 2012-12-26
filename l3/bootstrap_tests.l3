@@ -692,7 +692,12 @@
 // modules
 
 :import @unittest func()
-	false
+	assertTrue?  import :../../l3/module.l3
+	assertFalse? import :../../l3/module.l3
+
+:reimport @unittest func()
+	assertTrue?  reimport :../../l3/module.l3
+	assertTrue?  reimport :../../l3/module.l3
 
 
 //

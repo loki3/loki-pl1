@@ -134,6 +134,7 @@ namespace loki3.core
 		internal static string keyFunction = "l3.scope.function";
 		internal static string keyCalledFunction = "l3.scope.calledFunction";
 		internal static string keyParent = "l3.scope.parent";
+		internal static string keyModules = "l3.scope.modules";
 		#endregion
 
 		private static Value s_type = new ValueString("scope");

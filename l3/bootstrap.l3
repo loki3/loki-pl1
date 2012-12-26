@@ -596,7 +596,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :import v= .( func ( ->file @@type :string )
 	l3.loadModule { :file file :scope " parent " }
-:import @cat :module @doc ." Run the code from the given file
+:import @cat :module @doc ." Run the code from the given file.  Don't run if file has already been imported.
+
+:reimport v= .( func ( ->file @@type :string )
+	l3.loadModule { :file file :scope " parent " :force? true }
+:reimport @cat :module @doc ." Run the code from the given file.  Reload even if module has been imported before.
 
 
 //

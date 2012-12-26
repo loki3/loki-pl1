@@ -18,7 +18,7 @@ namespace loki3.builtin
 		}
 
 
-		/// <summary>{ :file [:scope] } -> load the given module, optionally on a scope</summary>
+		/// <summary>{ :file [:scope] [:force?] } -> load the given module, optionally on a scope</summary>
 		class LoadModule : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new LoadModule(); }
@@ -30,6 +30,7 @@ namespace loki3.builtin
 				Map map = new Map();
 				map["file"] = PatternData.Single("file", ValueType.String);
 				map["scope"] = PatternData.Single("scope", ValueType.String, new ValueString("current"));
+				map["force?"] = PatternData.Single("force?", ValueType.Bool, ValueBool.False);
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}
@@ -45,8 +46,27 @@ namespace loki3.builtin
 				// todo: turn this into an enum, at least "current" & "parent"
 				bool bParentScope = (map["scope"].AsString == "parent");
 				IScope runOn = (bParentScope && scope.Parent != null) ? scope.Parent : scope;
+
+				// check if we should load or reload
+				bool bForce = map["force?"].AsBool;
+				Map loadedList = GetModuleList(runOn);
+				if (!bForce && loadedList.ContainsKey(file))
+					return ValueBool.False;	// module is already loaded
+
 				EvalFile.Do(file, runOn);
+				loadedList[file] = ValueBool.True;
 				return ValueBool.True;
+			}
+
+			// get/create the scope metadata listing all the loaded modules
+			private Map GetModuleList(IScope scope)
+			{
+				Map metadata = scope.AsValue.WritableMetadata;
+				if (metadata.ContainsKey(ScopeChain.keyModules))
+					return metadata[ScopeChain.keyModules].AsMap;
+				Map loadedList = new Map();
+				metadata[ScopeChain.keyModules] = new ValueMap(loadedList);
+				return loadedList;
 			}
 		}
 	}
