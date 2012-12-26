@@ -56,7 +56,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="MapFunctions.cs" />
     <Compile Include="Math.cs" />
-    <Compile Include="Module.cs" />
+    <Compile Include="ModuleFunctions.cs" />
     <Compile Include="PartialFunction.cs" />
     <Compile Include="PatternAssign.cs" />
     <Compile Include="PatternData.cs" />
