@@ -33,6 +33,13 @@ namespace loki3.core
 			return this;
 		}
 
+		/// <summary>A function was expecting a previous or next value</summary>
+		internal Loki3Exception AddMissingValue(bool bPrevious)
+		{
+			m_map[keyMissingValue] = new ValueString(bPrevious ? "previous" : "next");
+			return this;
+		}
+
 		/// <summary>Could not parse token</summary>
 		internal Loki3Exception AddBadToken(Token token)
 		{
@@ -127,6 +134,8 @@ namespace loki3.core
 		internal static string keyMissingBody = "l3.error.missingBody";
 		/// <summary>Map that was required to have a key</summary>
 		internal static string keyMissingKey = "l3.error.missingKey";
+		/// <summary>Function needed a previous or next value</summary>
+		internal static string keyMissingValue = "l3.error.missingValue";
 		/// <summary>Token that couldn't be parsed</summary>
 		internal static string keyBadToken = "l3.error.badToken";
 		/// <summary>Bad line in a body</summary>

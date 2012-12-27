@@ -124,6 +124,8 @@ namespace loki3.core
 
 				if (m_usePrevious)
 				{
+					if (prev == null)
+						throw new Loki3Exception().AddMissingValue(true/*bPrevious*/);
 					Value value1 = EvalNode.Do(prev, parentScope, nodes, requestor);
 					Value match, leftover;
 					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], false/*bShortPat*/, out match, out leftover))
@@ -142,6 +144,8 @@ namespace loki3.core
 				}
 				if (m_useNext)
 				{
+					if (next == null)
+						throw new Loki3Exception().AddMissingValue(false/*bPrevious*/);
 					Value value2 = EvalNode.Do(next, parentScope, nodes, requestor);
 					Value match, leftover;
 					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], false/*bShortPat*/, out match, out leftover))
