@@ -290,6 +290,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :+= v= .( ( ->array @@type :array ) infix ->value
 	l3.addToArray .{ :array array :value value
+:+= @order 6
 :+= @cat :array @doc ." Add a value to an array
 
 :.size v= .( ->value postfix
@@ -462,6 +463,15 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		[ :i :j ] = [ ( i + 1 ) 0 ]
 	( i <? count1 ) ? [ ` [ ( array1 . i ) ( array2 . j ) ] ` nil ]
 
+// todo: function overloading should give :scope precendence over :map
+:iterator f= func ( ->scope @@type :scope )
+	:current i= nil
+	if current =? nil
+		:current = scope
+	else
+		:current = :current .@ :l3.scope.parent
+	current
+
 :iterator f= func ( ->map @@type :map )
 	[ :i :keys ] i= [ -1 ( l3.getMapKeys map ) ]
 	:count i= keys .size
@@ -471,14 +481,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		:key v= keys . i
 		:result = [ key ( map . key ) ]
 	result
-
-:iterator f= func ( ->scope @@type :scope )
-	:current i= nil
-	if current =? nil
-		:current = scope
-	else
-		:current = :current .@ :l3.scope.parent
-	current
 
 :iterator f= func ( ->f @@type :function )
 	[ :i :count ] i= [ -1 ( ( f ) .size ) ]
