@@ -28,7 +28,7 @@ namespace loki3.builtin.test
 				IScope scope = new ScopeChain(GetBootstrapScope());
 
 				{	// a function that needs params but doesn't get them is just a function
-					Value value = TestSupport.ToValue("enum", scope);
+					Value value = TestSupport.ToValue("=enum", scope);
 					Assert.AreEqual(ValueType.Function, value.Type);
 				}
 

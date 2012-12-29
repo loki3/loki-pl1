@@ -632,8 +632,8 @@
 //
 // enumerated type
 
-:enum @unittest func()
-	:asdf enum [ :qwert :yuiop ]
+:=enum @unittest func()
+	:asdf =enum [ :qwert :yuiop ]
 	0		assert=? asdf.qwert
 	1		assert=? asdf.yuiop
 	:asdf	assert=? l3.getType .{ :value asdf.yuiop

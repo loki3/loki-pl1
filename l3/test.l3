@@ -57,7 +57,7 @@ var :fizzbuzz3 = func()
 //
 // an enum representing the days of the week
 
-:days enum .[ :sunday :monday :tuesday :wednesday :thursday :friday :saturday
+:days =enum .[ :sunday :monday :tuesday :wednesday :thursday :friday :saturday
 :days @doc ." an enum representing the days of the week
 
 :isWeekend v= func ( ->day @@type :days )

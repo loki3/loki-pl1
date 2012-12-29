@@ -528,7 +528,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // enumerated type
 
-:enum v= .( ( ->name @@type :string ) infix ( ->array @@type :array )
+:=enum v= .( ( ->name @@type :string ) infix ( ->array @@type :array )
 	:list v= { }
 	:i v= 0
 	:val forEach array
@@ -545,7 +545,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	// metadata on the enum
 	value @@ [ :l3.value.type " enum " ]
 	list
-:enum @cat :enum @doc ." Create an enumerated map of values
+:=enum @cat :enum @doc ." Create an enumerated map of values
 
 
 //
