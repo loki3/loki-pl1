@@ -626,6 +626,8 @@
 
 :\n @unittest stubFunc
 
+:\s @unittest stubFunc
+
 :\t @unittest stubFunc
 
 

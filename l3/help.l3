@@ -23,12 +23,15 @@
 		:i =eachIn map
 			:array = array + [ "" ( i . 0 ) ( i . 1 ) ]
 		array
-	// put the parameters into a table
-	:dumpParams v= func ->params
+	// build up a description of pre or post parameters
+	:dumpParams v= func .[ ->preOrPost ->overloads
 		:table v= [ ]
-		:param =eachIn params
+		:table v= [ :name :type :default :rest ]
+		:param =eachIn ( overloads . preOrPost )
 			[ :name :type :default :rest ] apply (| :table = table + ( param . ## ) |)
-		table
+		:s = :- + \s + preOrPost + \s + " parameters - " + \n
+		:s = s + .( l3.formatTable { :array table :columns 4 :dashesAfterFirst? true }
+		s
 	
 	:map v= describe key
 	:s v= \n + :============ + \n
@@ -54,15 +57,9 @@
 	if overloads !=? nil
 		:overloads = overloads . 0
 		if ( overloads . :pre ) !=? [ ]
-			:s = s + \n + " - pre parameters - " + \n
-			:overloadTable v= [ :name :type :default :rest ]
-			:overloadTable = overloadTable + .( dumpParams ( overloads . :pre )
-			:s = s + .( l3.formatTable { :array overloadTable :columns 4 :dashesAfterFirst? true }
+			:s = s + \n + .( dumpParams .[ :pre overloads
 		if ( overloads . :post ) !=? [ ]
-			:s = s + \n + " - post parameters - " + \n
-			:overloadTable v= [ :name :type :default :rest ]
-			:overloadTable = overloadTable + .( dumpParams ( overloads . :post )
-			:s = s + .( l3.formatTable { :array overloadTable :columns 4 :dashesAfterFirst? true }
+			:s = s + \n + .( dumpParams .[ :post overloads
 	
 	s
 :help @doc ." Describe the value represented by a key.

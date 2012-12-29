@@ -521,6 +521,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :\n v= l3.intToChar 13
 :\n @cat :string @doc ." Represents a newline in a string
 
+:\s v= l3.intToChar 32
+:\s @cat :string @doc ." Represents a space in a string
+
 :\t v= l3.intToChar 9
 :\t @cat :string @doc ." Represents a tab in a string
 
