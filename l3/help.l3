@@ -55,11 +55,11 @@
 	// overloads
 	:overloads v= map . :specific . :overloads
 	if overloads !=? nil
-		:overloads = overloads . 0
-		if ( overloads . :pre ) !=? [ ]
-			:s = s + \n + .( dumpParams .[ :pre overloads
-		if ( overloads . :post ) !=? [ ]
-			:s = s + \n + .( dumpParams .[ :post overloads
+		:overload =eachIn overloads
+			if ( overload . :pre ) !=? [ ]
+				:s = s + \n + .( dumpParams .[ :pre overload
+			if ( overload . :post ) !=? [ ]
+				:s = s + \n + .( dumpParams .[ :post overload
 	
 	s
 :help @doc ." Describe the value represented by a key.
