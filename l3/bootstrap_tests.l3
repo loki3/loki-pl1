@@ -498,6 +498,17 @@
 	5  assert=? i
 	15 assert=? total
 
+:repeat @unittest func()
+	:total v= 0
+	repeat 5
+		:total = total + 2
+	10 assert=? total
+
+:repeatsOf @unittest func()
+	:total v= 0
+	5 repeatsOf .` :total = total + 2
+	10 assert=? total
+
 :for @unittest func()
 	// todo: should be able to declare i inside for
 	:total v= 0

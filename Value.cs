@@ -405,6 +405,16 @@ namespace loki3.core
 		}
 
 		#region Value
+		internal override List<DelimiterList> AsLine
+		{
+			get
+			{
+				List<DelimiterList> list = new List<DelimiterList>();
+				list.Add(m_val);
+				return list;
+			}
+		}
+
 		internal override ValueType Type
 		{
 			get { return ValueType.Raw; }

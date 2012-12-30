@@ -401,6 +401,20 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :while @body? true
 :while @cat :loop @doc ." Repeat loop while condition is true
 
+:repeat v= func .( ->n @@type :int
+	:i v= 0
+	setScopeName :loop
+	l3.loop .{ :check ` i <? n ` :change ` :i = i + 1 ` :body body
+:repeat @body? true
+:repeat @cat :loop @doc ." Repeat the body n times.
+
+:repeatsOf v= .( ( ->n @@type :int ) infix ( ->code @@type :rawLines )
+	:i v= 0
+	setScopeName :loop
+	l3.loop .{ :check ` i <? n ` :change ` :i = i + 1 ` :body code
+:repeatsOf @order 5
+:repeatsOf @cat :loop @doc ." Repeat a code snippet n times.
+
 :for v= func .[ ->start ->cond ->change
 	start
 	setScopeName :loop
@@ -444,6 +458,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		:result v= ( l3.eval doIterator )
 	nil
 :=eachIn @body? true
+:=eachIn @order 6
 :=eachIn @cat :loop @doc ." Repeat loop for each item in a collection that supports an iterator.  Pattern is specified before =eachIn.  Collection is specified after =eachIn.
 
 // specific iterator overloads
@@ -504,6 +519,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :+ f= .( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
 	l3.stringConcat .{ :array .[ str1 str2
 :+ @cat :string @doc ." Concatenate two strings
+
+:* f= .( ( ->str @@type :string ) infix ( ->n @@type :number )
+	:all v= ""
+	n repeatsOf .` :all = all + str
+:* @order 2
+:* @cat :string @doc ." Repeat a string n times.
 
 :"" v= " "
 :"" @cat :string @doc ." TEMP: an empty string, needed until string delimiters handle white space correctly
