@@ -22,6 +22,13 @@
 	unittestScope currentScope
 :unittest @cat :unittest @doc ." For a given implementation file, run all the tests defined in a test file.
 
+:runTestFile v= func ->testFile
+	import testFile
+	:scope v= currentScope
+	testFunction .[ runTests :runTests scope
+:runTestFile @cat :unittest @doc ." Run all the tests defined in a test file.
+
+
 :unittestScope v= func ->scope
 	var :success? = true
 	:success? = success? &? testFunction .[ checkDocs :checkDocs scope
@@ -69,60 +76,78 @@
 
 :assert=? v= .( ->expected infix ->actual
 	if expected !=? actual
-		print " FAILED : " + unittestName
+		print " FAILED : " + testName
 		print " .expected: " + expected =>str
 		print " ...actual: " + actual =>str
-		l3.popScope { :name :runUnittests :return false }
+		l3.popScope { :name :testScope :return false }
 :assert=? @order 6
 :assert=? @cat :unittest @doc """
-	Unittests can assert objects are equal.
-	If they're not, the current unittest function aborts & fails.
+	A test can assert objects are equal.
+	If they're not, the current test function aborts & fails.
 
 :assertTrue? v= func ->cond
 	if !? l3.eval cond
 		print ." ...failed...
-		print " FAILED : " + unittestName
+		print " FAILED : " + testName
 		print " ...expected: true "
 		print " .expression: " + cond =>str
-		l3.popScope { :name :runUnittests :return false }
+		l3.popScope { :name :testScope :return false }
 :assertTrue? @order 6
 :assertTrue? @cat :unittest @doc """
-	Unittests can assert something is true.
-	If it's not, the current unittest function aborts & fails.
+	A test can assert something is true.
+	If it's not, the current test function aborts & fails.
 
 :assertFalse? v= func ->cond
 	if l3.eval cond
 		print ." ...failed...
-		print " FAILED : " + unittestName
+		print " FAILED : " + testName
 		print " ...expected: false "
 		print " .expression: " + cond =>str
-		l3.popScope { :name :runUnittests :return false }
+		l3.popScope { :name :testScope :return false }
 :assertFalse? @order 6
 :assertFalse? @cat :unittest @doc """
-	Unittests can assert something is false.
-	If it's not, the current unittest function aborts & fails.
+	A test can assert something is false.
+	If it's not, the current test function aborts & fails.
 
 :assertFail v= func ->message
 	print ." ...failed...
-	print " FAILED : " + unittestName
+	print " FAILED : " + testName
 	print " message: " + message
-	l3.popScope { :name :runUnittests :return false }
-:assertFail @cat :unittest @doc ." Unittests can say they fail immediately if this line of code is run.
+	l3.popScope { :name :testScope :return false }
+:assertFail @cat :unittest @doc """
+	A test can say it fails immediately if this line of code is run.
 
 
 :runUnittests v= func ->scope
 	var :failures = [ ]
-	[ :unittestName _ ] forEach scope
+	[ :testName _ ] forEach scope
 		var :success? = if true
 			// asserts will exit this scope & the above 'if' will return false
-			setScopeName :runUnittests
+			setScopeName :testScope
 			// run the test
-			if unittestName .@unittest =? nil		// fail if no test
-				failures += unittestName
+			if testName .@unittest =? nil		// fail if no test
+				failures += testName
 		// fail if function asserted
 		if !? success?
-			failures += unittestName
+			failures += testName
 	[ ( ( failures .size ) =? 0 ) failures ]
 :runUnittests @cat :unittest @doc """
 	Run .@unittest on every value in the scope.
 	A unittest fails if it isn't present or if an assert fails inside it.
+
+:runTests v= func ->scope
+	var :failures = [ ]
+	:mapOfTests v= scope filterMap (< l3.getType { :key #1 } =? :function >)
+	[ :testName :testFunction ] =eachIn mapOfTests
+		var :success? = if true
+			// asserts will exit this scope & the above 'if' will return false
+			setScopeName :testScope
+			// run the test
+			testFunction
+		// fail if function asserted
+		if !? success?
+			failures += testName
+	[ ( ( failures .size ) =? 0 ) failures ]
+:runTests @cat :unittest @doc """
+	Run every function in the scope as a test.
+	A test fails if an assert fails inside it.
