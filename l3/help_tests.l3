@@ -1,0 +1,85 @@
+// unittests for help.l3
+
+:helpAll @unittest stubFunc
+
+:help @unittest stubFunc
+
+:describe @unittest func()
+	// simple value
+	:a v= 5
+	:map v= describe :a
+	:a         assert=? map . :general . :name
+	:int       assert=? map . :general . :type
+	
+	// prefix
+	:fPrefix v= func .( ->a @@type :int
+		true
+	:fPrefix @order 4 @cat :thing @doc :something
+	:map v= describe :fPrefix
+	:fPrefix   assert=? map . :general . :name
+	:function  assert=? map . :general . :type
+	:something assert=? map . :general . :documentation
+	:thing     assert=? map . :general . :category
+	:prefix    assert=? map . :specific . :fix
+	4          assert=? map . :specific . :order
+	1          assert=? map . :specific . :overloads .size
+	[ ]        assert=? map . :specific . :overloads . 0 . :pre
+	:a         assert=? map . :specific . :overloads . 0 . :post . 0 . :name
+	:int       assert=? map . :specific . :overloads . 0 . :post . 0 . :type
+	
+	// infix
+	:fInfix v= .( ->a infix ->b
+		true
+	:map v= describe :fInfix
+	:fInfix    assert=? map . :general . :name
+	:infix     assert=? map . :specific . :fix
+	:a         assert=? map . :specific . :overloads . 0 . :pre . 0 . :name
+	:b         assert=? map . :specific . :overloads . 0 . :post . 0 . :name
+	
+	// postfix
+	:fPostfix v= .( ->a postfix
+		true
+	:map v= describe :fPostfix
+	:postfix   assert=? map . :specific . :fix
+	:a         assert=? map . :specific . :overloads . 0 . :pre . 0 . :name
+	[ ]        assert=? map . :specific . :overloads . 0 . :post
+	
+	// no parameters
+	:fNofix v= func()
+		true
+	// todo: this doesn't work
+	// :map v= describe :fNofix
+	
+	// overload
+	:fOverload f= func .( ->a @@type :int
+		true
+	:fOverload f= func .( ->a @@type :string
+		true
+	:map v= describe :fOverload
+	:fOverload assert=? map . :general . :name
+	2          assert=? map . :specific . :overloads .size
+
+
+:dumpBody @unittest stubFunc
+
+:dumpMeta @unittest stubFunc
+
+:dumpStack @unittest stubFunc
+
+:dumpCurrentStack @unittest stubFunc
+
+:listFunctions @unittest stubFunc
+
+:listEnums @unittest stubFunc
+
+:listDelimiters @unittest stubFunc
+
+:listByCat @unittest stubFunc
+
+:getDocs @unittest stubFunc
+
+:getDocsInScope @unittest stubFunc
+
+:getFileDocs @unittest stubFunc
+
+:prettify @unittest stubFunc

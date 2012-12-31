@@ -372,7 +372,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.setValue { :key :l3.coFunction.if.done? :value do? :scope :parent }
 	do?
 :if @body? true
-:if @order 5
+:if @order 6
 :if @cat :if @doc ." If condition is met, do body
 
 :elsif v= func ( ->do? @@type :bool )
@@ -381,7 +381,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.ifBody .{ :do? doThis? :body .[ .` l3.setValue .{ :key :l3.coFunction.if.done? :value true :scope :parent
 	doThis?
 :elsif @body? true
-:elsif @order 5
+:elsif @order 6
 :elsif @cat :if @doc ." If previous if and elsifs failed and this condition is met, do body
 
 :else v= func()
@@ -633,5 +633,5 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // I/O
 
 :print v= .(| l3.print .{ :value ##
-:print @order 5
+:print @order 6
 :print @cat :io @doc ." Print a value as a string

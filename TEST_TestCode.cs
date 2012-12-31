@@ -17,8 +17,14 @@ namespace loki3.builtin.test
 				EvalFile.Do("../../l3/unittest.l3", scope);
 
 				// use the loki3 unittest framework to test the code
-				Value v = TestSupport.ToValue("unittest [ :../../l3/test.l3 :../../l3/test_tests.l3 ]", scope);
-				Assert.True(v.AsBool);
+				{
+					Value v = TestSupport.ToValue("unittest [ :../../l3/help.l3 :../../l3/help_tests.l3 ]", scope);
+					Assert.True(v.AsBool);
+				}
+				{
+					Value v = TestSupport.ToValue("unittest [ :../../l3/test.l3 :../../l3/test_tests.l3 ]", scope);
+					Assert.True(v.AsBool);
+				}
 			}
 			catch (Loki3Exception e)
 			{
