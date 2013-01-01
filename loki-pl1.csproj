@@ -104,6 +104,7 @@
     <None Include="l3\help.l3" />
     <None Include="l3\help_tests.l3" />
     <None Include="l3\module.l3" />
+    <None Include="l3\pattern_tests.l3" />
     <None Include="l3\test.l3" />
     <None Include="l3\test_tests.l3" />
     <None Include="l3\unittest.l3" />

@@ -1,0 +1,77 @@
+// tests of various uses of patterns
+
+:assignmentSingle v= func()
+	// single item
+	:a v= 5
+	5 assert=? a
+	:a v= { :a 1 :b 2 }
+	{ :a 1 :b 2 } assert=? a
+	:a v= [ 1 2 :str ]
+	[ 1 2 :str ] assert=? a
+:assignmentSingle @doc """
+	Test how assignment uses pattern matching for assignment of a single variable
+
+:assignmentArray v= func()
+	// simple array
+	[ :a :b :c ] v= [ 1 2 3 ]
+	1 assert=? a
+	2 assert=? b
+	3 assert=? c
+	
+	// types
+	[ ( :a @@type :int ) ( :b @@type :bool ) ( :c @@type :string ) ] v= [ 3 false :asdf ]
+	3     assert=? a
+	false assert=? b
+	:asdf assert=? c
+	// fail (todo: this shouldn't fail silently)
+	[ ( :a @@type :int ) ( :b @@type :bool ) ] v= [ 4.0 :asdf ]
+	3     assert=? a
+	false assert=? b
+	
+	// rest of array
+	[ :a :b ( :c @@rest ) ] v= [ 1 2 3 4 5 6 ]
+	1           assert=? a
+	2           assert=? b
+	[ 3 4 5 6 ] assert=? c
+	
+	// default
+	[ :a :b ( :c @@default 5 ) ] v= [ 1 2 3 ]
+	1 assert=? a
+	2 assert=? b
+	3 assert=? c
+	[ :a :b ( :c @@default 5 ) ] v= [ 7 8 ]
+	7 assert=? a
+	8 assert=? b
+	5 assert=? c
+:assignmentArray @doc """
+	Test how assignment uses pattern matching for assignment into an array
+
+:assignmentMap v= func()
+	// if it finds :a, put value in :c, same with { :b :d }
+	{ :a :c :b :d } v= { :a 1 :b 2 }
+	1 assert=? c
+	2 assert=? d
+	
+	// search for keys specified in array
+	[ :a :c ] v= { :a 1 :b 2 :c 3 }
+	1 assert=? a
+	3 assert=? c
+	
+	// remainder in map
+	{ :a :b :whatever ( :rest @@rest ) } v= { :a 5 :b 6 :c 7 }
+	5             assert=? b
+	{ :b 6 :c 7 } assert=? rest
+	// remainder in array
+	[ :a ( :rest @@rest ) ] v= { :a 3 :b 4 :c 5 }
+	3             assert=? a
+	{ :b 4 :c 5 } assert=? rest
+	
+	// default
+	[ :a ( :b @@default 4 ) ] v= { :a 1 :b 2 }
+	1 assert=? a
+	2 assert=? b
+	[ :a ( :b @@default 4 ) ] v= { :a 6 :c 7 }
+	6 assert=? a
+	4 assert=? b
+:assignmentMap @doc """
+	Test how assignment uses pattern matching for assignment of a map
