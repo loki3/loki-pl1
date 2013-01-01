@@ -94,12 +94,12 @@ namespace loki3.core
 		}
 
 		#region Keys
-		internal static string keyType = "l3.param.type";
-		internal static string keyOneOf = "l3.param.oneOf";
-		internal static string keyRequiredKeys = "l3.param.keys";
-		internal static string keyDefault = "l3.param.default";
-		internal static string keyRest = "l3.param.rest";
-		internal static string keyIsBody = "l3.param.body?";
+		internal static string keyType = "l3.pattern.type";
+		internal static string keyOneOf = "l3.pattern.oneOf";
+		internal static string keyRequiredKeys = "l3.pattern.keys";
+		internal static string keyDefault = "l3.pattern.default";
+		internal static string keyRest = "l3.pattern.rest";
+		internal static string keyIsBody = "l3.pattern.body?";
 		#endregion
 
 		/// <summary>If present, required type of parameter</summary>

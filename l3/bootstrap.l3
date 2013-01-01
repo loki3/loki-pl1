@@ -133,15 +133,15 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :@@ @cat :metadata @doc ." Set metadata on a value, e.g. a parameter
 
 :@@type v= .( ->object infix ->type
-	object @@ .[ :l3.param.type type
+	object @@ .[ :l3.pattern.type type
 :@@type @cat :metadata @doc ." Restrict a parameter to a specific type
 
 :@@default v= .( ->object infix ->default
-	object @@ .[ :l3.param.default default
+	object @@ .[ :l3.pattern.default default
 :@@default @cat :metadata @doc ." Set the default value for a parameter if not present
 
 :@@rest v= .( ->object postfix
-	object @@ .[ :l3.param.rest true
+	object @@ .[ :l3.pattern.rest true
 :@@rest @cat :metadata @doc ." Associated parameter will be filled with the remainder of the parameter values
 
 :copy v= func ->value

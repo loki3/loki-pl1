@@ -87,7 +87,7 @@
 			// extract metadata on a single parameter
 			:getParam v= func ->param
 				:getMeta v= func ->which
-					:key v= :l3.param. + which
+					:key v= :l3.pattern. + which
 					if ( :t v= ( l3.getMetadata { :value param } ) . key ) =? nil
 						:t = ""
 					t

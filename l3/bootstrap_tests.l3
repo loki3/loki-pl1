@@ -200,17 +200,17 @@
 :@@type @unittest func()
 	:a v= 1
 	a @@type :int
-	:int assert=? :a .@ :l3.param.type
+	:int assert=? :a .@ :l3.pattern.type
 
 :@@default @unittest func()
 	:a v= 1
 	a @@default 2
-	2 assert=? :a .@ :l3.param.default
+	2 assert=? :a .@ :l3.pattern.default
 
 :@@rest @unittest func()
 	:a v= 1
 	a @@rest
-	true assert=? :a .@ :l3.param.rest
+	true assert=? :a .@ :l3.pattern.rest
 
 :copy	@unittest func()
 	:a v= 1
