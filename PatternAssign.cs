@@ -49,7 +49,7 @@ namespace loki3.core
 			PatternChecker.Do(value, m_key, true/*bShortPat*/, out match, out leftover);
 
 			// add/modify scope
-			if (match != null)
+			if (match != null && leftover == null)
 			{
 				Utility.AddToScope(m_key, match, m_scope, m_bCreate, m_bOverload, bInitOnly);
 			}

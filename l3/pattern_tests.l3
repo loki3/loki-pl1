@@ -88,6 +88,7 @@
 	// keys aren't present
 	// todo: this shouldn't fail silently
 	[ :a ( :b @@hasKeys [ :k1 :k2 ] ) ] v= { :a 3 :b { :k4 7 :k5 8 :k3 9 } }
+	2 assert=? a
 	{ :k1 7 :k2 8 :k3 9 } assert=? b
 	
 	// map
@@ -100,6 +101,7 @@
 	// keys aren't present
 	// todo: this shouldn't fail silently
 	[ :a ( :b @@hasKeys map ) ] v= { :a 3 :b { :k4 7 :k5 8 :k3 9 } }
+	1 assert=? a
 	{ :k1 2 :k2 3 :k3 4 } assert=? b
 	
 	// string
