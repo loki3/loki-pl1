@@ -14,66 +14,49 @@
 :assignmentArray v= func()
 	// simple array
 	[ :a :b :c ] v= [ 1 2 3 ]
-	1 assert=? a
-	2 assert=? b
-	3 assert=? c
+	[ 1 2 3 ] assert=? [ a b c ]
 	
 	// types
 	[ ( :a @@type :int ) ( :b @@type :bool ) ( :c @@type :string ) ] v= [ 3 false :asdf ]
-	3     assert=? a
-	false assert=? b
-	:asdf assert=? c
+	[ 3 false :asdf ] assert=? [ a b c ]
 	// fail
 	// todo: this shouldn't fail silently
 	[ ( :a @@type :int ) ( :b @@type :bool ) ] v= [ 4.0 :asdf ]
-	3     assert=? a
-	false assert=? b
+	[ 3 false ] assert=? [ a b ]
 	
 	// rest of array
 	[ :a :b ( :c @@rest ) ] v= [ 1 2 3 4 5 6 ]
-	1           assert=? a
-	2           assert=? b
-	[ 3 4 5 6 ] assert=? c
+	[ 1 2 [ 3 4 5 6 ] ] assert=? [ a b c ]
 	
 	// default
 	[ :a :b ( :c @@default 5 ) ] v= [ 1 2 3 ]
-	1 assert=? a
-	2 assert=? b
-	3 assert=? c
+	[ 1 2 3 ] assert=? [ a b c ]
 	[ :a :b ( :c @@default 5 ) ] v= [ 7 8 ]
-	7 assert=? a
-	8 assert=? b
-	5 assert=? c
+	[ 7 8 5 ] assert=? [ a b c ]
 :assignmentArray @doc """
 	Test how assignment uses pattern matching for assignment into an array
 
 :assignmentMap v= func()
 	// if it finds :a, put value in :c, same with { :b :d }
 	{ :a :c :b :d } v= { :a 1 :b 2 }
-	1 assert=? c
-	2 assert=? d
+	[ 1 2 ] assert=? [ c d ]
 	
 	// search for keys specified in array
 	[ :a :c ] v= { :a 1 :b 2 :c 3 }
-	1 assert=? a
-	3 assert=? c
+	[ 1 3 ] assert=? [ a c ]
 	
 	// remainder in map
 	{ :a :b :whatever ( :rest @@rest ) } v= { :a 5 :b 6 :c 7 }
-	5             assert=? b
-	{ :b 6 :c 7 } assert=? rest
+	[ 5 { :b 6 :c 7 } ] assert=? [ b rest ]
 	// remainder in array
 	[ :a ( :rest @@rest ) ] v= { :a 3 :b 4 :c 5 }
-	3             assert=? a
-	{ :b 4 :c 5 } assert=? rest
+	[ 3 { :b 4 :c 5 } ] assert=? [ a rest ]
 	
 	// default
 	[ :a ( :b @@default 4 ) ] v= { :a 1 :b 2 }
-	1 assert=? a
-	2 assert=? b
+	[ 1 2 ] assert=? [ a b ]
 	[ :a ( :b @@default 4 ) ] v= { :a 6 :c 7 }
-	6 assert=? a
-	4 assert=? b
+	[ 6 4 ] assert=? [ a b ]
 :assignmentMap @doc """
 	Test how assignment uses pattern matching for assignment of a map
 
@@ -114,6 +97,7 @@
 	// keys aren't present
 	// todo: this shouldn't fail silently
 	[ :a ( :b @@hasKeys :k2 ) ] v= { :a 3 :b { :k4 7 :k5 8 :k3 9 } }
+	2 assert=? a
 	{ :k1 3 :k2 4 :k3 5 } assert=? b
 :assignmentHasKeys @doc """
 	Test requiring that a map should contain certain keys in order to pattern match
