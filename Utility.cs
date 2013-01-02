@@ -12,7 +12,7 @@ namespace loki3.core
 		{
 			if (pattern is ValueString)
 			{
-				if (!pattern.IsNil)
+				if (pattern is ValueString)
 					SetOnScope(scope, pattern.AsString, match, bCreate, bOverload, bInitOnly);
 			}
 			else if (pattern is ValueMap && match is ValueMap)
@@ -20,7 +20,7 @@ namespace loki3.core
 				Map patmap = pattern.AsMap;
 				Map matmap = match.AsMap;
 				foreach (string key in matmap.Raw.Keys)
-					if (!patmap[key].IsNil)
+					if (patmap[key] is ValueString)
 						SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate, bOverload, bInitOnly);
 			}
 			else if (pattern is ValueArray && match is ValueArray)
@@ -29,7 +29,7 @@ namespace loki3.core
 				List<Value> matcharray = match.AsArray;
 				int count = System.Math.Min(patarray.Count, matcharray.Count);
 				for (int i = 0; i < count; i++)
-					if (!patarray[i].IsNil)
+					if (patarray[i] is ValueString)
 						SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate, bOverload, bInitOnly);
 			}
 			else if (pattern is ValueArray && match is ValueMap)

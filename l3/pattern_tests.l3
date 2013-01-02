@@ -33,6 +33,13 @@
 	[ 1 2 3 ] assert=? [ a b c ]
 	[ :a :b ( :c @@default 5 ) ] v= [ 7 8 ]
 	[ 7 8 5 ] assert=? [ a b c ]
+	
+	// when one value is a direct match rather than a variable
+	[ :a 2 ] v= [ 5 2 ]
+	5 assert=? a
+	// non match
+	[ :a 2 ] v= [ 2 5 ]
+	5 assert=? a
 :assignmentArray @doc """
 	Test how assignment uses pattern matching for assignment into an array
 
@@ -57,6 +64,13 @@
 	[ 1 2 ] assert=? [ a b ]
 	[ :a ( :b @@default 4 ) ] v= { :a 6 :c 7 }
 	[ 6 4 ] assert=? [ a b ]
+	
+	// when one value is a direct match rather than a variable
+	{ :a :c :b 2 } v= { :a 1 :b 2 }
+	1 assert=? c
+	// non match
+	{ :a :c :b 2 } v= { :a 5 :b 6 }
+	1 assert=? c
 :assignmentMap @doc """
 	Test how assignment uses pattern matching for assignment of a map
 

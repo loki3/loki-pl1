@@ -26,16 +26,16 @@ namespace loki3.core
 			switch (input.Type)
 			{
 				case ValueType.Nil:
-					return DoSingle(input as ValueNil, ValueType.Nil, pattern as ValueString, out match);
+					return DoSingle(input as ValueNil, ValueType.Nil, pattern, out match);
 
 				case ValueType.Bool:
-					return DoSingle(input as ValueBool, ValueType.Bool, pattern as ValueString, out match);
+					return DoSingle(input as ValueBool, ValueType.Bool, pattern, out match);
 				case ValueType.Int:
-					return DoSingle(input as ValueInt, ValueType.Int, pattern as ValueString, out match);
+					return DoSingle(input as ValueInt, ValueType.Int, pattern, out match);
 				case ValueType.Float:
-					return DoSingle(input as ValueFloat, ValueType.Float, pattern as ValueString, out match);
+					return DoSingle(input as ValueFloat, ValueType.Float, pattern, out match);
 				case ValueType.String:
-					return DoSingle(input as ValueString, ValueType.String, pattern as ValueString, out match);
+					return DoSingle(input as ValueString, ValueType.String, pattern, out match);
 
 				case ValueType.Array:
 					return MatchAgainstArray(input as ValueArray, pattern, bShortPat, out match, out leftover);
@@ -44,27 +44,33 @@ namespace loki3.core
 						return true;
 					if (MatchMapAgainstKeys(input as ValueMap, pattern as ValueArray, bShortPat, out match, out leftover))
 						return true;
-					return DoSingle(input as ValueMap, ValueType.Map, pattern as ValueString, out match);
+					return DoSingle(input as ValueMap, ValueType.Map, pattern, out match);
 
 				case ValueType.Function:
-					return DoSingle(input as ValueFunction, ValueType.Function, pattern as ValueString, out match);
+					return DoSingle(input as ValueFunction, ValueType.Function, pattern, out match);
 				case ValueType.Delimiter:
-					return DoSingle(input as ValueDelimiter, ValueType.Delimiter, pattern as ValueString, out match);
+					return DoSingle(input as ValueDelimiter, ValueType.Delimiter, pattern, out match);
 				case ValueType.Raw:
-					return DoSingle(input as ValueRaw, ValueType.Raw, pattern as ValueString, out match);
+					return DoSingle(input as ValueRaw, ValueType.Raw, pattern, out match);
 				case ValueType.RawList:
-					return DoSingle(input as ValueLine, ValueType.RawList, pattern as ValueString, out match);
+					return DoSingle(input as ValueLine, ValueType.RawList, pattern, out match);
 			}
 
 			return false;
 		}
 
 		/// <summary>Match against a non-aggregate type</summary>
-		private static bool DoSingle<T>(T input, ValueType target, ValueString pattern, out Value match) where T : Value
+		private static bool DoSingle<T>(T input, ValueType target, Value patternValue, out Value match) where T : Value
 		{
 			match = null;
+			ValueString pattern = patternValue as ValueString;
 			if (pattern == null)
-				return false;	// this only matches against a single item
+			{
+				T exact = patternValue as T;
+				// if this is the same type, we need an exact match (e.g. [ :a 2 ] = [ :blah 2 ])
+				// else fail because this only matches against a single item
+				return input.Equals(exact);
+			}
 			PatternData data = new PatternData(pattern);
 
 			// check type
@@ -217,7 +223,7 @@ namespace loki3.core
 						matchmap[key] = submatch;
 					else if (restMap != null)
 						restMap[key] = inmap[key];
-					else if (!bShortPat)
+					else
 						return false;	// input has key that pattern doesn't
 				}
 
