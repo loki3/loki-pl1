@@ -66,6 +66,8 @@ namespace loki3.core
 			if (pattern == null)
 				return false;	// this only matches against a single item
 			PatternData data = new PatternData(pattern);
+
+			// check type
 			string patternType = data.Type;
 			string targetType = ValueClasses.ClassOf(target);
 			if (patternType != ValueClasses.ClassOf(ValueType.Nil) && patternType != targetType)
@@ -76,6 +78,32 @@ namespace loki3.core
 						return false;	// they asked for a different type
 				}
 			}
+
+			// check hasKeys
+			Value hasKeys = data.HasKeys;
+			if (hasKeys != null)
+			{
+				// if input is required to have certain keys, then it's required to be a map
+				Map inputMap = input.AsMap;
+				if (hasKeys is ValueArray)
+				{
+					foreach (Value keyValue in hasKeys.AsArray)
+						if (!inputMap.ContainsKey(keyValue.AsString))
+							return false;	// a required key was missing
+				}
+				else if (hasKeys is ValueMap)
+				{
+					foreach (string key in hasKeys.AsMap.Raw.Keys)
+						if (!inputMap.ContainsKey(key))
+							return false;	// a required key was missing
+				}
+				else if (hasKeys is ValueString)
+				{
+					if (!inputMap.ContainsKey(hasKeys.AsString))
+						return false;	// a required key was missing
+				}
+			}
+
 			match = input;
 			return true;
 		}

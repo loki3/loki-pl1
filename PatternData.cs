@@ -100,6 +100,7 @@ namespace loki3.core
 		internal static string keyDefault = "l3.pattern.default";
 		internal static string keyRest = "l3.pattern.rest";
 		internal static string keyIsBody = "l3.pattern.body?";
+		internal static string keyHasKeys = "l3.pattern.hasKeys";
 		#endregion
 
 		/// <summary>If present, required type of parameter</summary>
@@ -142,6 +143,13 @@ namespace loki3.core
 		{
 			get { return m_readableMetadata == null ? false : m_readableMetadata.GetOptionalT<bool>(keyRest, false); }
 			set { WritableMetadata[keyRest] = new ValueBool(value); }
+		}
+
+		/// <summary>If present, the value must contain each of the keys specified in the map or array</summary>
+		internal Value HasKeys
+		{
+			get { return m_readableMetadata == null ? null : m_readableMetadata.GetOptional(keyHasKeys, null); }
+			set { WritableMetadata[keyHasKeys] = value; }
 		}
 
 		/// <summary>Make metadata writable if it isn't already</summary>

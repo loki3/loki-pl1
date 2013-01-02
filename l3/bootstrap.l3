@@ -144,6 +144,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object @@ .[ :l3.pattern.rest true
 :@@rest @cat :metadata @doc ." Associated parameter will be filled with the remainder of the parameter values
 
+:@@hasKeys f= .( ->object infix ( ->type @@type :array )
+	object @@ .[ :l3.pattern.hasKeys type
+:@@hasKeys f= .( ->object infix ( ->type @@type :map )
+	object @@ .[ :l3.pattern.hasKeys type
+:@@hasKeys f= .( ->object infix ( ->type @@type :string )
+	object @@ .[ :l3.pattern.hasKeys type
+:@@hasKeys @cat :metadata @doc ." Specify that parameter must have certain keys
+
 :copy v= func ->value
 	l3.copy .{ :value value
 :copy @cat :create @doc ." Make a copy of a value

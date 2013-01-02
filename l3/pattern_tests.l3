@@ -23,7 +23,8 @@
 	3     assert=? a
 	false assert=? b
 	:asdf assert=? c
-	// fail (todo: this shouldn't fail silently)
+	// fail
+	// todo: this shouldn't fail silently
 	[ ( :a @@type :int ) ( :b @@type :bool ) ] v= [ 4.0 :asdf ]
 	3     assert=? a
 	false assert=? b
@@ -75,3 +76,42 @@
 	4 assert=? b
 :assignmentMap @doc """
 	Test how assignment uses pattern matching for assignment of a map
+
+
+:assignmentHasKeys v= func()
+	// array
+	// keys are present
+	[ :a ( :b @@hasKeys [ :k1 :k2 ] ) ] v= { :a 2 :b { :k1 7 :k2 8 :k3 9 } }
+	2 assert=? a
+	{ :k1 7 :k2 8 :k3 9 } assert=? b
+	
+	// keys aren't present
+	// todo: this shouldn't fail silently
+	[ :a ( :b @@hasKeys [ :k1 :k2 ] ) ] v= { :a 3 :b { :k4 7 :k5 8 :k3 9 } }
+	{ :k1 7 :k2 8 :k3 9 } assert=? b
+	
+	// map
+	// keys are present
+	:map v= { :k1 -1 :k2 -2 }
+	[ :a ( :b @@hasKeys map ) ] v= { :a 1 :b { :k1 2 :k2 3 :k3 4 } }
+	1 assert=? a
+	{ :k1 2 :k2 3 :k3 4 } assert=? b
+	
+	// keys aren't present
+	// todo: this shouldn't fail silently
+	[ :a ( :b @@hasKeys map ) ] v= { :a 3 :b { :k4 7 :k5 8 :k3 9 } }
+	{ :k1 2 :k2 3 :k3 4 } assert=? b
+	
+	// string
+	// key is present
+	:map v= { :k1 -1 :k2 -2 }
+	[ :a ( :b @@hasKeys :k2 ) ] v= { :a 2 :b { :k1 3 :k2 4 :k3 5 } }
+	2 assert=? a
+	{ :k1 3 :k2 4 :k3 5 } assert=? b
+	
+	// keys aren't present
+	// todo: this shouldn't fail silently
+	[ :a ( :b @@hasKeys :k2 ) ] v= { :a 3 :b { :k4 7 :k5 8 :k3 9 } }
+	{ :k1 3 :k2 4 :k3 5 } assert=? b
+:assignmentHasKeys @doc """
+	Test requiring that a map should contain certain keys in order to pattern match

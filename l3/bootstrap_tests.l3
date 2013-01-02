@@ -212,6 +212,11 @@
 	a @@rest
 	true assert=? :a .@ :l3.pattern.rest
 
+:@@hasKeys @unittest func()
+	:a v= 1
+	a @@hasKeys [ :b :c ]
+	[ :b :c ] assert=? :a .@ :l3.pattern.hasKeys
+
 :copy	@unittest func()
 	:a v= 1
 	1 assert=? copy a
