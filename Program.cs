@@ -24,6 +24,12 @@ namespace loki_pl1
 					}
 					catch (Loki3Exception error)
 					{
+						// if we're at the root scope, remove it to avoid infinite
+						// recursion in Map.ToString
+						if (error.Errors.ContainsKey("l3.error.scope"))
+							if (error.Errors["l3.error.scope"].AsMap == scope.AsMap)
+								error.Errors.Raw.Remove("l3.error.scope");
+
 						scope.SetValue("lastError", new ValueMap(error.Errors));
 						Value v = loki3.builtin.test.TestSupport.ToValue("prettify lastError", scope);
 						Console.WriteLine("LOKI3 ERROR:\n" + v.AsString);
