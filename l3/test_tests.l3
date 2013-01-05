@@ -81,3 +81,66 @@
 
 :fib2 @unittest func()
 	testFib
+
+
+:unitsType			@unittest ( stubFunc )
+:unitsType.distance	@unittest ( stubFunc ) @doc ."
+:unitsType.weight	@unittest ( stubFunc ) @doc ."
+
+:mm @unittest func()
+	5.5 assert=? 5.5 mm =>mm
+
+:m  @unittest func()
+	4 assert=? 4 m =>m
+
+:in @unittest func()
+	1 assert=? 1 in =>in
+
+:ft @unittest func()
+	2 assert=? 2 ft =>ft
+
+
+:=>mm @unittest func()
+	2000 assert=? 2 m =>mm
+
+:=>m  @unittest func()
+	0.6096 assert=? 2 ft =>m
+
+:=>in @unittest func()
+	2 assert=? 50.8 mm =>in
+
+:=>ft @unittest func()
+	2.5 assert=? 2.5 ft =>ft
+
+
+:g  @unittest func()
+	1 assert=? 1000 g =>kg
+
+:kg @unittest func()
+	2000 assert=? 2 kg =>g
+
+:oz @unittest func()
+	1 assert=? 16 oz =>lb
+
+:lb @unittest func()
+	16 assert=? 1 lb =>oz
+
+
+:=>g  @unittest func()
+	1500 assert=? 1.5 kg =>g
+
+:=>kg @unittest func()
+	.123 assert=? 123 g =>kg
+
+:=>oz @unittest func()
+	64 assert=? 4 lb =>oz
+
+:=>lb @unittest func()
+	0.5 assert=? 8 oz =>lb
+
+
+:- @unittest func()
+	3.3322 assert=? 2 mm + 3 m + 1 ft + 1 in =>m
+	1900 assert=? 2 m - 100 mm =>mm
+	2222 assert=? 2 kg + 222 g =>g
+	1778 assert=? 2 kg - 222 g =>g

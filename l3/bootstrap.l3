@@ -596,7 +596,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.add [ a b ]
 :+ @cat :math @doc ." Add two numbers
 
-:- v= .(< l3.subtract [ #1 #2 ]
+:- f= .(< l3.subtract [ #1 #2 ]
 :- @cat :math @doc ." Subtract one number from another
 
 :* f= .( ( ->a @@type :number ) infix ( ->b @@type :number )

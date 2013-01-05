@@ -109,3 +109,92 @@ var :fizzbuzz3 = func()
 		( i =? n ) ? .[ f2 .` sub .[ f2 ( f1 + f2 ) ( i + 1 )
 	sub .[ 0 1 0
 :fib2 @doc ." Recursive computation of Fibonacci numbers
+
+
+//
+// Units
+
+:unitsType =enum [ :distance :weight ]
+:unitsType @doc ." A list of the different types of supported units
+
+
+:mm v= .( ( ->x @@type :number ) postfix
+	{ :meters ( x / 1000.0 ) :units unitsType.distance }
+:mm @order 1 @doc ." Used to specify a particular number of millimeters
+
+:m  v= .( ( ->x @@type :number ) postfix
+	{ :meters x :units unitsType.distance }
+:m  @order 1 @doc ." Used to specify a particular number of meters
+
+:in v= .( ( ->x @@type :number ) postfix
+	{ :meters ( x * 0.0254 ) :units unitsType.distance }
+:in @order 1 @doc ." Used to specify a particular number of inches
+
+:ft v= .( ( ->x @@type :number ) postfix
+	{ :meters ( x * 0.3048 ) :units unitsType.distance }
+:ft @order 1 @doc ." Used to specify a particular number of feet
+
+
+:=>mm v= .( { :meters ->meters :units unitsType.distance } postfix
+	meters * 1000
+:=>mm @doc ." Convert a distance into millimeters
+
+:=>m  v= .( { :meters ->meters :units unitsType.distance } postfix
+	meters
+:=>m  @doc ." Convert a distance into meters
+
+:=>in v= .( { :meters ->meters :units unitsType.distance } postfix
+	meters / 0.0254
+:=>in @doc ." Convert a distance into inches
+
+:=>ft v= .( { :meters ->meters :units unitsType.distance } postfix
+	meters / 0.3048
+:=>ft @doc ." Convert a distance into feet
+
+
+:+ f= .( { :meters ->x :units unitsType.distance } infix { :meters ->y :units unitsType.distance }
+	{ :meters ( x + y ) :units unitsType.distance }
+
+:- f= .( { :meters ->x :units unitsType.distance } infix { :meters ->y :units unitsType.distance }
+	{ :meters ( x - y ) :units unitsType.distance }
+
+
+:g  v= .( ( ->x @@type :number ) postfix
+	{ :grams x :units unitsType.weight }
+:g  @order 1 @doc ." Used to specify a particular number of grams
+
+:kg v= .( ( ->x @@type :number ) postfix
+	{ :grams ( x * 1000 ) :units unitsType.weight }
+:kg @order 1 @doc ." Used to specify a particular number of kilograms
+
+:oz v= .( ( ->x @@type :number ) postfix
+	{ :grams ( x * 28.349523125 ) :units unitsType.weight }
+:oz @order 1 @doc ." Used to specify a particular number of ounces
+
+:lb v= .( ( ->x @@type :number ) postfix
+	{ :grams ( x * 453.59237 ) :units unitsType.weight }
+:lb @order 1 @doc ." Used to specify a particular number of pounds
+
+
+:=>g  v= .( { :grams ->x :units unitsType.weight } postfix
+	x
+:=>g @doc ." Convert a weight into grams
+
+:=>kg v= .( { :grams ->x :units unitsType.weight } postfix
+	x / 1000.0
+:=>kg @doc ." Convert a weight into kilograms
+
+:=>oz v= .( { :grams ->x :units unitsType.weight } postfix
+	x / 28.349523125
+:=>oz @doc ." Convert a weight into ounces
+
+:=>lb v= .( { :grams ->x :units unitsType.weight } postfix
+	x / 453.59237
+:=>lb @doc ." Convert a weight into pounds
+
+
+:+ f= .( { :grams ->x :units unitsType.weight } infix { :grams ->y :units unitsType.weight }
+	{ :grams ( x + y ) :units unitsType.weight }
+
+:- f= .( { :grams ->x :units unitsType.weight } infix { :grams ->y :units unitsType.weight }
+	{ :grams ( x - y ) :units unitsType.weight }
