@@ -16,6 +16,21 @@
 	// assertTrue? false
 	true
 
+:///func @unittest func()
+	///func
+		this should all be ignored
+		as well as this line
+			and this
+		and this
+	true
+
+:///	@unittest func()
+	/// this should all be ignored
+		as well as this line
+			and this
+		and this
+	true
+
 :`		@unittest func()
 	8 assert=? l3.eval ` 5 + 3 `
 
