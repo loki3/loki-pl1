@@ -408,6 +408,30 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :else @body? true
 :else @cat :if @doc ." If previous if and elsifs failed, do body
 
+:match v= func ->l3.coFunction.match.value
+	:l3.coFunction.match.done? v= false
+	l3.eval body
+:match @body? true @order 6
+:match @cat :if @doc ." Set the seed value for picking which pattern matches a given value.  Used with nested when statements and default.
+
+:when v= func ->pattern
+	:whenBody v= body
+	if !? l3.coFunction.match.done?
+		:do? v= l3.setValue .{ :key pattern :value l3.coFunction.match.value :returnSuccess? true
+		if do?
+			l3.eval whenBody
+			:l3.coFunction.match.done? = true
+:when @body? true @order 6
+:when @cat :if @doc ." Used inside a match statement to check if a given pattern is a match.
+
+:default v= func()
+	:defaultBody v= body
+	if !? l3.coFunction.match.done?
+		l3.eval defaultBody
+		:l3.coFunction.match.done? = true
+:default @body? true
+:default @cat :if @doc ." If no other patterns in a match statement matched, execute the default block.
+
 
 //
 // loop

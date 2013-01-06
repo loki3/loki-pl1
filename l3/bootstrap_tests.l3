@@ -505,6 +505,29 @@
 		:a = 3
 	3 assert=? a
 
+:match @unittest func()
+	:test v= func ->pattern
+		var :result
+		match pattern
+			when [ ( ->a @@type :int ) 1 ]
+				:result = a + 1
+			when [ ( ->a @@type :int ) 2 ]
+				:result = a + 2
+			when [ ( ->a @@type :int ) 3 ]
+				:result = 3
+			default
+				:result = 4
+		result
+	5 assert=? test [ 4 1 ]
+	6 assert=? test [ 4 2 ]
+	3 assert=? test [ 5 3 ]
+	4 assert=? test [ 6 4 ]
+	true
+
+:when @unittest stubFunc
+
+:default @unittest stubFunc
+
 
 //
 // loop
