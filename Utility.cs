@@ -8,12 +8,13 @@ namespace loki3.core
 		/// <param name="bCreate">should key be created in current scope if it doesn't exist?</param>
 		/// <param name="bOverload">if value is a function, determines whether it's added to override list on key</param>
 		/// <param name="bInitOnly">if true and key already exists, don't change value</param>
-		internal static void AddToScope(Value pattern, Value match, IScope scope, bool bCreate, bool bOverload, bool bInitOnly)
+		/// <returns>true if it set values</returns>
+		internal static bool AddToScope(Value pattern, Value match, IScope scope, bool bCreate, bool bOverload, bool bInitOnly)
 		{
 			if (pattern is ValueString)
 			{
 				if (pattern is ValueString)
-					SetOnScope(scope, pattern.AsString, match, bCreate, bOverload, bInitOnly);
+					return SetOnScope(scope, pattern.AsString, match, bCreate, bOverload, bInitOnly);
 			}
 			else if (pattern is ValueMap && match is ValueMap)
 			{	// add matched dictionary to current scope
@@ -21,7 +22,9 @@ namespace loki3.core
 				Map matmap = match.AsMap;
 				foreach (string key in matmap.Raw.Keys)
 					if (patmap[key] is ValueString)
-						SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate, bOverload, bInitOnly);
+						if (!SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate, bOverload, bInitOnly))
+							return false;
+				return matmap.Raw.Keys.Count > 0;
 			}
 			else if (pattern is ValueArray && match is ValueArray)
 			{	// add matched array values to current scope
@@ -30,19 +33,24 @@ namespace loki3.core
 				int count = System.Math.Min(patarray.Count, matcharray.Count);
 				for (int i = 0; i < count; i++)
 					if (patarray[i] is ValueString)
-						SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate, bOverload, bInitOnly);
+						if (!SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate, bOverload, bInitOnly))
+							return false;
+				return count > 0;
 			}
 			else if (pattern is ValueArray && match is ValueMap)
 			{
 				Map matmap = match.AsMap;
 				foreach (string key in matmap.Raw.Keys)
-					SetOnScope(scope, key, matmap[key], bCreate, bOverload, bInitOnly);
+					if (!SetOnScope(scope, key, matmap[key], bCreate, bOverload, bInitOnly))
+						return false;
+				return matmap.Raw.Keys.Count > 0;
 			}
+			return false;
 		}
 		/// <summary>Add the values from the matched pattern to the scope</summary>
-		internal static void AddToScope(Value pattern, Value match, IScope scope)
+		internal static bool AddToScope(Value pattern, Value match, IScope scope)
 		{
-			AddToScope(pattern, match, scope, true/*bCreate*/, false/*bOverload*/, false/*bInitOnly*/);
+			return AddToScope(pattern, match, scope, true/*bCreate*/, false/*bOverload*/, false/*bInitOnly*/);
 		}
 
 		/// <summary>Add values from one scope onto another</summary>
@@ -58,7 +66,8 @@ namespace loki3.core
 		/// If bCreate, always set value on current scope,
 		/// else, change value on scope value exists on or throw exception if it doesn't exist
 		/// </summary>
-		internal static void SetOnScope(IScope scope, string key, Value value, bool bCreate, bool bOverload, bool bInitOnly)
+		/// <returns>true if it actually set a value</returns>
+		internal static bool SetOnScope(IScope scope, string key, Value value, bool bCreate, bool bOverload, bool bInitOnly)
 		{
 			// figure out the scope to modify
 			IScope where;
@@ -111,13 +120,15 @@ namespace loki3.core
 						{
 							overload.Add(value as ValueFunction);
 						}
-						return;
+						return true;
 					}
 				}
 			}
 
-			if (!bInitOnly || !where.AsMap.ContainsKey(key))
-				where.SetValue(key, value);
+			if (bInitOnly && where.AsMap.ContainsKey(key))
+				return false;
+			where.SetValue(key, value);
+			return true;
 		}
 
 		/// <summary>If :key is present, lookup value, else if :value is present, return value.</summary>

@@ -30,7 +30,7 @@ namespace loki3.builtin
 		}
 
 
-		/// <summary>{ :key :value [:create?] [:map] [:scope] [:overload?] [onlyInit?] } -> value  and stores the key value pair on the specified map or scope</summary>
+		/// <summary>{ :key :value [:create?] [:map] [:scope] [:overload?] [:onlyInit?] [:returnSuccess?] } -> value  and stores the key value pair on the specified map or scope</summary>
 		class SetValue : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new SetValue(); }
@@ -47,6 +47,8 @@ namespace loki3.builtin
 				map["overload?"] = PatternData.Single("overload?", ValueType.Bool, ValueBool.False);
 				// if initOnly? && (key already exists), then don't change the value
 				map["initOnly?"] = PatternData.Single("initOnly?", ValueType.Bool, ValueBool.False);
+				// if returnSuccess?, return value tells whether assignment succeeded, else returns value
+				map["returnSuccess?"] = PatternData.Single("returnSuccess?", ValueType.Bool, ValueBool.False);
 				Utility.AddParamsForScopeToModify(map, true/*bIncludeMap*/);
 				Init(new ValueMap(map));
 			}
@@ -55,9 +57,14 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				bool bInitOnly = map["initOnly?"].AsBool;
+				bool bReturnSuccess = map["returnSuccess?"].AsBool;
 
 				PatternAssign assign = new PatternAssign(map, scope);
-				return assign.Assign(map["value"], bInitOnly);
+				Value value = map["value"];
+				bool bSuccess = assign.Assign(value, bInitOnly);
+				if (bReturnSuccess)
+					return bSuccess ? ValueBool.True : ValueBool.False;
+				return value;
 			}
 		}
 

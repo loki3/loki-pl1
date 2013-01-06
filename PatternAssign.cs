@@ -41,8 +41,8 @@ namespace loki3.core
 		/// </summary>
 		/// <param name="value">value to pattern match against</param>
 		/// <param name="bInitOnly">if true and key already exists, don't change value</param>
-		/// <returns>original value</returns>
-		internal Value Assign(Value value, bool bInitOnly)
+		/// <returns>true if values were assigned</returns>
+		internal bool Assign(Value value, bool bInitOnly)
 		{
 			// find the matches in the pattern, ignoring the leftover
 			Value match, leftover;
@@ -50,17 +50,16 @@ namespace loki3.core
 
 			// add/modify scope
 			if (match != null && leftover == null)
-			{
-				Utility.AddToScope(m_key, match, m_scope, m_bCreate, m_bOverload, bInitOnly);
-			}
-			else if (m_key is ValueArray && value.IsNil)
+				return Utility.AddToScope(m_key, match, m_scope, m_bCreate, m_bOverload, bInitOnly);
+			if (m_key is ValueArray && value.IsNil)
 			{	// special case: initialize every token in array to nil
 				foreach (Value v in m_key.AsArray)
 					Utility.AddToScope(v, value, m_scope, m_bCreate, m_bOverload, bInitOnly);
+				return m_key.AsArray.Count > 0;
 			}
-			return value;
+			return false;
 		}
-		internal Value Assign(Value value)
+		internal bool Assign(Value value)
 		{
 			return Assign(value, false/*bInitOnly*/);
 		}

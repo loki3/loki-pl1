@@ -129,6 +129,13 @@ namespace loki3.builtin.test
 				Assert.AreEqual(3, scope.AsMap["bb"].AsInt);
 				Assert.IsTrue(scope.AsMap["cc"].IsNil);
 			}
+
+			{	// if returnSuccess?, return value tells whether a value was set
+				Value value = TestSupport.ToValue("l3.setValue { :key [ :x :y ] :value [ 2 3 ] :returnSuccess? true }", scope);
+				Assert.IsTrue(value.AsBool);
+				value = TestSupport.ToValue("l3.setValue { :key [ :x :y :z ] :value [ 2 3 ] :returnSuccess? true }", scope);
+				Assert.IsFalse(value.AsBool);
+			}
 		}
 
 		[Test]
