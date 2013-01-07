@@ -515,13 +515,19 @@
 				:result = a + 2
 			when [ ( ->a @@type :int ) 3 ]
 				:result = 3
+			when { :a ( ->b @@type :int ) }
+				:result = b + 4
 			default
 				:result = 4
 		result
 	5 assert=? test [ 4 1 ]
 	6 assert=? test [ 4 2 ]
 	3 assert=? test [ 5 3 ]
+	9 assert=? test { :a 5 }
+	// these all fall through to the default
 	4 assert=? test [ 6 4 ]
+	4 assert=? test { :a 5 :b 6 }
+	4 assert=? test { :a :blah }
 	true
 
 :when @unittest stubFunc

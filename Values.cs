@@ -61,10 +61,25 @@ namespace loki3.builtin
 
 				PatternAssign assign = new PatternAssign(map, scope);
 				Value value = map["value"];
-				bool bSuccess = assign.Assign(value, bInitOnly);
 				if (bReturnSuccess)
-					return bSuccess ? ValueBool.True : ValueBool.False;
-				return value;
+				{	// if we want to know about success, we ignore exceptions,
+					// since they're probably not interested
+					try
+					{
+						bool bSuccess = assign.Assign(value, bInitOnly);
+						return bSuccess ? ValueBool.True : ValueBool.False;
+					}
+					catch (Loki3Exception)
+					{
+						return ValueBool.False;
+					}
+				}
+				else
+				{
+					if (assign.Assign(value, bInitOnly))
+						return value;
+					return ValueNil.Nil;
+				}
 			}
 		}
 
