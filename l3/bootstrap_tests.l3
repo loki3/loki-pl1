@@ -529,6 +529,20 @@
 	4 assert=? test { :a 5 :b 6 }
 	4 assert=? test { :a :blah }
 	true
+	
+	:simple v= func ->input
+		var :result
+		match input
+			when 1
+				:result = :one
+			when 2
+				:result = :two
+			default
+				:result = :default
+		result
+	:one     assert=? simple 1
+	:two     assert=? simple 2
+	:default assert=? simple { :a 3 :b 4 }
 
 :when @unittest stubFunc
 

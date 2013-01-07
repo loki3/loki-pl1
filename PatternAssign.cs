@@ -25,8 +25,6 @@ namespace loki3.core
 		{
 			// key must be a type that can be used for pattern matching
 			Value key = paramMap["key"];
-			if (key.Type != ValueType.String && key.Type != ValueType.Array && key.Type != ValueType.Map)
-				throw new Loki3Exception().AddWrongType(ValueType.String, key.Type);
 
 			m_key = key;
 			m_bCreate = bCreate;
@@ -46,7 +44,12 @@ namespace loki3.core
 		{
 			// find the matches in the pattern, ignoring the leftover
 			Value match, leftover;
-			PatternChecker.Do(value, m_key, true/*bShortPat*/, out match, out leftover);
+			bool bMatch = PatternChecker.Do(value, m_key, true/*bShortPat*/, out match, out leftover);
+
+			// if PatternChecker says it was a match, but there aren't any details,
+			// it was a trivial match - report success
+			if (bMatch && match == null && leftover == null)
+				return true;
 
 			// add/modify scope
 			if (match != null && leftover == null)
