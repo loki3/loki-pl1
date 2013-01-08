@@ -436,6 +436,23 @@ namespace loki3.core.test
 				Assert.AreEqual(31, match.AsMap["b"].AsInt);
 				Assert.AreEqual(null, leftover);
 			}
+
+			{	// missing key
+				List<Value> list2 = new List<Value>();
+				list2.Add(PatternData.Single("a", ValueType.Int));
+				list2.Add(PatternData.Rest("other"));
+				ValueArray pattern2 = new ValueArray(list2);
+
+				Map map = new Map();
+				map["b"] = new ValueInt(31);
+				map["c"] = new ValueInt(31);
+				ValueMap input = new ValueMap(map);
+				Assert.IsFalse(PatternChecker.Do(input, pattern2, true/*bShortPat*/, out match, out leftover));
+
+				// but if "a" is present, it matches
+				map["a"] = new ValueInt(42);
+				Assert.IsTrue(PatternChecker.Do(input, pattern2, true/*bShortPat*/, out match, out leftover));
+			}
 		}
 	}
 }

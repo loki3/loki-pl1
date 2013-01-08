@@ -281,6 +281,7 @@ namespace loki3.core
 
 			// matches
 			Map leftovermap = new Map();
+			int mismatchCount = 0;
 			foreach (Value key in patarray)
 			{
 				Value submatch, subleftover;
@@ -298,6 +299,10 @@ namespace loki3.core
 					else
 						leftovermap[keyString] = key;
 				}
+				else
+				{
+					mismatchCount++;
+				}
 			}
 
 			if (matchmap.Count == 0)
@@ -309,11 +314,12 @@ namespace loki3.core
 				foreach (string inkey in inmap.Raw.Keys)
 					if (!matchmap.ContainsKey(inkey))
 						restMap[inkey] = inmap[inkey];
+				mismatchCount--;
 			}
 			if (leftovermap.Count > 0)
 				leftover = new ValueMap(leftovermap);
 
-			return true;
+			return mismatchCount == 0;
 		}
 
 		/// <summary>
