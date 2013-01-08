@@ -83,7 +83,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :object :key } -> value,  either map[key.AsString] or array[key.AsInt]</summary>
+		/// <summary>{ :object :key [:default] } -> value,  either map[key.AsString] or array[key.AsInt]</summary>
 		class GetValue : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new GetValue(); }
@@ -97,6 +97,7 @@ namespace loki3.builtin
 				// or make this into two functions
 				map["object"] = PatternData.Single("object", ValueNil.Nil);
 				map["key"] = PatternData.Single("key");
+				map["default"] = PatternData.Single("default", ValueNil.Nil);
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}
@@ -119,7 +120,7 @@ namespace loki3.builtin
 					Value result = null;
 					if (!objMap.AsMap.TryGetValue(keystr, out result))
 						// if key isn't present, return map's default value
-						return GetDefault(obj, key);
+						return GetDefault(obj, key, map);
 					return result;
 				}
 
@@ -130,7 +131,7 @@ namespace loki3.builtin
 					int i = key.AsInt;
 					if (i < 0 || i >= array.Count)
 						// if index is out of bounds, return array's default value
-						return GetDefault(obj, key);
+						return GetDefault(obj, key, map);
 					return objArr.AsArray[i];
 				}
 
@@ -140,7 +141,7 @@ namespace loki3.builtin
 					int i = key.AsInt;
 					if (i < 0 || i >= overload.Count)
 						// if index is out of bounds, return default value
-						return GetDefault(obj, key);
+						return GetDefault(obj, key, map);
 					return overload.GetFunction(i);
 				}
 				ValueFunction function = obj as ValueFunction;
@@ -156,12 +157,14 @@ namespace loki3.builtin
 				throw new Loki3Exception().AddWrongType(ValueType.Map, obj.Type);
 			}
 
-			private Value GetDefault(Value value, Value key)
+			private Value GetDefault(Value value, Value key, Map findDefault)
 			{
 				Map meta = value.Metadata;
 				Value result = null;
 				if (meta == null || !meta.TryGetValue(PatternData.keyDefault, out result))
-					return ValueNil.Nil;
+				{	// object doesn't have a default, use default passed as a parameter
+					return findDefault["default"];
+				}
 				return result;
 			}
 		}

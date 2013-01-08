@@ -189,6 +189,14 @@ namespace loki3.builtin.test
 				Assert.AreEqual(4, value.AsInt);
 			}
 
+			{	// providing a default when the key isn't present
+				Value value = TestSupport.ToValue("l3.getValue { :object aMap :key :notThere :default 42 }", scope);
+				Assert.AreEqual(42, value.AsInt);
+				// default ignored if key is present
+				value = TestSupport.ToValue("l3.getValue { :object aMap :key :one :default 42 }", scope);
+				Assert.AreEqual(1, value.AsInt);
+			}
+
 			// asking for a key that doesn't exist returns nil...
 			{
 				Value value = TestSupport.ToValue("l3.getValue { :object aMap :key :notThere }", scope);
