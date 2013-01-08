@@ -165,6 +165,11 @@ namespace loki3.core
 		internal static string keyScope = "l3.error.scope";
 		#endregion
 
+		/// <summary>Named scope that can catch exceptions</summary>
+		internal static string catchScopeName = "l3.catch";
+		/// <summary>Key where current exception is stored</summary>
+		internal static string exceptionKey = "l3.exception";
+
 		private Map m_map;
 	}
 

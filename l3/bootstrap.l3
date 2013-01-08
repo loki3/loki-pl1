@@ -659,6 +659,46 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// exceptions
+
+:try v= func()
+	// name the scope so exceptions in body will continue after the body
+	setScopeName :l3.catch
+	// variable used for communication between try-catch-endTry blocks
+	l3.setValue { :key :l3.coFunction.catch.done? :value false :scope :parent }
+	l3.eval body
+:try @body? true
+:try @cat :exception @doc ." Start a code block where exceptions can be caught.  Used with catch and endtry.
+
+:catch v= func ->pattern
+	:catchBody v= body
+	// see if there was an exception thrown
+	if l3.exception =? nil
+		:l3.coFunction.catch.done? = true
+	// if we have an exception to catch, see if it's expected pattern
+	if !? l3.coFunction.catch.done?
+		:do? v= l3.setValue .{ :key pattern :value l3.exception :returnSuccess? true
+		if do?
+			l3.eval catchBody
+			:l3.coFunction.catch.done? = true
+:catch @body? true @order 5
+:catch @cat :exception @doc ." After a try, can be used to catch exceptions that match a given pattern.
+
+:endTry v= func()
+	if !? l3.coFunction.catch.done?
+		rethrow
+	if l3.exception !=? nil
+		:l3.exception = nil
+	true
+:endTry @cat :exception @doc ." Ends try-catch blocks.  If exception wasn't caught, it gets rethrown.
+
+:rethrow v= func()
+	if l3.exception !=? nil
+		l3.throw l3.exception
+:rethrow @cat :exception @doc ." Rethrows the current exception, if any.
+
+
+//
 // modules
 
 :import v= .( func ( ->file @@type :string )

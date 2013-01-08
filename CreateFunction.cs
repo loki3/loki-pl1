@@ -210,6 +210,16 @@ namespace loki3.core
 						return pop.Return;
 					throw pop;
 				}
+				catch (Loki3Exception e)
+				{	// if this scope catches exceptions, stop here
+					if (Loki3Exception.catchScopeName == scope.Name)
+					{
+						if (scope.Parent != null)
+							scope.Parent.SetValue(Loki3Exception.exceptionKey, new ValueMap(e.Errors));
+						return ValueNil.Nil;
+					}
+					throw e;
+				}
 			}
 
 			internal override List<DelimiterList> GetBody(IScope scope)

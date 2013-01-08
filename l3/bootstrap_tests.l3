@@ -765,6 +765,85 @@
 
 
 //
+// exceptions
+
+:try @unittest stubFunc
+
+:catch @unittest func()
+	// catch a badToken exception
+	:correct v= false
+	try
+		doesn'tExist
+		assertFail ." exception should be thrown before we get here
+	catch [ ->a ( ->x @@rest ) ]
+		assertFail ." exception mismatch, so we shouldn't get here
+	catch [ ->l3.error.badToken ( ->x @@rest ) ]
+		:correct = true
+		:doesn'tExist assert=? l3.error.badToken
+	catch :e
+		assertFail ." exception should have been caught earlier
+	endTry
+	assertTrue? correct
+	
+	// catch an explicitly thrown exception
+	:correct v= false
+	try
+		l3.throw { :a 5 :b 6 }
+		assertFail ." exception should be thrown before we get here
+	catch [ ->a ( ->x @@rest ) ]
+		:correct = true
+		5 assert=? a
+	catch [ ->l3.error.badToken ( ->x @@rest ) ]
+		assertFail ." exception should have been caught earlier
+	catch :e
+		assertFail ." exception should have been caught earlier
+	endTry
+	assertTrue? correct
+	
+	// no exception thrown
+	try
+		true
+		true
+	catch [ ->a ( ->x @@rest ) ]
+		assertFail ." no exception should be thrown or caught
+	catch [ ->l3.error.badToken ( ->x @@rest ) ]
+		assertFail ." no exception should be thrown or caught
+	catch :e
+		assertFail ." no exception should be thrown or caught
+	endTry
+
+:endTry @unittest func()
+	:correct v= false
+	try
+		true
+		try
+			doesn'tExist
+		// exception wasn't caught, so this'll rethrow it
+		endTry
+	catch :e
+		:correct = true
+	endTry
+	assertTrue? correct
+
+:rethrow @unittest func()
+	[ :rethrew? :caught? ] v= [ false false ]
+	try
+		true
+		try
+			doesn'tExist
+		catch :e
+			// explicitly rethrow to outside scope
+			:rethrew? = true
+			rethrow
+		endTry
+	catch :e
+		:caught? = true
+	endTry
+	assertTrue? rethrew?
+	assertTrue? caught?
+
+
+//
 // modules
 
 :import @unittest func()

@@ -43,7 +43,7 @@ namespace loki3.builtin
 
 			internal Throw()
 			{
-				SetDocString("Throw an exception.");
+				SetDocString("Throw an exception.  Exceptions can be caught by a scope named l3.catch, with the exception stuffed into l3.exception.");
 				Init(PatternData.Single("map", ValueType.Map));
 			}
 
