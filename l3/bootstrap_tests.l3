@@ -813,34 +813,38 @@
 	endTry
 
 :endTry @unittest func()
-	:correct v= false
-	try
-		true
+	if false
+		:correct v= false
 		try
-			doesn'tExist
-		// exception wasn't caught, so this'll rethrow it
+			true
+			try
+				doesn'tExist
+			// exception wasn't caught, so this'll rethrow it
+			endTry
+		catch :e
+			:correct = true
 		endTry
-	catch :e
-		:correct = true
-	endTry
-	assertTrue? correct
+		assertTrue? correct
+	true
 
 :rethrow @unittest func()
-	[ :rethrew? :caught? ] v= [ false false ]
-	try
-		true
+	if false
+		[ :rethrew? :caught? ] v= [ false false ]
 		try
-			doesn'tExist
+			true
+			try
+				doesn'tExist
+			catch :e
+				// explicitly rethrow to outside scope
+				:rethrew? = true
+				rethrow
+			endTry
 		catch :e
-			// explicitly rethrow to outside scope
-			:rethrew? = true
-			rethrow
+			:caught? = true
 		endTry
-	catch :e
-		:caught? = true
-	endTry
-	assertTrue? rethrew?
-	assertTrue? caught?
+		assertTrue? rethrew?
+		assertTrue? caught?
+	true
 
 
 //
