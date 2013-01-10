@@ -14,6 +14,7 @@ namespace loki3.builtin
 		internal static void Register(IScope scope)
 		{
 			scope.SetValue("l3.debug.break", new Break());
+			scope.SetValue("l3.debug.getTicks", new GetTicks());
 			scope.SetValue("l3.throw", new Throw());
 		}
 
@@ -50,6 +51,23 @@ namespace loki3.builtin
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				throw new Loki3Exception(arg.AsMap);
+			}
+		}
+
+		/// <summary>get current tick count</summary>
+		class GetTicks : ValueFunction
+		{
+			internal override Value ValueCopy() { return new GetTicks(); }
+
+			internal GetTicks()
+			{
+				SetDocString("Get the current tick count.");
+				Init(null, null);
+			}
+
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+			{
+				return new ValueInt(System.Environment.TickCount);
 			}
 		}
 	}
