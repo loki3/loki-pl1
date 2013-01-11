@@ -76,10 +76,7 @@
 
 :assert=? v= .( ->expected infix ->actual
 	if expected !=? actual
-		print " FAILED : " + testName
-		print " .expected: " + expected =>str
-		print " ...actual: " + actual =>str
-		l3.popScope { :name :testScope :return false }
+		l3.throw { :type :assert :expected ( expected ) :actual ( actual ) }
 :assert=? @order 6
 :assert=? @cat :unittest @doc """
 	A test can assert objects are equal.
@@ -87,11 +84,7 @@
 
 :assertTrue? v= func ->cond
 	if !? l3.eval cond
-		print ." ...failed...
-		print " FAILED : " + testName
-		print " ...expected: true "
-		print " .expression: " + cond =>str
-		l3.popScope { :name :testScope :return false }
+		l3.throw { :type :assert :expected true :expression ( cond ) }
 :assertTrue? @order 6
 :assertTrue? @cat :unittest @doc """
 	A test can assert something is true.
@@ -99,37 +92,42 @@
 
 :assertFalse? v= func ->cond
 	if l3.eval cond
-		print ." ...failed...
-		print " FAILED : " + testName
-		print " ...expected: false "
-		print " .expression: " + cond =>str
-		l3.popScope { :name :testScope :return false }
+		l3.throw { :type :assert :expected false :expression ( cond ) }
 :assertFalse? @order 6
 :assertFalse? @cat :unittest @doc """
 	A test can assert something is false.
 	If it's not, the current test function aborts & fails.
 
 :assertFail v= func ->message
-	print ." ...failed...
-	print " FAILED : " + testName
-	print " message: " + message
-	l3.popScope { :name :testScope :return false }
+	l3.throw { :type :assert :message message }
 :assertFail @cat :unittest @doc """
 	A test can say it fails immediately if this line of code is run.
 
+:dumpAssert v= func [ ->testName ->e ]
+	print " FAILED : " + testName
+	if ( e . :expected ) !=? nil
+		print " .expected: " + ( e . :expected =>str )
+	if ( e . :actual ) !=? nil
+		print " ...actual: " + ( e . :actual =>str )
+	if ( e . :expression ) !=? nil
+		print " .expression: " + ( e . :expression =>str )
+	if ( e . :message ) !=? nil
+		print " ....message: " + ( e . :message )
+:dumpAssert @doc ." Print details about an assert
 
 :runUnittests v= func ->scope
 	var :failures = [ ]
+	// todo: remove this
+	var :l3.exception
 	[ :testName _ ] forEach scope
-		var :success? = if true
-			// asserts will exit this scope & the above 'if' will return false
-			setScopeName :testScope
-			// run the test
+		try
 			if testName .@unittest =? nil		// fail if no test
 				failures += testName
-		// fail if function asserted
-		if !? success?
+				print " missing unittest: " + \s + testName
+		catch :e
 			failures += testName
+			dumpAssert [ testName e ]
+		endTry
 	[ ( ( failures .size ) =? 0 ) failures ]
 :runUnittests @cat :unittest @doc """
 	Run .@unittest on every value in the scope.
@@ -138,15 +136,16 @@
 :runTests v= func ->scope
 	var :failures = [ ]
 	:mapOfTests v= scope filterMap (< l3.getType { :key #1 } =? :function >)
+	// todo: remove this
+	var :l3.exception
 	[ :testName :testFunction ] =eachIn mapOfTests
-		var :success? = if true
-			// asserts will exit this scope & the above 'if' will return false
-			setScopeName :testScope
+		try
 			// run the test
 			testFunction
-		// fail if function asserted
-		if !? success?
+		catch :e
 			failures += testName
+			dumpAssert [ testName e ]
+		endTry
 	[ ( ( failures .size ) =? 0 ) failures ]
 :runTests @cat :unittest @doc """
 	Run every function in the scope as a test.
