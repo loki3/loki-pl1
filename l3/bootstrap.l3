@@ -673,7 +673,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :catch v= func ->pattern
 	:catchBody v= body
 	// see if there was an exception thrown
-	if l3.exception =? nil
+	if ( l3.getValue { :key :l3.exception } ) =? nil
 		:l3.coFunction.catch.done? = true
 	// if we have an exception to catch, see if it's expected pattern
 	if !? l3.coFunction.catch.done?
@@ -687,7 +687,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :endTry v= func()
 	if !? l3.coFunction.catch.done?
 		rethrow
-	if l3.exception !=? nil
+	if ( l3.getValue { :key :l3.exception } ) !=? nil
 		:l3.exception = nil
 	true
 :endTry @cat :exception @doc ." Ends try-catch blocks.  If exception wasn't caught, it gets rethrown.

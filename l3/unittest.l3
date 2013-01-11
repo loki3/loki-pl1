@@ -117,8 +117,6 @@
 
 :runUnittests v= func ->scope
 	var :failures = [ ]
-	// todo: remove this
-	var :l3.exception
 	[ :testName _ ] forEach scope
 		try
 			if testName .@unittest =? nil		// fail if no test
@@ -136,8 +134,6 @@
 :runTests v= func ->scope
 	var :failures = [ ]
 	:mapOfTests v= scope filterMap (< l3.getType { :key #1 } =? :function >)
-	// todo: remove this
-	var :l3.exception
 	[ :testName :testFunction ] =eachIn mapOfTests
 		try
 			// run the test
