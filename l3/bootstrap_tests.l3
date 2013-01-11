@@ -698,6 +698,12 @@
 		text
 	" this is some multiline text " assert=? a
 
+:"[ @unittest func()
+	:asdf12.34 assert=? "[ :asdf 1 2.34 ]
+
+:."[ @unittest func()
+	:asdf12.34 assert=? ."[ :asdf 1 2.34
+
 :\n @unittest stubFunc
 
 :\s @unittest stubFunc
