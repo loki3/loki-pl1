@@ -64,7 +64,8 @@ namespace loki3.builtin
 					}
 
 					// eval body
-					result = EvalBody.Do(valueBody, scope);
+					IScope local = new ScopeChain(scope);
+					result = EvalBody.Do(valueBody, local);
 
 					// if per-loop code was passed, run it
 					if (change != null)

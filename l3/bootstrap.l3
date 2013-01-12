@@ -496,7 +496,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	while .` ( result ) !=? nil
 		l3.setValue { :key pattern :value ( result ) :map loopScope :create? true }
 		l3.evalWithScope { :value eachInBody :map loopScope }
-		:result v= ( l3.eval doIterator )
+		:result = ( l3.eval doIterator )
 	nil
 :=eachIn @body? true
 :=eachIn @order 6
