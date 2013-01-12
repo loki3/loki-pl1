@@ -599,6 +599,10 @@
 		:total = total + value
 	:ab assert=? str
 	6 assert=? total
+	// each time through loop should be new scope
+	:i forEach ( 1 .. 3 )
+		nil assert=? .( l3.getValue .{ :key :doesn'tExist
+		:doesn'tExist v= 5
 
 :forEachDelim @unittest func()
 	// create a function that turns a body into a map

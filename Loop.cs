@@ -108,8 +108,9 @@ namespace loki3.builtin
 					string s = collection.AsString;
 					foreach (char c in s)
 					{
+						IScope local = new ScopeChain(scope);
 						assign.Assign(new ValueString(c.ToString()));
-						result = EvalBody.Do(valueBody, scope);
+						result = EvalBody.Do(valueBody, local);
 					}
 				}
 				else if (collection is ValueArray)
@@ -117,8 +118,9 @@ namespace loki3.builtin
 					List<Value> list = collection.AsArray;
 					foreach (Value v in list)
 					{
+						IScope local = new ScopeChain(scope);
 						assign.Assign(v);
-						result = EvalBody.Do(valueBody, scope);
+						result = EvalBody.Do(valueBody, local);
 					}
 				}
 				else if (collection is ValueMap)
@@ -130,8 +132,9 @@ namespace loki3.builtin
 						list.Add(new ValueString(key));
 						list.Add(dict[key]);
 
+						IScope local = new ScopeChain(scope);
 						assign.Assign(new ValueArray(list));
-						result = EvalBody.Do(valueBody, scope);
+						result = EvalBody.Do(valueBody, local);
 					}
 				}
 				else if (collection is ValueLine)
@@ -162,9 +165,10 @@ namespace loki3.builtin
 					ILineRequestor lines = new LineConsumer(list);
 					while (lines.HasCurrent())
 					{
-						Value value = EvalLines.DoOne(lines, scope);
+						IScope local = new ScopeChain(scope);
+						Value value = EvalLines.DoOne(lines, local);
 						assign.Assign(value);
-						result = EvalBody.Do(valueBody, scope);
+						result = EvalBody.Do(valueBody, local);
 					}
 				}
 				return result;

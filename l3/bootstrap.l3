@@ -609,7 +609,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		i @@ [ :l3.enum.key key ]
 		:list = list + { key i }
 		// store enum key/value on scope that called this function
-		l3.setValue { :key key :value i :scope :grandparent }
+		l3.setValue { :key key :value i :scope :greatgrandparent }
 		:i = i + 1
 	// store entire map on scope that called this function
 	:value v= l3.setValue { :key name :value list :scope :parent }
