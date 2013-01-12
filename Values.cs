@@ -27,6 +27,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.getType", new GetTypeFunction());
 			scope.SetValue("l3.getFunctionBody", new GetFunctionBody());
 			scope.SetValue("l3.eval", new EvalValue());
+			scope.SetValue("l3.bindFunction", new BindFunction());
 		}
 
 
@@ -567,6 +568,42 @@ namespace loki3.builtin
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				return Utility.EvalValue(arg, scope);
+			}
+		}
+
+		/// <summary>{ :function [:map] } -> a function that will use a map for its scope</summary>
+		class BindFunction : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new BindFunction(); }
+
+			internal BindFunction()
+			{
+				SetDocString("Bind a map or scope to a function so it's always used when the function is called.");
+
+				Map map = new Map();
+				map["function"] = PatternData.Single("function", ValueType.Function);
+				map["map"] = PatternData.Single("map", ValueType.Map, ValueNil.Nil);
+				Init(new ValueMap(map));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+
+				// get parameter
+				ValueFunction function = map["function"] as ValueFunction;
+				IScope thescope;
+				if (map["map"].IsNil)
+				{	// nothing specified, use current scope
+					thescope = scope;
+				}
+				else
+				{	// either use map or scope passed in
+					ValueMap themap = map["map"] as ValueMap;
+					thescope = (themap.Scope != null ? themap.Scope : new ScopeChain(themap.AsMap));
+				}
+
+				return new BoundFunction(function, thescope);
 			}
 		}
 	}

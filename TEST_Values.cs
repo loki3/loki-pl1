@@ -415,5 +415,22 @@ namespace loki3.builtin.test
 				Assert.AreEqual(8, value.AsInt);
 			}
 		}
+
+		[Test]
+		public void TestBindFunction()
+		{
+			IScope scope = CreateValueScope();
+			// a scope with a value for a
+			IScope scopeA = new ScopeChain(scope);
+			scopeA.SetValue("a", new ValueInt(3));
+
+			// create a new function that returns a & is bound to a map where a=42
+			TestSupport.ToValue("l3.setValue { :key :testBound :value ( l3.bindFunction { :function ( l3.createFunction { :post :x :body [ ' a ' ] } ) :map { :a 42 } } ) }", scope);
+			// then eval it against a scope where a!=42
+			Value value = TestSupport.ToValue("testBound 1", scopeA);
+			Assert.AreEqual(42, value.AsInt);
+			value = TestSupport.ToValue("a", scopeA);
+			Assert.AreEqual(3, value.AsInt);
+		}
 	}
 }

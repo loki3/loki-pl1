@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="AllBuiltins.cs" />
     <Compile Include="ArrayFunctions.cs" />
+    <Compile Include="BoundFunction.cs" />
     <Compile Include="CreateFunction.cs" />
     <Compile Include="DebugFunctions.cs" />
     <Compile Include="DelimiterNode.cs" />
