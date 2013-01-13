@@ -19,6 +19,11 @@ namespace loki3.core
 		#region ValueFunction
 		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 		{
+			// if we need prev or next params but they're not there, simply return the function
+			// note: if we let m_function.Eval do this, we end up with CreateFunction.UserFunction
+			if ((m_function.ConsumesPrevious || m_function.ConsumesNext) && prev == null && next == null)
+				return this;
+
 			return m_function.Eval(prev, next, m_scope, nodes, requestor);
 		}
 
