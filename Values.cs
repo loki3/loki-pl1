@@ -31,7 +31,7 @@ namespace loki3.builtin
 		}
 
 
-		/// <summary>{ :key :value [:create?] [:map] [:scope] [:overload?] [:onlyInit?] [:returnSuccess?] } -> value  and stores the key value pair on the specified map or scope</summary>
+		/// <summary>{ :key :value [:create?] [:map] [:level] [:overload?] [:onlyInit?] [:returnSuccess?] } -> value  and stores the key value pair on the specified map or scope</summary>
 		class SetValue : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new SetValue(); }

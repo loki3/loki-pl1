@@ -29,6 +29,7 @@ namespace loki3.builtin
 
 				Map map = new Map();
 				map["file"] = PatternData.Single("file", ValueType.String);
+				// todo: change scope to level
 				map["scope"] = PatternData.Single("scope", ValueType.String, new ValueString("current"));
 				map["force?"] = PatternData.Single("force?", ValueType.Bool, ValueBool.False);
 				ValueMap vMap = new ValueMap(map);

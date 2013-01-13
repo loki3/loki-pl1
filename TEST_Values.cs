@@ -367,7 +367,7 @@ namespace loki3.builtin.test
 
 			{	// get user defined function body
 				string[] lines = {
-					"l3.setValue { :key :v= :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :scope :parent :create? true } ` ] } ) }",
+					"l3.setValue { :key :v= :value ( l3.createFunction { :pre ->key :post ->value :order 5 :body [ ` l3.setValue { :key key :value value :level 1 :create? true } ` ] } ) }",
 					":myFunc v= l3.createFunction { :post ->a }",
 					"	some code",
 					"	more code",

@@ -156,30 +156,24 @@ namespace loki3.core
 
 		/// <summary>
 		/// Get the scope to modify based on values in 'map'.
-		///		:scope = current | parent | grandparent | greatgrandparent
+		///		:level = the number of parents up the chain to modify
 		///		:map   = if present, the map to modify
 		/// </summary>
 		internal static IScope GetScopeToModify(Map map, IScope scope, bool bIncludeMap)
 		{
-			if (!map.ContainsKey("map") && !map.ContainsKey("scope"))
+			if (!map.ContainsKey("map") && !map.ContainsKey("level"))
 				return scope;
 
 			ValueMap valueMap = (bIncludeMap ? map["map"] as ValueMap : null);
-			// todo: turn this into an enum, at least "current" & "parent" & "grandparent" & "greatgrandparent"
-			bool bParentScope = (map["scope"].AsString == "parent");
-			bool bGrandparentScope = (map["scope"].AsString == "grandparent");
-			bool bGreatGrandparentScope = (map["scope"].AsString == "greatgrandparent");
+			int level = (map.ContainsKey("level") ? map["level"].AsInt : 0);
 
 			// scope we're going to modify
 			IScope toModify = scope;
 			if (valueMap != null)
 				toModify = new ScopeChain(valueMap.AsMap);
-			else if (bParentScope)
-				toModify = scope.Parent;
-			else if (bGrandparentScope && scope.Parent != null)
-				toModify = scope.Parent.Parent;
-			else if (bGreatGrandparentScope && scope.Parent != null && scope.Parent.Parent != null)
-				toModify = scope.Parent.Parent.Parent;
+			else
+				for (int i = 0; i < level && toModify.Parent != null; i++)
+					toModify = toModify.Parent;
 			if (toModify == null)
 				toModify = scope;
 			return toModify;
@@ -188,7 +182,7 @@ namespace loki3.core
 		{
 			if (bIncludeMap)
 				map["map"] = PatternData.Single("map", ValueType.Map, ValueNil.Nil);
-			map["scope"] = PatternData.Single("scope", ValueType.String, new ValueString("current"));
+			map["level"] = PatternData.Single("level", ValueType.Int, new ValueInt(0));
 		}
 
 		/// <summary>Add two arrays or maps into one</summary>
