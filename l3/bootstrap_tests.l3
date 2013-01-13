@@ -322,6 +322,12 @@
 
 
 //
+// debugging
+
+:repl @unittest stubFunc
+
+
+//
 // logic
 
 :&? @unittest func()

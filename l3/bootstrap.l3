@@ -266,6 +266,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// debugging
+
+:repl v= func()
+	l3.repl .{ :prompt :debug> :map .( l3.getScope .{ :level 1
+:repl @doc ." Starts a read-eval-print loop at the current scope
+
+
+//
 // logic
 
 :&? v= .(< l3.and? [ #1 #2 ]
