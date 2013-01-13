@@ -485,17 +485,16 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // function that allows for looping with an iterator
 :=eachIn v= .( ->pattern infix ->input
-	// one scope for the iterator and one for the body of the loop
+	// new scope for the iterator
 	:iterScope v= l3.getScope .{ :scope :parent :createChild? true
-	:loopScope v= l3.getScope .{ :scope :parent :createChild? true
 	// store body because there will be a different body inside the loop
 	:eachInBody v= body
 	// a simple way to execute common code before the loop and inside it
 	:doIterator v= .` l3.callWithScope { :function ( iterator ) :map iterScope :next input }
 	:result v= ( l3.eval doIterator )
 	while .` ( result ) !=? nil
-		l3.setValue { :key pattern :value ( result ) :map loopScope :create? true }
-		l3.evalWithScope { :value eachInBody :map loopScope }
+		pattern v= ( result )
+		l3.eval eachInBody
 		:result = ( l3.eval doIterator )
 	nil
 :=eachIn @body? true
