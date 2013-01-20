@@ -153,6 +153,16 @@ namespace loki3.builtin
 						return ValueNil.Nil;
 					return function;
 				}
+				ValueLine line = obj as ValueLine;
+				if (line != null)
+				{
+					List<DelimiterList> list = line.AsLine;
+					int i = key.AsInt;
+					if (i < 0 || i >= list.Count)
+						// if index is out of bounds, return default value
+						return GetDefault(obj, key, map);
+					return new ValueRaw(list[i]);
+				}
 
 				// todo: better error
 				throw new Loki3Exception().AddWrongType(ValueType.Map, obj.Type);
