@@ -13,17 +13,15 @@ namespace loki3.core
 		{
 			if (pattern is ValueString)
 			{
-				if (pattern is ValueString)
-					return SetOnScope(scope, pattern.AsString, match, bCreate, bOverload, bInitOnly);
+				return SetOnScope(scope, pattern.AsString, match, bCreate, bOverload, bInitOnly);
 			}
 			else if (pattern is ValueMap && match is ValueMap)
 			{	// add matched dictionary to current scope
 				Map patmap = pattern.AsMap;
 				Map matmap = match.AsMap;
 				foreach (string key in matmap.Raw.Keys)
-					if (patmap[key] is ValueString)
-						if (!SetOnScope(scope, patmap[key].AsString, matmap[key], bCreate, bOverload, bInitOnly))
-							return false;
+					if (!SetSubOnScope(scope, patmap[key], matmap[key], bCreate, bOverload, bInitOnly))
+						return false;
 				return matmap.Raw.Keys.Count > 0;
 			}
 			else if (pattern is ValueArray && match is ValueArray)
@@ -32,9 +30,8 @@ namespace loki3.core
 				List<Value> matcharray = match.AsArray;
 				int count = System.Math.Min(patarray.Count, matcharray.Count);
 				for (int i = 0; i < count; i++)
-					if (patarray[i] is ValueString)
-						if (!SetOnScope(scope, patarray[i].AsString, matcharray[i], bCreate, bOverload, bInitOnly))
-							return false;
+					if (!SetSubOnScope(scope, patarray[i], matcharray[i], bCreate, bOverload, bInitOnly))
+						return false;
 				return count > 0;
 			}
 			else if (pattern is ValueArray && match is ValueMap)
@@ -60,6 +57,24 @@ namespace loki3.core
 			if (dict != null)
 				foreach (string key in dict.Keys)
 					to.SetValue(key, dict[key]);
+		}
+
+		/// <summary>
+		/// Either set a key directly or recurse into a collection
+		/// </summary>
+		private static bool SetSubOnScope(IScope scope, Value subPattern, Value value, bool bCreate, bool bOverload, bool bInitOnly)
+		{
+			if (subPattern is ValueString)
+			{	// key set directly
+				if (!SetOnScope(scope, subPattern.AsString, value, bCreate, bOverload, bInitOnly))
+					return false;
+			}
+			else if (subPattern is ValueArray || subPattern is ValueMap)
+			{	// recurse into collection
+				if (!AddToScope(subPattern, value, scope, bCreate, bOverload, bInitOnly))
+					return false;
+			}
+			return true;
 		}
 
 		/// <summary>

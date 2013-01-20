@@ -40,6 +40,11 @@
 	// non match
 	[ :a 2 ] v= [ 2 5 ]
 	5 assert=? a
+	
+	// subpattern
+	[ :a { :b ->c } ] v= [ 11 { :b 22 } ]
+	11 assert=? a
+	22 assert=? c
 :assignmentArray @doc """
 	Test how assignment uses pattern matching for assignment into an array
 
@@ -71,6 +76,15 @@
 	// non match
 	{ :a :c :b 2 } v= { :a 5 :b 6 }
 	1 assert=? c
+	
+	// subpattern
+	{ :a ->b :c { :e ->f } } v= { :a 11 :c { :e 22 } }
+	11 assert=? b
+	22 assert=? f
+	{ :a ->b :c [ ->d ->e ] } v= { :a -1 :c [ -2 -3 ] }
+	-1 assert=? b
+	-2 assert=? d
+	-3 assert=? e
 :assignmentMap @doc """
 	Test how assignment uses pattern matching for assignment of a map
 
