@@ -713,6 +713,15 @@
 	:5				assert=? :5 =>str
 	" [ 1 2 3 ] "	assert=? [ 1 2 3 ] =>str
 
+:$ @unittest func()
+	:5 assert=? $ 5
+
+:$_ @unittest func()
+	( \s + :5 ) assert=? $_ 5
+
+:$__ @unittest func()
+	( \t + :5 ) assert=? $__ 5
+
 :+ @unittest func()
 	:qwert assert=? :qw + :ert
 

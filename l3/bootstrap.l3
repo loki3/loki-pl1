@@ -584,6 +584,16 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :=>str @order 2
 :=>str @cat :string @doc ." Convert a value to a string
 
+:$ v= func ->val
+	l3.toString ( val )
+:$ @order 2 @cat :string @doc ." Converts the next value to a string.
+:$_ v= func ->val
+	\s + .( l3.toString ( val )
+:$_ @order 2 @cat :string @doc ." Prepends a space and converts the next value to a string.
+:$__ v= func ->val
+	\t + .( l3.toString ( val )
+:$__ @order 2 @cat :string @doc ." Prepends a tab and converts the next value to a string.
+
 :+ f= .( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
 	l3.stringConcat .{ :array .[ str1 str2
 :+ @cat :string @doc ." Concatenate two strings
