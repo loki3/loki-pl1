@@ -440,6 +440,21 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :default @body? true
 :default @cat :if @doc ." If no other patterns in a match statement matched, execute the default block.
 
+:if!nil v= .( ->val infix ->doIfNotNil
+	var :result
+	if ( val ) !=? nil
+		:result = .( l3.eval doIfNotNil
+	result
+:if!nil @cat :if @doc ." If a value isn't nil, evaluate the following code.
+
+:do!nil v= func .( ->val @@type :rawLines
+	:theBody v= body
+	:line =eachIn ( theBody )
+		if ( l3.eval val ) !=? nil
+			l3.eval line
+:do!nil @body? true
+:do!nil @cat :if @doc ." Execute each line in the body until a value evaluates as nil.
+
 
 //
 // loop

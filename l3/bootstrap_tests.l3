@@ -554,6 +554,19 @@
 
 :default @unittest stubFunc
 
+:if!nil @unittest func()
+	5   assert=? .( 1   if!nil 5
+	nil assert=? .( nil if!nil 5
+
+:do!nil @unittest func()
+	[ :a :final ] v= [ 0 0 ]
+	do!nil ` a `
+		:final = 1
+		:final = 2
+		:a = nil
+		:final = 3
+	2 assert=? final
+
 
 //
 // loop
