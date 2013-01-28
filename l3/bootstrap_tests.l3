@@ -222,9 +222,9 @@
 	a @@default 2
 	2 assert=? :a .@ :l3.pattern.default
 
-:@@rest @unittest func()
+:... @unittest func()
 	:a v= 1
-	a @@rest
+	a ...
 	true assert=? :a .@ :l3.pattern.rest
 
 :@@hasKeys @unittest func()
@@ -819,9 +819,9 @@
 	try
 		doesn'tExist
 		assertFail ." exception should be thrown before we get here
-	catch [ ->a ( ->x @@rest ) ]
+	catch [ ->a ( ->x ... ) ]
 		assertFail ." exception mismatch, so we shouldn't get here
-	catch [ ->l3.error.badToken ( ->x @@rest ) ]
+	catch [ ->l3.error.badToken ( ->x ... ) ]
 		:correct = true
 		:doesn'tExist assert=? l3.error.badToken
 	catch :e
@@ -834,10 +834,10 @@
 	try
 		l3.throw { :a 5 :b 6 }
 		assertFail ." exception should be thrown before we get here
-	catch [ ->a ( ->x @@rest ) ]
+	catch [ ->a ( ->x ... ) ]
 		:correct = true
 		5 assert=? a
-	catch [ ->l3.error.badToken ( ->x @@rest ) ]
+	catch [ ->l3.error.badToken ( ->x ... ) ]
 		assertFail ." exception should have been caught earlier
 	catch :e
 		assertFail ." exception should have been caught earlier
@@ -848,9 +848,9 @@
 	try
 		true
 		true
-	catch [ ->a ( ->x @@rest ) ]
+	catch [ ->a ( ->x ... ) ]
 		assertFail ." no exception should be thrown or caught
-	catch [ ->l3.error.badToken ( ->x @@rest ) ]
+	catch [ ->l3.error.badToken ( ->x ... ) ]
 		assertFail ." no exception should be thrown or caught
 	catch :e
 		assertFail ." no exception should be thrown or caught

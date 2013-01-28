@@ -140,9 +140,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object @@ .[ :l3.pattern.default default
 :@@default @cat :metadata @doc ." Set the default value for a parameter if not present
 
-:@@rest v= .( ->object postfix
+:... v= .( ->object postfix
 	object @@ .[ :l3.pattern.rest true
-:@@rest @cat :metadata @doc ." Associated parameter will be filled with the remainder of the parameter values
+:... @cat :metadata @doc ." Associated parameter will be filled with the remainder of the parameter values
 
 :@@hasKeys f= .( ->object infix ( ->type @@type :array )
 	object @@ .[ :l3.pattern.hasKeys type
@@ -221,7 +221,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // definitions that take a pattern and one or more lines of code
 
-:lambda v= func [ ->pattern ->line1 ( ->more @@rest ) ]
+:lambda v= func [ ->pattern ->line1 ( ->more ... ) ]
 	l3.createFunction { :post pattern :body ( [ line1 ] + more ) }
 :lambda	@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. lambda [ :x ` 2 + x ` ]
 

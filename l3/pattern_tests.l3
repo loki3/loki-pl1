@@ -25,7 +25,7 @@
 	[ 3 false ] assert=? [ a b ]
 	
 	// rest of array
-	[ :a :b ( :c @@rest ) ] v= [ 1 2 3 4 5 6 ]
+	[ :a :b ( :c ... ) ] v= [ 1 2 3 4 5 6 ]
 	[ 1 2 [ 3 4 5 6 ] ] assert=? [ a b c ]
 	
 	// default
@@ -58,10 +58,10 @@
 	[ 1 3 ] assert=? [ a c ]
 	
 	// remainder in map
-	{ :a :b :whatever ( :rest @@rest ) } v= { :a 5 :b 6 :c 7 }
+	{ :a :b :whatever ( :rest ... ) } v= { :a 5 :b 6 :c 7 }
 	[ 5 { :b 6 :c 7 } ] assert=? [ b rest ]
 	// remainder in array
-	[ :a ( :rest @@rest ) ] v= { :a 3 :b 4 :c 5 }
+	[ :a ( :rest ... ) ] v= { :a 3 :b 4 :c 5 }
 	[ 3 { :b 4 :c 5 } ] assert=? [ a rest ]
 	
 	// default

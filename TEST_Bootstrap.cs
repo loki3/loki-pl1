@@ -234,7 +234,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = TestSupport.ToValue("{ :a :a :remainder ( :remainder @@rest ) } v= { :a 4 :b 5 :c 6 }", nested);
+					Value value = TestSupport.ToValue("{ :a :a :remainder ( :remainder ... ) } v= { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -247,7 +247,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = TestSupport.ToValue("[ ->a ( ->remainder @@rest ) ] v= { :a 4 :b 5 :c 6 }", nested);
+					Value value = TestSupport.ToValue("[ ->a ( ->remainder ... ) ] v= { :a 4 :b 5 :c 6 }", nested);
 					// value should be { :a 4 :b 5 :c 6 }
 					Assert.AreEqual(3, value.AsMap.Count);
 					// nested should now contain "a" and "remainder"
@@ -260,7 +260,7 @@ namespace loki3.builtin.test
 
 				{
 					ScopeChain nested = new ScopeChain(scope);
-					Value value = TestSupport.ToValue("[ ->a ( ->remainder @@rest ) ] v= [ 7 8 9 ]", nested);
+					Value value = TestSupport.ToValue("[ ->a ( ->remainder ... ) ] v= [ 7 8 9 ]", nested);
 					// value should be [ 7 8 9 ]
 					Assert.AreEqual(3, value.AsArray.Count);
 					// nested should now contain "a" and "remainder"
