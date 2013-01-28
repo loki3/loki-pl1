@@ -132,11 +132,11 @@
 	4 assert=? { :a 3 :b 4 :c 5 } . :b
 	3 assert=? [ 6 5 4 3 2 ] . 3
 	// map default
-	:a v= { :a 9 :b 12 } @@default 42
+	:a v= { :a 9 :b 12 } d= 42
 	12 assert=? a . :b
 	42 assert=? a . :notThere
 	// array default
-	:b v= [ 200 400 ] @@default 314
+	:b v= [ 200 400 ] d= 314
 	200 assert=? b . 0
 	400 assert=? b . 1
 	314 assert=? b . 2
@@ -217,9 +217,9 @@
 	a : :int
 	:int assert=? :a .@ :l3.pattern.type
 
-:@@default @unittest func()
+:d= @unittest func()
 	:a v= 1
-	a @@default 2
+	a d= 2
 	2 assert=? :a .@ :l3.pattern.default
 
 :... @unittest func()

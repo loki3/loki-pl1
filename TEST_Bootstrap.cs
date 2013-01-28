@@ -191,7 +191,7 @@ namespace loki3.builtin.test
 				IScope scope = new ScopeChain(GetBootstrapScope());
 
 				string[] lines = {
-					":addUp v= func [ ( ->a : :int ) ( ->b @@default 5 ) ]",
+					":addUp v= func [ ( ->a : :int ) ( ->b d= 5 ) ]",
 					"	a + b",
 				};
 				LineConsumer requestor = new LineConsumer(lines);

@@ -29,9 +29,9 @@
 	[ 1 2 [ 3 4 5 6 ] ] assert=? [ a b c ]
 	
 	// default
-	[ :a :b ( :c @@default 5 ) ] v= [ 1 2 3 ]
+	[ :a :b ( :c d= 5 ) ] v= [ 1 2 3 ]
 	[ 1 2 3 ] assert=? [ a b c ]
-	[ :a :b ( :c @@default 5 ) ] v= [ 7 8 ]
+	[ :a :b ( :c d= 5 ) ] v= [ 7 8 ]
 	[ 7 8 5 ] assert=? [ a b c ]
 	
 	// when one value is a direct match rather than a variable
@@ -65,9 +65,9 @@
 	[ 3 { :b 4 :c 5 } ] assert=? [ a rest ]
 	
 	// default
-	[ :a ( :b @@default 4 ) ] v= { :a 1 :b 2 }
+	[ :a ( :b d= 4 ) ] v= { :a 1 :b 2 }
 	[ 1 2 ] assert=? [ a b ]
-	[ :a ( :b @@default 4 ) ] v= { :a 6 :c 7 }
+	[ :a ( :b d= 4 ) ] v= { :a 6 :c 7 }
 	[ 6 4 ] assert=? [ a b ]
 	
 	// when one value is a direct match rather than a variable
