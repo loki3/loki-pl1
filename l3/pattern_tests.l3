@@ -17,11 +17,11 @@
 	[ 1 2 3 ] assert=? [ a b c ]
 	
 	// types
-	[ ( :a @@type :int ) ( :b @@type :bool ) ( :c @@type :string ) ] v= [ 3 false :asdf ]
+	[ ( :a : :int ) ( :b : :bool ) ( :c : :string ) ] v= [ 3 false :asdf ]
 	[ 3 false :asdf ] assert=? [ a b c ]
 	// fail
 	// todo: this shouldn't fail silently
-	[ ( :a @@type :int ) ( :b @@type :bool ) ] v= [ 4.0 :asdf ]
+	[ ( :a : :int ) ( :b : :bool ) ] v= [ 4.0 :asdf ]
 	[ 3 false ] assert=? [ a b ]
 	
 	// rest of array

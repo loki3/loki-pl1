@@ -83,11 +83,11 @@
 	:g f= .(( :a ` a + 1 `
 	5 assert=? g 4
 	// most specific
-	:g f= .(( ( :a @@type :float ) ` a + 3 `
+	:g f= .(( ( :a : :float ) ` a + 3 `
 	5 assert=? g 4
 	7 assert=? g 4.0
 	// intermediate
-	:g f= .(( ( :a @@type :number ) ` a + 2 `
+	:g f= .(( ( :a : :number ) ` a + 2 `
 	6 assert=? g 4
 	7 assert=? g 4.0
 
@@ -212,9 +212,9 @@
 	a @@ [ :key 2 ]
 	2 assert=? :a .@ :key
 
-:@@type @unittest func()
+:: @unittest func()
 	:a v= 1
-	a @@type :int
+	a : :int
 	:int assert=? :a .@ :l3.pattern.type
 
 :@@default @unittest func()
@@ -515,13 +515,13 @@
 	:test v= func ->pattern
 		var :result
 		match pattern
-			when [ ( ->a @@type :int ) 1 ]
+			when [ ( ->a : :int ) 1 ]
 				:result = a + 1
-			when [ ( ->a @@type :int ) 2 ]
+			when [ ( ->a : :int ) 2 ]
 				:result = a + 2
-			when [ ( ->a @@type :int ) 3 ]
+			when [ ( ->a : :int ) 3 ]
 				:result = 3
-			when { :a ( ->b @@type :int ) }
+			when { :a ( ->b : :int ) }
 				:result = b + 4
 			default
 				:result = 4
@@ -672,13 +672,13 @@
 	7.5 assert=? total
 	
 	// test over functions & overloads
-	:functions v= func ( ->a @@type :array )
+	:functions v= func ( ->a : :array )
 		1
 	:count v= 0
 	:i =eachIn ( functions )
 		:count = count + 1
 	1 assert=? count
-	:functions f= func ( ->a @@type :map )
+	:functions f= func ( ->a : :map )
 		2
 	:count v= 0
 	:i =eachIn ( functions )

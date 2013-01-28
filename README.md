@@ -111,7 +111,7 @@ The following example shows metadata being attached to function parameters to ai
 
 ```
 // function will only be called if parameter is a number
-var :square = func ( ->a @@type :number )
+var :square = func ( ->a : :number )
     a * a
 ```
 

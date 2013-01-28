@@ -43,9 +43,9 @@ var :fizzbuzz3 = func()
 
 :+ f= ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 	{ :x ( x1 + x2 ) :y ( y1 + y2 ) }
-:+ f= ( { :x ->x1 :y ->y1 } infix ( ->x2 @@type :number ) )
+:+ f= ( { :x ->x1 :y ->y1 } infix ( ->x2 : :number ) )
 	{ :x ( x1 + x2 ) :y y1 }
-:+ f= ( ( ->x1 @@type :number ) infix { :x ->x2 :y ->y2 } )
+:+ f= ( ( ->x1 : :number ) infix { :x ->x2 :y ->y2 } )
 	{ :x ( x1 + x2 ) :y y2 }
 :+ @doc ." Adds together two complex numbers of the form { :x # :y # }
 
@@ -60,7 +60,7 @@ var :fizzbuzz3 = func()
 :days =enum .[ :sunday :monday :tuesday :wednesday :thursday :friday :saturday
 :days @doc ." an enum representing the days of the week
 
-:isWeekend v= func ( ->day @@type :days )
+:isWeekend v= func ( ->day : :days )
 	( day =? days.sunday ) |? ( day =? days.saturday )
 :isWeekend @doc ." true if the day is Saturday or Sunday
 
@@ -118,19 +118,19 @@ var :fizzbuzz3 = func()
 :unitsType @doc ." A list of the different types of supported units
 
 
-:mm v= .( ( ->x @@type :number ) postfix
+:mm v= .( ( ->x : :number ) postfix
 	{ :meters ( x / 1000.0 ) :units unitsType.distance }
 :mm @order 1 @doc ." Used to specify a particular number of millimeters
 
-:m  v= .( ( ->x @@type :number ) postfix
+:m  v= .( ( ->x : :number ) postfix
 	{ :meters x :units unitsType.distance }
 :m  @order 1 @doc ." Used to specify a particular number of meters
 
-:in v= .( ( ->x @@type :number ) postfix
+:in v= .( ( ->x : :number ) postfix
 	{ :meters ( x * 0.0254 ) :units unitsType.distance }
 :in @order 1 @doc ." Used to specify a particular number of inches
 
-:ft v= .( ( ->x @@type :number ) postfix
+:ft v= .( ( ->x : :number ) postfix
 	{ :meters ( x * 0.3048 ) :units unitsType.distance }
 :ft @order 1 @doc ." Used to specify a particular number of feet
 
@@ -159,19 +159,19 @@ var :fizzbuzz3 = func()
 	{ :meters ( x - y ) :units unitsType.distance }
 
 
-:g  v= .( ( ->x @@type :number ) postfix
+:g  v= .( ( ->x : :number ) postfix
 	{ :grams x :units unitsType.weight }
 :g  @order 1 @doc ." Used to specify a particular number of grams
 
-:kg v= .( ( ->x @@type :number ) postfix
+:kg v= .( ( ->x : :number ) postfix
 	{ :grams ( x * 1000 ) :units unitsType.weight }
 :kg @order 1 @doc ." Used to specify a particular number of kilograms
 
-:oz v= .( ( ->x @@type :number ) postfix
+:oz v= .( ( ->x : :number ) postfix
 	{ :grams ( x * 28.349523125 ) :units unitsType.weight }
 :oz @order 1 @doc ." Used to specify a particular number of ounces
 
-:lb v= .( ( ->x @@type :number ) postfix
+:lb v= .( ( ->x : :number ) postfix
 	{ :grams ( x * 453.59237 ) :units unitsType.weight }
 :lb @order 1 @doc ." Used to specify a particular number of pounds
 

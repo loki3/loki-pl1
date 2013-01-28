@@ -132,9 +132,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object
 :@@ @cat :metadata @doc ." Set metadata on a value, e.g. a parameter
 
-:@@type v= .( ->object infix ->type
+:: v= .( ->object infix ->type
 	object @@ .[ :l3.pattern.type type
-:@@type @cat :metadata @doc ." Restrict a parameter to a specific type
+:: @cat :metadata @doc ." Restrict a parameter to a specific type
 
 :@@default v= .( ->object infix ->default
 	object @@ .[ :l3.pattern.default default
@@ -144,11 +144,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object @@ .[ :l3.pattern.rest true
 :... @cat :metadata @doc ." Associated parameter will be filled with the remainder of the parameter values
 
-:@@hasKeys f= .( ->object infix ( ->type @@type :array )
+:@@hasKeys f= .( ->object infix ( ->type : :array )
 	object @@ .[ :l3.pattern.hasKeys type
-:@@hasKeys f= .( ->object infix ( ->type @@type :map )
+:@@hasKeys f= .( ->object infix ( ->type : :map )
 	object @@ .[ :l3.pattern.hasKeys type
-:@@hasKeys f= .( ->object infix ( ->type @@type :string )
+:@@hasKeys f= .( ->object infix ( ->type : :string )
 	object @@ .[ :l3.pattern.hasKeys type
 :@@hasKeys @cat :metadata @doc ." Specify that parameter must have certain keys
 
@@ -295,7 +295,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :!=? @order 4
 :!=? @cat :logic @doc ." Return true if two values are not equal
 
-:=any? v= .( ->value infix ( ->array @@type :array )
+:=any? v= .( ->value infix ( ->array : :array )
 	l3.anyEqual? [ value array ]
 :=any? @cat :logic @doc ." Return true if value is equal to anything in array
 
@@ -303,17 +303,17 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // arrays
 
-:.. v= .( ( ->start @@type :number ) infix ( ->end @@type :number )
+:.. v= .( ( ->start : :number ) infix ( ->end : :number )
 	l3.createRange { :start start :end end }
 :.. @cat :array @doc ." Creates an array starting with one value and ending with another
 
-:+ f= .( ->value1 infix ( ->array2 @@type :array )
+:+ f= .( ->value1 infix ( ->array2 : :array )
 	l3.combine .[ value1 array2
-:+ f= .( ( ->array1 @@type :array ) infix ->value2
+:+ f= .( ( ->array1 : :array ) infix ->value2
 	l3.combine .[ array1 value2
 :+ @cat :array @doc ." Combine two arrays
 
-:+= v= .( ( ->array @@type :array ) infix ->value
+:+= v= .( ( ->array : :array ) infix ->value
 	l3.addToArray .{ :array array :value value
 :+= @order 6
 :+= @cat :array @doc ." Add a value to an array
@@ -322,21 +322,21 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.getCount value
 :.size @cat :array @doc ." Return the number of elements in a collection.
 
-:apply v= .( ( ->array @@type :array ) infix ( ->function @@type :function )
+:apply v= .( ( ->array : :array ) infix ( ->function : :function )
 	l3.arrayToArray { :array array :transform function }
 :apply @cat :array @doc ." Apply function to every element of a collection.  Functions for arrays take a single value.  Functions for maps are infix.  Returns the new collection.
 
-:foldLeft v= .( ( ->array @@type :array ) infix ( ->function @@type :function )
+:foldLeft v= .( ( ->array : :array ) infix ( ->function : :function )
 	l3.foldLeft { :array array :function function }
 :foldLeft @cat :array @doc ." ((a[0] function a[1]) function a[2]) etc.  Returns a single value.
 
 :fold v= .( foldLeft
 
-:foldRight v= .( ( ->array @@type :array ) infix ( ->function @@type :function )
+:foldRight v= .( ( ->array : :array ) infix ( ->function : :function )
 	l3.foldRight { :array array :function function }
 :foldRight @cat :array @doc ." (a[0] function (a[1] function a[2])) etc.  Returns a single value.
 
-:filter v= .( ( ->array @@type :array ) infix ( ->function @@type :function )
+:filter v= .( ( ->array : :array ) infix ( ->function : :function )
 	l3.arrayToArray { :array array :filter? function }
 :filter @cat :array @doc ." Returns an array consisting of every member for which function returns true
 
@@ -352,9 +352,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // maps
 
-:+ f= .( ->value1 infix ( ->map2 @@type :map )
+:+ f= .( ->value1 infix ( ->map2 : :map )
 	l3.combine .[ value1 map2
-:+ f= .( ( ->map1 @@type :map ) infix ->value2
+:+ f= .( ( ->map1 : :map ) infix ->value2
 	l3.combine .[ map1 value2
 :+ @cat :map @doc ." Combine two maps
 
@@ -366,19 +366,19 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :makeMap @cat :map @doc ." Make a map where every line in the body is evaluated and the first element is the key and the second the value
 :makeMap @body? true
 
-:applyMap v= .( ( ->map @@type :map ) infix ( ->transform @@type :function )
+:applyMap v= .( ( ->map : :map ) infix ( ->transform : :function )
 	l3.mapToMap { :map map :transform transform }
 :applyMap @cat :map @doc ." Apply function to every element of a map.  If function is infix, it's handed key and value.  If it's prefix, it's handed the value.  Returns the new map.
 
-:filterMap v= .( ( ->map @@type :map ) infix ( ->filter? @@type :function )
+:filterMap v= .( ( ->map : :map ) infix ( ->filter? : :function )
 	l3.mapToMap { :map map :filter? filter? }
 :filterMap @cat :map @doc ." Returns a map consisting of every member for which function returns true
 
-:mapToArray v= .( ( ->map @@type :map ) infix ( ->transform @@type :function )
+:mapToArray v= .( ( ->map : :map ) infix ( ->transform : :function )
 	l3.mapToArray { :map map :transform transform }
 :mapToArray @cat :map @doc ." Apply function to every element of a map.  If function is infix, it's handed key and value.  If it's prefix, it's handed the value.  Returns a new array.
 
-:filterMapToArray v= .( ( ->map @@type :map ) infix ( ->filter? @@type :function )
+:filterMapToArray v= .( ( ->map : :map ) infix ( ->filter? : :function )
 	l3.mapToArray { :map map :filter? filter? }
 :filterMapToArray @cat :map @doc ." Returns an array consisting of every value in the map for which function returns true
 
@@ -387,12 +387,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // conditional
 
 // ternary operator
-:? v= .( ( ->do? @@type :bool ) infix [ ->doIfTrue ->doIfFalse ]
+:? v= .( ( ->do? : :bool ) infix [ ->doIfTrue ->doIfFalse ]
 	l3.ifValue .{ :do? do? :ifTrue doIfTrue :ifFalse doIfFalse
 :? @order 4
 :? @cat :if @doc ." If condition is met, return first value, else return second value
 
-:if v= func ( ->do? @@type :bool )
+:if v= func ( ->do? : :bool )
 	l3.ifBody .{ :do? do? :body body
 	l3.setValue { :key :l3.coFunction.if.done? :value do? :level 1 }
 	do?
@@ -400,7 +400,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :if @order 6
 :if @cat :if @doc ." If condition is met, do body
 
-:elsif v= func ( ->do? @@type :bool )
+:elsif v= func ( ->do? : :bool )
 	:doThis? v= .( ( !? l3.coFunction.if.done? ) &? do?
 	l3.ifBody .{ :do? doThis? :body body
 	l3.ifBody .{ :do? doThis? :body .[ .` l3.setValue .{ :key :l3.coFunction.if.done? :value true :level 1
@@ -447,7 +447,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	result
 :if!nil @cat :if @doc ." If a value isn't nil, evaluate the following code.
 
-:do!nil v= func .( ->val @@type :rawLines
+:do!nil v= func .( ->val : :rawLines
 	:theBody v= body
 	:line =eachIn ( theBody )
 		if ( l3.eval val ) !=? nil
@@ -459,20 +459,20 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // loop
 
-:while v= func ( ->cond @@type :rawLines )
+:while v= func ( ->cond : :rawLines )
 	setScopeName :loop
 	l3.loop .{ :check cond :body body
 :while @body? true
 :while @cat :loop @doc ." Repeat loop while condition is true
 
-:repeat v= func .( ->n @@type :int
+:repeat v= func .( ->n : :int
 	:i v= 0
 	setScopeName :loop
 	l3.loop .{ :check ` i <? n ` :change ` :i = i + 1 ` :body body
 :repeat @body? true
 :repeat @cat :loop @doc ." Repeat the body n times.
 
-:repeatsOf v= .( ( ->n @@type :int ) infix ( ->code @@type :rawLines )
+:repeatsOf v= .( ( ->n : :int ) infix ( ->code : :rawLines )
 	:i v= 0
 	setScopeName :loop
 	l3.loop .{ :check ` i <? n ` :change ` :i = i + 1 ` :body code
@@ -526,14 +526,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // specific iterator overloads
 
-:iterator f= func ( ->array @@type :array )
+:iterator f= func ( ->array : :array )
 	[ :i :count ] i= [ -1 ( array .size ) ]
 	:i = i + 1
 	( i <? count ) ? [ ` array . i ` nil ]
 :iterator @iterator
 :iterator @cat :iterator @doc ." Iterate over all items in a collection.
 
-:iterator f= func .[ ( ->array1 @@type :array ) ( ->array2 @@type :array )
+:iterator f= func .[ ( ->array1 : :array ) ( ->array2 : :array )
 	[ :i :j ] i= [ 0 -1 ]
 	[ :count1 :count2 ] i= [ ( array1 .size ) ( array2 .size ) ]
 	:j = j + 1
@@ -542,7 +542,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	( i <? count1 ) ? [ ` [ ( array1 . i ) ( array2 . j ) ] ` nil ]
 
 // todo: function overloading should give :scope precendence over :map
-:iterator f= func ( ->scope @@type :scope )
+:iterator f= func ( ->scope : :scope )
 	:current i= nil
 	if current =? nil
 		:current = scope
@@ -550,7 +550,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		:current = :current .@ :l3.scope.parent
 	current
 
-:iterator f= func ( ->map @@type :map )
+:iterator f= func ( ->map : :map )
 	[ :i :keys ] i= [ -1 ( l3.getMapKeys map ) ]
 	:count i= keys .size
 	:i = i + 1
@@ -560,17 +560,17 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		:result = [ key ( map . key ) ]
 	result
 
-:iterator f= func ( ->f @@type :function )
+:iterator f= func ( ->f : :function )
 	[ :i :count ] i= [ -1 ( ( f ) .size ) ]
 	:i = i + 1
 	( i <? count ) ? [ ( ( f ) . i ) nil ]
 
-:iterator f= func ( ->lines @@type :rawLines )
+:iterator f= func ( ->lines : :rawLines )
 	[ :i :count ] i= [ -1 ( lines .size ) ]
 	:i = i + 1
 	( i <? count ) ? [ ` lines . i ` nil ]
 
-:iterator f= func ( ->lines @@type :rawLine )
+:iterator f= func ( ->lines : :rawLine )
 	[ :i :count ] i= [ -1 ( lines .size ) ]
 	:i = i + 1
 	( i <? count ) ? [ ` lines . i ` nil ]
@@ -594,11 +594,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	\t + .( l3.toString ( val )
 :$__ @order 2 @cat :string @doc ." Prepends a tab and converts the next value to a string.
 
-:+ f= .( ( ->str1 @@type :string ) infix ( ->str2 @@type :string )
+:+ f= .( ( ->str1 : :string ) infix ( ->str2 : :string )
 	l3.stringConcat .{ :array .[ str1 str2
 :+ @cat :string @doc ." Concatenate two strings
 
-:* f= .( ( ->str @@type :string ) infix ( ->n @@type :number )
+:* f= .( ( ->str : :string ) infix ( ->n : :number )
 	:all v= ""
 	n repeatsOf .` :all = all + str
 :* @order 2
@@ -636,7 +636,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // enumerated type
 
-:=enum v= .( ( ->name @@type :string ) infix ( ->array @@type :array )
+:=enum v= .( ( ->name : :string ) infix ( ->array : :array )
 	:list v= { }
 	:i v= 0
 	:val forEach array
@@ -659,14 +659,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // math
 
-:+ f= .( ( ->a @@type :number ) infix ( ->b @@type :number )
+:+ f= .( ( ->a : :number ) infix ( ->b : :number )
 	l3.add [ a b ]
 :+ @cat :math @doc ." Add two numbers
 
 :- f= .(< l3.subtract [ #1 #2 ]
 :- @cat :math @doc ." Subtract one number from another
 
-:* f= .( ( ->a @@type :number ) infix ( ->b @@type :number )
+:* f= .( ( ->a : :number ) infix ( ->b : :number )
 	l3.multiply [ a b ]
 :* @order 2
 :* @cat :math @doc ." Multiply two numbers
@@ -744,11 +744,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // modules
 
-:import v= .( func ( ->file @@type :string )
+:import v= .( func ( ->file : :string )
 	l3.loadModule { :file file :scope " parent " }
 :import @cat :module @doc ." Run the code from the given file.  Don't run if file has already been imported.
 
-:reimport v= .( func ( ->file @@type :string )
+:reimport v= .( func ( ->file : :string )
 	l3.loadModule { :file file :scope " parent " :force? true }
 :reimport @cat :module @doc ." Run the code from the given file.  Reload even if module has been imported before.
 

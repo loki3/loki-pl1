@@ -16,7 +16,7 @@
 	""
 :helpAll @cat :help @doc ." Print out information on everything defined in the given scope
 
-:help v= func .( ->key @@type :string
+:help v= func .( ->key : :string
 	// turn a map into an array useful for formatting
 	:dumpMap v= func  ->map
 		var :array
@@ -65,8 +65,8 @@
 :help @doc ." Describe the value represented by a key.
 
 
-:describe v= func .( ->key @@type :string
-	:getSpecific f= func .[ ( ->key @@type :string ) ( ->value @@type :function )
+:describe v= func .( ->key : :string
+	:getSpecific f= func .[ ( ->key : :string ) ( ->value : :function )
 		// figure out if var is an in/post/prefix function
 		:getFixType v= func()
 			:details v= ."
@@ -127,7 +127,7 @@
 		map + { :overloads overloads }
 	
 	
-	:getSpecific f= func .[ ( ->key @@type :string ) ( ->value @@type :delimiter )
+	:getSpecific f= func .[ ( ->key : :string ) ( ->value : :delimiter )
 		:map v= .{ :start key :end ( key .@ :l3.delim.end )
 		// turn the number representing the type into a string
 		:delimEnum v= .[ :comment :string :value :array :raw
@@ -141,10 +141,10 @@
 			:map = map + { :function nil }
 		map
 	
-	:getSpecific f= func .[ ( ->key @@type :string ) ( ->value @@type :enum )
+	:getSpecific f= func .[ ( ->key : :string ) ( ->value : :enum )
 		.{ :values .( ( l3.getValue { :key key } ) mapToArray (< #2 >)
 	
-	:getSpecific f= func .[ ( ->key @@type :string ) ->value
+	:getSpecific f= func .[ ( ->key : :string ) ->value
 		{ :value value }
 	
 	[ :general :specific ] v= [ { } { } ]
@@ -159,7 +159,7 @@
 
 
 
-:dumpBody v= func ( ->name @@type :string )
+:dumpBody v= func ( ->name : :string )
 	( l3.getFunctionBody { :key name } ) fold (< ( #1 =>str ) + ( #2 =>str ) + \n >)
 :dumpBody @cat :help @doc ." Get the body of a function
 
