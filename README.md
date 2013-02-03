@@ -107,7 +107,7 @@ var :square = func ->a
 :square @doc ." Compute the square of a number
 ```
 
-The following example shows metadata being attached to function parameters to aid in pattern matching.
+The following example shows metadata being attached to function parameters to aid in pattern matching.  Note that : is a function that adds metadata to a key describing the data type to use during pattern matching.
 
 ```
 // function will only be called if parameter is a number
