@@ -348,6 +348,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :makeArray @cat :array @doc ." Make an array where every line in the body is evaluated and becomes an element in the array
 :makeArray @body? true
 
+:by v= .( ( ->a : :array ) infix ( ->step : :int )
+	a filter (< #1 % step =? 0 >)
+:by @cat :array @doc ." Returns an array with every 'step' elements of an input array
+
 
 //
 // maps
