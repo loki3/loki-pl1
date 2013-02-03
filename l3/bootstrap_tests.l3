@@ -393,7 +393,10 @@
 	9 assert=? [ 27 9 3 ] foldRight (< #1 / #2 >)
 
 :filter @unittest func()
-	[ 3 5 7 ] assert=? [ 2 3 4 5 6 7 8 ] filter (| ## % 2 =? 1 |)
+	// only take the odd values
+	[ 3 5 7 ] assert=? [ 2 3 5 6 7 8 ] filter (| ## % 2 =? 1 |)
+	// take every other value
+	[ 3 6 8 ] assert=? [ 2 3 5 6 7 8 ] filter (< #1 % 2 =? 1 >)
 
 :makeArray @unittest func()
 	:a v= makeArray

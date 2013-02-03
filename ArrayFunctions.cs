@@ -99,16 +99,20 @@ namespace loki3.builtin
 					return map["array"];
 
 				List<Value> newarray = new List<Value>(array.Count);
+				bool bPre = ((filter != null && filter.ConsumesPrevious) || (transform != null && transform.ConsumesPrevious));
+				int i = 0;
 				foreach (Value val in array)
 				{
+					DelimiterNode prev = (bPre ? new DelimiterNodeValue(new ValueInt(i)) : null);
 					DelimiterNode node = new DelimiterNodeValue(val);
 
 					// if we should use this value...
-					if (filter == null || filter.Eval(null, node, scope, null, null).AsBool)
+					if (filter == null || filter.Eval(prev, node, scope, null, null).AsBool)
 					{	// ...transform if appropriate
-						Value newval = (transform == null ? val : transform.Eval(null, node, scope, null, null));
+						Value newval = (transform == null ? val : transform.Eval(prev, node, scope, null, null));
 						newarray.Add(newval);
 					}
+					i++;
 				}
 				return new ValueArray(newarray);
 			}
