@@ -591,7 +591,8 @@ namespace loki3.builtin
 				SetDocString("Bind a map or scope to a function so it's always used when the function is called.");
 
 				Map map = new Map();
-				map["function"] = PatternData.Single("function", ValueType.Function);
+				map["function"] = PatternData.Single("function", ValueType.Function, ValueNil.Nil);
+				map["functionKey"] = PatternData.Single("functionKey", ValueType.String, ValueNil.Nil);
 				map["map"] = PatternData.Single("map", ValueType.Map, ValueNil.Nil);
 				Init(new ValueMap(map));
 			}
@@ -600,8 +601,18 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 
-				// get parameter
-				ValueFunction function = map["function"] as ValueFunction;
+				// get parameters
+				ValueFunction function = null;
+				if (map["function"] is ValueFunction)
+				{
+					function = map["function"] as ValueFunction;
+				}
+				else if (map["functionKey"] is ValueString)
+				{
+					string name = map["functionKey"].AsString;
+					function = scope.GetValue(new Token(name)) as ValueFunction;
+				}
+
 				IScope thescope;
 				if (map["map"].IsNil)
 				{	// nothing specified, use current scope
