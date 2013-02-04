@@ -61,10 +61,12 @@ namespace loki3.core
 		internal static string keyNextPattern = "l3.func.next";
 		internal static string keyBody = "l3.func.body";
 		internal static string keyCreateScope = "l3.func.createScope?";
+		internal static string keyForceEval = "l3.func.forceEval?";
 		#endregion
 
 		internal virtual bool ConsumesPrevious { get { return Metadata.ContainsKey(keyPreviousPattern); } }
 		internal virtual bool ConsumesNext { get { return Metadata.ContainsKey(keyNextPattern); } }
+		internal virtual bool ForceEval { get { return Metadata.ContainsKey(keyForceEval); } }
 		internal virtual bool ShouldCreateScope
 		{
 			get { return (Metadata != null && Metadata.ContainsKey(keyCreateScope) ? Metadata[keyCreateScope].AsBool : true); }

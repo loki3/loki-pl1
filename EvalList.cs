@@ -70,6 +70,7 @@ namespace loki3.core
 			internal bool HasFunction { get { return m_state == NodeState.Function; } }
 			internal bool HasValue { get { return m_state == NodeState.Value; } }
 			internal bool CantEval { get { return m_state == NodeState.CantEval; } }
+			internal bool ForceEval { get { return m_state == NodeState.Function && m_func.ForceEval; } }
 			internal Value Value { get { return m_value; } }
 			internal DelimiterNode Node { get { return m_node; } }
 
@@ -102,7 +103,7 @@ namespace loki3.core
 					}
 					else
 					{
-						if (!m_func.ConsumesPrevious && !m_func.ConsumesNext && !m_func.RequiresBody())
+						if (!m_func.ConsumesPrevious && !m_func.ConsumesNext && !m_func.RequiresBody() && !m_func.ForceEval)
 						{	// function can't be evaled further
 							m_state = NodeState.Value;
 							return;
@@ -188,7 +189,7 @@ namespace loki3.core
 				if (max == Int32.MaxValue)
 					return false;
 				// if the only thing left is a function, there's nothing further to do
-				if (empties == count - 1 && m_nodes[m_evalIndex].HasFunction)
+				if (empties == count - 1 && m_nodes[m_evalIndex].HasFunction && !m_nodes[m_evalIndex].ForceEval)
 					return false;
 				// if we found something we can't eval, it's an error
 				if (m_nodes[m_evalIndex].CantEval)
