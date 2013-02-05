@@ -252,6 +252,28 @@
 
 :setScopeName @unittest stubFunc
 
+:closure @unittest func()
+	:value v= 1
+	
+	// not using a closure
+	// returns a function that adds onto 'value'
+	:nested v= func ->value
+		:add v= func ->plus
+			value + plus
+		add
+	// 2 gets lost, instead it'll add onto 1
+	:getValue v= nested 2
+	4 assert=? getValue 3
+	
+	// create a closure
+	:nested2 v= func ->value
+		:add v= func ->plus
+			value + plus
+		closure :add
+	// this time it'll add onto 2
+	:getValue v= nested2 2
+	5 assert=? getValue 3
+
 :i= @unittest func()
 	[ :a :b ] i= [ 4 5 ]
 	4 assert=? a

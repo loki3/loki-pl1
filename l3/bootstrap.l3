@@ -164,6 +164,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.getScope { :level 1 } @@ .[ :l3.scope.name name
 :setScopeName @cat :scope @doc ." Assign a name to the current scope.  Useful for popping back to this scope.
 
+:closure v= func ( ->key : :string )
+	l3.bindFunction .{ :functionKey key :map .( l3.getScope .{ :level 1
+:closure @cat :scope @doc ." Manually create a closure, binding the current scope to a function
+
 :i= v= .( ->pattern infix ->value
 	l3.setValue { :key pattern :value value :level 1 :create? true :initOnly? true }
 :i= @order 5
