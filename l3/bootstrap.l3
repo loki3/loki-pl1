@@ -767,3 +767,21 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :print v= .(| l3.print .{ :value ##
 :print @order 6
 :print @cat :io @doc ." Print a value as a string
+
+
+//
+// classes
+
+:public v= func()
+	:map v= { }
+	// body consists of keys with functions as values
+	:line forEach body
+		// add function as a closure over the current scope
+		:map = map + { line ( closure line ) }
+		// if it's a function with no parameters, force it to eval when used.
+		// todo: it would be better if this decision could be based on the context
+		//   in which it's used, rather than being a property of the function
+		( map . line ) @@ .[ :l3.func.forceEval? true
+	map
+:public @cat :class @doc ." Creates a map of functions that are bound to the local scope given a list of function names
+:public @body? true

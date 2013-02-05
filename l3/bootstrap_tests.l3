@@ -936,3 +936,31 @@
 
 :print @unittest func()
 	false
+
+
+//
+// classes
+
+:public @unittest func()
+	// a function which creates a 'class'
+	// with a constructor, private data, and public methods
+	:keepAdding v= func ->initial
+		// private variable
+		:total v= initial
+		
+		// methods
+		:add v= func ->amount
+			:total = total + amount
+		:current v= func()
+			total
+		
+		// make methods public
+		public
+			:add
+			:current
+	
+	:test v= keepAdding 5
+	6 assert=? test . :add 1
+	6 assert=? test . :current
+	8 assert=? test . :add 2
+	8 assert=? test . :current
