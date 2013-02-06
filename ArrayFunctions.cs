@@ -107,9 +107,9 @@ namespace loki3.builtin
 					DelimiterNode node = new DelimiterNodeValue(val);
 
 					// if we should use this value...
-					if (filter == null || filter.Eval(prev, node, scope, null, null).AsBool)
+					if (filter == null || filter.Eval(prev, node, scope, scope, null, null).AsBool)
 					{	// ...transform if appropriate
-						Value newval = (transform == null ? val : transform.Eval(prev, node, scope, null, null));
+						Value newval = (transform == null ? val : transform.Eval(prev, node, scope, scope, null, null));
 						newarray.Add(newval);
 					}
 					i++;
@@ -153,7 +153,7 @@ namespace loki3.builtin
 					{
 						DelimiterNode node1 = new DelimiterNodeValue(last);
 						DelimiterNode node2 = new DelimiterNodeValue(val);
-						last = function.Eval(node1, node2, scope, null, null);
+						last = function.Eval(node1, node2, scope, scope, null, null);
 					}
 				}
 				return last;
@@ -188,7 +188,7 @@ namespace loki3.builtin
 					Value val = array[i];
 					DelimiterNode node1 = new DelimiterNodeValue(last);
 					DelimiterNode node2 = new DelimiterNodeValue(val);
-					last = function.Eval(node2, node1, scope, null, null);
+					last = function.Eval(node2, node1, scope, scope, null, null);
 				}
 				return last;
 			}

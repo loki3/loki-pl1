@@ -49,14 +49,14 @@ namespace loki3.core
 		}
 
 		/// <summary>Examine overloads to figure out which function to eval</summary>
-		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope paramScope, IScope bodyScope, INodeRequestor nodes, ILineRequestor requestor)
 		{
 			// if we've got a single function, simply use it
 			List<Value> functions = m_functions.AsArray;
 			if (m_functions.Count == 1)
 			{
 				ValueFunction single = functions[0] as ValueFunction;
-				return single.Eval(prev, next, scope, nodes, requestor);
+				return single.Eval(prev, next, paramScope, bodyScope, nodes, requestor);
 			}
 
 			// if they didn't pass any parameters, then we eval as ourselves
@@ -67,8 +67,8 @@ namespace loki3.core
 
 			// todo: avoid evaling twice (or is it cached behind the scenes?)
 			// and pattern matching twice for the successfull function
-			Value value1 = (m_bConsumesPrevious ? EvalNode.Do(prev, scope, nodes, requestor) : null);
-			Value value2 = (m_bConsumesNext ? EvalNode.Do(next, scope, nodes, requestor) : null);
+			Value value1 = (m_bConsumesPrevious ? EvalNode.Do(prev, paramScope, nodes, requestor) : null);
+			Value value2 = (m_bConsumesNext ? EvalNode.Do(next, paramScope, nodes, requestor) : null);
 
 			// eval the first function that's a full match,
 			// else eval the first function that was a match with leftover,
@@ -103,7 +103,7 @@ namespace loki3.core
 				// todo: NoMatches
 				throw new Loki3Exception();
 			// eval the best match we found
-			return best.Eval(prev, next, scope, nodes, requestor);
+			return best.Eval(prev, next, paramScope, bodyScope, nodes, requestor);
 		}
 
 		#region	ValueFunction

@@ -41,9 +41,9 @@ namespace loki3.builtin.test
 
 			internal DoubleIn() { Init(PatternData.Single("a"), PatternData.Single("b", ValueType.Int)); }
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope paramScope, IScope bodyScope, INodeRequestor nodes, ILineRequestor requestor)
 			{
-				Value value2 = EvalNode.Do(next, scope, nodes, requestor);
+				Value value2 = EvalNode.Do(next, paramScope, nodes, requestor);
 				return new ValueInt(value2.AsInt * 2);
 			}
 		}

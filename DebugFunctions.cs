@@ -66,7 +66,7 @@ namespace loki3.builtin
 				Init(null, null);
 			}
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope paramScope, IScope bodyScope, INodeRequestor nodes, ILineRequestor requestor)
 			{
 				System.Diagnostics.Debugger.Break();
 				return ValueNil.Nil;
@@ -101,7 +101,7 @@ namespace loki3.builtin
 				Init(null, null);
 			}
 
-			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+			internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope paramScope, IScope bodyScope, INodeRequestor nodes, ILineRequestor requestor)
 			{
 				return new ValueInt(System.Environment.TickCount);
 			}

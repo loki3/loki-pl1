@@ -56,9 +56,9 @@ namespace loki3.builtin
 					DelimiterNode next = new DelimiterNodeValue(dict[key]);
 
 					// if we should use this value...
-					if (filter == null || filter.Eval(prev, next, scope, null, null).AsBool)
+					if (filter == null || filter.Eval(prev, next, scope, scope, null, null).AsBool)
 					{	// ...transform if appropriate
-						Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, null, null));
+						Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, scope, null, null));
 						newdict[key] = newval;
 					}
 				}
@@ -102,9 +102,9 @@ namespace loki3.builtin
 					DelimiterNode next = new DelimiterNodeValue(dict[key]);
 
 					// if we should use this value...
-					if (filter == null || filter.Eval(prev, next, scope, null, null).AsBool)
+					if (filter == null || filter.Eval(prev, next, scope, scope, null, null).AsBool)
 					{	// ...transform if appropriate
-						Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, null, null));
+						Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, scope, null, null));
 						newarray.Add(newval);
 					}
 				}

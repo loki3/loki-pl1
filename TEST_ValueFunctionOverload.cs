@@ -74,15 +74,15 @@ namespace loki3.core.test
 			{	// add a single function & make sure it's called at right time & fails at right time
 				ValueFunction numInt = new Add(ValueType.Number, ValueType.Int, 0);
 				overload.Add(numInt);
-				Value a = overload.Eval(null, MakePair(3, 4, true, true), scope, null, null);
+				Value a = overload.Eval(null, MakePair(3, 4, true, true), scope, scope, null, null);
 				Assert.AreEqual(7, a.AsInt);
-				Value b = overload.Eval(null, MakePair(3, 5, false, true), scope, null, null);
+				Value b = overload.Eval(null, MakePair(3, 5, false, true), scope, scope, null, null);
 				Assert.AreEqual(8, b.AsFloat);
 
 				bool bThrew = false;
 				try
 				{
-					overload.Eval(null, MakePair(3, 4, false, false), scope, null, null);
+					overload.Eval(null, MakePair(3, 4, false, false), scope, scope, null, null);
 				}
 				catch (Loki3Exception)
 				{
@@ -95,15 +95,15 @@ namespace loki3.core.test
 				// this one is more specific so should get called first when signature matches
 				ValueFunction intInt = new Add(ValueType.Int, ValueType.Int, 1);
 				overload.Add(intInt);
-				Value a = overload.Eval(null, MakePair(3, 4, true, true), scope, null, null);
+				Value a = overload.Eval(null, MakePair(3, 4, true, true), scope, scope, null, null);
 				Assert.AreEqual(8, a.AsInt);	// calls 2nd version
-				Value b = overload.Eval(null, MakePair(3, 5, false, true), scope, null, null);
+				Value b = overload.Eval(null, MakePair(3, 5, false, true), scope, scope, null, null);
 				Assert.AreEqual(8, b.AsFloat);	// calls 1st version
 
 				bool bThrew = false;
 				try
 				{	// still no match for this one
-					overload.Eval(null, MakePair(3, 4, false, false), scope, null, null);
+					overload.Eval(null, MakePair(3, 4, false, false), scope, scope, null, null);
 				}
 				catch (Loki3Exception)
 				{

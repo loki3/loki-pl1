@@ -108,7 +108,7 @@ namespace loki3.core
 							m_state = NodeState.Value;
 							return;
 						}
-						m_value = m_func.Eval(previous, next, scope, nodes, requestor);
+						m_value = m_func.Eval(previous, next, scope, scope, nodes, requestor);
 					}
 				}
 

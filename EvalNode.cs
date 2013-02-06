@@ -48,7 +48,7 @@ namespace loki3.core
 					// evaluate
 					try
 					{
-						return function.Eval(previous, next, scope, nodes, requestor);
+						return function.Eval(previous, next, scope, scope, nodes, requestor);
 					}
 					catch (Loki3Exception e)
 					{	// this function is the correct context if there isn't already one there
@@ -102,7 +102,7 @@ namespace loki3.core
 				if (function == null)
 					return value;
 				DelimiterNode next = new DelimiterNodeValue(value);
-				return function.Eval(null, next, scope, nodes, requestor);
+				return function.Eval(null, next, scope, scope, nodes, requestor);
 			}
 			return new ValueNil();
 		}

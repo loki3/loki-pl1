@@ -105,7 +105,7 @@ namespace loki3.builtin
 
 				DelimiterNodeValue prev = (prevValue == ValueNil.Nil ? null : new DelimiterNodeValue(prevValue));
 				DelimiterNodeValue next = (nextValue == ValueNil.Nil ? null : new DelimiterNodeValue(nextValue));
-				Value value = function.Eval(prev, next, where, null, null);
+				Value value = function.Eval(prev, next, where, where, null, null);
 				return value;
 			}
 		}

@@ -316,7 +316,7 @@ namespace loki3.core
 					return EvalBody.Do(line2, scope);
 				case ValueType.Function:
 					ValueFunction function = value as ValueFunction;
-					return function.Eval(null, null, scope, null, null);
+					return function.Eval(null, null, scope, scope, null, null);
 				default:
 					return value;
 			}

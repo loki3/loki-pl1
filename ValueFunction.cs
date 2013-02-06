@@ -95,7 +95,7 @@ namespace loki3.core
 		/// <summary>If this is a user defined function, get the body</summary>
 		internal virtual List<DelimiterList> GetBody(IScope scope) { return null; }
 
-		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor);
+		internal abstract Value Eval(DelimiterNode prev, DelimiterNode next, IScope paramScope, IScope bodyScope, INodeRequestor nodes, ILineRequestor requestor);
 	}
 
 	/// <summary>
@@ -106,18 +106,18 @@ namespace loki3.core
 		internal void Init(Value pattern) { Init(null, pattern); }
 		internal void Init(Value pattern, Order order) { Init(null, pattern, order); }
 
-		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope paramScope, IScope bodyScope, INodeRequestor nodes, ILineRequestor requestor)
 		{
 			if (next == null)
 				return this;	// without parameters, it's still a function
-			Value post = EvalNode.Do(next, scope, nodes, requestor);
+			Value post = EvalNode.Do(next, paramScope, nodes, requestor);
 			Value match, leftover;
 			if (!PatternChecker.Do(post, Metadata[keyNextPattern], false/*bShortPat*/, out match, out leftover))
 				throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], post);
 			if (leftover != null)
 				// create a partial function that starts w/ match & still needs leftover
 				return new PartialFunctionPre(this, match, leftover);
-			return Eval(match, scope);
+			return Eval(match, bodyScope);
 		}
 
 		internal abstract Value Eval(Value arg, IScope scope);
@@ -131,18 +131,18 @@ namespace loki3.core
 		internal void Init(Value pattern) { Init(pattern, null); }
 		internal void Init(Value pattern, Order order) { Init(pattern, null, order); }
 
-		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
+		internal override Value Eval(DelimiterNode prev, DelimiterNode next, IScope paramScope, IScope bodyScope, INodeRequestor nodes, ILineRequestor requestor)
 		{
 			if (prev == null)
 				return this;	// without parameters, it's still a function
-			Value pre = EvalNode.Do(prev, scope, nodes, requestor);
+			Value pre = EvalNode.Do(prev, paramScope, nodes, requestor);
 			Value match, leftover;
 			if (!PatternChecker.Do(pre, Metadata[keyPreviousPattern], false/*bShortPat*/, out match, out leftover))
 				throw new Loki3Exception().AddWrongPattern(Metadata[keyPreviousPattern], pre);
 			if (leftover != null)
 				// create a partial function that starts w/ match & still needs leftover
 				return new PartialFunctionPost(this, match, leftover);
-			return Eval(match, scope);
+			return Eval(match, bodyScope);
 		}
 
 		internal abstract Value Eval(Value arg, IScope scope);
