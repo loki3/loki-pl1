@@ -964,3 +964,22 @@
 	6 assert=? test . :current
 	8 assert=? test . :add 2
 	8 assert=? test . :current
+	
+	// using composition to extend the class
+	:addOrSubtract v= func ->initial
+		:base v= keepAdding initial
+		
+		// additional method
+		:subtract v= func ->amount
+			base . :add ( 0 - amount )
+		
+		// expose composed methods & extension
+		public
+			base
+			:subtract
+	
+	:test v= addOrSubtract 100
+	101 assert=? test . :add 1
+	101 assert=? test . :current
+	91  assert=? test . :subtract 10
+	91  assert=? test . :current
