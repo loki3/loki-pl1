@@ -226,6 +226,7 @@ As with any value, additional metadata can be attached to a function.  Typically
 * @cat:  List the category it's part of
 * @order:  Set the evaluation precedence
 * @body?:  Declare that the function requires a body
+* @unittest:  Associate a unit test with the function
 
 Since each of these metadata functions return the key, they can easily be chained together.
 
