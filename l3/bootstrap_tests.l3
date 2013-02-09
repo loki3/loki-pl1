@@ -107,7 +107,7 @@
 :func	@unittest func()
 	:a v= func ->b
 		b + 2
-	7 assert=? func 5
+	7 assert=? a 5
 
 :infix	@unittest func()
 	:a v= .( ->b infix ->c
