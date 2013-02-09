@@ -38,6 +38,8 @@ The following shows a sample line, which gets tokenized based on white space.  *
 
 The language defines these parse/eval rules and combines this with a set of built-in functions, with the language syntax "bootstrapped" from there.Even functionality such as assignment, if statements, and function definitions are bootstrapped, including every function and delimiter in the above example (*, +, () (||)).  This makes the entire syntax very flexible.
 
+[More information](docs/ParseEval.md)
+
 
 DSLs
 ----
