@@ -101,6 +101,9 @@
     <Content Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="docs\Debugging.md" />
+    <None Include="docs\ParseEval.md" />
+    <None Include="docs\PatternMatching.md" />
     <None Include="l3\bootstrap.l3" />
     <None Include="l3\bootstrap_tests.l3" />
     <None Include="l3\help.l3" />

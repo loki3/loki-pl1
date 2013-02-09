@@ -96,6 +96,8 @@ var :* = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
 var :a = { :x 2 :y 3 } * { :x 1 :y 2 }
 ```
 
+[More information](docs/PatternMatching.md)
+
 
 Metadata
 --------
