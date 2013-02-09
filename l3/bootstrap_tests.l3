@@ -766,6 +766,7 @@
 
 :"[ @unittest func()
 	:asdf12.34 assert=? "[ :asdf 1 2.34 ]
+	:123 assert=? "[ 1 2 3 ]
 
 :."[ @unittest func()
 	:asdf12.34 assert=? ."[ :asdf 1 2.34

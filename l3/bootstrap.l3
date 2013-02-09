@@ -625,10 +625,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	Use the indented lines following this function as a single string.
 	Useful for long strings such as @doc.
 
-:"[ v= .( l3.createDelimiter .{ :end :] :type :asArray :function (( :a ` a fold (< #1 + ( #2 =>str ) >) ` ))
+:"[ v= .( l3.createDelimiter .{ :end :] :type :asArray :function (( :a ` a fold (< $ #1 + $ #2 >) ` ))
 :"[ @cat :string @doc ." Each item in array is converted to a string and concatenated together
 
-:."[ v= .( l3.createDelimiter .{ :type :asArray :function (( :a ` a fold (< #1 + ( #2 =>str ) >) ` ))
+:."[ v= .( l3.createDelimiter .{ :type :asArray :function (( :a ` a fold (< $ #1 + $ #2 >) ` ))
 :."[ @cat :string @doc ." Each item in array is converted to a string and concatenated together
 
 :\n v= l3.intToChar 13
