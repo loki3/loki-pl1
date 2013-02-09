@@ -102,6 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="docs\Debugging.md" />
+    <None Include="docs\Delimeters.md" />
+    <None Include="docs\Functions.md" />
     <None Include="docs\ParseEval.md" />
     <None Include="docs\PatternMatching.md" />
     <None Include="l3\bootstrap.l3" />
