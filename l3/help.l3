@@ -117,12 +117,17 @@
 			:body? = false
 		:map = map + .{ :order order :body? body?
 		
-		// each of the function overloads
 		:overloads v= [ ]
-		:f =eachIn ( value )
-			:temp v= ( f )
-			:overload v= .{ :pre  .( getParams .( :temp .@ :l3.func.previous
-			:overload = overload + .{ :post .( getParams .( :temp .@ :l3.func.next
+		if ( key .@ :l3.func.overload? ) !=? nil
+			// each of the function overloads
+			:f =eachIn ( value )
+				:temp v= ( f )
+				:overload v= .{ :pre  .( getParams .( :temp .@ :l3.func.previous
+				:overload = overload + .{ :post .( getParams .( :temp .@ :l3.func.next
+				:overloads = overloads + [ overload ]
+		else
+			:overload v= .{ :pre  .( getParams .( key .@ :l3.func.previous
+			:overload = overload + .{ :post .( getParams .( key .@ :l3.func.next
 			:overloads = overloads + [ overload ]
 		map + { :overloads overloads }
 	

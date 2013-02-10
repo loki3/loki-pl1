@@ -2,7 +2,11 @@
 
 :helpAll @unittest noTestNeeded
 
-:help @unittest noTestNeeded
+:help @unittest func()
+	// simply validate that help doesn't crash on various functions
+	help :rethrow
+	help :l3.ifBody
+	help :@@hasKeys
 
 :describe @unittest func()
 	// simple value
