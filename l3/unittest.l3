@@ -14,10 +14,8 @@
 	import targetFile
 	import testFile
 	// stub out doc & unittest so local vars don't affect results
-	:targetFile @doc ."
-	:testFile @doc ."
-	:targetFile @unittest true
-	:testFile @unittest true
+	:targetFile @unittest true @doc ."
+	:testFile @unittest true @doc ."
 	// run tests on local scope
 	unittestScope currentScope
 :unittest @cat :unittest @doc ." For a given implementation file, run all the tests defined in a test file.
@@ -69,9 +67,13 @@
 	test
 :.@unittest	@cat :unittest @doc ." Get the unittest attached to a value
 
-:stubFunc v= func()
+:noTestNeeded v= func()
 	true
-:stubFunc @cat :unittest @doc ." Used for stubbing out unneeded unittests
+:noTestNeeded @cat :unittest @doc ." Used for stubbing out unneeded unittests
+
+:testNYI v= func()
+	true
+:testNYI @cat :unittest @doc ." Used to indicate that a unittest is not yet implemented
 
 
 :assert=? v= .( ->expected infix ->actual

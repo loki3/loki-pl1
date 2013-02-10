@@ -250,7 +250,7 @@
 				:map = map + { ( i . 0 ) ( i . 1 ) }
 	{ :a 1 :b 2 } assert=? map
 
-:setScopeName @unittest stubFunc
+:setScopeName @unittest noTestNeeded
 
 :closure @unittest func()
 	:value v= 1
@@ -346,7 +346,7 @@
 //
 // debugging
 
-:repl @unittest stubFunc
+:repl @unittest noTestNeeded
 
 
 //
@@ -578,9 +578,9 @@
 	:two     assert=? simple 2
 	:default assert=? simple { :a 3 :b 4 }
 
-:when @unittest stubFunc
+:when @unittest noTestNeeded
 
-:default @unittest stubFunc
+:default @unittest noTestNeeded
 
 :if!nil @unittest func()
 	5   assert=? .( 1   if!nil 5
@@ -729,7 +729,7 @@
 	true
 
 // see the :eachIn test
-:iterator @unittest stubFunc
+:iterator @unittest noTestNeeded
 
 
 //
@@ -771,11 +771,11 @@
 :."[ @unittest func()
 	:asdf12.34 assert=? ."[ :asdf 1 2.34
 
-:\n @unittest stubFunc
+:\n @unittest noTestNeeded
 
-:\s @unittest stubFunc
+:\s @unittest noTestNeeded
 
-:\t @unittest stubFunc
+:\t @unittest noTestNeeded
 
 
 //
@@ -840,7 +840,7 @@
 //
 // exceptions
 
-:try @unittest stubFunc
+:try @unittest noTestNeeded
 
 :catch @unittest func()
 	// catch a badToken exception

@@ -26,14 +26,14 @@
 	{ :x -12 :y 0 } assert=? 4 i * 3 i
 
 // stub out tests & docstrings for the enum & its values
-:days			@unittest ( stubFunc )
-:days.sunday	@unittest ( stubFunc ) @doc ."
-:days.monday	@unittest ( stubFunc ) @doc ."
-:days.tuesday	@unittest ( stubFunc ) @doc ."
-:days.wednesday	@unittest ( stubFunc ) @doc ."
-:days.thursday	@unittest ( stubFunc ) @doc ."
-:days.friday	@unittest ( stubFunc ) @doc ."
-:days.saturday	@unittest ( stubFunc ) @doc ."
+:days			@unittest noTestNeeded
+:days.sunday	@unittest noTestNeeded @doc ."
+:days.monday	@unittest noTestNeeded @doc ."
+:days.tuesday	@unittest noTestNeeded @doc ."
+:days.wednesday	@unittest noTestNeeded @doc ."
+:days.thursday	@unittest noTestNeeded @doc ."
+:days.friday	@unittest noTestNeeded @doc ."
+:days.saturday	@unittest noTestNeeded @doc ."
 
 :isWeekend @unittest func()
 	( isWeekend days.sunday )	assert=? true
@@ -58,7 +58,7 @@
 	1       assert=? 1 !
 	24      assert=? 4 !
 	3628800 assert=? 10 !
-:testFactorial @unittest ( stubFunc ) @doc ." general testing for a factorial function
+:testFactorial @unittest noTestNeeded @doc ." general testing for a factorial function
 
 :! @unittest func()
 	testFactorial
@@ -74,7 +74,7 @@
 	3	assert=? fib1 3
 	5	assert=? fib1 4
 	8	assert=? fib1 5
-:testFib @unittest ( stubFunc ) @doc ." general testing for a Fibonacci function
+:testFib @unittest noTestNeeded @doc ." general testing for a Fibonacci function
 
 :fib1 @unittest func()
 	testFib
@@ -83,9 +83,9 @@
 	testFib
 
 
-:unitsType			@unittest ( stubFunc )
-:unitsType.distance	@unittest ( stubFunc ) @doc ."
-:unitsType.weight	@unittest ( stubFunc ) @doc ."
+:unitsType			@unittest noTestNeeded
+:unitsType.distance	@unittest noTestNeeded @doc ."
+:unitsType.weight	@unittest noTestNeeded @doc ."
 
 :mm @unittest func()
 	5.5 assert=? 5.5 mm =>mm

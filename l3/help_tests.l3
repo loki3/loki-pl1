@@ -1,8 +1,8 @@
 // unittests for help.l3
 
-:helpAll @unittest stubFunc
+:helpAll @unittest noTestNeeded
 
-:help @unittest stubFunc
+:help @unittest noTestNeeded
 
 :describe @unittest func()
 	// simple value
@@ -60,26 +60,26 @@
 	2          assert=? map . :specific . :overloads .size
 
 
-:dumpBody @unittest stubFunc
+:dumpBody @unittest noTestNeeded
 
-:dumpMeta @unittest stubFunc
+:dumpMeta @unittest noTestNeeded
 
-:dumpStack @unittest stubFunc
+:dumpStack @unittest noTestNeeded
 
-:dumpCurrentStack @unittest stubFunc
+:dumpCurrentStack @unittest noTestNeeded
 
-:listFunctions @unittest stubFunc
+:listFunctions @unittest noTestNeeded
 
-:listEnums @unittest stubFunc
+:listEnums @unittest noTestNeeded
 
-:listDelimiters @unittest stubFunc
+:listDelimiters @unittest noTestNeeded
 
-:listByCat @unittest stubFunc
+:listByCat @unittest noTestNeeded
 
-:getDocs @unittest stubFunc
+:getDocs @unittest noTestNeeded
 
-:getDocsInScope @unittest stubFunc
+:getDocsInScope @unittest noTestNeeded
 
-:getFileDocs @unittest stubFunc
+:getFileDocs @unittest noTestNeeded
 
-:prettify @unittest stubFunc
+:prettify @unittest noTestNeeded
