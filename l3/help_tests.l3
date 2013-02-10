@@ -1,6 +1,6 @@
 // unittests for help.l3
 
-:helpAll @unittest noTestNeeded
+:helpAll @unittest testNYI
 
 :help @unittest func()
 	// simply validate that help doesn't crash on various functions
@@ -64,26 +64,26 @@
 	2          assert=? map . :specific . :overloads .size
 
 
-:dumpBody @unittest noTestNeeded
+:dumpBody @unittest testNYI
 
-:dumpMeta @unittest noTestNeeded
+:dumpMeta @unittest testNYI
 
-:dumpStack @unittest noTestNeeded
+:dumpStack @unittest testNYI
 
-:dumpCurrentStack @unittest noTestNeeded
+:dumpCurrentStack @unittest testNYI
 
-:listFunctions @unittest noTestNeeded
+:listFunctions @unittest testNYI
 
-:listEnums @unittest noTestNeeded
+:listEnums @unittest testNYI
 
-:listDelimiters @unittest noTestNeeded
+:listDelimiters @unittest testNYI
 
-:listByCat @unittest noTestNeeded
+:listByCat @unittest testNYI
 
-:getDocs @unittest noTestNeeded
+:getDocs @unittest testNYI
 
-:getDocsInScope @unittest noTestNeeded
+:getDocsInScope @unittest testNYI
 
-:getFileDocs @unittest noTestNeeded
+:getFileDocs @unittest testNYI
 
-:prettify @unittest noTestNeeded
+:prettify @unittest testNYI
