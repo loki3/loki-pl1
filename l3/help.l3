@@ -62,7 +62,7 @@
 				:s = s + \n + .( dumpParams .[ :post overload
 	
 	s
-:help @doc ." Describe the value represented by a key.
+:help @cat :help @doc ." Describe the value represented by a key.
 
 
 :describe v= func .( ->key : :string
@@ -160,7 +160,7 @@
 	:specific = specific + .( getSpecific .[ key ( l3.getValue { :key key } )
 	// full results
 	{ :general general :specific specific }
-:describe @doc ." Create a description of the value represented by a key, returning a map with details.
+:describe @cat :help @doc ." Create a description of the value represented by a key, returning a map with details.
 
 
 
