@@ -9,9 +9,13 @@ namespace loki3.core
 	/// </summary>
 	internal class ValueFunctionOverload : ValueFunction
 	{
-		internal ValueFunctionOverload() { }
+		internal ValueFunctionOverload()
+		{
+			WritableMetadata[keyIsOverload] = new ValueBool(true);
+		}
 		internal ValueFunctionOverload(ValueFunction function)
 		{
+			WritableMetadata[keyIsOverload] = new ValueBool(true);
 			Add(function);
 		}
 
@@ -113,6 +117,7 @@ namespace loki3.core
 		#endregion
 
 		#region Keys
+		internal static string keyIsOverload = "l3.func.overload?";
 		internal static string keyOverloadLevel = "l3.func.overloadLevel";
 		#endregion
 
