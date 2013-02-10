@@ -106,6 +106,7 @@
     <None Include="docs\Functions.md" />
     <None Include="docs\ParseEval.md" />
     <None Include="docs\PatternMatching.md" />
+    <None Include="docs\Tests.md" />
     <None Include="l3\bootstrap.l3" />
     <None Include="l3\bootstrap_tests.l3" />
     <None Include="l3\help.l3" />
