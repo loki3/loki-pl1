@@ -323,7 +323,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :+= @cat :array @doc ." Add a value to an array
 
 :.size v= .( ->value postfix
-	l3.getCount value
+	l3.getCount ( value )
 :.size @cat :array @doc ." Return the number of elements in a collection.
 
 :apply v= .( ( ->array : :array ) infix ( ->function : :function )
