@@ -11,7 +11,7 @@
 
 
 :helpAll v= func()
-	:map v= l3.getScope .{ :scope :parent
+	:map v= l3.getScope .{ :level 1
 	map applyMap .(< print help #1
 	""
 :helpAll @cat :help @doc ." Print out information on everything defined in the given scope
@@ -192,7 +192,7 @@
 :dumpStack @cat :help @doc ." Dump the given stack, listing function names and variables that are defined in each scope.
 
 :dumpCurrentStack v= func()
-	dumpStack .( l3.getScope .{ :scope :parent
+	dumpStack .( l3.getScope .{ :level 1
 :dumpCurrentStack @cat :help @doc ." Dump the current stack, listing function names and variables that are defined in each scope.
 
 
@@ -218,7 +218,7 @@
 
 
 :getDocs v= func()
-	:scope v= l3.getScope .{ :scope :parent
+	:scope v= l3.getScope .{ :level 1
 	getDocsInScope scope
 :getDocs @cat :help @doc ." Return all the docstrings attached to the values in the current scope
 
