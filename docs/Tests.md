@@ -19,7 +19,7 @@ Say that stuff.l3 consists of the following functions:
 :quadruple @doc ." Quadruple a number
 
 :printHelp v= func()
-	print ." You can double or triple a number
+	print ." You can double, triple or quadruple a number
 ```
 
 You could then create a file called stuff_tests.l3 containing the unit tests for each of those functions.
@@ -30,7 +30,7 @@ You could then create a file called stuff_tests.l3 containing the unit tests for
 	5 assert=? double 2.5
 
 :triple @unittest func()
-	6 assert=? double 2
+	6 assert=? triple 2
 
 // indicates that we still need to write this test
 :quadruple @unittest testNYI
@@ -46,7 +46,7 @@ import :l3/unittest.l3
 unittest [ :stuff.l3 :stuff_tests.l3 ]
 ```
 
-This would print out diagnostics if any of the tests failed or weren’t present or if any function didn’t have @doc metadata attached to it.  Alternately, you could use runTestFile :myfile.l3 to run every function in a file if you had a suite of tests that didn’t directly correspond to functions.
+This would print out diagnostics if any of the tests failed or weren’t present or if any function didn’t have @doc metadata attached to it.  Alternately, you could use `runTestFile :myfile.l3` to run every function in a file if you had a suite of tests that didn’t directly correspond to functions.
 There are several basic asserts included for validating that functions return the expected values.
 
 ```
