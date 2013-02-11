@@ -317,7 +317,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.combine .[ array1 value2
 :+ @cat :array @doc ." Combine two arrays
 
-:+= v= .( ( ->array : :array ) infix ->value
+:+= f= .( ( ->array : :array ) infix ->value
 	l3.addToArray .{ :array array :value value
 :+= @order 6
 :+= @cat :array @doc ." Add a value to an array
@@ -605,6 +605,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :+ f= .( ( ->str1 : :string ) infix ( ->str2 : :string )
 	l3.stringConcat .{ :array .[ str1 str2
 :+ @cat :string @doc ." Concatenate two strings
+
+:+= f= .( ( ->key : :string ) infix ->value
+	key = l3.stringConcat .{ :array .[ ( l3.eval key ) .( $ value
+:+= @order 6
+:+= @cat :array @doc ." Add a value to an array
 
 :* f= .( ( ->str : :string ) infix ( ->n : :number )
 	:all v= ""
