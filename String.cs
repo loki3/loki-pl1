@@ -36,6 +36,8 @@ namespace loki3.builtin
 			{
 				if (arg.Type == ValueType.String)
 					return arg;
+				if (arg.Type == ValueType.Nil)
+					return new ValueString("");
 				return new ValueString(arg.ToString());
 			}
 		}
