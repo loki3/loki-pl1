@@ -79,7 +79,7 @@
 			elsif next?
 				:details = ." prefix
 			else
-				:details = ." body only
+				:details = ." nofix
 			details
 		
 		// get an array of all params

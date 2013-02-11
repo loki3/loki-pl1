@@ -778,12 +778,15 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	:line forEach body
 		match line
 			when .( ->key : :string
-				// add function as a closure over the current scope
-				:map = map + { key ( closure key ) }
-				// if it's a function with no parameters, force it to eval when used.
-				// todo: it would be better if this decision could be based on the context
-				//   in which it's used, rather than being a property of the function
-				( map . key ) @@ .[ :l3.func.forceEval? true
+				if l3.getType { :key key } =? :function
+					// add function as a closure over the current scope
+					:map = map + { key ( closure key ) }
+					// if it's a function with no parameters, force it to eval when used.
+					// todo: it would be better if this decision could be based on the context
+					//   in which it's used, rather than being a property of the function
+					( map . key ) @@ .[ :l3.func.forceEval? true
+				else
+					:map = map + { key ( l3.eval key ) }
 			when .( ->m : :map
 				:map = map + m
 	map

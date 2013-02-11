@@ -602,15 +602,25 @@ namespace loki3.builtin
 				Map map = arg.AsMap;
 
 				// get parameters
-				ValueFunction function = null;
+				Value value = null;
 				if (map["function"] is ValueFunction)
 				{
-					function = map["function"] as ValueFunction;
+					value = map["function"];
 				}
 				else if (map["functionKey"] is ValueString)
 				{
 					string name = map["functionKey"].AsString;
-					function = scope.GetValue(new Token(name)) as ValueFunction;
+					value = scope.GetValue(new Token(name));
+				}
+				ValueFunction function = value as ValueFunction;
+				if (function == null)
+				{
+					Loki3Exception e = new Loki3Exception();
+					if (value == null)
+						e.AddMissingKey(new ValueString("function"));
+					else
+						e.AddWrongType(ValueType.Function, value.Type);
+					throw e;
 				}
 
 				IScope thescope;

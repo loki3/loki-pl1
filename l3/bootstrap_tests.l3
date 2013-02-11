@@ -956,16 +956,21 @@
 		:current v= func()
 			total
 		
+		// data
+		:theAnswer v= 42
+		
 		// make methods public
 		public
 			:add
 			:current
+			:theAnswer
 	
 	:test v= keepAdding 5
 	6 assert=? test . :add 1
 	6 assert=? test . :current
 	8 assert=? test . :add 2
 	8 assert=? test . :current
+	42 assert=? test . :theAnswer
 	
 	// using composition to extend the class
 	:addOrSubtract v= func ->initial
