@@ -95,17 +95,20 @@ namespace loki3.builtin
 				Dictionary<string, Value> dict = inputMap.Raw;
 				List<Value> newarray = new List<Value>();
 
-				bool bPre = (filter is ValueFunctionPre || transform is ValueFunctionPre);
-				foreach (string key in dict.Keys)
+				if (dict != null)
 				{
-					DelimiterNode prev = (bPre ? null : new DelimiterNodeValue(new ValueString(key)));
-					DelimiterNode next = new DelimiterNodeValue(dict[key]);
+					bool bPre = (filter is ValueFunctionPre || transform is ValueFunctionPre);
+					foreach (string key in dict.Keys)
+					{
+						DelimiterNode prev = (bPre ? null : new DelimiterNodeValue(new ValueString(key)));
+						DelimiterNode next = new DelimiterNodeValue(dict[key]);
 
-					// if we should use this value...
-					if (filter == null || filter.Eval(prev, next, scope, scope, null, null).AsBool)
-					{	// ...transform if appropriate
-						Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, scope, null, null));
-						newarray.Add(newval);
+						// if we should use this value...
+						if (filter == null || filter.Eval(prev, next, scope, scope, null, null).AsBool)
+						{	// ...transform if appropriate
+							Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, scope, null, null));
+							newarray.Add(newval);
+						}
 					}
 				}
 				return new ValueArray(newarray);
