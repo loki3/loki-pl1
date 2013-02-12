@@ -85,6 +85,14 @@
 	-1 assert=? b
 	-2 assert=? d
 	-3 assert=? e
+	
+	// value mismatch
+	:x v= nil
+	{ :a true :x ( :x ... ) } v= { :a false :b 5 }
+	nil assert=? x
+	// value match
+	{ :a false :x ( :x ... ) } v= { :a false :b 5 }
+	{ :b 5 } assert=? x
 :assignmentMap @doc """
 	Test how assignment uses pattern matching for assignment of a map
 

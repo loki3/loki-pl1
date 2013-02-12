@@ -219,8 +219,12 @@ namespace loki3.core
 				foreach (string key in inmap.Raw.Keys)
 				{
 					Value submatch, subleftover;
-					if (patmap.ContainsKey(key) && Do(inmap[key], patmap[key], bShortPat, out submatch, out subleftover))
+					if (patmap.ContainsKey(key))
+					{	// if key is present, subpieces must match
+						if (!Do(inmap[key], patmap[key], bShortPat, out submatch, out subleftover))
+							return false;
 						matchmap[key] = submatch;
+					}
 					else if (restMap != null)
 						restMap[key] = inmap[key];
 					else
