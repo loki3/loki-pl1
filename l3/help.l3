@@ -16,15 +16,15 @@
 	""
 :helpAll @cat :help @doc ." Print out information on everything defined in the given scope
 
-:help v= func .( ->key : :string
+:help v= func1 .( ->key : :string
 	// turn a map into an array useful for formatting
-	:dumpMap v= func  ->map
+	:dumpMap v= func1  ->map
 		var :array
 		:i =eachIn map
 			:array = array + [ "" ( i . 0 ) ( i . 1 ) ]
 		array
 	// build up a description of pre or post parameters
-	:dumpParams v= func .[ ->preOrPost ->overloads
+	:dumpParams v= func1 .[ ->preOrPost ->overloads
 		:table v= [ ]
 		:table v= [ :name :type :default :rest ]
 		:param =eachIn ( overloads . preOrPost )
@@ -65,8 +65,8 @@
 :help @cat :help @doc ." Describe the value represented by a key.
 
 
-:describe v= func .( ->key : :string
-	:getSpecific f= func .[ ( ->key : :string ) ( ->value : :function )
+:describe v= func1 .( ->key : :string
+	:getSpecific f= func1 .[ ( ->key : :string ) ( ->value : :function )
 		// figure out if var is an in/post/prefix function
 		:getFixType v= func0
 			:details v= ."
@@ -83,10 +83,10 @@
 			details
 		
 		// get an array of all params
-		:getParams v= func ->params
+		:getParams v= func1 ->params
 			// extract metadata on a single parameter
-			:getParam v= func ->param
-				:getMeta v= func ->which
+			:getParam v= func1 ->param
+				:getMeta v= func1 ->which
 					:key v= :l3.pattern. + which
 					if ( :t v= ( l3.getMetadata { :value param } ) . key ) =? nil
 						:t = ""
@@ -132,7 +132,7 @@
 		map + { :overloads overloads }
 	
 	
-	:getSpecific f= func .[ ( ->key : :string ) ( ->value : :delimiter )
+	:getSpecific f= func1 .[ ( ->key : :string ) ( ->value : :delimiter )
 		:map v= .{ :start key :end ( key .@ :l3.delim.end )
 		// turn the number representing the type into a string
 		:delimEnum v= .[ :comment :string :value :array :raw
@@ -146,10 +146,10 @@
 			:map = map + { :function nil }
 		map
 	
-	:getSpecific f= func .[ ( ->key : :string ) ( ->value : :enum )
+	:getSpecific f= func1 .[ ( ->key : :string ) ( ->value : :enum )
 		.{ :values .( ( l3.getValue { :key key } ) mapToArray (< #2 >)
 	
-	:getSpecific f= func .[ ( ->key : :string ) ->value
+	:getSpecific f= func1 .[ ( ->key : :string ) ->value
 		{ :value value }
 	
 	[ :general :specific ] v= [ { } { } ]
@@ -164,12 +164,12 @@
 
 
 
-:dumpBody v= func ( ->name : :string )
+:dumpBody v= func1 ( ->name : :string )
 	( l3.getFunctionBody { :key name } ) fold (< ( #1 =>str ) + ( #2 =>str ) + \n >)
 :dumpBody @cat :help @doc ." Get the body of a function
 
 
-:dumpMeta v= func ->key
+:dumpMeta v= func1 ->key
 	:table v= [ :key :value ]
 	:metadata v= l3.getMetadata { :key key }
 	:pair =eachIn metadata
@@ -182,7 +182,7 @@
 :dumpMeta @cat :help @doc ." Dump metadata for the given value attached to a key
 
 
-:dumpStack v= func ->scope
+:dumpStack v= func1 ->scope
 	:table v= [ :function :scope ]
 	:i =eachIn scope
 		:function v= :i .@ :l3.scope.calledFunction
@@ -196,17 +196,17 @@
 :dumpCurrentStack @cat :help @doc ." Dump the current stack, listing function names and variables that are defined in each scope.
 
 
-:listFunctions v= func ->map
+:listFunctions v= func1 ->map
 	:table v= map filterMap (< :function =? l3.getType { :key #1 :builtin? true } >) mapToArray (< #1 >)
 	l3.formatTable { :array table :columns 3 }
 :listFunctions @cat :help @doc ." List all the functions in the given map
 
-:listEnums v= func ->map
+:listEnums v= func1 ->map
 	:table v= map filterMap (< :enum =? l3.getType { :key #1 } >) mapToArray (< #1 >)
 	l3.formatTable { :array table :columns 3 }
 :listEnums @cat :help @doc ." List all the enums in the given map
 
-:listDelimiters v= func ->map
+:listDelimiters v= func1 ->map
 	:table v= map filterMap (< :delimiter =? l3.getType { :key #1 :builtin? true } >) mapToArray (< #1 >)
 	l3.formatTable { :array table :columns 7 }
 :listDelimiters @cat :help @doc ." List all the delimiters in the given map
@@ -222,18 +222,18 @@
 	getDocsInScope scope
 :getDocs @cat :help @doc ." Return all the docstrings attached to the values in the current scope
 
-:getDocsInScope v= func ->scope
+:getDocsInScope v= func1 ->scope
 	:table v= scope filterMap (< #1 .@doc !=? nil >) mapToArray (< [ :> #1 ( #1 .@doc ) ] >)
 	l3.formatTable2 { :arrayOfArrays table }
 :getDocsInScope @cat :help @doc ." Return all the docstrings attached to the values in a given scope
 
-:getFileDocs v= func ->file
+:getFileDocs v= func1 ->file
 	import file
 	getDocsInScope currentScope
 :getFileDocs @cat :help @doc ." Return all the docstrings attached to the values in a given file
 
 
-:prettify v= func ->map
+:prettify v= func1 ->map
 	:table v= map mapToArray (< [ #1 #2 ] >)
 	l3.formatTable2 { :arrayOfArrays table }
 :prettify @cat :help @doc ." Return a map as a simple table represented by a string

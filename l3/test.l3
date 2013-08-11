@@ -60,7 +60,7 @@ var :fizzbuzz3 = func0
 :days =enum .[ :sunday :monday :tuesday :wednesday :thursday :friday :saturday
 :days @doc ." an enum representing the days of the week
 
-:isWeekend v= func ( ->day : :days )
+:isWeekend v= func1 ( ->day : :days )
 	( day =? days.sunday ) |? ( day =? days.saturday )
 :isWeekend @doc ." true if the day is Saturday or Sunday
 
@@ -68,7 +68,7 @@ var :fizzbuzz3 = func0
 //
 // a mechanism for defining a function recursively but having it execute iteratively
 
-:repeat v= func [ ->a ->f ]
+:repeat v= func1 [ ->a ->f ]
 	while ` nil !=? f `
 		[ :a :f ] = f [ a ]
 	a
@@ -80,7 +80,7 @@ var :fizzbuzz3 = func0
 	When the computation is finished, the returned function should be nil.
 
 :! v= .( ->n 1func
-	:fact v= func [ ->a ->b ]
+	:fact v= func1 [ ->a ->b ]
 		( a >? 0 ) ? .[ [ ( a * b ) ( fact [ ( a - 1 ) ] ) ]  [ b nil ]
 	repeat [ 1 ( fact [ n ] ) ]
 :! @order 2
@@ -96,7 +96,7 @@ var :fizzbuzz3 = func0
 //
 // Fibonacci numbers
 
-:fib1 v= func ->n
+:fib1 v= func1 ->n
 	[ :f1 :f2 ] v= [ 1 1 ]
 	if n >? 1
 		:i forEach ( 2 .. n )
@@ -104,8 +104,8 @@ var :fizzbuzz3 = func0
 	f2
 :fib1 @doc ." Iterative computation of Fibonacci numbers
 
-:fib2 v= func ->n
-	:sub v= func .[ ->f1 ->f2 ->i
+:fib2 v= func1 ->n
+	:sub v= func1 .[ ->f1 ->f2 ->i
 		( i =? n ) ? .[ f2 .` sub .[ f2 ( f1 + f2 ) ( i + 1 )
 	sub .[ 0 1 0
 :fib2 @doc ." Recursive computation of Fibonacci numbers

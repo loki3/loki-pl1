@@ -16,7 +16,7 @@
 	:int       assert=? map . :general . :type
 	
 	// prefix
-	:fPrefix v= func .( ->a : :int
+	:fPrefix v= func1 .( ->a : :int
 		true
 	:fPrefix @order 4 @cat :thing @doc :something
 	:map v= describe :fPrefix
@@ -55,9 +55,9 @@
 	// :map v= describe :fNofix
 	
 	// overload
-	:fOverload f= func .( ->a : :int
+	:fOverload f= func1 .( ->a : :int
 		true
-	:fOverload f= func .( ->a : :string
+	:fOverload f= func1 .( ->a : :string
 		true
 	:map v= describe :fOverload
 	:fOverload assert=? map . :general . :name

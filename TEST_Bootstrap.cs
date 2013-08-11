@@ -80,7 +80,7 @@ namespace loki3.builtin.test
 				// define complex math
 				string[] lines = {
 					// complex [ 1 2 ] -> 1+2i
-					":complex v= func [ ->x ->y ]",
+					":complex v= func1 [ ->x ->y ]",
 					"	{ :real x :imaginary y }",
 					":complex @order 1",
 					// 5 i -> 5i
@@ -191,7 +191,7 @@ namespace loki3.builtin.test
 				IScope scope = new ScopeChain(GetBootstrapScope());
 
 				string[] lines = {
-					":addUp v= func [ ( ->a : :int ) ( ->b d= 5 ) ]",
+					":addUp v= func1 [ ( ->a : :int ) ( ->b d= 5 ) ]",
 					"	a + b",
 				};
 				LineConsumer requestor = new LineConsumer(lines);

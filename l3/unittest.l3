@@ -9,7 +9,7 @@
 //		doSomething
 //
 
-:unittest v= func [ ->targetFile ->testFile ]
+:unittest v= func1 [ ->targetFile ->testFile ]
 	// import files into local scope
 	import targetFile
 	import testFile
@@ -20,21 +20,21 @@
 	unittestScope currentScope
 :unittest @cat :unittest @doc ." For a given implementation file, run all the tests defined in a test file.
 
-:runTestFile v= func ->testFile
+:runTestFile v= func1 ->testFile
 	import testFile
 	:scope v= currentScope
 	testFunction .[ runTests :runTests scope
 :runTestFile @cat :unittest @doc ." Run all the tests defined in a test file.
 
 
-:unittestScope v= func ->scope
+:unittestScope v= func1 ->scope
 	var :success? = true
 	:success? = success? &? testFunction .[ checkDocs :checkDocs scope
 	:success? = success? &? testFunction .[ runUnittests :runUnittests scope
 	success?
 :unittestScope @cat :unittest @doc ." Run tests and check for docstrings on everything in scope
 
-:testFunction v= func .[ ->function ->name ->scope
+:testFunction v= func1 .[ ->function ->name ->scope
 	[ :success? :failures ] v= function scope
 	if success?
 		print " ---- " + name + ." : succeeded
@@ -47,7 +47,7 @@
 	Takes a function that returns [ success? arrayOfFailures ] , the name of the test, and a scope to operate on.
 
 
-:checkDocs v= func ->scope
+:checkDocs v= func1 ->scope
 	var :failures = scope filterMap (< #1 .@doc =? nil >) mapToArray (< #1 >)
 	[ ( ( failures .size ) =? 0 ) failures ]
 :checkDocs @cat :unittest @doc """
@@ -84,7 +84,7 @@
 	A test can assert objects are equal.
 	If they're not, the current test function aborts & fails.
 
-:assertTrue? v= func ->cond
+:assertTrue? v= func1 ->cond
 	if !? l3.eval cond
 		l3.throw { :type :assert :expected true :expression ( cond ) }
 :assertTrue? @order 6
@@ -92,7 +92,7 @@
 	A test can assert something is true.
 	If it's not, the current test function aborts & fails.
 
-:assertFalse? v= func ->cond
+:assertFalse? v= func1 ->cond
 	if l3.eval cond
 		l3.throw { :type :assert :expected false :expression ( cond ) }
 :assertFalse? @order 6
@@ -100,12 +100,12 @@
 	A test can assert something is false.
 	If it's not, the current test function aborts & fails.
 
-:assertFail v= func ->message
+:assertFail v= func1 ->message
 	l3.throw { :type :assert :message message }
 :assertFail @cat :unittest @doc """
 	A test can say it fails immediately if this line of code is run.
 
-:dumpAssert v= func [ ->testName ->e ]
+:dumpAssert v= func1 [ ->testName ->e ]
 	print " FAILED : " + testName
 	if ( e . :expected ) !=? nil
 		print ."[ :.expected: \s ( e . :expected )
@@ -117,7 +117,7 @@
 		print ."[ :....message: \s ( e . :message )
 :dumpAssert @doc ." Print details about an assert
 
-:runUnittests v= func ->scope
+:runUnittests v= func1 ->scope
 	var :failures = [ ]
 	[ :testName _ ] forEach scope
 		try
@@ -133,7 +133,7 @@
 	Run .@unittest on every value in the scope.
 	A unittest fails if it isn't present or if an assert fails inside it.
 
-:runTests v= func ->scope
+:runTests v= func1 ->scope
 	var :failures = [ ]
 	:mapOfTests v= scope filterMap (< l3.getType { :key #1 } =? :function >)
 	[ :testName :testFunction ] =eachIn mapOfTests

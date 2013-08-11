@@ -45,8 +45,8 @@
 	( isWeekend days.sunday )	assert=? true
 
 :repeat @unittest func0
-	:sum v= func ->n
-		:add v= func [ ->a ->b ]
+	:sum v= func1 ->n
+		:add v= func1 [ ->a ->b ]
 			( a >? 0 ) ? .[ [ ( a + b ) ( add [ ( a - 1 ) ] ) ]  [ b nil ]
 		repeat [ 0 ( add [ n ] ) ]
 	10 assert=? sum 4

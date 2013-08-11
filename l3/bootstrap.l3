@@ -50,7 +50,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // function definitions:
 
 // a function which creates a prefix function
-:func v= l3.createFunction { :post ->pattern }
+:func1 v= l3.createFunction { :post ->pattern }
 	l3.createFunction { :post pattern }
 
 // a function which creates an infix function
@@ -152,7 +152,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object @@ .[ :l3.pattern.hasKeys type
 :@@hasKeys @cat :metadata @doc ." Specify that parameter must have certain keys
 
-:copy v= func ->value
+:copy v= func1 ->value
 	l3.copy .{ :value value
 :copy @cat :create @doc ." Make a copy of a value
 
@@ -160,11 +160,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.getScope .{ :level 1
 :currentScope @cat :scope @doc ." Get a map representing the current scope
 
-:setScopeName v= func ->name
+:setScopeName v= func1 ->name
 	l3.getScope { :level 1 } @@ .[ :l3.scope.name name
 :setScopeName @cat :scope @doc ." Assign a name to the current scope.  Useful for popping back to this scope.
 
-:closure v= func ( ->key : :string )
+:closure v= func1 ( ->key : :string )
 	l3.bindFunction .{ :functionKey key :map .( l3.getScope .{ :level 1
 :closure @cat :scope @doc ." Manually create a closure, binding the current scope to a function
 
@@ -208,7 +208,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :f=		@cat :assign    @doc ." Create a new key/value pair in the current scope, like v= but functions can be overloaded
 :=		@cat :assign    @doc ." Assign a value to a key
 :var	@cat :assign    @doc ." Create a new variable in the current scope
-:func	@cat :function  @doc ." Define a function that takes parameters after the function name
+:func1	@cat :function  @doc ." Define a function that takes parameters after the function name
 :1func1	@cat :function  @doc ." Define a function that takes parameters before and after the function name
 :1func @cat :function @doc ." Define a function that takes parameters before the function name
 :func0	@cat :function  @doc ." Define a function that takes no parameters
@@ -225,7 +225,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // definitions that take a pattern and one or more lines of code
 
-:lambda v= func [ ->pattern ->line1 ( ->more ... ) ]
+:lambda v= func1 [ ->pattern ->line1 ( ->more ... ) ]
 	l3.createFunction { :post pattern :body ( [ line1 ] + more ) }
 :lambda	@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. lambda [ :x ` 2 + x ` ]
 
@@ -238,7 +238,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // definitions that create a prefix function, assume parameter is called ## and takes a single line of code
 
-:lambda1 v= func ->line
+:lambda1 v= func1 ->line
 	l3.createFunction { :post ->## :body [ line ] }
 :lambda1	@cat :function @doc ." Creates a single line prefix function, assuming parameter is called ##, e.g. lambda1 ` 2 + ## `
 
@@ -251,7 +251,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // definitions that create an infix function, assume parameters are called #1 and #2 and takes a single line of code
 
-:lambda2 v= func ->line
+:lambda2 v= func1 ->line
 	l3.createFunction { :pre ->#1 :post ->#2 :body [ line ] }
 :lambda2	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. lambda2 ` #1 + #2 `
 
@@ -400,7 +400,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :? @order 4
 :? @cat :if @doc ." If condition is met, return first value, else return second value
 
-:if v= func ( ->do? : :bool )
+:if v= func1 ( ->do? : :bool )
 	l3.ifBody .{ :do? do? :body body
 	l3.setValue { :key :l3.coFunction.if.done? :value do? :level 1 }
 	do?
@@ -408,7 +408,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :if @order 6
 :if @cat :if @doc ." If condition is met, do body
 
-:elsif v= func ( ->do? : :bool )
+:elsif v= func1 ( ->do? : :bool )
 	:doThis? v= .( ( !? l3.coFunction.if.done? ) &? do?
 	l3.ifBody .{ :do? doThis? :body body
 	l3.ifBody .{ :do? doThis? :body .[ .` l3.setValue .{ :key :l3.coFunction.if.done? :value true :level 1
@@ -424,18 +424,18 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :else @body? true
 :else @cat :if @doc ." If previous if and elsifs failed, do body
 
-:match v= func ->l3.coFunction.match.value
+:match v= func1 ->l3.coFunction.match.value
 	:l3.coFunction.match.done? v= false
 	l3.eval body
 :match @body? true @order 6
 :match @cat :if @doc ." Set the seed value for picking which pattern matches a given value.  First nested 'when' that matches is run, else it runs 'default' if present.
 
-:matchAll v= func ->l3.coFunction.matchAll.value
+:matchAll v= func1 ->l3.coFunction.matchAll.value
 	l3.eval body
 :matchAll @body? true @order 6
 :matchAll @cat :if @doc ." Set the seed value for matching patterns against a given value.  Every nested 'when' that matches is run.
 
-:when v= func ->pattern
+:when v= func1 ->pattern
 	:whenBody v= body
 	if ( l3.getValue { :key :l3.coFunction.matchAll.value } ) =? nil
 		// goes with match
@@ -465,7 +465,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	result
 :if!nil @cat :if @doc ." If a value isn't nil, evaluate the following code.
 
-:do!nil v= func .( ->val : :rawLines
+:do!nil v= func1 .( ->val : :rawLines
 	:theBody v= body
 	:line =eachIn ( theBody )
 		if ( l3.eval val ) !=? nil
@@ -477,13 +477,13 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // loop
 
-:while v= func ( ->cond : :rawLines )
+:while v= func1 ( ->cond : :rawLines )
 	setScopeName :loop
 	l3.loop .{ :check cond :body body
 :while @body? true
 :while @cat :loop @doc ." Repeat loop while condition is true
 
-:repeat v= func .( ->n : :int
+:repeat v= func1 .( ->n : :int
 	:i v= 0
 	setScopeName :loop
 	l3.loop .{ :check ` i <? n ` :change ` :i = i + 1 ` :body body
@@ -497,7 +497,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :repeatsOf @order 5
 :repeatsOf @cat :loop @doc ." Repeat a code snippet n times.
 
-:for v= func .[ ->start ->cond ->change
+:for v= func1 .[ ->start ->cond ->change
 	start
 	setScopeName :loop
 	l3.loop .{ :check cond :change change :body body
@@ -544,14 +544,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // specific iterator overloads
 
-:iterator f= func ( ->array : :array )
+:iterator f= func1 ( ->array : :array )
 	[ :i :count ] i= [ -1 ( array .size ) ]
 	:i = i + 1
 	( i <? count ) ? [ ` array . i ` nil ]
 :iterator @iterator
 :iterator @cat :iterator @doc ." Iterate over all items in a collection.
 
-:iterator f= func .[ ( ->array1 : :array ) ( ->array2 : :array )
+:iterator f= func1 .[ ( ->array1 : :array ) ( ->array2 : :array )
 	[ :i :j ] i= [ 0 -1 ]
 	[ :count1 :count2 ] i= [ ( array1 .size ) ( array2 .size ) ]
 	:j = j + 1
@@ -560,7 +560,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	( i <? count1 ) ? [ ` [ ( array1 . i ) ( array2 . j ) ] ` nil ]
 
 // todo: function overloading should give :scope precendence over :map
-:iterator f= func ( ->scope : :scope )
+:iterator f= func1 ( ->scope : :scope )
 	:current i= nil
 	if current =? nil
 		:current = scope
@@ -568,7 +568,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		:current = :current .@ :l3.scope.parent
 	current
 
-:iterator f= func ( ->map : :map )
+:iterator f= func1 ( ->map : :map )
 	[ :i :keys ] i= [ -1 ( l3.getMapKeys map ) ]
 	:count i= keys .size
 	:i = i + 1
@@ -578,17 +578,17 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		:result = [ key ( map . key ) ]
 	result
 
-:iterator f= func ( ->f : :function )
+:iterator f= func1 ( ->f : :function )
 	[ :i :count ] i= [ -1 ( ( f ) .size ) ]
 	:i = i + 1
 	( i <? count ) ? [ ( ( f ) . i ) nil ]
 
-:iterator f= func ( ->lines : :rawLines )
+:iterator f= func1 ( ->lines : :rawLines )
 	[ :i :count ] i= [ -1 ( lines .size ) ]
 	:i = i + 1
 	( i <? count ) ? [ ` lines . i ` nil ]
 
-:iterator f= func ( ->lines : :rawLine )
+:iterator f= func1 ( ->lines : :rawLine )
 	[ :i :count ] i= [ -1 ( lines .size ) ]
 	:i = i + 1
 	( i <? count ) ? [ ` lines . i ` nil ]
@@ -602,13 +602,13 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :=>str @order 2
 :=>str @cat :string @doc ." Convert a value to a string
 
-:$ v= func ->val
+:$ v= func1 ->val
 	l3.toString ( val )
 :$ @order 2 @cat :string @doc ." Converts the next value to a string.
-:$_ v= func ->val
+:$_ v= func1 ->val
 	\s + .( l3.toString ( val )
 :$_ @order 2 @cat :string @doc ." Prepends a space and converts the next value to a string.
-:$__ v= func ->val
+:$__ v= func1 ->val
 	\t + .( l3.toString ( val )
 :$__ @order 2 @cat :string @doc ." Prepends a tab and converts the next value to a string.
 
@@ -736,7 +736,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :try @body? true
 :try @cat :exception @doc ." Start a code block where exceptions can be caught.  Used with catch and endtry.
 
-:catch v= func ->pattern
+:catch v= func1 ->pattern
 	:catchBody v= body
 	// see if there was an exception thrown
 	if ( l3.getValue { :key :l3.exception } ) =? nil
@@ -767,11 +767,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // modules
 
-:import v= .( func ( ->file : :string )
+:import v= .( func1 ( ->file : :string )
 	l3.loadModule { :file file :scope " parent " }
 :import @cat :module @doc ." Run the code from the given file.  Don't run if file has already been imported.
 
-:reimport v= .( func ( ->file : :string )
+:reimport v= .( func1 ( ->file : :string )
 	l3.loadModule { :file file :scope " parent " :force? true }
 :reimport @cat :module @doc ." Run the code from the given file.  Reload even if module has been imported before.
 

@@ -104,8 +104,8 @@
 //
 // function definitions:
 
-:func	@unittest func0
-	:a v= func ->b
+:func1	@unittest func0
+	:a v= func1 ->b
 		b + 2
 	7 assert=? a 5
 
@@ -257,8 +257,8 @@
 	
 	// not using a closure
 	// returns a function that adds onto 'value'
-	:nested v= func ->value
-		:add v= func ->plus
+	:nested v= func1 ->value
+		:add v= func1 ->plus
 			value + plus
 		add
 	// 2 gets lost, instead it'll add onto 1
@@ -266,8 +266,8 @@
 	4 assert=? getValue 3
 	
 	// create a closure
-	:nested2 v= func ->value
-		:add v= func ->plus
+	:nested2 v= func1 ->value
+		:add v= func1 ->plus
 			value + plus
 		closure :add
 	// this time it'll add onto 2
@@ -541,7 +541,7 @@
 	3 assert=? a
 
 :match @unittest func0
-	:test v= func ->pattern
+	:test v= func1 ->pattern
 		var :result
 		match pattern
 			when [ ( ->a : :int ) 1 ]
@@ -565,7 +565,7 @@
 	4 assert=? test { :a :blah }
 	true
 	
-	:simple v= func ->input
+	:simple v= func1 ->input
 		var :result
 		match input
 			when 1
@@ -714,13 +714,13 @@
 	7.5 assert=? total
 	
 	// test over functions & overloads
-	:functions v= func ( ->a : :array )
+	:functions v= func1 ( ->a : :array )
 		1
 	:count v= 0
 	:i =eachIn ( functions )
 		:count = count + 1
 	1 assert=? count
-	:functions f= func ( ->a : :map )
+	:functions f= func1 ( ->a : :map )
 		2
 	:count v= 0
 	:i =eachIn ( functions )
@@ -959,12 +959,12 @@
 :public @unittest func0
 	// a function which creates a 'class'
 	// with a constructor, private data, and public methods
-	:keepAdding v= func ->initial
+	:keepAdding v= func1 ->initial
 		// private variable
 		:total v= initial
 		
 		// methods
-		:add v= func ->amount
+		:add v= func1 ->amount
 			:total = total + amount
 		:current v= func0
 			total
@@ -986,11 +986,11 @@
 	42 assert=? test . :theAnswer
 	
 	// using composition to extend the class
-	:addOrSubtract v= func ->initial
+	:addOrSubtract v= func1 ->initial
 		:base v= keepAdding initial
 		
 		// additional method
-		:subtract v= func ->amount
+		:subtract v= func1 ->amount
 			base . :add ( 0 - amount )
 		
 		// expose composed methods & extension
