@@ -1,22 +1,22 @@
 // unittests for bootstrap.l3
 
-:(		@unittest func()
+:(		@unittest func0
 	14 assert=? ( 4 + 3 ) * 2
 	10 assert=? 4 + ( 3 * 2 )
 
-:[		@unittest func()
+:[		@unittest func0
 	:array assert=? l3.getType { :value [ 1 2 ] }
 	4 assert=? l3.getCount [ 3 4 5 6 ]
 
-:{		@unittest func()
+:{		@unittest func0
 	:map assert=? l3.getType { :value { :a 1 :b 2 } }
 	2 assert=? l3.getCount { :a 1 :b 2 }
 
-://		@unittest func()
+://		@unittest func0
 	// assertTrue? false
 	true
 
-:///func @unittest func()
+:///func @unittest func0
 	///func
 		this should all be ignored
 		as well as this line
@@ -24,49 +24,49 @@
 		and this
 	true
 
-:///	@unittest func()
+:///	@unittest func0
 	/// this should all be ignored
 		as well as this line
 			and this
 		and this
 	true
 
-:`		@unittest func()
+:`		@unittest func0
 	8 assert=? l3.eval ` 5 + 3 `
 
-:.(		@unittest func()
+:.(		@unittest func0
 	10 assert=? 4 + .( 3 * 2
 
-:.[		@unittest func()
+:.[		@unittest func0
 	3 assert=? l3.getCount .[ 2 3 4
 
-:.{		@unittest func()
-	:map assert=? l3.getType .{ :value .{ :a 1 :b 2 
+:.{		@unittest func0
+	:map assert=? l3.getType .{ :value .{ :a 1 :b 2
 
-:.`		@unittest func()
+:.`		@unittest func0
 	8 assert=? l3.eval .` 5 + 3
 
-:/*		@unittest func()
+:/*		@unittest func0
 	:a /* comment */ v= /* comment */ 5 + 3
 	8 assert=? a
 
-:"		@unittest func()
+:"		@unittest func0
 	:asdf assert=? " asdf "
 
-:'		@unittest func()
+:'		@unittest func0
 	:asdf assert=? ' asdf '
 
-:."		@unittest func()
+:."		@unittest func0
 	:asdf assert=? ." asdf
 
-:.'		@unittest func()
+:.'		@unittest func0
 	:asdf assert=? .' asdf
 
-:v=		@unittest func()
+:v=		@unittest func0
 	:a v= 5
 	5 assert=? a
 
-:f=		@unittest func()
+:f=		@unittest func0
 	// try overloads on different numbers of parameters
 	:f f= .(( :a ` a + 1 `
 	5 assert=? f 4
@@ -91,12 +91,12 @@
 	6 assert=? g 4
 	7 assert=? g 4.0
 
-:=		@unittest func()
+:=		@unittest func0
 	:a v= 5
 	:a = 4
 	4 assert=? a
 
-:var	@unittest func()
+:var	@unittest func0
 	var :a = 5
 	5 assert=? a
 
@@ -104,23 +104,23 @@
 //
 // function definitions:
 
-:func	@unittest func()
+:func	@unittest func0
 	:a v= func ->b
 		b + 2
 	7 assert=? a 5
 
-:infix	@unittest func()
-	:a v= .( ->b infix ->c
+:1func1	@unittest func0
+	:a v= .( ->b 1func1 ->c
 		b + c
 	42 assert=? 40 a 2
 
-:postfix @unittest func()
-	:a v= .( ->b postfix
+:1func @unittest func0
+	:a v= .( ->b 1func
 		b + 2
 	5 assert=? 3 a
 
-:func()	@unittest func()
-	:a v= func()
+:func0	@unittest func0
+	:a v= func0
 		3.5
 	3.5 assert=? a
 
@@ -128,7 +128,7 @@
 //
 // get & set
 
-:.		@unittest func()
+:.		@unittest func0
 	4 assert=? { :a 3 :b 4 :c 5 } . :b
 	3 assert=? [ 6 5 4 3 2 ] . 3
 	// map default
@@ -142,42 +142,42 @@
 	314 assert=? b . 2
 	314 assert=? b . -1
 
-:@		@unittest func()
+:@		@unittest func0
 	:a v= 1
 	:a @ [ :blah :something ]
 	:something assert=? ( l3.getMetadata { :key :a } ) . :blah
 
-:.@		@unittest func()
+:.@		@unittest func0
 	:a v= 1
 	:a @ [ :blah :something ]
 	:something assert=? :a .@ :blah
 
-:.@@	@unittest func()
+:.@@	@unittest func0
 	:a v= 1
 	:a @ [ :blah :something ]
 	{ :blah :something } assert=? :a .@@
 
-:@doc	@unittest func()
+:@doc	@unittest func0
 	:a v= 1
 	:a @doc :whatever
 	:whatever assert=? :a .@doc
 
-:.@doc	@unittest func()
+:.@doc	@unittest func0
 	:a v= 1.5
 	:a @doc :whatever
 	:whatever assert=? :a .@doc
 
-:@cat	@unittest func()
+:@cat	@unittest func0
 	:a v= 1
 	:a @cat :something
 	:something assert=? :a .@cat
 
-:.@cat	@unittest func()
+:.@cat	@unittest func0
 	:a v= 1.5
 	:a @cat :something
 	:something assert=? :a .@cat
 
-:@order @unittest func()
+:@order @unittest func0
 	:a v= (| ## + 2 |)
 	// a should be applied after *
 	:a @order 5
@@ -186,8 +186,8 @@
 	:a @order 1
 	14 assert=? a 5 * 2
 
-:@body? @unittest func()
-	:a v= func()
+:@body? @unittest func0
+	:a v= func0
 		:result v= nil
 		:line forEach body
 			:result = result + [ line ]
@@ -197,47 +197,47 @@
 		4
 	[ 3 4 ] assert=? b
 
-:@type @unittest func()
+:@type @unittest func0
 	:a v= 1
 	:a @type :int
 	:int assert=? :a .@ :l3.value.type
 
-:@iterator @unittest func()
+:@iterator @unittest func0
 	:a v= (| ## + 1 |)
 	:a @iterator
 	:iterator assert=? :a .@ :l3.value.type
 
-:@@ @unittest func()
+:@@ @unittest func0
 	:a v= 1
 	a @@ [ :key 2 ]
 	2 assert=? :a .@ :key
 
-:: @unittest func()
+:: @unittest func0
 	:a v= 1
 	a : :int
 	:int assert=? :a .@ :l3.pattern.type
 
-:d= @unittest func()
+:d= @unittest func0
 	:a v= 1
 	a d= 2
 	2 assert=? :a .@ :l3.pattern.default
 
-:... @unittest func()
+:... @unittest func0
 	:a v= 1
 	a ...
 	true assert=? :a .@ :l3.pattern.rest
 
-:@@hasKeys @unittest func()
+:@@hasKeys @unittest func0
 	:a v= 1
 	a @@hasKeys [ :b :c ]
 	[ :b :c ] assert=? :a .@ :l3.pattern.hasKeys
 
-:copy	@unittest func()
+:copy	@unittest func0
 	:a v= 1
 	1 assert=? copy a
 	:str assert=? copy :str
 
-:currentScope @unittest func()
+:currentScope @unittest func0
 	// create accumulator outside the nested scope
 	:map v= { }
 	if true
@@ -252,7 +252,7 @@
 
 :setScopeName @unittest noTestNeeded
 
-:closure @unittest func()
+:closure @unittest func0
 	:value v= 1
 	
 	// not using a closure
@@ -274,7 +274,7 @@
 	:getValue v= nested2 2
 	5 assert=? getValue 3
 
-:i= @unittest func()
+:i= @unittest func0
 	[ :a :b ] i= [ 4 5 ]
 	4 assert=? a
 	5 assert=? b
@@ -293,41 +293,41 @@
 //
 // more function definitions
 
-:lambda	@unittest func()
+:lambda	@unittest func0
 	:2+ v= .( lambda .[ :x .` 2 + x
 	3 assert=? 2+ 1
 
-:((		@unittest func()
+:((		@unittest func0
 	:2+ v= (( :x ` 2 + x ` ))
 	3 assert=? 2+ 1
 	:mult v= (( [ :a :b ] ` a * b ` ))
 	12 assert=? mult [ 6 2 ]
 
-:.((	@unittest func()
+:.((	@unittest func0
 	:2+ v= .(( :x ` 2 + x `
 	3 assert=? 2+ 1
 
-:lambda1	@unittest func()
+:lambda1	@unittest func0
 	:2+ v= .( lambda1 .` ## + 2
 	3 assert=? 2+ 1
 
-:(|		@unittest func()
+:(|		@unittest func0
 	:2+ v= (| ## + 2 |)
 	3 assert=? 2+ 1
 
-:.(|	@unittest func()
+:.(|	@unittest func0
 	:2+ v= .(| ## + 2
 	3 assert=? 2+ 1
 
-:lambda2	@unittest func()
+:lambda2	@unittest func0
 	:div v= .( lambda2 ` #1 / #2 `
 	3 assert=? 6 div 2
 
-:(<		@unittest func()
+:(<		@unittest func0
 	:div v= (< #1 / #2 >)
 	3 assert=? 6 div 2
 
-:.(<	@unittest func()
+:.(<	@unittest func0
 	:div v= .(< #1 / #2
 	3 assert=? 6 div 2
 
@@ -335,7 +335,7 @@
 //
 // types
 
-:_ @unittest func()
+:_ @unittest func0
 	nil assert=? _
 	// _ in pattern matching means ignore the value
 	[ :a _ :b ] v= [ 3 5 7 ]
@@ -352,31 +352,31 @@
 //
 // logic
 
-:&? @unittest func()
+:&? @unittest func0
 	assertTrue?  true  &? true
 	assertFalse? true  &? false
 	assertFalse? false &? true
 	assertFalse? false &? false
 
-:|? @unittest func()
+:|? @unittest func0
 	assertTrue?  true  |? true
 	assertTrue?  true  |? false
 	assertTrue?  false |? true
 	assertFalse? false |? false
 
-:!? @unittest func()
+:!? @unittest func0
 	assertTrue?  !? false
 	assertFalse? !? true
 
-:=? @unittest func()
+:=? @unittest func0
 	assertTrue?  5 =? 5
 	assertFalse? 5 =? 4
 
-:!=? @unittest func()
+:!=? @unittest func0
 	assertTrue?  5 !=? 4
 	assertFalse? 5 !=? 5
 
-:=any? @unittest func()
+:=any? @unittest func0
 	assertTrue?  5 =any? [ 3 5 6 9 ]
 	assertFalse? 4 =any? [ 3 5 6 9 ]
 
@@ -384,74 +384,74 @@
 //
 // arrays
 
-:.. @unittest func()
+:.. @unittest func0
 	[ 3 4 5 6 ] assert=? ( 3 .. 6 )
 
-:+ @unittest func()
+:+ @unittest func0
 	[ 3 4 5 6 ] assert=? [ 3 4 ] + [ 5 6 ]
 	[ 3 4 5 6 ] assert=? [ 3 4 5 ] + 6
 	[ 3 4 5 6 ] assert=? [ 3 4 5 6 ] + [ ]
 	[ 3 4 5 6 ] assert=? [ 3 4 5 6 ] + nil
 
-:+= @unittest func()
+:+= @unittest func0
 	// array addition
 	:a v= [ 3 4 5 ]
 	// todo: perhaps it should be :a += 6
 	a += 6
 	[ 3 4 5 6 ] assert=? a
 
-:.size @unittest func()
+:.size @unittest func0
 	3 assert=? [ 5 6 8 ] .size
 	2 assert=? { :a 1 :b 3 } .size
 	5 assert=? " qwert " .size
 
-:apply @unittest func()
+:apply @unittest func0
 	[ 6 10 14 ] assert=? [ 3 5 7 ] apply (| ## * 2 |)
 
-:foldLeft @unittest func()
+:foldLeft @unittest func0
 	1 assert=? [ 27 9 3 ] foldLeft (< #1 / #2 >)
 
-:foldRight @unittest func()
+:foldRight @unittest func0
 	9 assert=? [ 27 9 3 ] foldRight (< #1 / #2 >)
 
-:filter @unittest func()
+:filter @unittest func0
 	// only take the odd values
 	[ 3 5 7 ] assert=? [ 2 3 5 6 7 8 ] filter (| ## % 2 =? 1 |)
 	// take every other value
 	[ 3 6 8 ] assert=? [ 2 3 5 6 7 8 ] filter (< #1 % 2 =? 1 >)
 
-:makeArray @unittest func()
+:makeArray @unittest func0
 	:a v= makeArray
 		:asdf
 		3.5
 		2
 	[ :asdf 3.5 2 ] assert=? a
 
-:by @unittest func()
+:by @unittest func0
 	[ 2 6 11 ] assert=? [ 2 3 5 6 7 8 11 ] by 3
 
 
 //
 // maps
 
-:makeMap @unittest func()
+:makeMap @unittest func0
 	:a v= makeMap
 		:1 2
 		:3 4
 	{ :1 2 :3 4 } assert=? a
 
-:applyMap @unittest func()
+:applyMap @unittest func0
 	{ :a 42 :b 17 } assert=? { :a 84 :b 34 } applyMap (| ## / 2 |)
 
-:filterMap @unittest func()
+:filterMap @unittest func0
 	{ :b 2 :d 6 } assert=? { :a 1 :b 2 :c 3 :d 6 } filterMap (| ## % 2 =? 0 |)
 	{ :c 3 }      assert=? { :a 1 :b 2 :c 3 :d 6 } filterMap (< #1 =? :c >)
 
-:mapToArray @unittest func()
+:mapToArray @unittest func0
 	[ 42 17 ] assert=? { :a 84 :b 34 } mapToArray (| ## / 2 |)
 	[ ] assert=? { } mapToArray (| ## / 2 |)
 
-:filterMapToArray @unittest func()
+:filterMapToArray @unittest func0
 	[ 2 6 ] assert=? { :a 1 :b 2 :c 3 :d 6 } filterMapToArray (| ## % 2 =? 0 |)
 	[ 3 ]   assert=? { :a 1 :b 2 :c 3 :d 6 } filterMapToArray (< #1 =? :c >)
 
@@ -459,11 +459,11 @@
 //
 // conditional
 
-:? @unittest func()
+:? @unittest func0
 	2 assert=? true  ? [ 2 3 ]
 	3 assert=? false ? [ 2 3 ]
 
-:if @unittest func()
+:if @unittest func0
 	// if is run
 	:a v= false
 	if true
@@ -473,7 +473,7 @@
 	if false
 		assertFail ." if shouldn't have been called
 
-:elsif @unittest func()
+:elsif @unittest func0
 	// if is run, not elsif
 	:a v= 0
 	if true
@@ -496,7 +496,7 @@
 		assertFail ." elsif shouldn't have been called
 	0 assert=? a
 
-:else @unittest func()
+:else @unittest func0
 	// if is run, not else
 	:a v= 0
 	if true
@@ -540,7 +540,7 @@
 		:a = 3
 	3 assert=? a
 
-:match @unittest func()
+:match @unittest func0
 	:test v= func ->pattern
 		var :result
 		match pattern
@@ -579,7 +579,7 @@
 	:two     assert=? simple 2
 	:default assert=? simple { :a 3 :b 4 }
 
-:matchAll @unittest func()
+:matchAll @unittest func0
 	:str v= ""
 	matchAll .{ :a 2 :b 4 :c 6
 		when .[ ->a
@@ -596,11 +596,11 @@
 
 :default @unittest noTestNeeded
 
-:if!nil @unittest func()
+:if!nil @unittest func0
 	5   assert=? .( 1   if!nil 5
 	nil assert=? .( nil if!nil 5
 
-:do!nil @unittest func()
+:do!nil @unittest func0
 	[ :a :final ] v= [ 0 0 ]
 	do!nil ` a `
 		:final = 1
@@ -613,7 +613,7 @@
 //
 // loop
 
-:while @unittest func()
+:while @unittest func0
 	:total v= 0
 	:i v= 0
 	while .` i !=? 5
@@ -622,18 +622,18 @@
 	5  assert=? i
 	15 assert=? total
 
-:repeat @unittest func()
+:repeat @unittest func0
 	:total v= 0
 	repeat 5
 		:total = total + 2
 	10 assert=? total
 
-:repeatsOf @unittest func()
+:repeatsOf @unittest func0
 	:total v= 0
 	5 repeatsOf .` :total = total + 2
 	10 assert=? total
 
-:for @unittest func()
+:for @unittest func0
 	// todo: should be able to declare i inside for
 	:total v= 0
 	:i v= 0
@@ -641,7 +641,7 @@
 		:total = total + i
 	10 assert=? total
 
-:forEach @unittest func()
+:forEach @unittest func0
 	// loop thru array
 	:total v= 0
 	:i forEach ( 1 .. 5 )
@@ -665,9 +665,9 @@
 		nil assert=? .( l3.getValue .{ :key :doesn'tExist
 		:doesn'tExist v= 5
 
-:forEachDelim @unittest func()
+:forEachDelim @unittest func0
 	// create a function that turns a body into a map
-	:thing v= func()
+	:thing v= func0
 		:result v= nil
 		:map forEachDelim [ body :{ ]
 			:result = result + map
@@ -678,7 +678,7 @@
 		:b 7
 	{ :a 5 :b 7 } assert=? test
 
-:break @unittest func()
+:break @unittest func0
 	:total v= 0
 	:i v= 0
 	while .` i !=? 8
@@ -692,7 +692,7 @@
 //
 // iterators
 
-:=eachIn @unittest func()
+:=eachIn @unittest func0
 	// test array iterator
 	:total v= 0
 	:i =eachIn [ 4 1 3 6 10 ]
@@ -728,7 +728,7 @@
 	2 assert=? count
 	
 	// test function body
-	:testFunc v= func()
+	:testFunc v= func0
 		one line
 		second line
 	:count v= 0
@@ -749,40 +749,40 @@
 //
 // strings
 
-:=>str @unittest func()
+:=>str @unittest func0
 	:5				assert=? 5 =>str
 	:5.5			assert=? 5.5 =>str
 	:5				assert=? :5 =>str
 	" [ 1 2 3 ] "	assert=? [ 1 2 3 ] =>str
 
-:$ @unittest func()
+:$ @unittest func0
 	:5 assert=? $ 5
 
-:$_ @unittest func()
+:$_ @unittest func0
 	( \s + :5 ) assert=? $_ 5
 
-:$__ @unittest func()
+:$__ @unittest func0
 	( \t + :5 ) assert=? $__ 5
 
-:+ @unittest func()
+:+ @unittest func0
 	:qwert assert=? :qw + :ert
 
-:"" @unittest func()
+:"" @unittest func0
 	:string	assert=? l3.getType .{ :value ""
 	0		assert=? l3.getCount ""
 
-:""" @unittest func()
+:""" @unittest func0
 	:a v= """
 		this is
 		some multiline
 		text
 	" this is some multiline text " assert=? a
 
-:"[ @unittest func()
+:"[ @unittest func0
 	:asdf12.34 assert=? "[ :asdf 1 2.34 ]
 	:123 assert=? "[ 1 2 3 ]
 
-:."[ @unittest func()
+:."[ @unittest func0
 	:asdf12.34 assert=? ."[ :asdf 1 2.34
 
 :\n @unittest noTestNeeded
@@ -795,7 +795,7 @@
 //
 // enumerated type
 
-:=enum @unittest func()
+:=enum @unittest func0
 	:asdf =enum [ :qwert :yuiop ]
 	0		assert=? asdf.qwert
 	1		assert=? asdf.yuiop
@@ -805,49 +805,49 @@
 //
 // math
 
-:+ @unittest func()
+:+ @unittest func0
 	42 assert=? 39 + 3
 
-:- @unittest func()
+:- @unittest func0
 	7 assert=? 10 - 3
 
-:* @unittest func()
+:* @unittest func0
 	10 assert=? 5 * 2
 
-:/ @unittest func()
+:/ @unittest func0
 	3 assert=? 9 / 3
 
-:% @unittest func()
+:% @unittest func0
 	3 assert=? 15 % 4
 
-:sqrt @unittest func()
+:sqrt @unittest func0
 	assertTrue? ( ( sqrt 4 ) - 2 ) <? 0.00000001
 	assertTrue? ( ( sqrt 2 ) - 1.414213562 ) <? 0.00000001
 
-:<? @unittest func()
+:<? @unittest func0
 	assertFalse? 4 <? 4
 	assertTrue?  4 <? 5
 	assertFalse? 5 <? 4
 
-:<=? @unittest func()
+:<=? @unittest func0
 	assertTrue?  4 <=? 4
 	assertTrue?  4 <=? 5
 	assertFalse? 5 <=? 4
 
-:>? @unittest func()
+:>? @unittest func0
 	assertFalse? 4 >? 4
 	assertTrue?  5 >? 4
 	assertFalse? 4 >? 5
 
-:>=? @unittest func()
+:>=? @unittest func0
 	assertTrue?  4 >=? 4
 	assertTrue?  5 >=? 4
 	assertFalse? 4 >=? 5
 
-:min @unittest func()
+:min @unittest func0
 	4 assert=? 4 min 7
 
-:max @unittest func()
+:max @unittest func0
 	7 assert=? 4 max 7
 
 
@@ -856,7 +856,7 @@
 
 :try @unittest noTestNeeded
 
-:catch @unittest func()
+:catch @unittest func0
 	// catch a badToken exception
 	:correct v= false
 	try
@@ -899,7 +899,7 @@
 		assertFail ." no exception should be thrown or caught
 	endTry
 
-:endTry @unittest func()
+:endTry @unittest func0
 	if false
 		:correct v= false
 		try
@@ -914,7 +914,7 @@
 		assertTrue? correct
 	true
 
-:rethrow @unittest func()
+:rethrow @unittest func0
 	if false
 		[ :rethrew? :caught? ] v= [ false false ]
 		try
@@ -937,11 +937,11 @@
 //
 // modules
 
-:import @unittest func()
+:import @unittest func0
 	assertTrue?  import :../../l3/module.l3
 	assertFalse? import :../../l3/module.l3
 
-:reimport @unittest func()
+:reimport @unittest func0
 	assertTrue?  reimport :../../l3/module.l3
 	assertTrue?  reimport :../../l3/module.l3
 
@@ -949,14 +949,14 @@
 //
 // I/O
 
-:print @unittest func()
+:print @unittest func0
 	false
 
 
 //
 // classes
 
-:public @unittest func()
+:public @unittest func0
 	// a function which creates a 'class'
 	// with a constructor, private data, and public methods
 	:keepAdding v= func ->initial
@@ -966,7 +966,7 @@
 		// methods
 		:add v= func ->amount
 			:total = total + amount
-		:current v= func()
+		:current v= func0
 			total
 		
 		// data

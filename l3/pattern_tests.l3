@@ -1,6 +1,6 @@
 // tests of various uses of patterns
 
-:assignmentSingle v= func()
+:assignmentSingle v= func0
 	// single item
 	:a v= 5
 	5 assert=? a
@@ -11,7 +11,7 @@
 :assignmentSingle @doc """
 	Test how assignment uses pattern matching for assignment of a single variable
 
-:assignmentArray v= func()
+:assignmentArray v= func0
 	// simple array
 	[ :a :b :c ] v= [ 1 2 3 ]
 	[ 1 2 3 ] assert=? [ a b c ]
@@ -48,7 +48,7 @@
 :assignmentArray @doc """
 	Test how assignment uses pattern matching for assignment into an array
 
-:assignmentMap v= func()
+:assignmentMap v= func0
 	// if it finds :a, put value in :c, same with { :b :d }
 	{ :a :c :b :d } v= { :a 1 :b 2 }
 	[ 1 2 ] assert=? [ c d ]
@@ -97,7 +97,7 @@
 	Test how assignment uses pattern matching for assignment of a map
 
 
-:assignmentHasKeys v= func()
+:assignmentHasKeys v= func0
 	// array
 	// keys are present
 	[ :a ( :b @@hasKeys [ :k1 :k2 ] ) ] v= { :a 2 :b { :k1 7 :k2 8 :k3 9 } }

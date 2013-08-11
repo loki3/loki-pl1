@@ -18,7 +18,7 @@ var :i forEach ( 1 .. 20 )
 	fizzBuzz2 += .( ( fizz? |? buzz? ) ? .[ ( str1 + str2 ) i
 :fizzBuzz2 @doc ." fizzbuzz using multiple return values
 
-var :fizzbuzz3 = func()
+var :fizzbuzz3 = func0
 	var :zzz = [ ]
 	var :i forEach ( 1 .. 20 )
 		if ( i % 15 =? 0 )
@@ -36,20 +36,20 @@ var :fizzbuzz3 = func()
 //
 // complex numbers
 
-:i v= .( ->y postfix
+:i v= .( ->y 1func
 	{ :x 0 :y y }
 :i @order 1
 :i @doc ." Creates a complex number
 
-:+ f= ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
+:+ f= ( { :x ->x1 :y ->y1 } 1func1 { :x ->x2 :y ->y2 } )
 	{ :x ( x1 + x2 ) :y ( y1 + y2 ) }
-:+ f= ( { :x ->x1 :y ->y1 } infix ( ->x2 : :number ) )
+:+ f= ( { :x ->x1 :y ->y1 } 1func1 ( ->x2 : :number ) )
 	{ :x ( x1 + x2 ) :y y1 }
-:+ f= ( ( ->x1 : :number ) infix { :x ->x2 :y ->y2 } )
+:+ f= ( ( ->x1 : :number ) 1func1 { :x ->x2 :y ->y2 } )
 	{ :x ( x1 + x2 ) :y y2 }
 :+ @doc ." Adds together two complex numbers of the form { :x # :y # }
 
-:* f= ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
+:* f= ( { :x ->x1 :y ->y1 } 1func1 { :x ->x2 :y ->y2 } )
 	{ :x ( x1 * x2 - y1 * y2 ) :y ( x1 * y2 + x2 * y1 ) }
 :* @doc ." Multiples together two complex numbers of the form { :x # :y # }
 
@@ -79,7 +79,7 @@ var :fizzbuzz3 = func()
 	iteration value but still requiring the result value.
 	When the computation is finished, the returned function should be nil.
 
-:! v= .( ->n postfix
+:! v= .( ->n 1func
 	:fact v= func [ ->a ->b ]
 		( a >? 0 ) ? .[ [ ( a * b ) ( fact [ ( a - 1 ) ] ) ]  [ b nil ]
 	repeat [ 1 ( fact [ n ] ) ]
@@ -88,7 +88,7 @@ var :fizzbuzz3 = func()
 
 
 // simple factorial
-:!2 v= ( ->n postfix )
+:!2 v= ( ->n 1func )
 	( n <? 1 ) ? .[ 1 .` ( 1 .. n ) fold (< #1 * #2 >)
 :!2 @doc ." Factorial operator using a functional pattern
 
@@ -118,83 +118,83 @@ var :fizzbuzz3 = func()
 :unitsType @doc ." A list of the different types of supported units
 
 
-:mm v= .( ( ->x : :number ) postfix
+:mm v= .( ( ->x : :number ) 1func
 	{ :meters ( x / 1000.0 ) :units unitsType.distance }
 :mm @order 1 @doc ." Used to specify a particular number of millimeters
 
-:m  v= .( ( ->x : :number ) postfix
+:m  v= .( ( ->x : :number ) 1func
 	{ :meters x :units unitsType.distance }
 :m  @order 1 @doc ." Used to specify a particular number of meters
 
-:in v= .( ( ->x : :number ) postfix
+:in v= .( ( ->x : :number ) 1func
 	{ :meters ( x * 0.0254 ) :units unitsType.distance }
 :in @order 1 @doc ." Used to specify a particular number of inches
 
-:ft v= .( ( ->x : :number ) postfix
+:ft v= .( ( ->x : :number ) 1func
 	{ :meters ( x * 0.3048 ) :units unitsType.distance }
 :ft @order 1 @doc ." Used to specify a particular number of feet
 
 
-:=>mm v= .( { :meters ->meters :units unitsType.distance } postfix
+:=>mm v= .( { :meters ->meters :units unitsType.distance } 1func
 	meters * 1000
 :=>mm @doc ." Convert a distance into millimeters
 
-:=>m  v= .( { :meters ->meters :units unitsType.distance } postfix
+:=>m  v= .( { :meters ->meters :units unitsType.distance } 1func
 	meters
 :=>m  @doc ." Convert a distance into meters
 
-:=>in v= .( { :meters ->meters :units unitsType.distance } postfix
+:=>in v= .( { :meters ->meters :units unitsType.distance } 1func
 	meters / 0.0254
 :=>in @doc ." Convert a distance into inches
 
-:=>ft v= .( { :meters ->meters :units unitsType.distance } postfix
+:=>ft v= .( { :meters ->meters :units unitsType.distance } 1func
 	meters / 0.3048
 :=>ft @doc ." Convert a distance into feet
 
 
-:+ f= .( { :meters ->x :units unitsType.distance } infix { :meters ->y :units unitsType.distance }
+:+ f= .( { :meters ->x :units unitsType.distance } 1func1 { :meters ->y :units unitsType.distance }
 	{ :meters ( x + y ) :units unitsType.distance }
 
-:- f= .( { :meters ->x :units unitsType.distance } infix { :meters ->y :units unitsType.distance }
+:- f= .( { :meters ->x :units unitsType.distance } 1func1 { :meters ->y :units unitsType.distance }
 	{ :meters ( x - y ) :units unitsType.distance }
 
 
-:g  v= .( ( ->x : :number ) postfix
+:g  v= .( ( ->x : :number ) 1func
 	{ :grams x :units unitsType.weight }
 :g  @order 1 @doc ." Used to specify a particular number of grams
 
-:kg v= .( ( ->x : :number ) postfix
+:kg v= .( ( ->x : :number ) 1func
 	{ :grams ( x * 1000 ) :units unitsType.weight }
 :kg @order 1 @doc ." Used to specify a particular number of kilograms
 
-:oz v= .( ( ->x : :number ) postfix
+:oz v= .( ( ->x : :number ) 1func
 	{ :grams ( x * 28.349523125 ) :units unitsType.weight }
 :oz @order 1 @doc ." Used to specify a particular number of ounces
 
-:lb v= .( ( ->x : :number ) postfix
+:lb v= .( ( ->x : :number ) 1func
 	{ :grams ( x * 453.59237 ) :units unitsType.weight }
 :lb @order 1 @doc ." Used to specify a particular number of pounds
 
 
-:=>g  v= .( { :grams ->x :units unitsType.weight } postfix
+:=>g  v= .( { :grams ->x :units unitsType.weight } 1func
 	x
 :=>g @doc ." Convert a weight into grams
 
-:=>kg v= .( { :grams ->x :units unitsType.weight } postfix
+:=>kg v= .( { :grams ->x :units unitsType.weight } 1func
 	x / 1000.0
 :=>kg @doc ." Convert a weight into kilograms
 
-:=>oz v= .( { :grams ->x :units unitsType.weight } postfix
+:=>oz v= .( { :grams ->x :units unitsType.weight } 1func
 	x / 28.349523125
 :=>oz @doc ." Convert a weight into ounces
 
-:=>lb v= .( { :grams ->x :units unitsType.weight } postfix
+:=>lb v= .( { :grams ->x :units unitsType.weight } 1func
 	x / 453.59237
 :=>lb @doc ." Convert a weight into pounds
 
 
-:+ f= .( { :grams ->x :units unitsType.weight } infix { :grams ->y :units unitsType.weight }
+:+ f= .( { :grams ->x :units unitsType.weight } 1func1 { :grams ->y :units unitsType.weight }
 	{ :grams ( x + y ) :units unitsType.weight }
 
-:- f= .( { :grams ->x :units unitsType.weight } infix { :grams ->y :units unitsType.weight }
+:- f= .( { :grams ->x :units unitsType.weight } 1func1 { :grams ->y :units unitsType.weight }
 	{ :grams ( x - y ) :units unitsType.weight }

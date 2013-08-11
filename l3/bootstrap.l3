@@ -54,15 +54,15 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :post pattern }
 
 // a function which creates an infix function
-:infix v= .( l3.createFunction { :pre ->pattern1 :post ->pattern2 }
+:1func1 v= .( l3.createFunction { :pre ->pattern1 :post ->pattern2 }
 	l3.createFunction { :pre pattern1 :post pattern2 }
 
 // a function which creates a postfix function
-:postfix v= .( l3.createFunction { :pre ->pattern }
+:1func v= .( l3.createFunction { :pre ->pattern }
 	l3.createFunction { :pre pattern }
 
 // a function with no parameters which may decide to execute its body
-:func() v= l3.createFunction { }
+:func0 v= l3.createFunction { }
 	l3.createFunction { }
 
 
@@ -70,27 +70,27 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // get & set
 
 // member access using the . infix
-:. v= .( ->a infix ->b
+:. v= .( ->a 1func1 ->b
 	l3.getValue .{ :object a :key b
 
 // modify a value's metadata
-:@ v= .( ->object infix [ ->key ->value ]
+:@ v= .( ->object 1func1 [ ->key ->value ]
 	l3.setValue .{ :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value
 	object
 
 // get all the metadata attached to a value
-:.@@ v= .( ->object postfix
+:.@@ v= .( ->object 1func
 	l3.getMetadata { :key object }
 
 // get a particular piece of metadata attached to a value
-:.@ v= .( ->object infix ->key
+:.@ v= .( ->object 1func1 ->key
 	l3.getValue .{ :object ( l3.getMetadata { :key object } ) :key key
 
 // set the doc string on a value
-:@doc v= .( ->object infix ->docString
+:@doc v= .( ->object 1func1 ->docString
 	object @ .[ :l3.value.doc docString
 
-:.@doc v= .( ->object postfix
+:.@doc v= .( ->object 1func
 	:metadata v= l3.getMetadata { :key object }
 	:doc v= nil
 	if metadata !=? nil
@@ -98,11 +98,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	doc
 :.@doc	@doc ." Get the documentation attached to a value
 
-:@cat v= .( ->object infix ->catString
+:@cat v= .( ->object 1func1 ->catString
 	object @ .[ :l3.value.cat catString
 :@cat @cat :metadata @doc ." Set the category string on a value
 
-:.@cat v= .( ->object postfix
+:.@cat v= .( ->object 1func
 	:metadata v= l3.getMetadata { :key object }
 	:cat v= nil
 	if metadata !=? nil
@@ -110,45 +110,45 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	cat
 :.@cat @cat :metadata @doc ." Get the category attached to a value
 
-:@order v= .( ->object infix ->order
+:@order v= .( ->object 1func1 ->order
 	object @ .[ :l3.value.order order
 :@order @cat :metadata @doc ." Add evaluation order to a value
 
-:@body? v= .( ->object infix ->body?
+:@body? v= .( ->object 1func1 ->body?
 	object @ .[ :body? body?
 :@body? @cat :metadata @doc ." Declare that a function requires a body
 
-:@type v= .( ->object infix ->type
+:@type v= .( ->object 1func1 ->type
 	object @ .[ :l3.value.type type
 :@type @cat :metadata @doc ." Restrict a key to a specific type
 
-:@iterator v= .( ->object postfix
+:@iterator v= .( ->object 1func
 	object @ .[ :l3.func.createScope? false
 	object @type :iterator
 :@iterator @cat :metadata @doc ." Add metadata to a function so it can be used as an iterator
 
-:@@ v= .( ->object infix [ ->key ->value ]
+:@@ v= .( ->object 1func1 [ ->key ->value ]
 	l3.setValue .{ :map ( l3.getMetadata { :value object :writable? true } ) :key key :value value
 	object
 :@@ @cat :metadata @doc ." Set metadata on a value, e.g. a parameter
 
-:: v= .( ->object infix ->type
+:: v= .( ->object 1func1 ->type
 	object @@ .[ :l3.pattern.type type
 :: @cat :metadata @doc ." Restrict a parameter to a specific type
 
-:d= v= .( ->object infix ->default
+:d= v= .( ->object 1func1 ->default
 	object @@ .[ :l3.pattern.default default
 :d= @cat :metadata @doc ." Set the default value for a parameter if not present
 
-:... v= .( ->object postfix
+:... v= .( ->object 1func
 	object @@ .[ :l3.pattern.rest true
 :... @cat :metadata @doc ." Associated parameter will be filled with the remainder of the parameter values
 
-:@@hasKeys f= .( ->object infix ( ->type : :array )
+:@@hasKeys f= .( ->object 1func1 ( ->type : :array )
 	object @@ .[ :l3.pattern.hasKeys type
-:@@hasKeys f= .( ->object infix ( ->type : :map )
+:@@hasKeys f= .( ->object 1func1 ( ->type : :map )
 	object @@ .[ :l3.pattern.hasKeys type
-:@@hasKeys f= .( ->object infix ( ->type : :string )
+:@@hasKeys f= .( ->object 1func1 ( ->type : :string )
 	object @@ .[ :l3.pattern.hasKeys type
 :@@hasKeys @cat :metadata @doc ." Specify that parameter must have certain keys
 
@@ -156,7 +156,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.copy .{ :value value
 :copy @cat :create @doc ." Make a copy of a value
 
-:currentScope v= func()
+:currentScope v= func0
 	l3.getScope .{ :level 1
 :currentScope @cat :scope @doc ." Get a map representing the current scope
 
@@ -168,7 +168,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.bindFunction .{ :functionKey key :map .( l3.getScope .{ :level 1
 :closure @cat :scope @doc ." Manually create a closure, binding the current scope to a function
 
-:i= v= .( ->pattern infix ->value
+:i= v= .( ->pattern 1func1 ->value
 	l3.setValue { :key pattern :value value :level 1 :create? true :initOnly? true }
 :i= @order 5
 :i= @cat :assign @doc ." If variables don't exist, initialize them, otherwise leave them alone.
@@ -178,7 +178,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :. @order 2
 
 
-:///func v= func()
+:///func v= func0
 	nil
 :///func @cat :delimiter @doc ." Everything on subsequent indented lines is a comment
 :///func @body? true
@@ -209,9 +209,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :=		@cat :assign    @doc ." Assign a value to a key
 :var	@cat :assign    @doc ." Create a new variable in the current scope
 :func	@cat :function  @doc ." Define a function that takes parameters after the function name
-:infix	@cat :function  @doc ." Define a function that takes parameters before and after the function name
-:postfix @cat :function @doc ." Define a function that takes parameters before the function name
-:func()	@cat :function  @doc ." Define a function that takes no parameters
+:1func1	@cat :function  @doc ." Define a function that takes parameters before and after the function name
+:1func @cat :function @doc ." Define a function that takes parameters before the function name
+:func0	@cat :function  @doc ." Define a function that takes no parameters
 :.		@cat :access    @doc ." Access the member of a map by key or array by index
 :@		@cat :metadata  @doc ." Modify a value's metadata
 :.@		@cat :metadata  @doc ." Get a value's metadata
@@ -272,7 +272,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // debugging
 
-:repl v= func()
+:repl v= func0
 	l3.repl .{ :prompt :debug> :map .( l3.getScope .{ :level 1
 :repl @doc ." Starts a read-eval-print loop at the current scope
 
@@ -299,7 +299,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :!=? @order 4
 :!=? @cat :logic @doc ." Return true if two values are not equal
 
-:=any? v= .( ->value infix ( ->array : :array )
+:=any? v= .( ->value 1func1 ( ->array : :array )
 	l3.anyEqual? [ value array ]
 :=any? @cat :logic @doc ." Return true if value is equal to anything in array
 
@@ -307,44 +307,44 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // arrays
 
-:.. v= .( ( ->start : :number ) infix ( ->end : :number )
+:.. v= .( ( ->start : :number ) 1func1 ( ->end : :number )
 	l3.createRange { :start start :end end }
 :.. @cat :array @doc ." Creates an array starting with one value and ending with another
 
-:+ f= .( ->value1 infix ( ->array2 : :array )
+:+ f= .( ->value1 1func1 ( ->array2 : :array )
 	l3.combine .[ value1 array2
-:+ f= .( ( ->array1 : :array ) infix ->value2
+:+ f= .( ( ->array1 : :array ) 1func1 ->value2
 	l3.combine .[ array1 value2
 :+ @cat :array @doc ." Combine two arrays
 
-:+= f= .( ( ->array : :array ) infix ->value
+:+= f= .( ( ->array : :array ) 1func1 ->value
 	l3.addToArray .{ :array array :value value
 :+= @order 6
 :+= @cat :array @doc ." Add a value to an array
 
-:.size v= .( ->value postfix
+:.size v= .( ->value 1func
 	l3.getCount ( value )
 :.size @cat :array @doc ." Return the number of elements in a collection.
 
-:apply v= .( ( ->array : :array ) infix ( ->function : :function )
+:apply v= .( ( ->array : :array ) 1func1 ( ->function : :function )
 	l3.arrayToArray { :array array :transform function }
 :apply @cat :array @doc ." Apply function to every element of a collection.  Functions for arrays take a single value.  Functions for maps are infix.  Returns the new collection.
 
-:foldLeft v= .( ( ->array : :array ) infix ( ->function : :function )
+:foldLeft v= .( ( ->array : :array ) 1func1 ( ->function : :function )
 	l3.foldLeft { :array array :function function }
 :foldLeft @cat :array @doc ." ((a[0] function a[1]) function a[2]) etc.  Returns a single value.
 
 :fold v= .( foldLeft
 
-:foldRight v= .( ( ->array : :array ) infix ( ->function : :function )
+:foldRight v= .( ( ->array : :array ) 1func1 ( ->function : :function )
 	l3.foldRight { :array array :function function }
 :foldRight @cat :array @doc ." (a[0] function (a[1] function a[2])) etc.  Returns a single value.
 
-:filter v= .( ( ->array : :array ) infix ( ->function : :function )
+:filter v= .( ( ->array : :array ) 1func1 ( ->function : :function )
 	l3.arrayToArray { :array array :filter? function }
 :filter @cat :array @doc ." Returns an array consisting of every member for which function returns true
 
-:makeArray v= func()
+:makeArray v= func0
 	:array v= [ ]
 	:line forEach body
 		:array = array + [ line ]
@@ -352,7 +352,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :makeArray @cat :array @doc ." Make an array where every line in the body is evaluated and becomes an element in the array
 :makeArray @body? true
 
-:by v= .( ( ->a : :array ) infix ( ->step : :int )
+:by v= .( ( ->a : :array ) 1func1 ( ->step : :int )
 	a filter (< #1 % step =? 0 >)
 :by @cat :array @doc ." Returns an array with every 'step' elements of an input array
 
@@ -360,13 +360,13 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // maps
 
-:+ f= .( ->value1 infix ( ->map2 : :map )
+:+ f= .( ->value1 1func1 ( ->map2 : :map )
 	l3.combine .[ value1 map2
-:+ f= .( ( ->map1 : :map ) infix ->value2
+:+ f= .( ( ->map1 : :map ) 1func1 ->value2
 	l3.combine .[ map1 value2
 :+ @cat :map @doc ." Combine two maps
 
-:makeMap v= func()
+:makeMap v= func0
 	:map v= { }
 	:submap forEachDelim [ body :{ ]
 		:map = map + submap
@@ -374,19 +374,19 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :makeMap @cat :map @doc ." Make a map where every line in the body is evaluated and the first element is the key and the second the value
 :makeMap @body? true
 
-:applyMap v= .( ( ->map : :map ) infix ( ->transform : :function )
+:applyMap v= .( ( ->map : :map ) 1func1 ( ->transform : :function )
 	l3.mapToMap { :map map :transform transform }
 :applyMap @cat :map @doc ." Apply function to every element of a map.  If function is infix, it's handed key and value.  If it's prefix, it's handed the value.  Returns the new map.
 
-:filterMap v= .( ( ->map : :map ) infix ( ->filter? : :function )
+:filterMap v= .( ( ->map : :map ) 1func1 ( ->filter? : :function )
 	l3.mapToMap { :map map :filter? filter? }
 :filterMap @cat :map @doc ." Returns a map consisting of every member for which function returns true
 
-:mapToArray v= .( ( ->map : :map ) infix ( ->transform : :function )
+:mapToArray v= .( ( ->map : :map ) 1func1 ( ->transform : :function )
 	l3.mapToArray { :map map :transform transform }
 :mapToArray @cat :map @doc ." Apply function to every element of a map.  If function is infix, it's handed key and value.  If it's prefix, it's handed the value.  Returns a new array.
 
-:filterMapToArray v= .( ( ->map : :map ) infix ( ->filter? : :function )
+:filterMapToArray v= .( ( ->map : :map ) 1func1 ( ->filter? : :function )
 	l3.mapToArray { :map map :filter? filter? }
 :filterMapToArray @cat :map @doc ." Returns an array consisting of every value in the map for which function returns true
 
@@ -395,7 +395,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // conditional
 
 // ternary operator
-:? v= .( ( ->do? : :bool ) infix [ ->doIfTrue ->doIfFalse ]
+:? v= .( ( ->do? : :bool ) 1func1 [ ->doIfTrue ->doIfFalse ]
 	l3.ifValue .{ :do? do? :ifTrue doIfTrue :ifFalse doIfFalse
 :? @order 4
 :? @cat :if @doc ." If condition is met, return first value, else return second value
@@ -417,7 +417,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :elsif @order 6
 :elsif @cat :if @doc ." If previous if and elsifs failed and this condition is met, do body
 
-:else v= func()
+:else v= func0
 	:doThis? v= .( !? l3.coFunction.if.done?
 	l3.ifBody .{ :do? doThis? :body body
 	doThis?
@@ -450,7 +450,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :when @body? true @order 6
 :when @cat :if @doc ." Used inside a match or matchAll statement to check if a given pattern is a match.
 
-:default v= func()
+:default v= func0
 	:defaultBody v= body
 	if !? l3.coFunction.match.done?
 		l3.eval defaultBody
@@ -458,7 +458,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :default @body? true
 :default @cat :if @doc ." If no other patterns in a match statement matched, execute the default block.
 
-:if!nil v= .( ->val infix ->doIfNotNil
+:if!nil v= .( ->val 1func1 ->doIfNotNil
 	var :result
 	if ( val ) !=? nil
 		:result = .( l3.eval doIfNotNil
@@ -490,7 +490,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :repeat @body? true
 :repeat @cat :loop @doc ." Repeat the body n times.
 
-:repeatsOf v= .( ( ->n : :int ) infix ( ->code : :rawLines )
+:repeatsOf v= .( ( ->n : :int ) 1func1 ( ->code : :rawLines )
 	:i v= 0
 	setScopeName :loop
 	l3.loop .{ :check ` i <? n ` :change ` :i = i + 1 ` :body code
@@ -504,19 +504,19 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :for @body? true
 :for @cat :loop @doc ." Call initialization code, then repeat loop while condition is true, evaluating final expression each time
 
-:forEach v= .( ->key infix ->collection
+:forEach v= .( ->key 1func1 ->collection
 	setScopeName :loop
 	l3.forEach .{ :key key :collection collection :body body
 :forEach @body? true
 :forEach @cat :loop @doc ." Repeat loop for each item in collection.  Pattern is specified before forEach.  Collection is specified after forEach.
 
-:forEachDelim v= .( ->key infix .[ ->collection ->delim
+:forEachDelim v= .( ->key 1func1 .[ ->collection ->delim
 	setScopeName :loop
 	l3.forEach .{ :key key :collection collection :body body :delim delim
 :forEachDelim @body? true
 :forEachDelim @cat :loop @doc ." Repeat loop for each item in collection.  Pattern is specified before forEach.  Collection is specified after forEach.  Can specify a delimiter that determines how each line is interpreted.
 
-:break v= func()
+:break v= func0
 	l3.popScope .{ :name :loop
 :break @cat :loop @doc ." Pop the stack out of the current loop
 
@@ -525,7 +525,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // iterators
 
 // function that allows for looping with an iterator
-:=eachIn v= .( ->pattern infix ->input
+:=eachIn v= .( ->pattern 1func1 ->input
 	// new scope for the iterator
 	:iterScope v= l3.getScope .{ :level 1 :createChild? true
 	// store body because there will be a different body inside the loop
@@ -597,7 +597,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // strings
 
-:=>str v= .( ->val postfix
+:=>str v= .( ->val 1func
 	l3.toString ( val )
 :=>str @order 2
 :=>str @cat :string @doc ." Convert a value to a string
@@ -612,16 +612,16 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	\t + .( l3.toString ( val )
 :$__ @order 2 @cat :string @doc ." Prepends a tab and converts the next value to a string.
 
-:+ f= .( ( ->str1 : :string ) infix ( ->str2 : :string )
+:+ f= .( ( ->str1 : :string ) 1func1 ( ->str2 : :string )
 	l3.stringConcat .{ :array .[ str1 str2
 :+ @cat :string @doc ." Concatenate two strings
 
-:+= f= .( ( ->key : :string ) infix ->value
+:+= f= .( ( ->key : :string ) 1func1 ->value
 	key = l3.stringConcat .{ :array .[ ( l3.eval key ) .( $ value
 :+= @order 6
 :+= @cat :array @doc ." Add a value to an array
 
-:* f= .( ( ->str : :string ) infix ( ->n : :number )
+:* f= .( ( ->str : :string ) 1func1 ( ->n : :number )
 	:all v= ""
 	n repeatsOf .` :all = all + str
 :* @order 2
@@ -630,7 +630,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :"" v= " "
 :"" @cat :string @doc ." TEMP: an empty string, needed until string delimiters handle white space correctly
 
-:""" v= func()
+:""" v= func0
 	:list v= [ ]
 	:str forEachDelim [ body :" ]
 		list += str
@@ -659,7 +659,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // enumerated type
 
-:=enum v= .( ( ->name : :string ) infix ( ->array : :array )
+:=enum v= .( ( ->name : :string ) 1func1 ( ->array : :array )
 	:list v= { }
 	:i v= 0
 	:val forEach array
@@ -682,14 +682,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // math
 
-:+ f= .( ( ->a : :number ) infix ( ->b : :number )
+:+ f= .( ( ->a : :number ) 1func1 ( ->b : :number )
 	l3.add [ a b ]
 :+ @cat :math @doc ." Add two numbers
 
 :- f= .(< l3.subtract [ #1 #2 ]
 :- @cat :math @doc ." Subtract one number from another
 
-:* f= .( ( ->a : :number ) infix ( ->b : :number )
+:* f= .( ( ->a : :number ) 1func1 ( ->b : :number )
 	l3.multiply [ a b ]
 :* @order 2
 :* @cat :math @doc ." Multiply two numbers
@@ -727,7 +727,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // exceptions
 
-:try v= func()
+:try v= func0
 	// name the scope so exceptions in body will continue after the body
 	setScopeName :l3.catch
 	// variable used for communication between try-catch-endTry blocks
@@ -750,7 +750,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :catch @body? true @order 5
 :catch @cat :exception @doc ." After a try, can be used to catch exceptions that match a given pattern.
 
-:endTry v= func()
+:endTry v= func0
 	if !? l3.coFunction.catch.done?
 		rethrow
 	if ( l3.getValue { :key :l3.exception } ) !=? nil
@@ -758,7 +758,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	true
 :endTry @cat :exception @doc ." Ends try-catch blocks.  If exception wasn't caught, it gets rethrown.
 
-:rethrow v= func()
+:rethrow v= func0
 	if l3.exception !=? nil
 		l3.throw l3.exception
 :rethrow @cat :exception @doc ." Rethrows the current exception, if any.
@@ -787,7 +787,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // classes
 
-:public v= func()
+:public v= func0
 	:map v= { }
 	// body consists of keys with functions as values
 	:line forEach body

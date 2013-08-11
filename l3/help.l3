@@ -10,7 +10,7 @@
 //
 
 
-:helpAll v= func()
+:helpAll v= func0
 	:map v= l3.getScope .{ :level 1
 	map applyMap .(< print help #1
 	""
@@ -68,16 +68,16 @@
 :describe v= func .( ->key : :string
 	:getSpecific f= func .[ ( ->key : :string ) ( ->value : :function )
 		// figure out if var is an in/post/prefix function
-		:getFixType v= func()
+		:getFixType v= func0
 			:details v= ."
 			[ :prev  :next ]  v= [ ( key .@ :l3.func.previous ) ( key .@ :l3.func.next ) ]
 			[ :prev? :next? ] v= [ ( prev !=? nil ) ( next !=? nil ) ]
 			if prev? &? next?
-				:details = ." infix
+				:details = ." 1func1
 			elsif prev?
-				:details = ." postfix
+				:details = ." 1func
 			elsif next?
-				:details = ." prefix
+				:details = ." func1
 			else
 				:details = ." nofix
 			details
@@ -191,7 +191,7 @@
 	l3.formatTable { :array table :columns 2 :dashesAfterFirst? true }
 :dumpStack @cat :help @doc ." Dump the given stack, listing function names and variables that are defined in each scope.
 
-:dumpCurrentStack v= func()
+:dumpCurrentStack v= func0
 	dumpStack .( l3.getScope .{ :level 1
 :dumpCurrentStack @cat :help @doc ." Dump the current stack, listing function names and variables that are defined in each scope.
 
@@ -211,13 +211,13 @@
 	l3.formatTable { :array table :columns 7 }
 :listDelimiters @cat :help @doc ." List all the delimiters in the given map
 
-:listByCat v= ( ->cat infix ->map )
+:listByCat v= ( ->cat 1func1 ->map )
 	:table v= map filterMap (< ( #1 .@cat ) =? cat >) mapToArray (< #1 >)
 	l3.formatTable { :array table :columns 3 }
 :listByCat @cat :help @doc ." List all the values in a given category and map
 
 
-:getDocs v= func()
+:getDocs v= func0
 	:scope v= l3.getScope .{ :level 1
 	getDocsInScope scope
 :getDocs @cat :help @doc ." Return all the docstrings attached to the values in the current scope

@@ -55,11 +55,11 @@
 	Returns [ success? arrayOfFailures ]
 
 
-:@unittest v= .( ->object infix ->function
+:@unittest v= .( ->object 1func1 ->function
 	object @ .[ :l3.value.unittest function
 :@unittest	@cat :unittest @doc ." Attach a unittest to a value
 
-:.@unittest v= .( ->object postfix
+:.@unittest v= .( ->object 1func
 	:metadata v= l3.getMetadata { :key object }
 	:test v= nil
 	if metadata !=? nil
@@ -67,16 +67,16 @@
 	test
 :.@unittest	@cat :unittest @doc ." Get the unittest attached to a value
 
-:noTestNeeded v= func()
+:noTestNeeded v= func0
 	true
 :noTestNeeded @cat :unittest @doc ." Used for stubbing out unneeded unittests
 
-:testNYI v= func()
+:testNYI v= func0
 	true
 :testNYI @cat :unittest @doc ." Used to indicate that a unittest is not yet implemented
 
 
-:assert=? v= .( ->expected infix ->actual
+:assert=? v= .( ->expected 1func1 ->actual
 	if expected !=? actual
 		l3.throw { :type :assert :expected ( expected ) :actual ( actual ) }
 :assert=? @order 6

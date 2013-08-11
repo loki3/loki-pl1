@@ -2,13 +2,13 @@
 
 :helpAll @unittest testNYI
 
-:help @unittest func()
+:help @unittest func0
 	// simply validate that help doesn't crash on various functions
 	help :rethrow
 	help :l3.ifBody
 	help :@@hasKeys
 
-:describe @unittest func()
+:describe @unittest func0
 	// simple value
 	:a v= 5
 	:map v= describe :a
@@ -24,7 +24,7 @@
 	:function  assert=? map . :general . :type
 	:something assert=? map . :general . :documentation
 	:thing     assert=? map . :general . :category
-	:prefix    assert=? map . :specific . :fix
+	:func1     assert=? map . :specific . :fix
 	4          assert=? map . :specific . :order
 	1          assert=? map . :specific . :overloads .size
 	[ ]        assert=? map . :specific . :overloads . 0 . :pre
@@ -32,24 +32,24 @@
 	:int       assert=? map . :specific . :overloads . 0 . :post . 0 . :type
 	
 	// infix
-	:fInfix v= .( ->a infix ->b
+	:fInfix v= .( ->a 1func1 ->b
 		true
 	:map v= describe :fInfix
 	:fInfix    assert=? map . :general . :name
-	:infix     assert=? map . :specific . :fix
+	:1func1    assert=? map . :specific . :fix
 	:a         assert=? map . :specific . :overloads . 0 . :pre . 0 . :name
 	:b         assert=? map . :specific . :overloads . 0 . :post . 0 . :name
 	
 	// postfix
-	:fPostfix v= .( ->a postfix
+	:fPostfix v= .( ->a 1func
 		true
 	:map v= describe :fPostfix
-	:postfix   assert=? map . :specific . :fix
+	:1func     assert=? map . :specific . :fix
 	:a         assert=? map . :specific . :overloads . 0 . :pre . 0 . :name
 	[ ]        assert=? map . :specific . :overloads . 0 . :post
 	
 	// no parameters
-	:fNofix v= func()
+	:fNofix v= func0
 		true
 	// todo: this doesn't work
 	// :map v= describe :fNofix

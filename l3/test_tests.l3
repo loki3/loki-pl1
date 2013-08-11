@@ -4,25 +4,25 @@
 :fizzbuzz20 @doc ." Expected output for fizzbuzz from 1 to 20
 :fizzbuzz20 @unittest true
 
-:fizzBuzz1 @unittest func()
+:fizzBuzz1 @unittest func0
 	fizzbuzz20 assert=? fizzBuzz1
 
-:fizzBuzz2 @unittest func()
+:fizzBuzz2 @unittest func0
 	fizzbuzz20 assert=? fizzBuzz2
 
-:fizzbuzz3 @unittest func()
+:fizzbuzz3 @unittest func0
 	fizzbuzz20 assert=? fizzbuzz3
 
-:i @unittest func()
+:i @unittest func0
 	{ :x 0 :y 3 } assert=? 3 i
 
-:+ @unittest func()
+:+ @unittest func0
 	{ :x 4 :y 6 } assert=? { :x 1 :y 2 } + { :x 3 :y 4 }
 	{ :x 3 :y 8 } assert=? 4 i + { :x 3 :y 4 }
 	{ :x 1 :y 2 } assert=? 1 + 2 i
 	{ :x 1 :y 2 } assert=? 2 i + 1
 
-:* @unittest func()
+:* @unittest func0
 	{ :x -12 :y 0 } assert=? 4 i * 3 i
 
 // stub out tests & docstrings for the enum & its values
@@ -35,7 +35,7 @@
 :days.friday	@unittest noTestNeeded @doc ."
 :days.saturday	@unittest noTestNeeded @doc ."
 
-:isWeekend @unittest func()
+:isWeekend @unittest func0
 	( isWeekend days.sunday )	assert=? true
 	( isWeekend days.monday )	assert=? false
 	( isWeekend days.tuesday )	assert=? false
@@ -44,7 +44,7 @@
 	( isWeekend days.friday )	assert=? false
 	( isWeekend days.sunday )	assert=? true
 
-:repeat @unittest func()
+:repeat @unittest func0
 	:sum v= func ->n
 		:add v= func [ ->a ->b ]
 			( a >? 0 ) ? .[ [ ( a + b ) ( add [ ( a - 1 ) ] ) ]  [ b nil ]
@@ -53,21 +53,21 @@
 	55 assert=? sum 10
 
 
-:testFactorial v= func()
+:testFactorial v= func0
 	1       assert=? 0 !
 	1       assert=? 1 !
 	24      assert=? 4 !
 	3628800 assert=? 10 !
 :testFactorial @unittest noTestNeeded @doc ." general testing for a factorial function
 
-:! @unittest func()
+:! @unittest func0
 	testFactorial
 
-:!2 @unittest func()
+:!2 @unittest func0
 	testFactorial
 
 
-:testFib v= func()
+:testFib v= func0
 	1	assert=? fib1 0
 	1	assert=? fib1 1
 	2	assert=? fib1 2
@@ -76,10 +76,10 @@
 	8	assert=? fib1 5
 :testFib @unittest noTestNeeded @doc ." general testing for a Fibonacci function
 
-:fib1 @unittest func()
+:fib1 @unittest func0
 	testFib
 
-:fib2 @unittest func()
+:fib2 @unittest func0
 	testFib
 
 
@@ -87,59 +87,59 @@
 :unitsType.distance	@unittest noTestNeeded @doc ."
 :unitsType.weight	@unittest noTestNeeded @doc ."
 
-:mm @unittest func()
+:mm @unittest func0
 	5.5 assert=? 5.5 mm =>mm
 
-:m  @unittest func()
+:m  @unittest func0
 	4 assert=? 4 m =>m
 
-:in @unittest func()
+:in @unittest func0
 	1 assert=? 1 in =>in
 
-:ft @unittest func()
+:ft @unittest func0
 	2 assert=? 2 ft =>ft
 
 
-:=>mm @unittest func()
+:=>mm @unittest func0
 	2000 assert=? 2 m =>mm
 
-:=>m  @unittest func()
+:=>m  @unittest func0
 	0.6096 assert=? 2 ft =>m
 
-:=>in @unittest func()
+:=>in @unittest func0
 	2 assert=? 50.8 mm =>in
 
-:=>ft @unittest func()
+:=>ft @unittest func0
 	2.5 assert=? 2.5 ft =>ft
 
 
-:g  @unittest func()
+:g  @unittest func0
 	1 assert=? 1000 g =>kg
 
-:kg @unittest func()
+:kg @unittest func0
 	2000 assert=? 2 kg =>g
 
-:oz @unittest func()
+:oz @unittest func0
 	1 assert=? 16 oz =>lb
 
-:lb @unittest func()
+:lb @unittest func0
 	16 assert=? 1 lb =>oz
 
 
-:=>g  @unittest func()
+:=>g  @unittest func0
 	1500 assert=? 1.5 kg =>g
 
-:=>kg @unittest func()
+:=>kg @unittest func0
 	.123 assert=? 123 g =>kg
 
-:=>oz @unittest func()
+:=>oz @unittest func0
 	64 assert=? 4 lb =>oz
 
-:=>lb @unittest func()
+:=>lb @unittest func0
 	0.5 assert=? 8 oz =>lb
 
 
-:- @unittest func()
+:- @unittest func0
 	3.3322 assert=? 2 mm + 3 m + 1 ft + 1 in =>m
 	1900 assert=? 2 m - 100 mm =>mm
 	2222 assert=? 2 kg + 222 g =>g
