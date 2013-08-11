@@ -1,7 +1,7 @@
 Debugging
 =========
 
-As with many languages, one simple way to figure what your program thinks it's doing is to add print statements.  One simple way to build up strings is to use the $ function, which converts the next token to a string.  You can then combine this with concatenation to print out details:
+As with many languages, one simple way to figure what your program thinks it's doing is to add print statements.  One technique for building up strings is to use the $ function, which converts the next token to a string.  You can then combine this with concatenation to print out details:
 
 ```
 print " current contents of x: " + $ x + " and y: " + $ y

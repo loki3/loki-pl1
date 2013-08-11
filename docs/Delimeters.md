@@ -13,7 +13,7 @@ The core function l3.createDelimiter accepts the following options for how it in
 * asComment:  Ignore the contents
 * asRaw:  Treat the contents as raw code that could be evaluated later
 
-You can pass an optional end delimiter.  If none is specified, the remainder of the line is considered to be the delimited contents.  The convention in bootstrap.l3 is to define a variant of each delimiter that starts . (dot) that extends to the end of the line.  This can be a convenient shorthand for expressions with lots of nested delimiters.
+You can pass an optional end delimiter.  If none is specified, the remainder of the line is considered to be the delimited contents.  The convention in bootstrap.l3 is to define a variant of each delimiter beginning with . (dot) that extends to the end of the line.  This can be a convenient shorthand for expressions with lots of nested delimiters.
 
 ```
 // the following two lines both define an array with three values

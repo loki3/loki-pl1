@@ -1,8 +1,8 @@
 Functions
 =========
 
-Functions are values just like ints or strings, meaning that they can be assigned to variables, passed to functions, or generated based on data.  This makes it easy to apply functions to collections, for example.  Additionally, if not all parameters are passed to a function, it evaluates to a "partial function," i.e., a new function that only requires the missing parameters to be passed.  Metadata can be attached to a function to provide document or to change how the run-time deals with the function.  Functions can also be bound to a scope, allowing such features as closures.
-The last value in a function body is what the function evaluates to.  During the eval phase, functions can consume the token before it and/or after it in an expression.  Additionally, it can consume a function body, which can be specified by indenting the following lines.
+Functions are values just like ints or strings, meaning that they can be assigned to variables, passed to functions, or generated based on data.  This makes it easy to apply functions to collections, for example.  Additionally, if not all parameters are passed to a function, it evaluates to a "partial function," i.e., a new function that only requires the missing parameters to be passed.  Metadata can be attached to a function to provide documentation or to change how the run-time deals with the function.  Functions can also be bound to a scope, allowing such features as closures.
+The last value in a function body is what the function evaluates to (this is no explicit return).  During the eval phase, functions can consume the token before it and/or after it in an expression.  Additionally, it can consume a function body, which can be specified by indenting the lines following the function invocation.
 
 Prefix, postfix, and infix
 --------------------------
@@ -81,7 +81,7 @@ Pattern matching with defaults and substructures allow you to have optional and 
 	a + b
 // evals to 6
 doStuff [ 1 5 ]
-// evals to 3
+// evals to 3, since b takes the default
 doStuff [ 1 ]
 
 // optional named parameters
@@ -104,7 +104,7 @@ sum [ 1.5 3.5 ]
 sum [ 2 :text ]
 ```
 
-You can do function overloading, where the system calls the function that's the most specific match.  Note that this requires using f= instead of v= for assigning the function definition into a variable.
+You can do function overloading, where the system calls the function that's the most specific match.  Note that this requires using f= instead of v= for assigning the function definition into a variable to avoid simply overwriting the previous value associated with the function name.
 
 ```
 // if ints are passed, add them
@@ -141,22 +141,22 @@ step { :hasNext true }
 Simple declarations
 -------------------
 
-Since it's simple to extend the syntax of loki3, there are several other ways you can define functions that are convenient in different situations.  Short prefix functions with an arbitrary number of named arguments can be declared using (( )).
+Since it's simple to extend the syntax of loki3, multiple ways of defining functions are provided that are convenient in different situations.  Short prefix functions with an arbitrary number of named arguments can be declared using (( )).
 
 ```
-// (( )) creates a prefix function that takes three arguments
-// then an array is passed to it, so the expression evals to 30
+// (( )) creates a prefix function.  we use it to declare a function with three arguments,
+// then an array is passed to it, so this expression evals to 30
 (( [ ->a ->b ->c ] ` a * b * c ` )) [ 2 3 5 ]
 ```
 
-Functions that take exactly one argument can be declared using (| |).  The implicit parameter is referenced as ##.  This is useful for passing simple functions to other functions such as apply, which take a function as a parameter.  The following example doubles every value in an array:
+Functions taking exactly one argument can be declared using (| |).  The implicit parameter is referenced as ##.  This is useful for passing simple functions to other functions such as apply, which take a function as a parameter.  The following example doubles every value in an array:
 
 ```
 // evals to [ 6 10 14 ]
 [ 3 5 7 ] apply (| ## * 2 |)
 ```
 
-Functions that take exactly two arguments can be declared using (< >).  The implicit parameters are referenced as #1 and #2.  This is useful for passing simple functions to functions such as fold.  The following example multiplies together every value in an array:
+Functions taking exactly two arguments can be declared using (< >).  The implicit parameters are referenced as #1 and #2.  This is useful for passing simple functions to functions such as fold.  The following example multiplies together every value in an array:
 
 ```
 // evals to 30

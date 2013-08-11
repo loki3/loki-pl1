@@ -26,7 +26,7 @@ Parse/eval follows these steps:
 * **Consumes adjacent nodes:** Evaluating a node may call a function that consumes the nodes immediately before and/or after it, and possibly the "body" immediately following the line (i.e. the block of lines indented relative to the current line)
 * **Repeat:** Evaluation continues in precedence order (left-most wins a tie), until there is no more evaluation to do
 
-The following shows a sample line, which gets tokenized based on white space.  *a* and *c* are both lists that get interpreted based on custom code.  *b*, *d*, and *f* are infix functions which consume the nodes on either side of them.  Since *f* has highest precedence, it's evaluated first.  _3 * 2_ gets replaced by 6.  Next, *b* and *d* have equal precedence, so *b*, the left-most, is evaluated first, consuming *a* and *c* in the process.  Then *d* is applied, using the previous results from both sides to compute the final value.
+The following shows a sample line, which gets tokenized based on white space.  *a* and *c* are both lists that get interpreted based on custom code.  *b*, *d*, and *f* are infix functions which consume the nodes on either side of them.  *f* has highest precedence, so it's evaluated first.  _3 * 2_ gets replaced by 6.  Next, *b* and *d* have equal precedence, so *b*, the left-most, is evaluated first, consuming *a* and *c* in the process.  Then *d* is applied, using the previous results from both sides to compute the final value.
 
 ```
 ( 1 .. 4 ) fold (< #1 * #2 + #2 >) + 3 * 2
@@ -46,7 +46,7 @@ DSLs
 Domain Specific Languages (DSLs) can be created in Loki3.  Some of the features that make this particularly nice include the following:
 
 * **Pre/in/postfix functions:**  For example, `5 months + 3 days` reads much easier than `(add (months 5) (days 3))`, `Dates(0,5,0).Add(Date(0,0,3));` or the equivalent.
-* **Custom delimiters:**  You can define your own delimiters, including functions that will be called to interpret the contents.  Imagine custom delimiters that know how to handle HTML escaping or can create your own collection type.
+* **Custom delimiters:**  You can define your own delimiters, including functions that will be called to interpret the contents.  Imagine custom delimiters that know how to handle HTML escaping or creating your own collection type.
 * **Function bodies:**  A body is simply the indented lines that follow the current line.  The called function can interpret those lines however it sees fit, making it easy to intuitively declare custom data structures.
 
 ```
@@ -66,6 +66,7 @@ var :makeMap = func()
 	:submap forEachDelim [ body :{ ]
 		:map = map + submap
 	map
+:makeMap @body? true
 
 // :a will contain the map { :key1 42 :key2 (sqrt) }, where (sqrt) is a function
 var :a = makeMap

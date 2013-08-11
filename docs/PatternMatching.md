@@ -15,10 +15,10 @@ Pattern matching allows you to easily deconstruct a complex data structure, assi
 var [ :a :b ] = [ 1 2 ]
 
 // create a function which takes two parameters
-:myFunc v= func [ ->a ->b ]
+:myFunc f= func [ ->a ->b ]
 	a + b
 // function override that's called if three parameters are passed
-:myFunc v= func [ ->a ->b ->c ]
+:myFunc f= func [ ->a ->b ->c ]
 	a + b * c
 
 // conditional that executes the body for the first pattern match
