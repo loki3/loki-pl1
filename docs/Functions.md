@@ -7,10 +7,12 @@ The last value in a function body is what the function evaluates to (this is no 
 Prefix, postfix, and infix
 --------------------------
 
+The function names used for defining functions contain hints as to where it the new function will find its parameters.  A 1 can appear at the front and/or end of *func* to indicate it expects a parameter before and/or after the function name.  A 0 indicates the function takes no parameters.
+
 Here's an example of defining a prefix function:
 
 ```
-:add2 v= func ->b
+:add2 v= func1 ->b
 	b + 2
 // the following evaluates to 7
 add2 5
@@ -19,7 +21,7 @@ add2 5
 Here's a postfix function:
 
 ```
-:plus2 v= ( ->b postfix )
+:plus2 v= ( ->b 1func )
 	b + 2
 // the following evaluates to 5
 3 plus2
@@ -28,7 +30,7 @@ Here's a postfix function:
 Here's an infix function:
 
 ```
-:plus v= ( ->b infix ->c )
+:plus v= ( ->b 1func1 ->c )
 	b + c
 // the following evaluates to 42
 40 plus 2
@@ -37,14 +39,14 @@ Here's an infix function:
 Here's a function that takes no parameters:
 
 ```
-:help v= func()
+:help v= func0
 	print ." This could be a helpful explanation, but it's not.
 ```
 
 In order to indicate that a function should consume a body, metadata is attached to the function using @body?.  Here's an example of a function that accepts a body:
 
 ```
-:repeat v= func ->n
+:repeat v= func1 ->n
 	:i v= 0
 	l3.loop { :check ` i <? n ` :change ` :i = i + 1 ` :body body }
 :repeat @body? true
@@ -62,12 +64,12 @@ Pattern matching parameters
 Function parameters can be specified using pattern matching.  The values before or after the function in an expression could be an array, providing a way to pass multiple parameters, or a map, providing a way to pass named parameters.  Pattern matching can be used to extract out portions of the array or map.
 
 ```
-:sum v= func [ ->a ->b ]
+:sum v= func1 [ ->a ->b ]
 	a + b
 // the following evals to 5
 sum [ 2 3 ]
 
-:process v= func { :add ->a :mult1 ->m1 :mult2 ->m2 }
+:process v= func1 { :add ->a :mult1 ->m1 :mult2 ->m2 }
 	a + m1 * m2
 // the following evals to 11
 process { :mult1 2 :mult2 3 :add 5 }
@@ -77,7 +79,7 @@ Pattern matching with defaults and substructures allow you to have optional and 
 
 ```
 // optional parameter
-:doStuff v= func [ ->a ( ->b d= 2 ) ]
+:doStuff v= func1 [ ->a ( ->b d= 2 ) ]
 	a + b
 // evals to 6
 doStuff [ 1 5 ]
@@ -85,7 +87,7 @@ doStuff [ 1 5 ]
 doStuff [ 1 ]
 
 // optional named parameters
-:process v= func { :add ->a :mult1 ( ->m1 d= 2 ) :mult2 ( ->m2 d= 3 ) }
+:process v= func1 { :add ->a :mult1 ( ->m1 d= 2 ) :mult2 ( ->m2 d= 3 ) }
 	a + m1 * m2
 // the following evals to 11
 process { :add 5 }
@@ -96,7 +98,7 @@ process { :add 5 :mult1 4 }
 Pattern matching also allows you to optionally restrict parameters to the specified type.
 
 ```
-:sum v= func [ ( ->a : :number ) ( ->b : :number ) ]
+:sum v= func1 [ ( ->a : :number ) ( ->b : :number ) ]
 	a + b
 // evals to 5
 sum [ 1.5 3.5 ]
@@ -108,11 +110,11 @@ You can do function overloading, where the system calls the function that's the 
 
 ```
 // if ints are passed, add them
-:+ f= .( ( ->a : :int ) infix ( ->b : :int )
+:+ f= .( ( ->a : :int ) 1func1 ( ->b : :int )
 	l3.add .[ a b
 
 // turn contents into strings and concatenate them
-:+ f= .( ->a infix ->b
+:+ f= .( ->a 1func1 ->b
 	l3.stringConcat .{ :array .[ ( $ a ) ( $ b )
 
 // evals to 7
@@ -124,7 +126,7 @@ You can do function overloading, where the system calls the function that's the 
 You can do structural typing, where a function is only called if the parameter has the specified keys.  This technique can be used as a dynamic, yet type-safe, way to enforce that an object exposes certain functions or values.
 
 ```
-:step v= func ( ->thing @@hasKeys [ :hasNext :next ] )
+:step v= func1 ( ->thing @@hasKeys [ :hasNext :next ] )
 	:result v= 5
 	if thing . :hasNext
 		:result = thing . :next
@@ -171,7 +173,7 @@ Partial functions
 As is common with functional languages, passing a subset of the required arguments to a function will return a new function that's bound to the passed arguments and requires the missing arguments.
 
 ```
-:doStuff v= func [ ->x ->y ]
+:doStuff v= func1 [ ->x ->y ]
 	x + y
 
 // creates a partial function where x is 2 and y still needs to be passed
@@ -183,7 +185,7 @@ add2 [ 3 ]
 But, unlike most functional languages, you have more freedom than simply creating partial functions based on the order parameters are passed to the function.  If the function takes a map, it can bind to any of the named parameters.
 
 ```
-:doStuff v= func { :x ->x :y ->y }
+:doStuff v= func1 { :x ->x :y ->y }
 	2 * x + 3 * y
 
 // creates a partial function bound to x=2
@@ -203,7 +205,7 @@ Active functions
 One thing that can be tricky when dealing with functions is the fact that they get actively evaluated when appearing in an expression.  The following code defines a postfix function, then attempts to assign it into another variable.  But instead, the interpreter ends up trying to evaluate the function, since it has higher precedence than v=, causing an error.  You can surround the function with ( ) to keep parse/eval from eagerly evaluating the function.
 
 ```
-:! v= ( ->n postfix )
+:! v= ( ->n 1func )
 	( n <? 1 ) ? .[ 1 .` ( 1 .. n ) fold (< #1 * #2 >)
 // evals to 120
 5 !
@@ -231,7 +233,7 @@ As with any value, additional metadata can be attached to a function.  Typically
 Since each of these metadata functions return the key, they can easily be chained together.
 
 ```
-:triple v= func ( ->x : :number )
+:triple v= func1 ( ->x : :number )
 	3 * x
 :triple @cat :math @doc ." Triple a number
 ```
@@ -239,9 +241,9 @@ Since each of these metadata functions return the key, they can easily be chaine
 When figuring out the value of an expression, it evaluates the left-most function with the highest precedence first.  The default precedence for evaluating a function is 3.  Lower numbers cause the function to be evaluated earlier.  Higher numbers make the function get evaluated later.
 
 ```
-:plus v= ( ->a infix ->b )
+:plus v= ( ->a 1func1 ->b )
 	a + b
-:times v= ( ->a infix ->b )
+:times v= ( ->a 1func1 ->b )
 	a * b
 
 // evals to 9, since the left-most function is evaluated first
@@ -264,8 +266,8 @@ Currently the bootstrapped language doesn't create closures automatically.  You 
 
 // not using a closure
 // returns a function that adds onto the global 'value'
-:nested v= func ->value
-	:add v= func ->plus
+:nested v= func1 ->value
+	:add v= func1 ->plus
 		value + plus
 	add
 // 2 gets lost, instead it'll add onto 1...
@@ -274,8 +276,8 @@ Currently the bootstrapped language doesn't create closures automatically.  You 
 getValue 3
 
 // creates a closure bound to the passed value
-:nested2 v= func ->value
-	:add v= func ->plus
+:nested2 v= func1 ->value
+	:add v= func1 ->plus
 		value + plus
 	closure :add
 // this time it'll add onto 2...

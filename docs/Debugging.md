@@ -10,7 +10,7 @@ print " current contents of x: " + $ x + " and y: " + $ y
 Another way is to fire up a copy of the REPL from within your code so you can examine and/or modify the state of the current scope.
 
 ```
-:myFunc f= func ->a
+:myFunc f= func1 ->a
 	if a
 	    repl
 ```

@@ -51,7 +51,7 @@ Domain Specific Languages (DSLs) can be created in Loki3.  Some of the features 
 
 ```
 // define the .. infix operator that uses a built-in function to create a range
-var :.. = ( ->start infix ->end )
+var :.. = ( ->start 1func1 ->end )
     l3.createRange { :start start :end end }
 
 // the following assigns [ 3 4 5 6 7 ] to :a
@@ -61,7 +61,7 @@ Here's an example showing how you could leverage bodies for creating maps:
 
 ```
 // defines a function that takes a body and turns it into a map
-var :makeMap = func()
+var :makeMap = func0
 	var :map = nil
 	:submap forEachDelim [ body :{ ]
 		:map = map + submap
@@ -90,7 +90,7 @@ Here's an example that adds two complex numbers represented by maps.  The values
 ```
 // the following deconstructs two incoming maps, recombining the pieces,
 // effectively multiplying together two complex numbers
-var :* = ( { :x ->x1 :y ->y1 } infix { :x ->x2 :y ->y2 } )
+var :* = ( { :x ->x1 :y ->y1 } 1func1 { :x ->x2 :y ->y2 } )
 	{ :x ( x1 * x2 - y1 * y2 ) :y ( x1 * y2 + x2 * y1 ) }
 
 // sample usage: :a will be { :x -4 , :y 7 }
@@ -107,7 +107,7 @@ Metadata can be attached to any value.  Special metadata provides additional ins
 
 ```
 // @doc is used to attach documentation to values, including functions
-var :square = func ->a
+var :square = func1 ->a
     a * a
 :square @doc ." Compute the square of a number
 ```
@@ -116,7 +116,7 @@ The following example shows metadata being attached to function parameters to ai
 
 ```
 // function will only be called if parameter is a number
-var :square = func ( ->a : :number )
+var :square = func1 ( ->a : :number )
     a * a
 ```
 
@@ -132,7 +132,7 @@ The following shows how factorials could be computed by applying multiplication 
 
 ```
 // defines a postfix function that takes a single parameter
-var :! = ( ->n postfix )
+var :! = ( ->n 1func )
 	( 1 .. n ) fold (< #1 * #2 >)
 
 // uses the previous function definition

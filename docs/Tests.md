@@ -6,30 +6,30 @@ You can attach a unit test to a function.  This makes it simple to ensure that e
 Say that stuff.l3 consists of the following functions:
 
 ```
-:double v= func ->a
+:double v= func1 ->a
 	a * 2
 :double @doc ." Double a number
 
-:triple v= func ->a
+:triple v= func1 ->a
 	a * 3
 :triple @doc ." Triple a number
 
-:quadruple v= func ->a
+:quadruple v= func1 ->a
 	a * 4
 :quadruple @doc ." Quadruple a number
 
-:printHelp v= func()
+:printHelp v= func0
 	print ." You can double, triple or quadruple a number
 ```
 
 You could then create a file called stuff_tests.l3 containing the unit tests for each of those functions.
 
 ```
-:double @unittest func()
+:double @unittest func0
 	2 assert=? double 1
 	5 assert=? double 2.5
 
-:triple @unittest func()
+:triple @unittest func0
 	6 assert=? triple 2
 
 // indicates that we still need to write this test
