@@ -67,23 +67,6 @@
     <Compile Include="source\ScopeFunctions.cs" />
     <Compile Include="source\String.cs" />
     <Compile Include="source\TestSupport.cs" />
-    <Compile Include="source\TEST_ArrayFunctions.cs" />
-    <Compile Include="source\TEST_Bootstrap.cs" />
-    <Compile Include="source\TEST_Conditional.cs" />
-    <Compile Include="source\TEST_CreateFunction.cs" />
-    <Compile Include="source\TEST_EvalBuiltin.cs" />
-    <Compile Include="source\TEST_EvalLines.cs" />
-    <Compile Include="source\TEST_EvalList.cs" />
-    <Compile Include="source\TEST_ValueFunctionOverload.cs" />
-    <Compile Include="source\TEST_Logic.cs" />
-    <Compile Include="source\TEST_MapFunctions.cs" />
-    <Compile Include="source\TEST_Math.cs" />
-    <Compile Include="source\TEST_Module.cs" />
-    <Compile Include="source\TEST_PartialFunction.cs" />
-    <Compile Include="source\TEST_PatternChecker.cs" />
-    <Compile Include="source\TEST_String.cs" />
-    <Compile Include="source\TEST_TestCode.cs" />
-    <Compile Include="source\TEST_Values.cs" />
     <Compile Include="source\Utility.cs" />
     <Compile Include="source\ValueArray.cs" />
     <Compile Include="source\ValueDelimiter.cs" />
@@ -91,11 +74,30 @@
     <Compile Include="source\ParseLine.cs" />
     <Compile Include="source\Program.cs" />
     <Compile Include="source\Properties\AssemblyInfo.cs" />
-    <Compile Include="source\TEST_EvalNode.cs" />
-    <Compile Include="source\TEST_ParseLine.cs" />
     <Compile Include="source\Token.cs" />
     <Compile Include="source\Value.cs" />
     <Compile Include="source\Values.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="test\TEST_ArrayFunctions.cs" />
+    <Compile Include="test\TEST_Bootstrap.cs" />
+    <Compile Include="test\TEST_Conditional.cs" />
+    <Compile Include="test\TEST_CreateFunction.cs" />
+    <Compile Include="test\TEST_EvalBuiltin.cs" />
+    <Compile Include="test\TEST_EvalLines.cs" />
+    <Compile Include="test\TEST_EvalList.cs" />
+    <Compile Include="test\TEST_EvalNode.cs" />
+    <Compile Include="test\TEST_ValueFunctionOverload.cs" />
+    <Compile Include="test\TEST_Logic.cs" />
+    <Compile Include="test\TEST_MapFunctions.cs" />
+    <Compile Include="test\TEST_Math.cs" />
+    <Compile Include="test\TEST_Module.cs" />
+    <Compile Include="test\TEST_ParseLine.cs" />
+    <Compile Include="test\TEST_PartialFunction.cs" />
+    <Compile Include="test\TEST_PatternChecker.cs" />
+    <Compile Include="test\TEST_String.cs" />
+    <Compile Include="test\TEST_TestCode.cs" />
+    <Compile Include="test\TEST_Values.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
