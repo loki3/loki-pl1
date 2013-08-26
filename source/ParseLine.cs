@@ -57,40 +57,15 @@ namespace loki3.core
 			DelimiterType type = thisDelim.DelimiterType;
 			if (type == DelimiterType.AsComment)
 			{	// ignore everything up to the end delimiter
-				for (int i = iStart; i < strs.Length; i++)
-				{
-					if (strs[i] == thisDelim.End)
-					{
-						iEnd = i;
-						return null;
-					}
-				}
+				DelimiterList result = null;
+				if (ParseComment(strs, iStart, thisDelim, out iEnd, out result))
+					return result;
 			}
 			else if (type == DelimiterType.AsString)
 			{	// simply search for end and stuff everything in the middle into a single token
-				iEnd = -1;
-				for (int i = iStart; i < strs.Length; i++)
-				{
-					if (strs[i] == thisDelim.End)
-					{
-						iEnd = i;
-						break;
-					}
-				}
-
-				// no specified end delim means take the remainder of the line
-				if (thisDelim.End == "")
-					iEnd = strs.Length;
-
-				// if we found end, wrap entire string in a single node
-				if (iEnd != -1)
-				{
-					string subStr = GetSubStr(iStart, iEnd, strs);
-					Token token = new Token(subStr);
-					DelimiterNode node = new DelimiterNodeToken(token);
-					nodes.Add(node);
-					return new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr);
-				}
+				DelimiterList result = null;
+				if (ParseString(indent, strs, iStart, thisDelim, nodes, out iEnd, out result))
+					return result;
 			}
 			else // Value, Array && Raw
 			{	// handle as individual tokens and nested lists
@@ -155,6 +130,56 @@ namespace loki3.core
 			iEnd = strs.Length;
 			string trimmed = original.TrimStart(' ', '\t');
 			return new DelimiterList(thisDelim, nodes, indent, "", trimmed);
+		}
+
+		// ignore everything up to the end delimiter
+		private static bool ParseComment(string[] strs, int iStart, ValueDelimiter thisDelim,
+			out int iEnd, out DelimiterList result)
+		{
+			result = null;
+			for (int i = iStart; i < strs.Length; i++)
+			{
+				if (strs[i] == thisDelim.End)
+				{
+					iEnd = i;
+					return true;
+				}
+			}
+			iEnd = strs.Length;
+			return false;
+		}
+
+		// simply search for end and stuff everything in the middle into a single token
+		private static bool ParseString(int indent, string[] strs, int iStart,
+			ValueDelimiter thisDelim, List<DelimiterNode> nodes,
+			out int iEnd, out DelimiterList result)
+		{
+			iEnd = -1;
+			for (int i = iStart; i < strs.Length; i++)
+			{
+				if (strs[i] == thisDelim.End)
+				{
+					iEnd = i;
+					break;
+				}
+			}
+
+			// no specified end delim means take the remainder of the line
+			if (thisDelim.End == "")
+				iEnd = strs.Length;
+
+			// if we found end, wrap entire string in a single node
+			if (iEnd != -1)
+			{
+				string subStr = GetSubStr(iStart, iEnd, strs);
+				Token token = new Token(subStr);
+				DelimiterNode node = new DelimiterNodeToken(token);
+				nodes.Add(node);
+				result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr);
+				return true;
+			}
+			result = null;
+			return false;
 		}
 
 		/// <summary>
