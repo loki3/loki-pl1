@@ -69,58 +69,9 @@ namespace loki3.core
 			}
 			else // Value, Array && Raw
 			{	// handle as individual tokens and nested lists
-				for (int i = iStart; i < strs.Length; i++)
-				{
-					string s = strs[i];
-
-					// is this the end of current set of delimited tokens?
-					if (s == thisDelim.End)
-					{	// end delimiter
-						iEnd = i;
-						string subStr = GetSubStr(iStart, iEnd, strs);
-						return new DelimiterList(thisDelim, nodes, indent, strs[iStart-1], subStr);
-					}
-
-					// is it a stand alone starting delimiter?
-					bool bAnyToken = false;
-					ValueDelimiter subDelim = (delims == null ? null : delims.GetDelim(s, out bAnyToken));
-					string[] strsToUse = strs;
-					bool bExtra = true;
-					if (subDelim == null && !bAnyToken)
-					{	// whole thing wasn't a delimiter, function, etc., how about the 1st char?
-						string s1 = s.Substring(0, 1);
-						subDelim = (delims == null ? null : delims.GetDelim(s1, out bAnyToken));
-						if (subDelim != null)
-						{	// copy across array, but break iStart into delim & remainder
-							bExtra = false;
-							strsToUse = new string[strs.Length + 1];
-							for (int j = 0; j < i; j++)
-								strsToUse[j] = strs[j];
-							strsToUse[i] = s1;
-							strsToUse[i + 1] = s.Substring(1);
-							for (int j = i + 1; j < strs.Length; j++)
-								strsToUse[j + 1] = strs[j];
-						}
-					}
-					if (subDelim != null)
-					{	// start delimiter
-						int end;
-						DelimiterList sublist = Do(0, original, strsToUse, i + 1, subDelim, delims, requestor, out end);
-						if (sublist != null)
-						{
-							DelimiterNodeList node = new DelimiterNodeList(sublist);
-							nodes.Add(node);
-						}
-						// skip past the sublist
-						i = (bExtra ? end : end - 1);
-					}
-					else
-					{	// stand alone token
-						Token token = new Token(s);
-						DelimiterNode node = new DelimiterNodeToken(token);
-						nodes.Add(node);
-					}
-				}
+				DelimiterList result = null;
+				if (ParseMisc(indent, original, strs, iStart, thisDelim, delims, requestor, nodes, out iEnd, out result))
+					return result;
 			}
 
 			// didn't find closing delimiter, TODO request the next line
@@ -131,6 +82,7 @@ namespace loki3.core
 			string trimmed = original.TrimStart(' ', '\t');
 			return new DelimiterList(thisDelim, nodes, indent, "", trimmed);
 		}
+
 
 		// ignore everything up to the end delimiter
 		private static bool ParseComment(string[] strs, int iStart, ValueDelimiter thisDelim,
@@ -179,6 +131,70 @@ namespace loki3.core
 				return true;
 			}
 			result = null;
+			return false;
+		}
+
+		// handle as individual tokens and nested lists
+		private static bool ParseMisc(int indent, string original, string[] strs, int iStart, ValueDelimiter thisDelim,
+			IParseLineDelimiters delims, ILineRequestor requestor, List<DelimiterNode> nodes,
+			out int iEnd, out DelimiterList result)
+		{
+			result = null;
+			iEnd = strs.Length;
+
+			for (int i = iStart; i < strs.Length; i++)
+			{
+				string s = strs[i];
+
+				// is this the end of current set of delimited tokens?
+				if (s == thisDelim.End)
+				{	// end delimiter
+					iEnd = i;
+					string subStr = GetSubStr(iStart, iEnd, strs);
+					result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr);
+					return true;
+				}
+
+				// is it a stand alone starting delimiter?
+				bool bAnyToken = false;
+				ValueDelimiter subDelim = (delims == null ? null : delims.GetDelim(s, out bAnyToken));
+				string[] strsToUse = strs;
+				bool bExtra = true;
+				if (subDelim == null && !bAnyToken)
+				{	// whole thing wasn't a delimiter, function, etc., how about the 1st char?
+					string s1 = s.Substring(0, 1);
+					subDelim = (delims == null ? null : delims.GetDelim(s1, out bAnyToken));
+					if (subDelim != null)
+					{	// copy across array, but break iStart into delim & remainder
+						bExtra = false;
+						strsToUse = new string[strs.Length + 1];
+						for (int j = 0; j < i; j++)
+							strsToUse[j] = strs[j];
+						strsToUse[i] = s1;
+						strsToUse[i + 1] = s.Substring(1);
+						for (int j = i + 1; j < strs.Length; j++)
+							strsToUse[j + 1] = strs[j];
+					}
+				}
+				if (subDelim != null)
+				{	// start delimiter
+					int end;
+					DelimiterList sublist = Do(0, original, strsToUse, i + 1, subDelim, delims, requestor, out end);
+					if (sublist != null)
+					{
+						DelimiterNodeList node = new DelimiterNodeList(sublist);
+						nodes.Add(node);
+					}
+					// skip past the sublist
+					i = (bExtra ? end : end - 1);
+				}
+				else
+				{	// stand alone token
+					Token token = new Token(s);
+					DelimiterNode node = new DelimiterNodeToken(token);
+					nodes.Add(node);
+				}
+			}
 			return false;
 		}
 
