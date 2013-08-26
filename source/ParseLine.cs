@@ -10,8 +10,9 @@ namespace loki3.core
 	{
 		/// <summary>
 		/// If 'start' is a starting delimiter, returns delimiter, else null
+		/// 'anyToken' will be true if a token named 'start' exists at all
 		/// </summary>
-		ValueDelimiter GetDelim(string start);
+		ValueDelimiter GetDelim(string start, out bool anyToken);
 	}
 
 
@@ -106,17 +107,37 @@ namespace loki3.core
 					}
 
 					// is it a stand alone starting delimiter?
-					ValueDelimiter subDelim = (delims == null ? null : delims.GetDelim(s));
+					bool bAnyToken = false;
+					ValueDelimiter subDelim = (delims == null ? null : delims.GetDelim(s, out bAnyToken));
+					string[] strsToUse = strs;
+					bool bExtra = true;
+					if (subDelim == null && !bAnyToken)
+					{	// whole thing wasn't a delimiter, function, etc., how about the 1st char?
+						string s1 = s.Substring(0, 1);
+						subDelim = (delims == null ? null : delims.GetDelim(s1, out bAnyToken));
+						if (subDelim != null)
+						{	// copy across array, but break iStart into delim & remainder
+							bExtra = false;
+							strsToUse = new string[strs.Length + 1];
+							for (int j = 0; j < i; j++)
+								strsToUse[j] = strs[j];
+							strsToUse[i] = s1;
+							strsToUse[i + 1] = s.Substring(1);
+							for (int j = i + 1; j < strs.Length; j++)
+								strsToUse[j + 1] = strs[j];
+						}
+					}
 					if (subDelim != null)
 					{	// start delimiter
 						int end;
-						DelimiterList sublist = Do(0, original, strs, i + 1, subDelim, delims, requestor, out end);
+						DelimiterList sublist = Do(0, original, strsToUse, i + 1, subDelim, delims, requestor, out end);
 						if (sublist != null)
 						{
 							DelimiterNodeList node = new DelimiterNodeList(sublist);
 							nodes.Add(node);
 						}
-						i = end;	// skip past the sublist
+						// skip past the sublist
+						i = (bExtra ? end : end - 1);
 					}
 					else
 					{	// stand alone token

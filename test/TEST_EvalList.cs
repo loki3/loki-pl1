@@ -9,10 +9,12 @@ namespace loki3.core.test
 	{
 		class TestDelims : IParseLineDelimiters
 		{
-			public ValueDelimiter GetDelim(string start)
+			public ValueDelimiter GetDelim(string start, out bool anyToken)
 			{
+				anyToken = true;
 				if (start == "(")
 					return ValueDelimiter.Basic;
+				anyToken = false;
 				return null;
 			}
 		}

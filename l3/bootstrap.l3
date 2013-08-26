@@ -627,9 +627,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :* @order 2
 :* @cat :string @doc ." Repeat a string n times.
 
-:"" v= " "
-:"" @cat :string @doc ." TEMP: an empty string, needed until string delimiters handle white space correctly
-
 :""" v= func0
 	:list v= [ ]
 	:str forEachDelim [ body :" ]

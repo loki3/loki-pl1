@@ -767,10 +767,6 @@
 :+ @unittest func0
 	:qwert assert=? :qw + :ert
 
-:"" @unittest func0
-	:string	assert=? l3.getType .{ :value ""
-	0		assert=? l3.getCount ""
-
 :""" @unittest func0
 	:a v= """
 		this is

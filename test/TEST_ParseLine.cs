@@ -9,8 +9,9 @@ namespace loki3.core.test
 	{
 		class TestParseLineDelimiter : IParseLineDelimiters
 		{
-			public ValueDelimiter GetDelim(string start)
+			public ValueDelimiter GetDelim(string start, out bool anyToken)
 			{
+				anyToken = true;
 				if (start == "(")
 					return ValueDelimiter.Basic;
 				if (start == "[")
@@ -21,6 +22,7 @@ namespace loki3.core.test
 					return m_double;
 				if (start == "/*")
 					return m_comment;
+				anyToken = false;
 				return null;
 			}
 
@@ -140,6 +142,35 @@ namespace loki3.core.test
 				Assert.AreEqual(2, list.Nodes.Count);
 				Assert.AreEqual("asdf", list.Nodes[0].Token.Value);
 				Assert.AreEqual("ghjkl", list.Nodes[1].Token.Value);
+			}
+		}
+
+		[Test]
+		public void GlommedOn()
+		{
+			TestParseLineDelimiter delims = new TestParseLineDelimiter();
+
+			{	// front delimiter is part of its first token
+				DelimiterList list = ParseLine.Do("asdf (qwert yuiop ) ghjkl", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual("asdf", list.Nodes[0].Token.Value);
+				Assert.AreEqual("ghjkl", list.Nodes[2].Token.Value);
+
+				DelimiterList sublist = list.Nodes[1].List;
+				Assert.AreEqual(")", sublist.Delimiter.End);
+				Assert.AreEqual(2, sublist.Nodes.Count);
+				Assert.AreEqual("qwert", sublist.Nodes[0].Token.Value);
+				Assert.AreEqual("yuiop", sublist.Nodes[1].Token.Value);
+			}
+
+			{	// front delimiter is part of its first token
+				DelimiterList list = ParseLine.Do(":a v= \"\"", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual(":a", list.Nodes[0].Token.Value);
+				Assert.AreEqual("v=", list.Nodes[1].Token.Value);
+				Assert.AreEqual("\"\"", list.Nodes[2].Token.Value);
 			}
 		}
 	}

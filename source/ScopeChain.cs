@@ -86,12 +86,16 @@ namespace loki3.core
 			get { return m_valueMap.Metadata == null ? "" : m_valueMap.Metadata.GetOptionalT(keyName, ""); }
 		}
 
-		public ValueDelimiter GetDelim(string start)
+		public ValueDelimiter GetDelim(string start, out bool anyToken)
 		{
 			Value val;
 			if (m_values.TryGetValue(start, out val))
+			{
+				anyToken = true;
 				return val as ValueDelimiter;
-			return (m_parent != null ? m_parent.GetDelim(start) : null);
+			}
+			anyToken = false;
+			return (m_parent != null ? m_parent.GetDelim(start, out anyToken) : null);
 		}
 
 		public IScope Exists(string token)
