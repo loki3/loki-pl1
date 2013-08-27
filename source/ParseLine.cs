@@ -154,6 +154,23 @@ namespace loki3.core
 					result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr);
 					return true;
 				}
+				// TODO: rework this so I don't need to check for : (e.g. for :}, when creating a delim)
+				if (s.Substring(s.Length - 1, 1) == thisDelim.End && s[0] != ':')
+				{	// end delimiter is part of final token
+					iEnd = i + 1;
+					string without = s.Substring(0, s.Length - 1);
+
+					Token token = new Token(without);
+					DelimiterNode node = new DelimiterNodeToken(token);
+					nodes.Add(node);
+
+					strs[i] = without;
+					string subStr = GetSubStr(iStart, iEnd, strs);
+					result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr);
+					strs[i] = s;
+					--iEnd;
+					return true;
+				}
 
 				// is it a stand alone starting delimiter?
 				bool bAnyToken = false;

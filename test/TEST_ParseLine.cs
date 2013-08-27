@@ -172,6 +172,47 @@ namespace loki3.core.test
 				Assert.AreEqual("v=", list.Nodes[1].Token.Value);
 				Assert.AreEqual("\"\"", list.Nodes[2].Token.Value);
 			}
+
+			{	// end delimiter is part of its last token
+				DelimiterList list = ParseLine.Do("asdf ( qwert yuiop) ghjkl", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual("asdf", list.Nodes[0].Token.Value);
+				Assert.AreEqual("ghjkl", list.Nodes[2].Token.Value);
+
+				DelimiterList sublist = list.Nodes[1].List;
+				Assert.AreEqual(")", sublist.Delimiter.End);
+				Assert.AreEqual(2, sublist.Nodes.Count);
+				Assert.AreEqual("qwert", sublist.Nodes[0].Token.Value);
+				Assert.AreEqual("yuiop", sublist.Nodes[1].Token.Value);
+			}
+
+			{	// delimiter is part of both start & end tokens
+				DelimiterList list = ParseLine.Do("asdf (qwert yuiop) ghjkl", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual("asdf", list.Nodes[0].Token.Value);
+				Assert.AreEqual("ghjkl", list.Nodes[2].Token.Value);
+
+				DelimiterList sublist = list.Nodes[1].List;
+				Assert.AreEqual(")", sublist.Delimiter.End);
+				Assert.AreEqual(2, sublist.Nodes.Count);
+				Assert.AreEqual("qwert", sublist.Nodes[0].Token.Value);
+				Assert.AreEqual("yuiop", sublist.Nodes[1].Token.Value);
+			}
+
+			{	// delimiter is part of both start & end tokens
+				DelimiterList list = ParseLine.Do("asdf (qwert yuiop)", delims);
+				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
+				Assert.AreEqual(2, list.Nodes.Count);
+				Assert.AreEqual("asdf", list.Nodes[0].Token.Value);
+
+				DelimiterList sublist = list.Nodes[1].List;
+				Assert.AreEqual(")", sublist.Delimiter.End);
+				Assert.AreEqual(2, sublist.Nodes.Count);
+				Assert.AreEqual("qwert", sublist.Nodes[0].Token.Value);
+				Assert.AreEqual("yuiop", sublist.Nodes[1].Token.Value);
+			}
 		}
 	}
 }
