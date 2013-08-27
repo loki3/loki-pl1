@@ -45,7 +45,7 @@ namespace loki3.builtin
 				List<DelimiterNode> change = changeVal is ValueNil ? null : (changeVal as ValueRaw).GetValue().Nodes;
 				bool checkFirst = map["checkFirst?"].AsBool;
 				// todo: consolidate these bodies, one from an explicit param & one from the following lines
-				Value valueBody = map.ContainsKey("body") ? map["body"] : map["l3.func.body"];
+				Value valueBody = map.ContainsKey("body") ? map["body"] : map[ValueFunction.keyBody];
 
 				bool isFirst = true;
 				Value result = ValueBool.False;
@@ -98,7 +98,7 @@ namespace loki3.builtin
 
 				Value collection = map["collection"];
 				// todo: consolidate these bodies, one from an explicit param & one from the following lines
-				Value valueBody = map.ContainsKey("body") ? map["body"] : map["l3.func.body"];
+				Value valueBody = map.ContainsKey("body") ? map["body"] : map[ValueFunction.keyBody];
 
 				PatternAssign assign = new PatternAssign(map, scope, true/*bCreate*/);
 
