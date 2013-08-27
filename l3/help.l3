@@ -29,7 +29,7 @@
 		:table v= [ :name :type :default :rest ]
 		:param =eachIn ( overloads . preOrPost )
 			[ :name :type :default :rest ] apply (| :table = table + ( param . ## ) |)
-		:s = :- + \s + preOrPost + \s + " parameters - " + \n
+		:s = :- + \s + preOrPost + \s + "parameters -" + \n
 		:s = s + .( l3.formatTable { :array table :columns 4 :dashesAfterFirst? true }
 		s
 	
@@ -47,7 +47,7 @@
 	:s = s + \n
 	
 	// specific
-	:table v= [ :properties " ----- " " ----- " ]
+	:table v= [ :properties "-----" "-----" ]
 	:sansOverloads v= ( map . :specific ) filterMap (< #1 !=? :overloads >)
 	:table = table + .( dumpMap sansOverloads
 	:s = s + .( l3.formatTable { :array table :columns 3 } 
@@ -175,7 +175,7 @@
 	:pair =eachIn metadata
 		// handle docstrings separately because they're long
 		if ( pair . 0 ) =? :l3.value.doc
-			:table = table + [ ( pair . 0 ) " <docstring> " ]
+			:table = table + [ ( pair . 0 ) "<docstring>" ]
 		else
 			:table = table + pair
 	l3.formatTable { :array table :columns 2 :dashesAfterFirst? true }
@@ -186,7 +186,7 @@
 	:table v= [ :function :scope ]
 	:i =eachIn scope
 		:function v= :i .@ :l3.scope.calledFunction
-		:context  v= .( i .size <? 20 ? [ i " <many values> " ]
+		:context  v= .( i .size <? 20 ? [ i "<many values>" ]
 		:table = table + [ function context ]
 	l3.formatTable { :array table :columns 2 :dashesAfterFirst? true }
 :dumpStack @cat :help @doc ." Dump the given stack, listing function names and variables that are defined in each scope.

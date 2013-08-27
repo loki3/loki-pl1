@@ -51,10 +51,10 @@
 	8 assert=? a
 
 :"		@unittest func0
-	:asdf assert=? " asdf "
+	:asdf assert=? "asdf"
 
 :'		@unittest func0
-	:asdf assert=? ' asdf '
+	:asdf assert=? 'asdf'
 
 :."		@unittest func0
 	:asdf assert=? ." asdf
@@ -68,26 +68,26 @@
 
 :f=		@unittest func0
 	// try overloads on different numbers of parameters
-	:f f= .(( :a ` a + 1 `
+	:f f= .(( :a `a + 1`
 	5 assert=? f 4
-	:f f= .(( [ :a :b :c ] ` a + b + c `
+	:f f= .(( [ :a :b :c ] `a + b + c`
 	5 assert=? f 4
 	9 assert=? f .[ 4 2 3
-	:f f= .(( [ :a :b ] ` a * b `
+	:f f= .(( [ :a :b ] `a * b`
 	5 assert=? f 4
 	8 assert=? f .[ 4 2
 	9 assert=? f .[ 4 2 3
 	
 	// try overloads based on type
 	// general
-	:g f= .(( :a ` a + 1 `
+	:g f= .(( :a `a + 1`
 	5 assert=? g 4
 	// most specific
-	:g f= .(( ( :a : :float ) ` a + 3 `
+	:g f= .(( ( :a : :float ) `a + 3`
 	5 assert=? g 4
 	7 assert=? g 4.0
 	// intermediate
-	:g f= .(( ( :a : :number ) ` a + 2 `
+	:g f= .(( ( :a : :number ) `a + 2`
 	6 assert=? g 4
 	7 assert=? g 4.0
 
@@ -403,7 +403,7 @@
 :.size @unittest func0
 	3 assert=? [ 5 6 8 ] .size
 	2 assert=? { :a 1 :b 3 } .size
-	5 assert=? " qwert " .size
+	5 assert=? "qwert" .size
 
 :apply @unittest func0
 	[ 6 10 14 ] assert=? [ 3 5 7 ] apply (| ## * 2 |)
@@ -702,8 +702,8 @@
 	// test iterator over two arrays
 	:str v= ""
 	[ :i :j ] =eachIn [ [ 3 4 ] [ 5 6 7 ] ]
-		:str = str + .( ( i =>str ) + " , " + ( j =>str ) + " - "
-	" 3,5-3,6-3,7-4,5-4,6-4,7- " assert=? str
+		:str = str + .( ( i =>str ) + "," + ( j =>str ) + "-"
+	"3,5-3,6-3,7-4,5-4,6-4,7-" assert=? str
 	
 	// test over a map
 	[ :str :total ] v= [ "" 0 ]
@@ -772,7 +772,7 @@
 		this is
 		some multiline
 		text
-	" this is some multiline text " assert=? a
+	"this is some multiline text" assert=? a
 
 :"[ @unittest func0
 	:asdf12.34 assert=? "[ :asdf 1 2.34 ]

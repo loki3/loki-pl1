@@ -107,11 +107,19 @@ namespace loki3.core
 			out int iEnd, out DelimiterList result)
 		{
 			iEnd = -1;
+			bool bExtra = false;
 			for (int i = iStart; i < strs.Length; i++)
 			{
-				if (strs[i] == thisDelim.End)
+				string s = strs[i];
+				if (s == thisDelim.End)
 				{
 					iEnd = i;
+					break;
+				}
+				else if (s.Substring(s.Length - 1, 1) == thisDelim.End)
+				{
+					iEnd = i + 1;
+					bExtra = true;
 					break;
 				}
 			}
@@ -124,6 +132,11 @@ namespace loki3.core
 			if (iEnd != -1)
 			{
 				string subStr = GetSubStr(iStart, iEnd, strs);
+				if (bExtra)
+				{
+					subStr = subStr.Substring(0, subStr.Length - 1);
+					--iEnd;
+				}
 				Token token = new Token(subStr);
 				DelimiterNode node = new DelimiterNodeToken(token);
 				nodes.Add(node);

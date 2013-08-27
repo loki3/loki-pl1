@@ -37,9 +37,9 @@
 :testFunction v= func1 .[ ->function ->name ->scope
 	[ :success? :failures ] v= function scope
 	if success?
-		print " ---- " + name + ." : succeeded
+		print "----" + name + ." : succeeded
 	else
-		print " ---- " + name + ." : failed
+		print "----" + name + ." : failed
 		print failures
 	success?
 :testFunction @cat :unittest @doc """
@@ -106,7 +106,7 @@
 	A test can say it fails immediately if this line of code is run.
 
 :dumpAssert v= func1 [ ->testName ->e ]
-	print " FAILED : " + testName
+	print "FAILED :" + testName
 	if ( e . :expected ) !=? nil
 		print ."[ :.expected: \s ( e . :expected )
 	if ( e . :actual ) !=? nil
@@ -123,7 +123,7 @@
 		try
 			if testName .@unittest =? nil		// fail if no test
 				failures += testName
-				print ."[ " missing unittest: " \s testName
+				print ."[ "missing unittest:" \s testName
 		catch :e
 			failures += testName
 			dumpAssert [ testName e ]

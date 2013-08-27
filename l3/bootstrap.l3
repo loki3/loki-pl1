@@ -660,7 +660,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	:list v= { }
 	:i v= 0
 	:val forEach array
-		:key v= name + " . " + val
+		:key v= name + "." + val
 		// metadata on the value describing enum name & key
 		i @@ [ :l3.value.type name ]
 		i @@ [ :l3.enum.key key ]
@@ -671,7 +671,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	// store entire map on scope that called this function
 	:value v= l3.setValue { :key name :value list :level 1 }
 	// metadata on the enum
-	value @@ [ :l3.value.type " enum " ]
+	value @@ [ :l3.value.type "enum" ]
 	list
 :=enum @cat :enum @doc ." Create an enumerated map of values
 
@@ -765,11 +765,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // modules
 
 :import v= .( func1 ( ->file : :string )
-	l3.loadModule { :file file :scope " parent " }
+	l3.loadModule { :file file :scope "parent" }
 :import @cat :module @doc ." Run the code from the given file.  Don't run if file has already been imported.
 
 :reimport v= .( func1 ( ->file : :string )
-	l3.loadModule { :file file :scope " parent " :force? true }
+	l3.loadModule { :file file :scope "parent" :force? true }
 :reimport @cat :module @doc ." Run the code from the given file.  Reload even if module has been imported before.
 
 
