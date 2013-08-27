@@ -168,7 +168,7 @@ namespace loki3.core
 					return true;
 				}
 				// TODO: rework this so I don't need to check for : (e.g. for :}, when creating a delim)
-				if (s.Substring(s.Length - 1, 1) == thisDelim.End && s[0] != ':')
+				if (s.Substring(s.Length - 1, 1) == thisDelim.End && (s[0] != ':' || s.Length > 2))
 				{	// end delimiter is part of final token
 					iEnd = i + 1;
 					string without = s.Substring(0, s.Length - 1);
