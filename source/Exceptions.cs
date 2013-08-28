@@ -40,6 +40,13 @@ namespace loki3.core
 			return this;
 		}
 
+		/// <summary>Bad number of parameters passed to a function</summary>
+		internal Loki3Exception AddBadCount(string explain)
+		{
+			m_map[keyBadCount] = new ValueString(explain);
+			return this;
+		}
+
 		/// <summary>Could not parse token</summary>
 		internal Loki3Exception AddBadToken(Token token)
 		{
@@ -136,6 +143,8 @@ namespace loki3.core
 		internal static string keyMissingKey = "l3.error.missingKey";
 		/// <summary>Function needed a previous or next value</summary>
 		internal static string keyMissingValue = "l3.error.missingValue";
+		/// <summary>The number of objects passed was incorrect</summary>
+		internal static string keyBadCount = "l3.error.badCount";
 		/// <summary>Token that couldn't be parsed</summary>
 		internal static string keyBadToken = "l3.error.badToken";
 		/// <summary>Bad line in a body</summary>

@@ -222,6 +222,19 @@ namespace loki3.builtin.test
 				Assert.AreEqual(5, map["a"].AsInt);
 				Assert.AreEqual(true, map["key"].AsBool);
 			}
+
+			// we should throw a BadCount error if we pass an odd number of parameters
+			bool bThrew = false;
+			try
+			{
+				TestSupport.ToValue("l3.createMap [ :a 5 :key ]", scope);
+			}
+			catch (Loki3Exception e)
+			{
+				Assert.IsTrue(e.Errors.ContainsKey(Loki3Exception.keyBadCount));
+				bThrew = true;
+			}
+			Assert.IsTrue(bThrew);
 		}
 
 		[Test]

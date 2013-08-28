@@ -228,8 +228,11 @@ namespace loki3.builtin
 			{
 				List<Value> list = arg.AsArray;
 
-				Map map = new Map();
 				int count = list.Count;
+				if (count % 2 == 1)
+					throw new Loki3Exception().AddBadCount("requires an even number of parameters");
+
+				Map map = new Map();
 				for (int i = 0; i < count; i += 2)
 				{
 					string key = list[i].AsString;
