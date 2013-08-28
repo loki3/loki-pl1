@@ -177,12 +177,7 @@ namespace loki3.core
 					DelimiterNode possibleBody = nodes.GetNext();
 					if (possibleBody != null)
 					{
-						List<DelimiterNode> nList = new List<DelimiterNode>();
-						nList.Add(possibleBody);
-						DelimiterList dList = new DelimiterList(ValueDelimiter.Line, nList, 0, "", possibleBody.ToString());
-						List<DelimiterList> body = new List<DelimiterList>();
-						body.Add(dList);
-						localScope.SetValue("body", new ValueLine(body));
+						localScope.SetValue("body", UseNodeAsBody(possibleBody));
 						foundBody = true;
 					}
 
@@ -262,6 +257,17 @@ namespace loki3.core
 						m_parsedLines.Add(line);
 				}
 				m_rawLines = null;
+			}
+
+			/// <summary>Transform a node into something we can use as a body</summary>
+			private Value UseNodeAsBody(DelimiterNode bodyNode)
+			{
+				List<DelimiterNode> nList = new List<DelimiterNode>();
+				nList.Add(bodyNode);
+				DelimiterList dList = new DelimiterList(ValueDelimiter.Line, nList, 0, "", bodyNode.ToString());
+				List<DelimiterList> body = new List<DelimiterList>();
+				body.Add(dList);
+				return new ValueLine(body);
 			}
 
 			private bool m_usePrevious;
