@@ -172,7 +172,22 @@ namespace loki3.core
 				if (Metadata.GetOptionalT<bool>("body?", false))
 				{
 					bool foundBody = false;
-					if (requestor != null)
+
+					// if there's a following node, use it
+					DelimiterNode possibleBody = nodes.GetNext();
+					if (possibleBody != null)
+					{
+						List<DelimiterNode> nList = new List<DelimiterNode>();
+						nList.Add(possibleBody);
+						DelimiterList dList = new DelimiterList(ValueDelimiter.Line, nList, 0, "", possibleBody.ToString());
+						List<DelimiterList> body = new List<DelimiterList>();
+						body.Add(dList);
+						localScope.SetValue("body", new ValueLine(body));
+						foundBody = true;
+					}
+
+					// if no body, use the following lines
+					if (!foundBody && requestor != null)
 					{
 						List<DelimiterList> body = EvalList.DoGetBody(bodyScope, requestor);
 						if (body.Count != 0)
@@ -181,6 +196,7 @@ namespace loki3.core
 							foundBody = true;
 						}
 					}
+
 					if (!foundBody)
 						// create a partial function that only needs a body
 						return new UserFunction(this, localScope);

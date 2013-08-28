@@ -630,6 +630,10 @@
 	repeat 5
 		:total = total + 2
 	10 assert=? total
+	// try body on same line
+	:total v= 1
+	repeat 4 (:total = total * 2)
+	16 assert=? total
 
 :repeatsOf @unittest func0
 	:total v= 0
@@ -640,7 +644,7 @@
 	// todo: should be able to declare i inside for
 	:total v= 0
 	:i v= 0
-	for .[ ` :i = 0 ` ` i !=? 5 ` ` :i = i + 1 `
+	for .[ `:i = 0` `i !=? 5` `:i = i + 1`
 		:total = total + i
 	10 assert=? total
 
