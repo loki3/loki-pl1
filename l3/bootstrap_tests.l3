@@ -634,6 +634,11 @@
 	:total v= 1
 	repeat 4 (:total = total * 2)
 	16 assert=? total
+	// try multi-line body
+	[:i :j] v= [1 1]
+	repeat 4 [ (:i = i + 1) (:j = j + 2) ]
+	5 assert=? i
+	9 assert=? j
 
 :repeatsOf @unittest func0
 	:total v= 0
