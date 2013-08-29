@@ -484,16 +484,16 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :while @cat :loop @doc ." Repeat loop while condition is true
 
 :repeat v= func1 .( ->n : :int
-	:i v= 0
+	:__i v= 0
 	setScopeName :loop
-	l3.loop .{ :check ` i <? n ` :change ` :i = i + 1 ` :body body
+	l3.loop .{ :check `__i <? n` :change `:__i = __i + 1` :body body
 :repeat @body? true
 :repeat @cat :loop @doc ." Repeat the body n times.
 
 :repeatsOf v= .( ( ->n : :int ) 1func1 ( ->code : :rawLines )
-	:i v= 0
+	:__i v= 0
 	setScopeName :loop
-	l3.loop .{ :check ` i <? n ` :change ` :i = i + 1 ` :body code
+	l3.loop .{ :check `__i <? n` :change `:__i = __i + 1` :body code
 :repeatsOf @order 5
 :repeatsOf @cat :loop @doc ." Repeat a code snippet n times.
 
@@ -545,19 +545,19 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // specific iterator overloads
 
 :iterator f= func1 ( ->array : :array )
-	[ :i :count ] i= [ -1 ( array .size ) ]
-	:i = i + 1
-	( i <? count ) ? [ ` array . i ` nil ]
+	[ :__i :count ] i= [ -1 ( array .size ) ]
+	:__i = __i + 1
+	( __i <? count ) ? [ ` array . __i ` nil ]
 :iterator @iterator
 :iterator @cat :iterator @doc ." Iterate over all items in a collection.
 
 :iterator f= func1 .[ ( ->array1 : :array ) ( ->array2 : :array )
-	[ :i :j ] i= [ 0 -1 ]
+	[ :__i :__j ] i= [ 0 -1 ]
 	[ :count1 :count2 ] i= [ ( array1 .size ) ( array2 .size ) ]
-	:j = j + 1
-	if j >=? count2
-		[ :i :j ] = [ ( i + 1 ) 0 ]
-	( i <? count1 ) ? [ ` [ ( array1 . i ) ( array2 . j ) ] ` nil ]
+	:__j = __j + 1
+	if __j >=? count2
+		[ :__i :__j ] = [ ( __i + 1 ) 0 ]
+	( __i <? count1 ) ? [ ` [ ( array1 . __i ) ( array2 . __j ) ] ` nil ]
 
 // todo: function overloading should give :scope precendence over :map
 :iterator f= func1 ( ->scope : :scope )
@@ -569,29 +569,29 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	current
 
 :iterator f= func1 ( ->map : :map )
-	[ :i :keys ] i= [ -1 ( l3.getMapKeys map ) ]
+	[ :__i :keys ] i= [ -1 ( l3.getMapKeys map ) ]
 	:count i= keys .size
-	:i = i + 1
+	:__i = __i + 1
 	:result v= nil
-	if i <? count
-		:key v= keys . i
+	if __i <? count
+		:key v= keys . __i
 		:result = [ key ( map . key ) ]
 	result
 
 :iterator f= func1 ( ->f : :function )
-	[ :i :count ] i= [ -1 ( ( f ) .size ) ]
-	:i = i + 1
-	( i <? count ) ? [ ( ( f ) . i ) nil ]
+	[ :__i :count ] i= [ -1 ( ( f ) .size ) ]
+	:__i = __i + 1
+	( __i <? count ) ? [ ( ( f ) . __i ) nil ]
 
 :iterator f= func1 ( ->lines : :rawLines )
-	[ :i :count ] i= [ -1 ( lines .size ) ]
-	:i = i + 1
-	( i <? count ) ? [ ` lines . i ` nil ]
+	[ :__i :count ] i= [ -1 ( lines .size ) ]
+	:__i = __i + 1
+	( __i <? count ) ? [ ` lines . __i ` nil ]
 
 :iterator f= func1 ( ->lines : :rawLine )
-	[ :i :count ] i= [ -1 ( lines .size ) ]
-	:i = i + 1
-	( i <? count ) ? [ ` lines . i ` nil ]
+	[ :__i :count ] i= [ -1 ( lines .size ) ]
+	:__i = __i + 1
+	( __i <? count ) ? [ ` lines . __i ` nil ]
 
 
 //
@@ -658,16 +658,16 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :=enum v= .( ( ->name : :string ) 1func1 ( ->array : :array )
 	:list v= { }
-	:i v= 0
+	:__i v= 0
 	:val forEach array
 		:key v= name + "." + val
 		// metadata on the value describing enum name & key
-		i @@ [ :l3.value.type name ]
-		i @@ [ :l3.enum.key key ]
-		:list = list + { key i }
+		__i @@ [ :l3.value.type name ]
+		__i @@ [ :l3.enum.key key ]
+		:list = list + { key __i }
 		// store enum key/value on scope that called this function
-		l3.setValue { :key key :value i :level 3 }
-		:i = i + 1
+		l3.setValue { :key key :value __i :level 3 }
+		:__i = __i + 1
 	// store entire map on scope that called this function
 	:value v= l3.setValue { :key name :value list :level 1 }
 	// metadata on the enum
