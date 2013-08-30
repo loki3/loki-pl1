@@ -23,7 +23,7 @@ Parse/eval follows these steps:
 * **White space:** The line is parsed into tokens based on white space
 * **Delimiters:** If a token is a start delimiter, all tokens up to the end delimiter are grouped as a single node
 * **Precedence:** The left-most node with the highest precedence is evaluated first
-* **Consumes adjacent nodes:** Evaluating a node may call a function that consumes the nodes immediately before and/or after it, and possibly the "body" immediately following the line (i.e. the block of lines indented relative to the current line)
+* **Consumes adjacent nodes:** Evaluating a node may call a function that consumes the nodes immediately before and/or after it, and possibly the "body" immediately following the line (i.e. the block of lines indented relative to the current line or the next node on the current line)
 * **Repeat:** Evaluation continues in precedence order (left-most wins a tie), until there is no more evaluation to do
 
 The following shows a sample line, which gets tokenized based on white space.  *a* and *c* are both lists that get interpreted based on custom code.  *b*, *d*, and *f* are infix functions which consume the nodes on either side of them.  *f* has highest precedence, so it's evaluated first.  _3 * 2_ gets replaced by 6.  Next, *b* and *d* have equal precedence, so *b*, the left-most, is evaluated first, consuming *a* and *c* in the process.  Then *d* is applied, using the previous results from both sides to compute the final value.
@@ -72,6 +72,15 @@ var :makeMap = func0
 var :a = makeMap
     :key1   42
     :key2   ( sqrt )
+```
+
+Optionally, you can pass a function body on the same line by passing *raw* values.  You can either pass a single raw value or an array.
+
+```
+// create the map { :a 1 }
+makeMap `:a 1`
+// create the map { :a 1 :b 2 }
+makeMap [ `:a 1` `:b 2` ]
 ```
 
 

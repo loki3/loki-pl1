@@ -9,7 +9,7 @@ Here are some of the basic parse/eval rules:
 2.	Functions have an associated precedence that determines the evaluation order of tokens
 3.	A function can consume the token immediately before and/or after it
 4.	When a token is consumed, it's evaluated
-5.	A function can consume a body, which consists of the indented lines below it
+5.	A function can consume a body, which consists of the either the next raw node or the indented lines below it
 6.	Delimiters can be defined such that they determine how their contents are evaluated
 7.	Delimiters can have associated functions that evaluate their contents
 

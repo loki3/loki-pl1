@@ -57,6 +57,12 @@ repeat 4
 	:product = product * 2
 // total is now 16
 ```
+Functions that take bodies can also accept raw values on the same line.  The repeat above could be rewritten this way:
+
+```
+repeat 4 `:product = product * 2`
+```
+
 
 Pattern matching parameters
 ---------------------------
