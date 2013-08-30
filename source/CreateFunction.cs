@@ -262,12 +262,24 @@ namespace loki3.core
 			/// <summary>Transform a node into something we can use as a body</summary>
 			private Value UseNodeAsBody(DelimiterNode bodyNode)
 			{
-				List<DelimiterNode> nList = new List<DelimiterNode>();
-				nList.Add(bodyNode);
-				DelimiterList dList = new DelimiterList(ValueDelimiter.Line, nList, 0, "", bodyNode.ToString());
-				List<DelimiterList> body = new List<DelimiterList>();
-				body.Add(dList);
-				return new ValueLine(body);
+				if (bodyNode.List.Delimiter.DelimiterType == DelimiterType.AsArray)
+				{
+					List<DelimiterList> body = new List<DelimiterList>();
+					List<DelimiterNode> originalList = bodyNode.List.Nodes;
+					foreach (DelimiterNode node in originalList)
+					{
+						DelimiterList dList = new DelimiterList(ValueDelimiter.Line, node.List.Nodes, 0, "", node.ToString());
+						body.Add(dList);
+					}
+					return new ValueLine(body);
+				}
+				else
+				{
+					DelimiterList dList = new DelimiterList(ValueDelimiter.Line, bodyNode.List.Nodes, 0, "", bodyNode.ToString());
+					List<DelimiterList> body = new List<DelimiterList>();
+					body.Add(dList);
+					return new ValueLine(body);
+				}
 			}
 
 			private bool m_usePrevious;
