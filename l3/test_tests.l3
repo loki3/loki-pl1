@@ -70,20 +70,20 @@
 	testFactorial (!3)
 
 
-:testFib v= func0
-	1	assert=? fib1 0
-	1	assert=? fib1 1
-	2	assert=? fib1 2
-	3	assert=? fib1 3
-	5	assert=? fib1 4
-	8	assert=? fib1 5
+:testFib v= func1 ->fib
+	1	assert=? fib 0
+	1	assert=? fib 1
+	2	assert=? fib 2
+	3	assert=? fib 3
+	5	assert=? fib 4
+	8	assert=? fib 5
 :testFib @unittest noTestNeeded @doc ." general testing for a Fibonacci function
 
 :fib1 @unittest func0
-	testFib
+	testFib (fib1)
 
 :fib2 @unittest func0
-	testFib
+	testFib (fib2)
 
 
 :unitsType			@unittest noTestNeeded
