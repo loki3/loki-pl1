@@ -53,18 +53,21 @@
 	55 assert=? sum 10
 
 
-:testFactorial v= func0
-	1       assert=? 0 !
-	1       assert=? 1 !
-	24      assert=? 4 !
-	3628800 assert=? 10 !
+:testFactorial v= func1 ->f!
+	1       assert=? 0 f!
+	1       assert=? 1 f!
+	24      assert=? 4 f!
+	3628800 assert=? 10 f!
 :testFactorial @unittest noTestNeeded @doc ." general testing for a factorial function
 
 :! @unittest func0
-	testFactorial
+	testFactorial (!)
 
 :!2 @unittest func0
-	testFactorial
+	testFactorial (!2)
+
+:!3 @unittest func0
+	testFactorial (!3)
 
 
 :testFib v= func0

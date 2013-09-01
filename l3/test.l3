@@ -92,6 +92,12 @@ var :fizzbuzz3 = func0
 	( n <? 1 ) ? .[ 1 .` ( 1 .. n ) fold (< #1 * #2 >)
 :!2 @doc ." Factorial operator using a functional pattern
 
+:!3 f= (0 1func)
+	1
+:!3 f= (->n 1func)
+	n * ( (n - 1) !3 )
+:!3 @doc ." Factorial using pattern matching and recursion
+
 
 //
 // Fibonacci numbers
