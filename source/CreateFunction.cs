@@ -259,29 +259,6 @@ namespace loki3.core
 				m_rawLines = null;
 			}
 
-			/// <summary>Transform a node into something we can use as a body</summary>
-			private Value UseNodeAsBody(DelimiterNode bodyNode)
-			{
-				if (bodyNode.List.Delimiter.DelimiterType == DelimiterType.AsArray)
-				{
-					List<DelimiterList> body = new List<DelimiterList>();
-					List<DelimiterNode> originalList = bodyNode.List.Nodes;
-					foreach (DelimiterNode node in originalList)
-					{
-						DelimiterList dList = new DelimiterList(ValueDelimiter.Line, node.List.Nodes, 0, "", node.ToString());
-						body.Add(dList);
-					}
-					return new ValueLine(body);
-				}
-				else
-				{
-					DelimiterList dList = new DelimiterList(ValueDelimiter.Line, bodyNode.List.Nodes, 0, "", bodyNode.ToString());
-					List<DelimiterList> body = new List<DelimiterList>();
-					body.Add(dList);
-					return new ValueLine(body);
-				}
-			}
-
 			private bool m_usePrevious;
 			private bool m_useNext;
 			private Value m_pattern1;
@@ -293,6 +270,30 @@ namespace loki3.core
 			private Value m_fullPattern;
 			private IScope m_passedScope = null;
 		}
+
+		/// <summary>Transform a node into something we can use as a body</summary>
+		internal static Value UseNodeAsBody(DelimiterNode bodyNode)
+		{
+			if (bodyNode.List.Delimiter.DelimiterType == DelimiterType.AsArray)
+			{
+				List<DelimiterList> body = new List<DelimiterList>();
+				List<DelimiterNode> originalList = bodyNode.List.Nodes;
+				foreach (DelimiterNode node in originalList)
+				{
+					DelimiterList dList = new DelimiterList(ValueDelimiter.Line, node.List.Nodes, 0, "", node.ToString());
+					body.Add(dList);
+				}
+				return new ValueLine(body);
+			}
+			else
+			{
+				DelimiterList dList = new DelimiterList(ValueDelimiter.Line, bodyNode.List.Nodes, 0, "", bodyNode.ToString());
+				List<DelimiterList> body = new List<DelimiterList>();
+				body.Add(dList);
+				return new ValueLine(body);
+			}
+		}
+
 
 		/// <summary>
 		/// Create a new function, prefix, postfix or infix

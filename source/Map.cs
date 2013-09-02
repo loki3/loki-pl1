@@ -63,6 +63,8 @@ namespace loki3.core
 			if (!m_val.TryGetValue(key, out value))
 				return ifmissing;
 			ValueBase<T> valueBase = value as ValueBase<T>;
+			if (valueBase == null)
+				return ifmissing;
 			return valueBase.GetValue();
 		}
 
