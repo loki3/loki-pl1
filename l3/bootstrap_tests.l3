@@ -19,14 +19,6 @@
 	// assertTrue? false
 	true
 
-:///func @unittest func0
-	///func
-		this should all be ignored
-		as well as this line
-			and this
-		and this
-	true
-
 :///	@unittest func0
 	/// this should all be ignored
 		as well as this line
@@ -126,6 +118,14 @@
 	:a v= func0
 		3.5
 	3.5 assert=? a
+
+:b:: @unittest func0
+	{ :body [ 1 ] }   assert=? b:: 1
+	{ :body [ 1 2 ] } assert=? b:: 1 2
+	
+	// use it for a function definition
+	:f v= func1 ->x b:: `x + 1`
+	5 assert=? f 4
 
 
 //
