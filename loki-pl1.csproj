@@ -108,6 +108,7 @@
     <None Include="docs\Functions.md" />
     <None Include="docs\ParseEval.md" />
     <None Include="docs\PatternMatching.md" />
+    <None Include="docs\README.md" />
     <None Include="docs\Tests.md" />
     <None Include="l3\bootstrap.l3" />
     <None Include="l3\bootstrap_tests.l3" />
@@ -115,10 +116,13 @@
     <None Include="l3\help_tests.l3" />
     <None Include="l3\module.l3" />
     <None Include="l3\pattern_tests.l3" />
+    <None Include="l3\README.md" />
     <None Include="l3\test.l3" />
     <None Include="l3\test_tests.l3" />
     <None Include="l3\unittest.l3" />
     <None Include="README.md" />
+    <None Include="source\README.md" />
+    <None Include="test\README.md" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
