@@ -7,6 +7,7 @@
 // help :someFunction
 // dumpMeta :someFunction
 // listFunctions currentScope
+// getByCat :someCat
 //
 
 
@@ -231,6 +232,10 @@
 	import file
 	getDocsInScope currentScope
 :getFileDocs @cat :help @doc ." Return all the docstrings attached to the values in a given file
+
+:getByCat v= func1 ->cat
+	cat listByCat .( l3.getScope .{ :level 1
+:getByCat @cat :help @doc ." Return all the values in a given category
 
 
 :prettify v= func1 ->map
