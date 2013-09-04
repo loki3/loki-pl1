@@ -86,4 +86,6 @@
 
 :getFileDocs @unittest testNYI
 
+:getByCat @unittest testNYI
+
 :prettify @unittest testNYI

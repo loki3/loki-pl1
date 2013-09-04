@@ -121,7 +121,8 @@
 	var :failures = [ ]
 	[ :testName _ ] forEach scope
 		try
-			if testName .@unittest =? nil		// fail if no test
+			// fail if no test
+			if testName .@unittest =? nil
 				failures += testName
 				print ."[ "missing unittest:" \s testName
 		catch :e
