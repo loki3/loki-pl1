@@ -181,7 +181,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :. @order 2
 
 
-:/// v= .( l3.createDelimiter .{ :type :asComment :function .( l3.createFunction .{ :body `nil`
+:///func v= func0
+	nil
+:///func @cat :delimiter @doc ." Everything on subsequent indented lines is a comment
+:///func @body? true
+
+:/// v= .( l3.createDelimiter .{ :type :asComment :function ///func
 :/// @cat :delimiter @doc ." Everything on this and subsequent indented lines is a comment
 
 

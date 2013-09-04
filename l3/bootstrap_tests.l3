@@ -19,6 +19,8 @@
 	// assertTrue? false
 	true
 
+:///func @unittest noTestNeeded
+
 :///	@unittest func0
 	/// this should all be ignored
 		as well as this line
