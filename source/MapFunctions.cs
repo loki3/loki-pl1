@@ -73,10 +73,11 @@ namespace loki3.builtin
 
 			internal MapToArray()
 			{
-				SetDocString("Return a new array, where values from the original map are present if filter returns true.  The values are transformed by the given function.");
+				SetDocString("Return a new array, where keys or values from the original map are present if filter returns true.  The keys or values are transformed by the given function.");
 
 				Map map = new Map();
 				map["map"] = PatternData.Single("map", ValueType.Map);
+				map["keepValue?"] = PatternData.Single("keepValue?", ValueType.Bool, ValueBool.True);
 				map["filter?"] = PatternData.Single("filter?", ValueType.Function, ValueNil.Nil);
 				map["transform"] = PatternData.Single("transform", ValueType.Function, ValueNil.Nil);
 				ValueMap vMap = new ValueMap(map);
@@ -87,6 +88,7 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				Map inputMap = map["map"].AsMap;
+				bool bKeepValue = map["keepValue?"].AsBool;
 				ValueFunction filter = map["filter?"] as ValueFunction;
 				ValueFunction transform = map["transform"] as ValueFunction;
 				if (filter == null && transform == null)
@@ -101,12 +103,17 @@ namespace loki3.builtin
 					foreach (string key in dict.Keys)
 					{
 						DelimiterNode prev = (bPre ? null : new DelimiterNodeValue(new ValueString(key)));
-						DelimiterNode next = new DelimiterNodeValue(dict[key]);
+						DelimiterNode toFilter = new DelimiterNodeValue(dict[key]);
 
 						// if we should use this value...
-						if (filter == null || filter.Eval(prev, next, scope, scope, null, null).AsBool)
-						{	// ...transform if appropriate
-							Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, scope, null, null));
+						if (filter == null || filter.Eval(prev, toFilter, scope, scope, null, null).AsBool)
+						{	// get value or key & possibly transform
+							Value newval = (bKeepValue ? dict[key] : new ValueString(key));
+							if (transform != null)
+							{
+								DelimiterNode toTransform = new DelimiterNodeValue(newval);
+								newval = transform.Eval(prev, toTransform, scope, scope, null, null);
+							}
 							newarray.Add(newval);
 						}
 					}

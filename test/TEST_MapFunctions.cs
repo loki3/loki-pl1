@@ -133,6 +133,14 @@ namespace loki3.builtin.test
 				Assert.AreEqual(4, array[0].AsInt);
 				Assert.AreEqual(8, array[1].AsInt);
 			}
+
+			{
+				Value value = TestSupport.ToValue("l3.mapToArray { :map { :a 3 :b 4 :c 7 :d 8 } :filter? even? :keepValue? false }", scope);
+				List<Value> array = value.AsArray;
+				Assert.AreEqual(2, array.Count);
+				Assert.AreEqual("b", array[0].AsString);
+				Assert.AreEqual("d", array[1].AsString);
+			}
 		}
 
 		[Test]

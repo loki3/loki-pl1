@@ -394,6 +394,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.mapToArray { :map map :filter? filter? }
 :filterMapToArray @cat :map @doc ." Returns an array consisting of every value in the map for which function returns true
 
+:filterMapToKeysArray v= .( ( ->map : :map ) 1func1 ( ->filter? : :function )
+	l3.mapToArray { :map map :filter? filter? :keepValue? false }
+:filterMapToKeysArray @cat :map @doc ." Returns an array consisting of every key in the map for which function returns true
+
 
 //
 // conditional
