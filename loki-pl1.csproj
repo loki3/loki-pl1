@@ -79,6 +79,7 @@
     <Compile Include="source\Values.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="source\ParseChars.cs" />
     <Compile Include="test\TEST_ArrayFunctions.cs" />
     <Compile Include="test\TEST_Bootstrap.cs" />
     <Compile Include="test\TEST_Conditional.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="test\TEST_EvalLines.cs" />
     <Compile Include="test\TEST_EvalList.cs" />
     <Compile Include="test\TEST_EvalNode.cs" />
+    <Compile Include="test\TEST_ParseChars.cs" />
     <Compile Include="test\TEST_ValueFunctionOverload.cs" />
     <Compile Include="test\TEST_Logic.cs" />
     <Compile Include="test\TEST_MapFunctions.cs" />
