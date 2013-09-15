@@ -27,11 +27,11 @@ namespace loki3.builtin.test
 		{
 			IScope scope = CreateStringScope();
 			{
-				Value value = TestSupport.ToValue("l3.stringConcat { :array [ ' one ' ' two ' ] }", scope);
+				Value value = TestSupport.ToValue("l3.stringConcat { :array [ 'one' 'two' ] }", scope);
 				Assert.AreEqual("onetwo", value.AsString);
 			}
 			{
-				Value value = TestSupport.ToValue("l3.stringConcat { :array [ 2 ' two ' ] :spaces 2 }", scope);
+				Value value = TestSupport.ToValue("l3.stringConcat { :array [ 2 'two' ] :spaces 2 }", scope);
 				Assert.AreEqual("2  two", value.AsString);
 			}
 		}

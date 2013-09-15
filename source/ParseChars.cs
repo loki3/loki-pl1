@@ -4,12 +4,6 @@ using System.Text;
 
 namespace loki3.core
 {
-	interface ITemp
-	{
-		/// <summary>Get all the string delimiters</summary>
-		ValueDelimiter[] GetStringDelims();
-	}
-
 	/// <summary>
 	/// Break a string into an array of strings.
 	/// Breaks on whitespace (including comma) and treats
@@ -18,14 +12,26 @@ namespace loki3.core
 	/// </summary>
 	internal class ParseChars
 	{
-		internal static string[] Do(string s)
+		internal static string[] Do(string s, IParseLineDelimiters delims)
 		{
 			List<string> list = new List<string>();
 			StringBuilder current = new StringBuilder();
 			bool atStart = true;
 			bool inWord = false;
 			bool inString = false;
-			char endString = '"';
+			char endString = ' ';
+
+			// find string delims
+			//!! fetch from delims
+			string s_quotes = "";
+			Dictionary<string, ValueDelimiter> stringDelims = (delims == null ? null : delims.GetStringDelims());
+			if (stringDelims != null)
+			{
+				StringBuilder keys = new StringBuilder();
+				foreach (string key in stringDelims.Keys)
+					keys.Append(key);
+				s_quotes = keys.ToString();
+			}
 
 			foreach (char c in s)
 			{
@@ -33,7 +39,8 @@ namespace loki3.core
 				{
 					if (c == endString)
 					{	// end of string
-						list.Add(current.ToString());
+						if (current.Length > 0)
+							list.Add(current.ToString());
 						list.Add(c.ToString());
 						inString = inWord = false;
 						atStart = true;
@@ -52,7 +59,7 @@ namespace loki3.core
 						if (s_quotes.IndexOf(c) != -1)
 						{	// start of string
 							list.Add(c.ToString());
-							endString = c;	//!! pull from delimiter
+							endString = stringDelims[c.ToString()].End[0];
 							inString = true;
 							continue;
 						}
@@ -77,7 +84,5 @@ namespace loki3.core
 
 		/// <summary>chars to consider as separators</summary>
 		static private string s_white = " \n\r\t";
-
-		static private string s_quotes = "'\"";	//!! pass in
 	}
 }

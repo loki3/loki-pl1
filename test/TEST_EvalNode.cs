@@ -86,6 +86,7 @@ namespace loki3.core.test
 			public string Name { get { return ""; } }
 			public string Category { get { return ""; } }
 			public ValueDelimiter GetDelim(string start, out bool anyToken) { anyToken = false; return null; }
+			public Dictionary<string, ValueDelimiter> GetStringDelims() { return null; }
 			public IScope Exists(string token) { return null; }
 			public IScope Parent { get { return null; } }
 			public Value AsValue { get { return null; } }

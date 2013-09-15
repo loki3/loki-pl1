@@ -17,6 +17,17 @@ namespace loki3.core.test
 				anyToken = false;
 				return null;
 			}
+
+			public Dictionary<string, ValueDelimiter> GetStringDelims()
+			{
+				Dictionary<string, ValueDelimiter> d = new Dictionary<string, ValueDelimiter>();
+				d["'"] = m_single;
+				d["\""] = m_double;
+				return d;
+			}
+
+			private ValueDelimiter m_single = new ValueDelimiter("'", DelimiterType.AsString);
+			private ValueDelimiter m_double = new ValueDelimiter("\"", DelimiterType.AsString);
 		}
 
 		/// <summary>Function that adds previous and next ints</summary>

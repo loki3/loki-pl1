@@ -7,24 +7,41 @@ namespace loki3.core.test
 	[TestFixture]
 	class TEST_ParseChars
 	{
+		class TestParseCharsDelimiter : IParseLineDelimiters
+		{
+			public ValueDelimiter GetDelim(string start, out bool anyToken) { anyToken = false;  return null; }
+
+			public Dictionary<string, ValueDelimiter> GetStringDelims()
+			{
+				Dictionary<string, ValueDelimiter> d = new Dictionary<string, ValueDelimiter>();
+				d["'"] = m_single;
+				d["\""] = m_double;
+				return d;
+			}
+
+			private ValueDelimiter m_single = new ValueDelimiter("'", DelimiterType.AsString);
+			private ValueDelimiter m_double = new ValueDelimiter("\"", DelimiterType.AsString);
+		}
+
 		[Test]
 		public void TestBasic()
 		{
+			IParseLineDelimiters d = new TestParseCharsDelimiter();
 			{
-				string[] strs = ParseChars.Do("one");
+				string[] strs = ParseChars.Do("one", d);
 				Assert.AreEqual(1, strs.Length);
 				Assert.AreEqual("one", strs[0]);
 			}
 
 			{
-				string[] strs = ParseChars.Do("one two");
+				string[] strs = ParseChars.Do("one two", d);
 				Assert.AreEqual(2, strs.Length);
 				Assert.AreEqual("one", strs[0]);
 				Assert.AreEqual("two", strs[1]);
 			}
 
 			{
-				string[] strs = ParseChars.Do("one two 3 four 5");
+				string[] strs = ParseChars.Do("one two 3 four 5", d);
 				Assert.AreEqual(5, strs.Length);
 				Assert.AreEqual("one", strs[0]);
 				Assert.AreEqual("two", strs[1]);
@@ -37,8 +54,9 @@ namespace loki3.core.test
 		[Test]
 		public void TestStrings()
 		{
+			IParseLineDelimiters d = new TestParseCharsDelimiter();
 			{
-				string[] strs = ParseChars.Do("'one'");
+				string[] strs = ParseChars.Do("'one'", d);
 				Assert.AreEqual(3, strs.Length);
 				Assert.AreEqual("'", strs[0]);
 				Assert.AreEqual("one", strs[1]);
@@ -46,7 +64,7 @@ namespace loki3.core.test
 			}
 
 			{
-				string[] strs = ParseChars.Do("' one '");
+				string[] strs = ParseChars.Do("' one '", d);
 				Assert.AreEqual(3, strs.Length);
 				Assert.AreEqual("'", strs[0]);
 				Assert.AreEqual(" one ", strs[1]);
@@ -54,7 +72,7 @@ namespace loki3.core.test
 			}
 
 			{
-				string[] strs = ParseChars.Do("test ' \tone  ' \"more \" end");
+				string[] strs = ParseChars.Do("test ' \tone  ' \"more \" end", d);
 				Assert.AreEqual(8, strs.Length);
 				Assert.AreEqual("test", strs[0]);
 				Assert.AreEqual("'", strs[1]);

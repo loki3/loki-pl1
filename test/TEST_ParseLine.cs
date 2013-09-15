@@ -26,10 +26,20 @@ namespace loki3.core.test
 				return null;
 			}
 
+			public Dictionary<string, ValueDelimiter> GetStringDelims()
+			{
+				Dictionary<string, ValueDelimiter> d = new Dictionary<string, ValueDelimiter>();
+				d["'"] = m_singleQ;
+				d["\""] = m_doubleQ;
+				return d;
+			}
+
 			private ValueDelimiter m_square = new ValueDelimiter("]");
 			private ValueDelimiter m_fancy = new ValueDelimiter("]>");
 			private ValueDelimiter m_double = new ValueDelimiter("}}", DelimiterType.AsString);
 			private ValueDelimiter m_comment = new ValueDelimiter("*/", DelimiterType.AsComment);
+			private ValueDelimiter m_singleQ = new ValueDelimiter("'", DelimiterType.AsString);
+			private ValueDelimiter m_doubleQ = new ValueDelimiter("\"", DelimiterType.AsString);
 		}
 
 		[Test]
@@ -167,10 +177,11 @@ namespace loki3.core.test
 			{	// front delimiter is part of its first token
 				DelimiterList list = ParseLine.Do(":a v= \"\"", delims);
 				Assert.AreEqual(ValueDelimiter.Line, list.Delimiter);
-				Assert.AreEqual(3, list.Nodes.Count);
+				Assert.AreEqual(4, list.Nodes.Count);
 				Assert.AreEqual(":a", list.Nodes[0].Token.Value);
 				Assert.AreEqual("v=", list.Nodes[1].Token.Value);
-				Assert.AreEqual("\"\"", list.Nodes[2].Token.Value);
+				Assert.AreEqual("\"", list.Nodes[2].Token.Value);
+				Assert.AreEqual("\"", list.Nodes[3].Token.Value);
 			}
 
 			{	// end delimiter is part of its last token

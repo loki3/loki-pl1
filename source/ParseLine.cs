@@ -13,6 +13,9 @@ namespace loki3.core
 		/// 'anyToken' will be true if a token named 'start' exists at all
 		/// </summary>
 		ValueDelimiter GetDelim(string start, out bool anyToken);
+
+		/// <summary>Get all the string delimiters</summary>
+		Dictionary<string, ValueDelimiter> GetStringDelims();
 	}
 
 
@@ -42,8 +45,7 @@ namespace loki3.core
 		/// <param name="delims">used to ask questions about delimiters</param>
 		internal static DelimiterList Do(string str, IParseLineDelimiters delims, ILineRequestor requestor)
 		{
-			char[] separators = { ' ', '\n', '\r', '\t' };
-			string[] strs = str.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+			string[] strs = ParseChars.Do(str, delims);
 			int indent = Utility.CountIndent(str);
 			int end;
 			return Do(indent, str, strs, 0, ValueDelimiter.Line, delims, requestor, out end);

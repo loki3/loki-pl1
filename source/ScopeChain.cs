@@ -98,6 +98,11 @@ namespace loki3.core
 			return (m_parent != null ? m_parent.GetDelim(start, out anyToken) : null);
 		}
 
+		public Dictionary<string, ValueDelimiter> GetStringDelims()
+		{
+			return null;
+		}
+
 		public IScope Exists(string token)
 		{
 			if (m_values.ContainsKey(token))
