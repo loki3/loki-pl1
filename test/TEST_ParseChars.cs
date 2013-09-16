@@ -17,6 +17,7 @@ namespace loki3.core.test
 				d["'"] = m_single;
 				d["\""] = m_double;
 				d[".'"] = m_toEnd;
+				d["'''"] = m_toEnd;
 				return d;
 			}
 
@@ -99,6 +100,14 @@ namespace loki3.core.test
 				Assert.AreEqual(".'", strs[1]);
 				Assert.AreEqual("qwert", strs[2]);
 				Assert.AreEqual("yuiop", strs[3]);
+			}
+
+			{
+				string[] strs = ParseChars.Do("asdf '''qwert  yuiop", d);
+				Assert.AreEqual(3, strs.Length);
+				Assert.AreEqual("asdf", strs[0]);
+				Assert.AreEqual("'''", strs[1]);
+				Assert.AreEqual("qwert  yuiop", strs[2]);
 			}
 		}
 	}

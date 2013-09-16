@@ -20,23 +20,27 @@ namespace loki3.core
 			bool inWord = false;
 			bool inString = false;
 			char endString = ' ';
+			int maxDelimLen = 0;
 
 			// find single char string delims
 			//!! fetch from delims
-			//!! should allow multi-char
-			string s_quotes = "";
+			List<string> quotes = new List<string>();
 			Dictionary<string, ValueDelimiter> stringDelims = (delims == null ? null : delims.GetStringDelims());
 			if (stringDelims != null)
 			{
-				StringBuilder keys = new StringBuilder();
 				foreach (string key in stringDelims.Keys)
-					if (key.Length == 1)
-						keys.Append(key);
-				s_quotes = keys.ToString();
+				{
+					quotes.Add(key);
+					if (key.Length > maxDelimLen)
+						maxDelimLen = key.Length;
+				}
 			}
 
-			foreach (char c in s)
+			// parse
+			int len = s.Length;
+			for (int i = 0; i < len; i++)
 			{
+				char c = s[i];
 				if (inString)
 				{
 					if (c == endString)
@@ -58,10 +62,27 @@ namespace loki3.core
 					if (atStart)
 					{
 						atStart = false;
-						if (s_quotes.IndexOf(c) != -1)
+						string cAsStr = c.ToString();
+						if (quotes.Contains(cAsStr))
 						{	// start of string
-							list.Add(c.ToString());
-							endString = stringDelims[c.ToString()].End[0];
+
+							// find the longest starting delim
+							int additional = 0;
+							for (int j = 1; j < maxDelimLen; j++)
+							{
+								string substr = s.Substring(i, j + 1);
+								if (quotes.Contains(substr))
+								{
+									cAsStr = substr;
+									additional = j;
+								}
+							}
+							i += additional;
+
+							list.Add(cAsStr);
+							//!! should allow multi-char
+							string endDelim = stringDelims[cAsStr].End;
+							endString = (endDelim == null ? '\0' : endDelim[0]);
 							inString = true;
 							continue;
 						}
@@ -78,7 +99,7 @@ namespace loki3.core
 				}
 			}
 
-			if (inWord)
+			if (inWord || inString)
 				list.Add(current.ToString());
 
 			return list.ToArray();
