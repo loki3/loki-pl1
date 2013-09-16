@@ -21,15 +21,17 @@ namespace loki3.core
 			bool inString = false;
 			char endString = ' ';
 
-			// find string delims
+			// find single char string delims
 			//!! fetch from delims
+			//!! should allow multi-char
 			string s_quotes = "";
 			Dictionary<string, ValueDelimiter> stringDelims = (delims == null ? null : delims.GetStringDelims());
 			if (stringDelims != null)
 			{
 				StringBuilder keys = new StringBuilder();
 				foreach (string key in stringDelims.Keys)
-					keys.Append(key);
+					if (key.Length == 1)
+						keys.Append(key);
 				s_quotes = keys.ToString();
 			}
 

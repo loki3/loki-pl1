@@ -16,11 +16,13 @@ namespace loki3.core.test
 				Dictionary<string, ValueDelimiter> d = new Dictionary<string, ValueDelimiter>();
 				d["'"] = m_single;
 				d["\""] = m_double;
+				d[".'"] = m_toEnd;
 				return d;
 			}
 
 			private ValueDelimiter m_single = new ValueDelimiter("'", DelimiterType.AsString);
 			private ValueDelimiter m_double = new ValueDelimiter("\"", DelimiterType.AsString);
+			private ValueDelimiter m_toEnd = new ValueDelimiter(null, DelimiterType.AsString);
 		}
 
 		[Test]
@@ -82,6 +84,21 @@ namespace loki3.core.test
 				Assert.AreEqual("more ", strs[5]);
 				Assert.AreEqual("\"", strs[6]);
 				Assert.AreEqual("end", strs[7]);
+			}
+		}
+
+		[Test]
+		public void TestToEnd()
+		{
+			IParseLineDelimiters d = new TestParseCharsDelimiter();
+			{	// this documents that multi-char string delims still need work
+				// it should be 3 items where "qwert  yuiop" is the last item
+				string[] strs = ParseChars.Do("asdf .' qwert  yuiop", d);
+				Assert.AreEqual(4, strs.Length);
+				Assert.AreEqual("asdf", strs[0]);
+				Assert.AreEqual(".'", strs[1]);
+				Assert.AreEqual("qwert", strs[2]);
+				Assert.AreEqual("yuiop", strs[3]);
 			}
 		}
 	}
