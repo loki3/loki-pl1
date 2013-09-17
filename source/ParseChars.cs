@@ -70,6 +70,8 @@ namespace loki3.core
 							int additional = 0;
 							for (int j = 1; j < maxDelimLen; j++)
 							{
+								if (i + j + 1 > len)
+									break;
 								string substr = s.Substring(i, j + 1);
 								if (quotes.Contains(substr))
 								{

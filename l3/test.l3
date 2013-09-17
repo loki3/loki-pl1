@@ -72,7 +72,7 @@ var :fizzbuzz3 = func0
 	while ` nil !=? f `
 		[ :a :f ] = f [ a ]
 	a
-:repeat @doc """
+:repeat @doc --"
 	Turns a recursive function into an interative loop.
 	The passed function must take an iteration value and a result value
 	and return a new result and a partial function bound to the next

@@ -51,7 +51,7 @@ There are quite a few delimiters defined in bootstrap.l3.  The most basic is (),
 { :key1 3 :key2 :something }
 ```
 
-" or ' can be used to specify a string, making it easier to specify a string without having to escape " or '.  A current weakness in the language is that, since everything is space delimited, you can't specify a string that begins or ends with spaces.  """ is used for multi-line chunks of text where subsequent indented lines are considered part of the same string.  (""" is a function that takes a body.)  This is often used when attaching documentation to a function.
+" or ' can be used to specify a string, making it easier to specify a string without having to escape " or '.  A current weakness in the language is that, since everything is space delimited, you can't specify a string that begins or ends with spaces.  --" is used for multi-line chunks of text where subsequent indented lines are considered part of the same string.  (--" is a function that takes a body.)  This is often used when attaching documentation to a function.
 
 ```
 " this is a string "
@@ -59,22 +59,22 @@ There are quite a few delimiters defined in bootstrap.l3.  The most basic is (),
 ." and this, too
 
 :a v= (| ## + 2 |)
-:a @doc """ This defines a function that adds 2 to a value.
+:a @doc --" This defines a function that adds 2 to a value.
 	The documentation for this function is longer than the function itself.
 ```
 
-"[ can be used as a shorthand for converting every item in the list to a string and concatenating the results together.
+-"[ can be used as a shorthand for converting every item in the list to a string and concatenating the results together.
 
 ```
 // turns into :1text2.3
-"[ 1 :text 2.3 ]
+-"[ 1 :text 2.3 ]
 
 :value v= 5
-print ."[ :result: \s value
+print .-"[ :result: \s value
 // prints the string:  result: 5
 ```
 
-The ignore-the-rest-of-the-line comment indicator is //.  /* */ can be used within a line to indicate a comment.  /// can be used for large block comments (analogous to """).
+The ignore-the-rest-of-the-line comment indicator is //.  /* */ can be used within a line to indicate a comment.  /// can be used for large block comments (analogous to --").
 
 ```
 1 + 2 // this adds 1 and 2, producing 3

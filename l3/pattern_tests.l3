@@ -8,7 +8,7 @@
 	{ :a 1 :b 2 } assert=? a
 	:a v= [ 1 2 :str ]
 	[ 1 2 :str ] assert=? a
-:assignmentSingle @doc """
+:assignmentSingle @doc --"
 	Test how assignment uses pattern matching for assignment of a single variable
 
 :assignmentArray v= func0
@@ -45,7 +45,7 @@
 	[ :a { :b ->c } ] v= [ 11 { :b 22 } ]
 	11 assert=? a
 	22 assert=? c
-:assignmentArray @doc """
+:assignmentArray @doc --"
 	Test how assignment uses pattern matching for assignment into an array
 
 :assignmentMap v= func0
@@ -93,7 +93,7 @@
 	// value match
 	{ :a false :x ( :x ... ) } v= { :a false :b 5 }
 	{ :b 5 } assert=? x
-:assignmentMap @doc """
+:assignmentMap @doc --"
 	Test how assignment uses pattern matching for assignment of a map
 
 
@@ -135,5 +135,5 @@
 	[ :a ( :b @@hasKeys :k2 ) ] v= { :a 3 :b { :k4 7 :k5 8 :k3 9 } }
 	2 assert=? a
 	{ :k1 3 :k2 4 :k3 5 } assert=? b
-:assignmentHasKeys @doc """
+:assignmentHasKeys @doc --"
 	Test requiring that a map should contain certain keys in order to pattern match
