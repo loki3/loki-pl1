@@ -37,7 +37,7 @@ namespace loki3.core.test
 			}
 
 			{
-				string[] strs = ParseChars.Do("one two", d);
+				string[] strs = ParseChars.Do("one,two", d);
 				Assert.AreEqual(2, strs.Length);
 				Assert.AreEqual("one", strs[0]);
 				Assert.AreEqual("two", strs[1]);

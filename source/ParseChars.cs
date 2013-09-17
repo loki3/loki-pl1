@@ -108,6 +108,6 @@ namespace loki3.core
 		}
 
 		/// <summary>chars to consider as separators</summary>
-		static private string s_white = " \n\r\t";
+		static private string s_white = " \n\r\t,";
 	}
 }
