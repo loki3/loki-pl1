@@ -71,6 +71,18 @@ namespace loki3.core
 		public void SetValue(string token, Value value)
 		{
 			m_values[token] = value;
+
+			// track string delimiters
+			if (value.Type == ValueType.Delimiter)
+			{
+				ValueDelimiter delim = value as ValueDelimiter;
+				if (delim.DelimiterType == DelimiterType.AsString)
+				{
+					if (m_stringDelims == null)
+						m_stringDelims = new Dictionary<string, ValueDelimiter>();
+					m_stringDelims[token] = delim;
+				}
+			}
 		}
 
 		public Value GetValue(Token token)
@@ -100,7 +112,9 @@ namespace loki3.core
 
 		public Dictionary<string, ValueDelimiter> GetStringDelims()
 		{
-			return null;
+			// technically, this should dynamically build a dictionary for the entire chain,
+			// but that would really hurt perf, so it just takes the first it finds
+			return (m_parent != null ? m_parent.GetStringDelims() : m_stringDelims);
 		}
 
 		public IScope Exists(string token)
@@ -152,5 +166,7 @@ namespace loki3.core
 		private IScope m_parent;
 		private Map m_values;
 		private ValueMap m_valueMap;
+
+		Dictionary<string, ValueDelimiter> m_stringDelims = null;
 	}
 }
