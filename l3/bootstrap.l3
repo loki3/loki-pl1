@@ -380,7 +380,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :applyMap v= .( ( ->map : :map ) 1func1 ( ->transform : :function )
 	l3.mapToMap { :map map :transform transform }
-:applyMap @cat :map @doc ." Apply function to every element of a map.  If function is infix, it's handed key and value.  If it's prefix, it's handed the value.  Returns the new map.
+:applyMap @cat :map @doc ." Apply function to every value of a map.  If function is infix, it's handed key and value.  If it's prefix, it's handed the value.  Returns the new map.
+
+:applyKeys v= .( ( ->map : :map ) 1func1 ( ->transform : :function )
+	l3.mapToMap { :map map :transform transform :value? false }
+:applyKeys @cat :map @doc ." Apply function to every key of a map.  If function is infix, it's handed key and value.  If it's prefix, it's handed the value.  Returns the new map.
 
 :filterMap v= .( ( ->map : :map ) 1func1 ( ->filter? : :function )
 	l3.mapToMap { :map map :filter? filter? }
@@ -394,9 +398,9 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.mapToArray { :map map :filter? filter? }
 :filterMapToArray @cat :map @doc ." Returns an array consisting of every value in the map for which function returns true
 
-:filterMapToKeysArray v= .( ( ->map : :map ) 1func1 ( ->filter? : :function )
-	l3.mapToArray { :map map :filter? filter? :keepValue? false }
-:filterMapToKeysArray @cat :map @doc ." Returns an array consisting of every key in the map for which function returns true
+:filterKeysToArray v= .( ( ->map : :map ) 1func1 ( ->filter? : :function )
+	l3.mapToArray { :map map :filter? filter? :value? false }
+:filterKeysToArray @cat :map @doc ." Returns an array consisting of every key in the map for which function returns true
 
 
 //

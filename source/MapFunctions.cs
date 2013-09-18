@@ -31,6 +31,7 @@ namespace loki3.builtin
 
 				Map map = new Map();
 				map["map"] = PatternData.Single("map", ValueType.Map);
+				map["value?"] = PatternData.Single("value?", ValueType.Bool, ValueBool.True);
 				map["filter?"] = PatternData.Single("filter?", ValueType.Function, ValueNil.Nil);
 				map["transform"] = PatternData.Single("transform", ValueType.Function, ValueNil.Nil);
 				ValueMap vMap = new ValueMap(map);
@@ -41,6 +42,7 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				Map inputMap = map["map"].AsMap;
+				bool bUseValue = map["value?"].AsBool;
 				ValueFunction filter = map["filter?"] as ValueFunction;
 				ValueFunction transform = map["transform"] as ValueFunction;
 				if (filter == null && transform == null)
@@ -58,8 +60,16 @@ namespace loki3.builtin
 					// if we should use this value...
 					if (filter == null || filter.Eval(prev, next, scope, scope, null, null).AsBool)
 					{	// ...transform if appropriate
-						Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, scope, null, null));
-						newdict[key] = newval;
+						if (bUseValue)
+						{
+							Value newval = (transform == null ? dict[key] : transform.Eval(prev, next, scope, scope, null, null));
+							newdict[key] = newval;
+						}
+						else
+						{
+							string newkey = (transform == null ? key : transform.Eval(prev, next, scope, scope, null, null).AsString);
+							newdict[newkey] = dict[key];
+						}
 					}
 				}
 				return new ValueMap(new Map(newdict));
@@ -77,7 +87,7 @@ namespace loki3.builtin
 
 				Map map = new Map();
 				map["map"] = PatternData.Single("map", ValueType.Map);
-				map["keepValue?"] = PatternData.Single("keepValue?", ValueType.Bool, ValueBool.True);
+				map["value?"] = PatternData.Single("value?", ValueType.Bool, ValueBool.True);
 				map["filter?"] = PatternData.Single("filter?", ValueType.Function, ValueNil.Nil);
 				map["transform"] = PatternData.Single("transform", ValueType.Function, ValueNil.Nil);
 				ValueMap vMap = new ValueMap(map);
@@ -88,7 +98,7 @@ namespace loki3.builtin
 			{
 				Map map = arg.AsMap;
 				Map inputMap = map["map"].AsMap;
-				bool bKeepValue = map["keepValue?"].AsBool;
+				bool bKeepValue = map["value?"].AsBool;
 				ValueFunction filter = map["filter?"] as ValueFunction;
 				ValueFunction transform = map["transform"] as ValueFunction;
 				if (filter == null && transform == null)
