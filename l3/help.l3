@@ -30,7 +30,7 @@
 		:table v= [ :name :type :default :rest ]
 		:param =eachIn ( overloads . preOrPost )
 			[ :name :type :default :rest ] apply (| :table = table + ( param . ## ) |)
-		:s = :- + \s + preOrPost + \s + "parameters -" + \n
+		:s = :- + ' ' + preOrPost + ' ' + "parameters -" + \n
 		:s = s + .( l3.formatTable { :array table :columns 4 :dashesAfterFirst? true }
 		s
 	

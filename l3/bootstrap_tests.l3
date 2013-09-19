@@ -785,12 +785,6 @@
 :$ @unittest func0
 	:5 assert=? $ 5
 
-:$_ @unittest func0
-	( \s + :5 ) assert=? $_ 5
-
-:$__ @unittest func0
-	( \t + :5 ) assert=? $__ 5
-
 :+ @unittest func0
 	:qwert assert=? :qw + :ert
 
@@ -809,8 +803,6 @@
 	:asdf12.34 assert=? .-"[ :asdf 1 2.34
 
 :\n @unittest noTestNeeded
-
-:\s @unittest noTestNeeded
 
 :\t @unittest noTestNeeded
 

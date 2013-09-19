@@ -617,12 +617,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :$ v= func1 ->val
 	l3.toString ( val )
 :$ @order 2 @cat :string @doc ." Converts the next value to a string.
-:$_ v= func1 ->val
-	\s + .( l3.toString ( val )
-:$_ @order 2 @cat :string @doc ." Prepends a space and converts the next value to a string.
-:$__ v= func1 ->val
-	\t + .( l3.toString ( val )
-:$__ @order 2 @cat :string @doc ." Prepends a tab and converts the next value to a string.
 
 :+ f= .( ( ->str1 : :string ) 1func1 ( ->str2 : :string )
 	l3.stringConcat .{ :array .[ str1 str2
@@ -657,9 +651,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :\n v= l3.intToChar 13
 :\n @cat :string @doc ." Represents a newline in a string
-
-:\s v= l3.intToChar 32
-:\s @cat :string @doc ." Represents a space in a string
 
 :\t v= l3.intToChar 9
 :\t @cat :string @doc ." Represents a tab in a string

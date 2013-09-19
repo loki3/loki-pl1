@@ -51,7 +51,7 @@ There are quite a few delimiters defined in bootstrap.l3.  The most basic is (),
 { :key1 3 :key2 :something }
 ```
 
-" or ' can be used to specify a string, making it easier to specify a string without having to escape " or '.  A current weakness in the language is that, since everything is space delimited, you can't specify a string that begins or ends with spaces.  --" is used for multi-line chunks of text where subsequent indented lines are considered part of the same string.  (--" is a function that takes a body.)  This is often used when attaching documentation to a function.
+" or ' can be used to specify a string, making it easier to specify a string without having to escape " or '.  --" is used for multi-line chunks of text where subsequent indented lines are considered part of the same string.  (--" is a function that takes a body.)  This is often used when attaching documentation to a function.
 
 ```
 " this is a string "
@@ -70,7 +70,7 @@ There are quite a few delimiters defined in bootstrap.l3.  The most basic is (),
 -"[ 1 :text 2.3 ]
 
 :value v= 5
-print .-"[ :result: \s value
+print .-"[ :result: ' ' value
 // prints the string:  result: 5
 ```
 

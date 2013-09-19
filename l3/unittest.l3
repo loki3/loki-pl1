@@ -108,13 +108,13 @@
 :dumpAssert v= func1 [ ->testName ->e ]
 	print "FAILED :" + testName
 	if ( e . :expected ) !=? nil
-		print .-"[ :.expected: \s ( e . :expected )
+		print .-"[ :.expected: ' ' ( e . :expected )
 	if ( e . :actual ) !=? nil
-		print .-"[ :...actual: \s ( e . :actual )
+		print .-"[ :...actual: ' ' ( e . :actual )
 	if ( e . :expression ) !=? nil
-		print .-"[ :.expression: \s ( e . :expression )
+		print .-"[ :.expression: ' ' ( e . :expression )
 	if ( e . :message ) !=? nil
-		print .-"[ :....message: \s ( e . :message )
+		print .-"[ :....message: ' ' ( e . :message )
 :dumpAssert @doc ." Print details about an assert
 
 :runUnittests v= func1 ->scope
@@ -124,7 +124,7 @@
 			// fail if no test
 			if testName .@unittest =? nil
 				failures += testName
-				print .-"[ "missing unittest:" \s testName
+				print .-"[ "missing unittest:" ' ' testName
 		catch :e
 			failures += testName
 			dumpAssert [ testName e ]
