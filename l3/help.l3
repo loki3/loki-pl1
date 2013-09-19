@@ -206,6 +206,10 @@
 	l3.formatTable { :array table :columns 7 }
 :listDelimiters @cat :help @doc ." List all the delimiters in the given map
 
+:listAllCats v= func1 ->map
+	map filterMap (< #1 .@cat !=? nil >) applyKeys (< #1 .@cat >) filterKeysToArray (| true |)
+:listAllCats @cat :help @doc ." List all the categories in the given map
+
 :listByCat v= ( ->cat 1func1 ->map )
 	:table v= map filterMap (< ( #1 .@cat ) =? cat >) mapToArray (< #1 >)
 	l3.formatTable { :array table :columns 3 }
@@ -226,6 +230,10 @@
 	import file
 	getDocsInScope currentScope
 :getFileDocs @cat :help @doc ." Return all the docstrings attached to the values in a given file
+
+:getAllCats v= func0
+	listAllCats .( l3.getScope .{ :level 1
+:getAllCats @cat :help @doc ." Return all the categories for all the values in the current scope
 
 :getByCat v= func1 ->cat
 	cat listByCat .( l3.getScope .{ :level 1
