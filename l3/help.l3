@@ -18,19 +18,13 @@
 :helpAll @cat :help @doc ." Print out information on everything defined in the given scope
 
 :help v= func1 .( ->key : :string
-	// turn a map into an array useful for formatting
-	:dumpMap v= func1  ->map
-		var :array
-		:i =eachIn map
-			:array = array + [ "" ( i . 0 ) ( i . 1 ) ]
-		array
 	// build up a description of pre or post parameters
 	:dumpParams v= func1 .[ ->preOrPost ->overloads
 		:table v= [ ]
 		:table v= [ :name :type :default :rest ]
 		:param =eachIn ( overloads . preOrPost )
 			[ :name :type :default :rest ] apply (| :table = table + ( param . ## ) |)
-		:s = :- + ' ' + preOrPost + ' ' + "parameters -" + \n
+		:s = :- + ' ' + preOrPost + " parameters -" + \n
 		:s = s + .( l3.formatTable { :array table :columns 4 :dashesAfterFirst? true }
 		s
 	
@@ -50,7 +44,7 @@
 	// specific
 	:table v= [ :properties "-----" "-----" ]
 	:sansOverloads v= ( map . :specific ) filterMap (< #1 !=? :overloads >)
-	:table = table + .( dumpMap sansOverloads
+	:table = table + .( sansOverloads mapToArray (< [ "" #1 #2 ] >) fold (< #1 + #2 >)
 	:s = s + .( l3.formatTable { :array table :columns 3 } 
 	
 	// overloads
