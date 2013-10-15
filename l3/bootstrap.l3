@@ -334,7 +334,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.arrayToArray { :array array :transform function }
 :apply @cat :array @doc ." Apply function to every element of a collection.  Functions for arrays take a single value.  Functions for maps are infix.  Returns the new collection.
 
-:foldLeft v= .( ( ->array : :array ) 1func1 ( ->function : :function )
+:foldLeft f= .( ( ->array : :array ) 1func1 ( ->function : :function )
 	l3.foldLeft { :array array :function function }
 :foldLeft @cat :array @doc ." ((a[0] function a[1]) function a[2]) etc.  Returns a single value.
 
@@ -401,6 +401,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :filterKeysToArray v= .( ( ->map : :map ) 1func1 ( ->filter? : :function )
 	l3.mapToArray { :map map :filter? filter? :value? false }
 :filterKeysToArray @cat :map @doc ." Returns an array consisting of every key in the map for which function returns true
+
+
+//
+// raw line
+
+:foldLeft f= .( ( ->lines : :rawLine ) 1func1 ( ->function : :function )
+	:line forEach body
+		function line
 
 
 //
