@@ -6,9 +6,10 @@ namespace loki3.core
 	internal class EvalBuiltin
 	{
 		/// <summary>
-		/// Attempt to evaluate token as a bool, int, etc.  May throw.
+		/// Attempt to evaluate token as a bool, int, etc.
+		/// Returns null if it fails
 		/// </summary>
-		internal static Value Do(Token token)
+		internal static Value DoNoThrow(Token token)
 		{
 			string s = token.Value;
 
@@ -40,7 +41,18 @@ namespace loki3.core
 				return new ValueString(s.Substring(2));
 
 			// give up
-			throw new Loki3Exception().AddBadToken(token);
+			return null;
+		}
+
+		/// <summary>
+		/// Attempt to evaluate token as a bool, int, etc.  May throw.
+		/// </summary>
+		internal static Value Do(Token token)
+		{
+			Value v = DoNoThrow(token);
+			if (v == null)
+				throw new Loki3Exception().AddBadToken(token);
+			return v;
 		}
 	}
 }

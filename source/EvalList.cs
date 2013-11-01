@@ -45,8 +45,9 @@ namespace loki3.core
 					{	// built-in
 						try
 						{
-							m_value = EvalBuiltin.Do(token);
-							m_state = NodeState.Value;
+							m_value = EvalBuiltin.DoNoThrow(token);
+							if (m_value != null)
+								m_state = NodeState.Value;
 						}
 						catch (Exception) { }
 					}
