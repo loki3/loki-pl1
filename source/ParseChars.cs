@@ -6,9 +6,9 @@ namespace loki3.core
 {
 	/// <summary>
 	/// Break a string into an array of strings.
-	/// Breaks on whitespace (including comma) and treats
-	/// string delimiters specially, pretending like they
-	/// were whitespace delimited.
+	/// Breaks on whitespace and treats string delimiters
+	/// specially, pretending like they were whitespace delimited.
+	/// Removes trailing commas on each string.
 	/// </summary>
 	internal class ParseChars
 	{
@@ -94,6 +94,9 @@ namespace loki3.core
 				}
 				else if (inWord)
 				{	// end of word
+					if (current.Length > 1 && current[current.Length - 1] == ',')
+						// remove trailing comma
+						current.Remove(current.Length-1, 1);
 					list.Add(current.ToString());
 					inWord = false;
 					atStart = true;
@@ -108,6 +111,6 @@ namespace loki3.core
 		}
 
 		/// <summary>chars to consider as separators</summary>
-		static private string s_white = " \n\r\t,";
+		static private string s_white = " \n\r\t";
 	}
 }
