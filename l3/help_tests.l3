@@ -78,6 +78,8 @@
 
 :listDelimiters @unittest testNYI
 
+:listAllCats @unittest testNYI
+
 :listByCat @unittest testNYI
 
 :getDocs @unittest testNYI
@@ -85,6 +87,8 @@
 :getDocsInScope @unittest testNYI
 
 :getFileDocs @unittest testNYI
+
+:getAllCats @unittest testNYI
 
 :getByCat @unittest testNYI
 
