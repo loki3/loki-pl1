@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace loki3.core
 {
@@ -15,11 +16,24 @@ namespace loki3.core
 			do
 			{
 				Console.Write(prompt);
-				s = Console.ReadLine();
+
+				// keep reading lines as long as they end with \
+				List<string> lines = new List<string>();
+				bool bMore = false;
+				do
+				{
+					s = Console.ReadLine();
+					bMore = (s.Length > 2 && s[s.Length - 1] == '\\' && s[s.Length - 2] == ' ');
+					if (bMore)
+						s = s.Substring(0, s.Length - 2);
+					lines.Add(s);
+				} while (bMore);
+				LineConsumer consumer = new LineConsumer(lines);
+
+				// eval the line(s)
 				try
 				{
-					DelimiterList list = ParseLine.Do(s, scope);
-					Value v = EvalList.Do(list.Nodes, scope);
+					Value v = EvalLines.Do(consumer, scope);
 					Console.WriteLine(v.ToString());
 				}
 				catch (Loki3Exception error)
