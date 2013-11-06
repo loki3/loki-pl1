@@ -330,6 +330,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.getCount ( value )
 :.size @cat :array @doc ." Return the number of elements in a collection.
 
+:.last v= .( ->value 1func
+	value . (value .size - 1)
+:.last @cat :array @doc ." Return the last element in a collection.
+
 :apply v= .( ( ->array : :array ) 1func1 ( ->function : :function )
 	l3.arrayToArray { :array array :transform function }
 :apply @cat :array @doc ." Apply function to every element of a collection.  Functions for arrays take a single value.  Functions for maps are infix.  Returns the new collection.
