@@ -419,10 +419,21 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 // conditional
 
 // ternary operator
-:? v= .( ( ->do? : :bool ) 1func1 [ ->doIfTrue ->doIfFalse ]
+:? f= .( ( ->do? : :bool ) 1func1 [ ->doIfTrue ->doIfFalse ]
 	l3.ifValue .{ :do? do? :ifTrue doIfTrue :ifFalse doIfFalse
 :? @order 4
 :? @cat :if @doc ." If condition is met, return first value, else return second value
+
+// generalized ternary-style operator
+:? f= .( ( ->do? : :array ) 1func1 ( ->doIf : :array )
+	:idx v= 0
+	:answer v= doIf .last
+	:i? forEach do?
+		if i?
+			:answer = doIf . idx
+			break
+		:idx = idx + 1
+	answer
 
 :if v= func1 ( ->do? : :bool )
 	l3.ifBody .{ :do? do? :body body
