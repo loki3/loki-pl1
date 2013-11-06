@@ -114,6 +114,17 @@ namespace loki3.builtin
 				if (obj.IsNil)
 					return scope.GetValue(new Token(key.AsString));
 
+				ValueString objStr = obj as ValueString;
+				if (objStr != null)
+				{
+					string str = objStr.AsString;
+					int i = key.AsInt;
+					if (i < 0 || i >= str.Length)
+						// if index is out of bounds, return string's default value
+						return GetDefault(obj, key, map);
+					return new ValueString(new string(str[i], 1));
+				}
+
 				ValueMap objMap = obj as ValueMap;
 				if (objMap != null)
 				{

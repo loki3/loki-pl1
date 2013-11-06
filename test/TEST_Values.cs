@@ -168,6 +168,8 @@ namespace loki3.builtin.test
 		{
 			IScope scope = CreateValueScope();
 
+			scope.SetValue("aString", new ValueString("testing"));
+
 			Map map = new Map();
 			map["one"] = new ValueInt(1);
 			map["two"] = new ValueInt(2);
@@ -178,6 +180,11 @@ namespace loki3.builtin.test
 			array.Add(new ValueInt(2));
 			array.Add(new ValueInt(4));
 			scope.SetValue("anArray", new ValueArray(array));
+
+			{
+				Value value = TestSupport.ToValue("l3.getValue { :object aString :key 2 }", scope);
+				Assert.AreEqual("s", value.AsString);
+			}
 
 			{
 				Value value = TestSupport.ToValue("l3.getValue { :object aMap :key :two }", scope);
