@@ -713,6 +713,14 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :sqrt v= .(| l3.sqrt ##
 :sqrt @cat :math @doc ." Compute the square root of a number
 
+:++ v= .( ( ->## : :string ) 1func
+	## = (l3.eval ##) + 1
+:++ @cat :math @doc ." Increment the value stored by a key
+
+:-- v= .( ( ->## : :string ) 1func
+	## = (l3.eval ##) - 1
+:-- @cat :math @doc ." Decrement the value stored by a key
+
 :<? v= .(< l3.lt [ #1 #2 ]
 :<? @cat :math @doc ." True if a < b
 
