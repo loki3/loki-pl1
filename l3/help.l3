@@ -64,18 +64,9 @@
 	:getSpecific f= func1 .[ ( ->key : :string ) ( ->value : :function )
 		// figure out if var is an in/post/prefix function
 		:getFixType v= func0
-			:details v= ."
 			[ :prev  :next ]  v= [ ( key .@ :l3.func.previous ) ( key .@ :l3.func.next ) ]
 			[ :prev? :next? ] v= [ ( prev !=? nil ) ( next !=? nil ) ]
-			if prev? &? next?
-				:details = ." 1func1
-			elsif prev?
-				:details = ." 1func
-			elsif next?
-				:details = ." func1
-			else
-				:details = ." nofix
-			details
+			[ (prev? &? next?) prev? next? ] ? [ :1func1 :1func :func1 :nofix ]
 		
 		// get an array of all params
 		:getParams v= func1 ->params
