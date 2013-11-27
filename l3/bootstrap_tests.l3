@@ -810,6 +810,15 @@
 :.-"[ @unittest func0
 	:asdf12.34 assert=? .-"[ :asdf 1 2.34
 
+:+with @unittest func0
+	"ab-cd-ef" assert=? [ "ab" "cd" "ef" ] +with "-"
+
+:stringify @unittest func0
+	"ab-cd-ef" assert=? stringify "-"
+		"ab"
+		[false true] ? [1 "cd" 3]
+		"ef"
+
 :\n @unittest noTestNeeded
 
 :\t @unittest noTestNeeded
