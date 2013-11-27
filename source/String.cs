@@ -62,7 +62,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :array [:spaces] } -> convert a series of values to strings and concatenate them</summary>
+		/// <summary>{ :array [:spaces] [:separator] } -> convert a series of values to strings and concatenate them</summary>
 		class StringConcat : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new StringConcat(); }
@@ -74,6 +74,7 @@ namespace loki3.builtin
 				Map map = new Map();
 				map["array"] = PatternData.Rest("array");
 				map["spaces"] = PatternData.Single("spaces", ValueType.Int, new ValueInt(0));
+				map["separator"] = PatternData.Single("separator", ValueType.String, new ValueString(""));
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}
@@ -83,8 +84,10 @@ namespace loki3.builtin
 				Map map = arg.AsMap;
 				List<Value> list = map["array"].AsArray;
 				int spaces = map["spaces"].AsInt;
+				string separator = map["separator"].AsString;
 
 				string padding = (spaces == 0 ? null : new string(' ', spaces));
+				padding += separator;
 
 				string s = "";
 				bool bFirst = true;

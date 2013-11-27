@@ -34,6 +34,10 @@ namespace loki3.builtin.test
 				Value value = TestSupport.ToValue("l3.stringConcat { :array [ 2 'two' ] :spaces 2 }", scope);
 				Assert.AreEqual("2  two", value.AsString);
 			}
+			{
+				Value value = TestSupport.ToValue("l3.stringConcat { :array [ 2 'two' ] :separator ', ' }", scope);
+				Assert.AreEqual("2, two", value.AsString);
+			}
 		}
 
 		[Test]
