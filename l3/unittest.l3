@@ -35,11 +35,12 @@
 :unittestScope @cat :unittest @doc ." Run tests and check for docstrings on everything in scope
 
 :testFunction v= func1 .[ ->function ->name ->scope
-	[ :success? :failures ] v= function scope
+	[ :success? :passed :failures ] v= function scope
+	var :summary = .-"[ passed " passed, " (failures .size) " failed"
 	if success?
-		print "----" + name + ." : succeeded
+		print .-"[ "---- " name " : succeeded  " summary
 	else
-		print "----" + name + ." : failed
+		print .-"[ "---- " name " : FAILED     " summary
 		print failures
 	success?
 :testFunction @cat :unittest @doc --"
@@ -49,10 +50,10 @@
 
 :checkDocs v= func1 ->scope
 	var :failures = scope filterMap (< #1 .@doc =? nil >) mapToArray (< #1 >)
-	[ ( ( failures .size ) =? 0 ) failures ]
+	[ ( (failures .size) =? 0 ) (scope .size) failures ]
 :checkDocs @cat :unittest @doc --"
 	Check if everything in scope has doc metadata.
-	Returns [ success? arrayOfFailures ]
+	Returns [ success? passedCount arrayOfFailures ]
 
 
 :@unittest v= .( ->object 1func1 ->function
@@ -107,45 +108,45 @@
 
 :dumpAssert v= func1 [ ->testName ->e ]
 	print "FAILED :" + testName
-	if ( e . :expected ) !=? nil
-		print .-"[ :.expected: ' ' ( e . :expected )
-	if ( e . :actual ) !=? nil
-		print .-"[ :...actual: ' ' ( e . :actual )
-	if ( e . :expression ) !=? nil
-		print .-"[ :.expression: ' ' ( e . :expression )
-	if ( e . :message ) !=? nil
-		print .-"[ :....message: ' ' ( e . :message )
+	( e . :expected )   if!nil .` print .-"[ '.expected: '   ( e . :expected )
+	( e . :actual )     if!nil .` print .-"[ '...actual: '   ( e . :actual )
+	( e . :expression ) if!nil .` print .-"[ '.expression: ' ( e . :expression )
+	( e . :message )    if!nil .` print .-"[ '....message: ' ( e . :message )
 :dumpAssert @doc ." Print details about an assert
 
 :runUnittests v= func1 ->scope
 	var :failures = [ ]
+	var :passed = 0
 	[ :testName _ ] forEach scope
 		try
 			// fail if no test
 			if testName .@unittest =? nil
 				failures += testName
 				print .-"[ "missing unittest:" ' ' testName
+			:passed ++
 		catch :e
 			failures += testName
 			dumpAssert [ testName e ]
 		endTry
-	[ ( ( failures .size ) =? 0 ) failures ]
+	[ ( (failures .size) =? 0 ) passed failures ]
 :runUnittests @cat :unittest @doc --"
 	Run .@unittest on every value in the scope.
 	A unittest fails if it isn't present or if an assert fails inside it.
 
 :runTests v= func1 ->scope
 	var :failures = [ ]
+	var :passed = 0
 	:mapOfTests v= scope filterMap (< l3.getType { :key #1 } =? :function >)
 	[ :testName :testFunction ] =eachIn mapOfTests
 		try
 			// run the test
 			testFunction
+			:passed ++
 		catch :e
 			failures += testName
 			dumpAssert [ testName e ]
 		endTry
-	[ ( ( failures .size ) =? 0 ) failures ]
+	[ ( (failures .size) =? 0 ) passed failures ]
 :runTests @cat :unittest @doc --"
 	Run every function in the scope as a test.
 	A test fails if an assert fails inside it.

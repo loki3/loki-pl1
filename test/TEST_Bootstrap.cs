@@ -57,7 +57,7 @@ namespace loki3.builtin.test
 				// make sure all functions have @doc
 				Value a = TestSupport.ToValue("checkDocs currentScope", scope);
 				if (!a.AsArray[0].AsBool)	// make it obvious which functions need @doc
-					Assert.AreEqual("[ ]", a.AsArray[1].AsArray);
+					Assert.AreEqual("[ ]", a.AsArray[2].AsArray);
 
 				// currently this runs checkDocs as well
 				Value v = TestSupport.ToValue("unittest [ :../../l3/bootstrap.l3 :../../l3/bootstrap_tests.l3 ]", scope);
