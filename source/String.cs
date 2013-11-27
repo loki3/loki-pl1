@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using loki3.core;
 
 namespace loki3.builtin
@@ -89,17 +90,17 @@ namespace loki3.builtin
 				string padding = (spaces == 0 ? null : new string(' ', spaces));
 				padding += separator;
 
-				string s = "";
+				StringBuilder s = new StringBuilder();
 				bool bFirst = true;
 				foreach (Value val in list)
 				{
 					if (bFirst)
 						bFirst = false;
 					else if (padding != null)
-						s += padding;
-					s += val.ToString();
+						s.Append(padding);
+					s.Append(val.ToString());
 				}
-				return new ValueString(s);
+				return new ValueString(s.ToString());
 			}
 		}
 
