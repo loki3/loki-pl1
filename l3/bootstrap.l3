@@ -368,16 +368,16 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // maps
 
-:+ f= .( ->value1 1func1 ( ->map2 : :map )
+:\/ f= .( ->value1 1func1 ( ->map2 : :map )
 	l3.combine .[ value1 map2
-:+ f= .( ( ->map1 : :map ) 1func1 ->value2
+:\/ f= .( ( ->map1 : :map ) 1func1 ->value2
 	l3.combine .[ map1 value2
-:+ @cat :map @doc ." Combine two maps
+:\/ @cat :map @doc ." Combine (union) two maps
 
 :makeMap v= func0
 	:map v= { }
 	:submap forEachDelim [ body :{ ]
-		:map = map + submap
+		:map = map \/ submap
 	map
 :makeMap @cat :map @doc ." Make a map where every line in the body is evaluated and the first element is the key and the second the value
 :makeMap @body? true
@@ -702,7 +702,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		// metadata on the value describing enum name & key
 		__i @@ [ :l3.value.type name ]
 		__i @@ [ :l3.enum.key key ]
-		:list = list + { key __i }
+		:list = list \/ { key __i }
 		// store enum key/value on scope that called this function
 		l3.setValue { :key key :value __i :level 3 }
 		:__i = __i + 1
@@ -838,15 +838,15 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 			when .( ->key : :string
 				if l3.getType { :key key } =? :function
 					// add function as a closure over the current scope
-					:map = map + { key ( closure key ) }
+					:map = map \/ { key ( closure key ) }
 					// if it's a function with no parameters, force it to eval when used.
 					// todo: it would be better if this decision could be based on the context
 					//   in which it's used, rather than being a property of the function
 					( map . key ) @@ .[ :l3.func.forceEval? true
 				else
-					:map = map + { key ( l3.eval key ) }
+					:map = map \/ { key ( l3.eval key ) }
 			when .( ->m : :map
-				:map = map + m
+				:map = map \/ m
 	map
 :public @cat :class @doc ." Creates a map of functions that are bound to the local scope given a list of function names
 :public @body? true

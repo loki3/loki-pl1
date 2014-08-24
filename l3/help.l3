@@ -78,7 +78,7 @@
 						:t = ""
 					t
 				:data v= { :name param }
-				:data = data + { :type ( getMeta :type ) :default ( getMeta :default ) :rest ( getMeta :rest ) }
+				:data = data \/ { :type ( getMeta :type ) :default ( getMeta :default ) :rest ( getMeta :rest ) }
 				data
 			// build up list of parameter information
 			:paramsList v= [ ]
@@ -95,13 +95,13 @@
 			paramsList
 		
 		:map v= { }
-		:map = map + { :fix ( getFixType ) }
+		:map = map \/ { :fix ( getFixType ) }
 		[ :order :body? ] v= [ ( key .@ :l3.value.order ) ( key .@ :body? ) ]
 		if order =? nil
 			:order = 3
 		if body? =? nil
 			:body? = false
-		:map = map + .{ :order order :body? body?
+		:map = map \/ .{ :order order :body? body?
 		
 		:overloads v= [ ]
 		if ( key .@ :l3.func.overload? ) !=? nil
@@ -109,27 +109,27 @@
 			:f =eachIn ( value )
 				:temp v= ( f )
 				:overload v= .{ :pre  .( getParams .( :temp .@ :l3.func.previous
-				:overload = overload + .{ :post .( getParams .( :temp .@ :l3.func.next
+				:overload = overload \/ .{ :post .( getParams .( :temp .@ :l3.func.next
 				:overloads = overloads + [ overload ]
 		else
 			:overload v= .{ :pre  .( getParams .( key .@ :l3.func.previous
-			:overload = overload + .{ :post .( getParams .( key .@ :l3.func.next
+			:overload = overload \/ .{ :post .( getParams .( key .@ :l3.func.next
 			:overloads = overloads + [ overload ]
-		map + { :overloads overloads }
+		map \/ { :overloads overloads }
 	
 	
 	:getSpecific f= func1 .[ ( ->key : :string ) ( ->value : :delimiter )
 		:map v= .{ :start key :end ( key .@ :l3.delim.end )
 		// turn the number representing the type into a string
 		:delimEnum v= .[ :comment :string :value :array :raw
-		:map = map + .{ :parseAs ( delimEnum . ( key .@ :l3.delim.type ) )
+		:map = map \/ .{ :parseAs ( delimEnum . ( key .@ :l3.delim.type ) )
 		// associated function, if any
 		:function v= key .@ :l3.delim.function
 		if ( function ) !=? nil
 			:temp v= ( function )
-			:map = map + { :function ( describe :temp ) }
+			:map = map \/ { :function ( describe :temp ) }
 		else
-			:map = map + { :function nil }
+			:map = map \/ { :function nil }
 		map
 	
 	:getSpecific f= func1 .[ ( ->key : :string ) ( ->value : :enum )
@@ -140,10 +140,10 @@
 	
 	[ :general :specific ] v= [ { } { } ]
 	// general properties
-	:general = general + .{ :name key :type ( l3.getType { :key key } )
-	:general = general + .{ :documentation ( key .@doc ) :category ( key .@cat )
+	:general = general \/ .{ :name key :type ( l3.getType { :key key } )
+	:general = general \/ .{ :documentation ( key .@doc ) :category ( key .@cat )
 	// specific properties based on type
-	:specific = specific + .( getSpecific .[ key ( l3.getValue { :key key } )
+	:specific = specific \/ .( getSpecific .[ key ( l3.getValue { :key key } )
 	// full results
 	{ :general general :specific specific }
 :describe @cat :help @doc ." Create a description of the value represented by a key, returning a map with details.

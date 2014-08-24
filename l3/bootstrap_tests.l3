@@ -252,7 +252,7 @@
 		var :i forEach currentScope
 			// ignore vars that the forEach created
 			if ( ( i . 0 ) =? :a |? ( i . 0 ) =? :b )
-				:map = map + { ( i . 0 ) ( i . 1 ) }
+				:map = map \/ { ( i . 0 ) ( i . 1 ) }
 	{ :a 1 :b 2 } assert=? map
 
 :setScopeName @unittest noTestNeeded
@@ -442,6 +442,11 @@
 
 //
 // maps
+
+:\/ @unittest func0
+	{ :a 1 :b 2 :c 3 } assert=? { :a 1 } \/ { :b 2 :c 3 }
+	{ :a 1 :b 2 :c 3 } assert=? { :a 1 :b 3 } \/ { :b 2 :c 3 }
+	{ :a 1 :b 2 :c 3 } assert=? { :a 1 :b 2 :c 3 } \/ { }
 
 :makeMap @unittest func0
 	:a v= makeMap
@@ -705,7 +710,7 @@
 	:thing v= func0
 		:result v= nil
 		:map forEachDelim [ body :{ ]
-			:result = result + map
+			:result = result \/ map
 	:thing @body? true
 	// use that function to create a map
 	:test v= thing
