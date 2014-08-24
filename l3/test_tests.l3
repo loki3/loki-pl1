@@ -13,6 +13,9 @@
 :fizzbuzz3 @unittest func0
 	fizzbuzz20 assert=? fizzbuzz3
 
+:fizzbuzz4 @unittest func0
+	fizzbuzz20 assert=? fizzbuzz4
+
 :i @unittest func0
 	{ :x 0 :y 3 } assert=? 3 i
 
