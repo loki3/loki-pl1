@@ -368,10 +368,8 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // maps
 
-:\/ f= .( ->value1 1func1 ( ->map2 : :map )
-	l3.combine .[ value1 map2
-:\/ f= .( ( ->map1 : :map ) 1func1 ->value2
-	l3.combine .[ map1 value2
+:\/ f= .( ( ->map1 : :map ) 1func1 ( ->map2 : :map )
+	l3.combine .[ map1 map2
 :\/ @cat :map @doc ." Combine (union) two maps
 
 :/\ v= .( ( ->map1 : :map ) 1func1 ( ->map2 : :map )

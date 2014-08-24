@@ -715,7 +715,7 @@
 :forEachDelim @unittest func0
 	// create a function that turns a body into a map
 	:thing v= func0
-		:result v= nil
+		:result v= { }
 		:map forEachDelim [ body :{ ]
 			:result = result \/ map
 	:thing @body? true
