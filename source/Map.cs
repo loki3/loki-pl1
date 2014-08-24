@@ -74,9 +74,12 @@ namespace loki3.core
 			Map other = v as Map;
 			if (other == null)
 				return false;
-			int count = m_val.Count;
-			if (count != other.m_val.Count)
+			int count = (m_val == null ? 0 : m_val.Count);
+			int otherCount = (other.m_val == null ? 0 : other.m_val.Count);
+			if (count != otherCount)
 				return false;
+			if (count == 0)
+				return true;
 			Dictionary<string, Value>.KeyCollection keys = m_val.Keys;
 			foreach (string key in keys)
 			{

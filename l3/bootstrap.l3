@@ -374,6 +374,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.combine .[ map1 value2
 :\/ @cat :map @doc ." Combine (union) two maps
 
+:/\ v= .( ( ->map1 : :map ) 1func1 ( ->map2 : :map )
+	map1 filterMap (< map2 . #1 =? #2 >)
+:/\ @cat :map @doc ." Get the intersection of two maps
+
 :makeMap v= func0
 	:map v= { }
 	:submap forEachDelim [ body :{ ]

@@ -50,6 +50,8 @@ namespace loki3.builtin
 
 				Dictionary<string, Value> dict = inputMap.Raw;
 				Dictionary<string, Value> newdict = new Dictionary<string, Value>();
+				if (dict == null)
+					return new ValueMap(new Map(newdict));
 
 				bool bPre = ((filter != null && filter.ConsumesPrevious) || (transform != null && transform.ConsumesPrevious));
 				foreach (string key in dict.Keys)
