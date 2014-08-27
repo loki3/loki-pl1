@@ -4,7 +4,7 @@ Issues
 Since loki3 is an experimental language, the design flaws are just as interesting as design that works well.  Here are several issues and how they could be fixed.
 
 
-# Eager evaluation
+Eager evaluation
 ------------------
 
 ## What's the problem?
@@ -45,7 +45,7 @@ Since `*` has higher precedence than `+`, the first line should evaluate to 7.  
 
 
 
-# All arguments are evaluated
+All arguments are evaluated
 -----------------------------
 
 ## What's the problem?
@@ -88,7 +88,7 @@ This would require the addition of a "left hand expression" rule that knows when
 
 
 
-# Dynamic scoping
+Dynamic scoping
 ----------------
 
 ## What's the problem?
