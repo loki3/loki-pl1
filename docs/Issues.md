@@ -7,7 +7,7 @@ Since loki3 is an experimental language, the design flaws are just as interestin
 Eager evaluation
 ------------------
 
-## What's the problem?
+### What's the problem?
 
 Pre and post arguments to a function are evaluated before they're passed to the function.  This has several implications for how programs can be written.
 
@@ -21,14 +21,14 @@ if ( false |? something )
 `something` may take a long time to run or it may have side effects.  In either case, you don't want it to be evaluted.
 
 
-## Why is it this way?
+### Why is it this way?
 
 There are several design decisions that combine to make it so eager evaluation is sometimes required:  dynamic typing, optional typing, function overloading, and a current lack of a way to annotate a function with a return type.
 
 If you have a function that's overloaded on different types, obviously you need to know the types of the arguments before deciding which overload to call.  But you need to evaluate the expression in order to determine its type.
 
 
-## How do you fix this?
+### How do you fix this?
 
 First off, arguments should only be evaluated when needed.  Sometimes this will be when a function first uses it.  But sometimes this will be in order to figure out which function overload to call.
 
@@ -48,7 +48,7 @@ Since `*` has higher precedence than `+`, the first line should evaluate to 7.  
 All arguments are evaluated
 -----------------------------
 
-## What's the problem?
+### What's the problem?
 
 Related to eager evaluation is another problem.  When any argument is used by a function, it's first evaluated.  For example, you can't do...
 
@@ -65,7 +65,7 @@ i = i + 1
 The = function has to take :i as a keyword to look up when it runs, since otherwise it's turned into whatever the current value of i is.
 
 
-## Why is it this way?
+### Why is it this way?
 
 It's a simple, consistent way to treat evaluation for all functions, whether they're prefix, postfix, infix, or delimited.
 
@@ -80,7 +80,7 @@ And it works nicely for pattern matching.  Consider the following:
 The first line is how you would currently use pattern matching to stuff 1 into `a` and 2 into `b`.  The second line is what you might consider "ideal" syntax.  But it needs to know to evaluate the [] delimiters (since everything's a function) without evaluating all the values inside it.  It needs to evaluate the `3` but not the `a` or `b`.  The third line demonstrates that you need to recursively evaluate delimiters without evaluating all the values inside.
 
 
-## How do you fix this?
+### How do you fix this?
 
 There should be a way for a function to say how it wants its arguments treated, much the way `forEachDelim` allows you to specify the delimiter used to automatically wrap around each line it parses.  So if = doesn't want its left-hand argument fully evaluated, it could instead interpret it as a keyword.  It would still have to evaluate delimiters and some types such as numbers, however.  This might be tricky to get right in practice.
 
@@ -91,7 +91,7 @@ This would require the addition of a "left hand expression" rule that knows when
 Dynamic scoping
 ----------------
 
-## What's the problem?
+### What's the problem?
 
 [Dynamic scoping](http://en.wikipedia.org/wiki/Scope_%28computer_science%29#Lexical_scope_vs._dynamic_scope) means that the scope where variables live is defined at runtime.  In loki3, each function call inherits the calling scope, adding to it.  When the function returns, the additional variables added by the function are removed.
 
@@ -114,7 +114,7 @@ Why?  Because the definition of `repeatsOf` uses a local variable called `__i`. 
 Another problem is that the current implementation uses chained maps, with an additional map added to the chain with each additional scope.  Values are then looked up by searching each map, starting with the deepest.  This means that a deep callstack can be slow, since all the built-in and bootstrapped functions exist in the outermost map.
 
 
-## Why is it this way?
+### Why is it this way?
 
 Rather than having syntax such as if-else or loops built into the language, it's defined in the language itself.  But rather than using macros to define the syntax (such as Lisp, or even the weaker form available in C), the syntax is defined as normal functions.
 
@@ -134,7 +134,7 @@ The route loki3 currently takes is for the independent functions to communicate 
 Now consider the earlier example using `repeatsOf`, where the code `:i = i * 2` is passed to `repeatsOf` to be evaluated multiple times.  That code needs to have the `i` that was defined on the outside in scope on the inside so that it can examine and modify it.  One way to do this is with dynamic scoping.  Of course, the drawback to this approach is that the variables used in the body of `repeatsOf` are *also* in scope.
 
 
-## How do you fix this?
+### How do you fix this?
 
 One possibility, of course, is to use macros for constructs such as if-else, though the language would lose something.  I specifically decided to try modeling all syntax through functions to see where it would lead.
 
