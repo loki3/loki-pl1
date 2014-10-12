@@ -63,8 +63,17 @@ namespace loki3.builtin
 						isFirst = false;
 					}
 
+					// use bound scope if available
+					IScope parentScope = scope;
+					if (valueBody is ValueRaw)
+					{
+						IScope rawScope = (valueBody as ValueRaw).Scope;
+						if (rawScope != null)
+							parentScope = rawScope;
+					}
+
 					// eval body
-					IScope local = new ScopeChain(scope);
+					IScope local = new ScopeChain(parentScope);
 					result = EvalBody.Do(valueBody, local);
 
 					// if per-loop code was passed, run it
@@ -100,7 +109,15 @@ namespace loki3.builtin
 				// todo: consolidate these bodies, one from an explicit param & one from the following lines
 				Value valueBody = map.ContainsKey("body") ? map["body"] : map[ValueFunction.keyBody];
 
-				PatternAssign assign = new PatternAssign(map, scope, true/*bCreate*/);
+				IScope bodyScope = scope;
+				if (valueBody is ValueRaw)
+				{
+					IScope tempScope = (valueBody as ValueRaw).Scope;
+					if (tempScope != null)
+						bodyScope = tempScope;
+				}
+
+				PatternAssign assign = new PatternAssign(map, bodyScope, true/*bCreate*/);
 
 				// todo: abstract iteration to avoid these ifs
 				Value result = ValueNil.Nil;
@@ -109,7 +126,7 @@ namespace loki3.builtin
 					string s = collection.AsString;
 					foreach (char c in s)
 					{
-						IScope local = new ScopeChain(scope);
+						IScope local = new ScopeChain(bodyScope);
 						assign.Assign(new ValueString(c.ToString()));
 						result = EvalBody.Do(valueBody, local);
 					}
@@ -119,7 +136,7 @@ namespace loki3.builtin
 					List<Value> list = collection.AsArray;
 					foreach (Value v in list)
 					{
-						IScope local = new ScopeChain(scope);
+						IScope local = new ScopeChain(bodyScope);
 						assign.Assign(v);
 						result = EvalBody.Do(valueBody, local);
 					}
@@ -133,7 +150,7 @@ namespace loki3.builtin
 						list.Add(new ValueString(key));
 						list.Add(dict[key]);
 
-						IScope local = new ScopeChain(scope);
+						IScope local = new ScopeChain(bodyScope);
 						assign.Assign(new ValueArray(list));
 						result = EvalBody.Do(valueBody, local);
 					}
@@ -154,8 +171,8 @@ namespace loki3.builtin
 							if (line.Indent == indent)
 							{
 								List<DelimiterNode> nodes = new List<DelimiterNode>();
-								nodes.Add(new DelimiterNodeList(new DelimiterList(delim, line.Nodes, line.Indent, "", line.Original)));
-								newLine = new DelimiterList(delim, nodes, indent, "", line.Original);
+								nodes.Add(new DelimiterNodeList(new DelimiterList(delim, line.Nodes, line.Indent, "", line.Original, line.Scope)));
+								newLine = new DelimiterList(delim, nodes, indent, "", line.Original, line.Scope);
 							}
 							delimList.Add(newLine);
 						}
@@ -166,7 +183,7 @@ namespace loki3.builtin
 					ILineRequestor lines = new LineConsumer(list);
 					while (lines.HasCurrent())
 					{
-						IScope local = new ScopeChain(scope);
+						IScope local = new ScopeChain(bodyScope);
 						Value value = EvalLines.DoOne(lines, local);
 						assign.Assign(value);
 						result = EvalBody.Do(valueBody, local);

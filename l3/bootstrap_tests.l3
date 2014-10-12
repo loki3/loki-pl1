@@ -679,6 +679,10 @@
 	:total v= 0
 	5 repeatsOf .` :total = total + 2
 	10 assert=? total
+	// test scoping: should be able to use a variable local to repeatsOf
+	:__i v= 2
+	:result v= ( 5 repeatsOf `:__i = __i * 2` )
+	64 assert=? result
 
 :for @unittest func0
 	// todo: should be able to declare i inside for

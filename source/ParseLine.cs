@@ -82,7 +82,7 @@ namespace loki3.core
 
 			iEnd = strs.Length;
 			string trimmed = original.TrimStart(' ', '\t');
-			return new DelimiterList(thisDelim, nodes, indent, "", trimmed);
+			return new DelimiterList(thisDelim, nodes, indent, "", trimmed, null);
 		}
 
 
@@ -142,7 +142,7 @@ namespace loki3.core
 				Token token = new Token(subStr);
 				DelimiterNode node = new DelimiterNodeToken(token);
 				nodes.Add(node);
-				result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr);
+				result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr, null);
 				return true;
 			}
 			result = null;
@@ -166,7 +166,7 @@ namespace loki3.core
 				{	// end delimiter
 					iEnd = i;
 					string subStr = GetSubStr(iStart, iEnd, strs);
-					result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr);
+					result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr, null);
 					return true;
 				}
 				// TODO: rework this so I don't need to check for : (e.g. for :}, when creating a delim)
@@ -181,7 +181,7 @@ namespace loki3.core
 
 					strs[i] = without;
 					string subStr = GetSubStr(iStart, iEnd, strs);
-					result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr);
+					result = new DelimiterList(thisDelim, nodes, indent, strs[iStart - 1], subStr, null);
 					strs[i] = s;
 					--iEnd;
 					return true;

@@ -76,7 +76,8 @@ namespace loki3.builtin
 					ValueRaw raw = val as ValueRaw;
 					if (raw == null)
 						return val;
-					return EvalList.Do(raw.GetValue().Nodes, scope);
+					IScope theScope = (raw.Scope != null ? raw.Scope : scope);
+					return EvalList.Do(raw.GetValue().Nodes, theScope);
 				}
 				else
 				{
@@ -84,7 +85,8 @@ namespace loki3.builtin
 					ValueRaw raw = val as ValueRaw;
 					if (raw == null)
 						return val;
-					return EvalList.Do(raw.GetValue().Nodes, scope);
+					IScope theScope = (raw.Scope != null ? raw.Scope : scope);
+					return EvalList.Do(raw.GetValue().Nodes, theScope);
 				}
 			}
 		}

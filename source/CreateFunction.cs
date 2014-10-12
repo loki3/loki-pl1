@@ -187,7 +187,7 @@ namespace loki3.core
 						List<DelimiterList> body = EvalList.DoGetBody(bodyScope, requestor);
 						if (body.Count != 0)
 						{
-							localScope.SetValue("body", new ValueLine(body));
+							localScope.SetValue("body", new ValueLine(body, bodyScope));
 							foundBody = true;
 						}
 					}
@@ -280,17 +280,19 @@ namespace loki3.core
 				List<DelimiterNode> originalList = bodyNode.List.Nodes;
 				foreach (DelimiterNode node in originalList)
 				{
-					DelimiterList dList = new DelimiterList(ValueDelimiter.Line, node.List.Nodes, 0, "", node.ToString());
+					IScope scope = node.List.Scope;
+					DelimiterList dList = new DelimiterList(ValueDelimiter.Line, node.List.Nodes, 0, "", node.ToString(), scope);
 					body.Add(dList);
 				}
-				return new ValueLine(body);
+				return new ValueLine(body, bodyNode.List.Scope);
 			}
 			else
 			{
-				DelimiterList dList = new DelimiterList(ValueDelimiter.Line, bodyNode.List.Nodes, 0, "", bodyNode.ToString());
+				IScope scope = bodyNode.List.Scope;
+				DelimiterList dList = new DelimiterList(ValueDelimiter.Line, bodyNode.List.Nodes, 0, "", bodyNode.ToString(), scope);
 				List<DelimiterList> body = new List<DelimiterList>();
 				body.Add(dList);
-				return new ValueLine(body);
+				return new ValueLine(body, scope);
 			}
 		}
 

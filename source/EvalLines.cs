@@ -35,7 +35,9 @@ namespace loki3.core
 			DelimiterList list = requestor.GetCurrentLine(scope);
 			try
 			{
-				Value value = EvalList.Do(list.Nodes, scope, requestor);
+				// eval using list's scope, falling back to passed in scope if not present
+				IScope theScope = (list.Scope != null ? list.Scope : scope);
+				Value value = EvalList.Do(list.Nodes, theScope, requestor);
 
 				// if only item on line was a func, see if it needs a body
 				ValueFunction func = value as ValueFunction;

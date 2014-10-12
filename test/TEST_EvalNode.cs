@@ -183,7 +183,7 @@ namespace loki3.core.test
 			List<DelimiterNode> nodes = new List<DelimiterNode>();
 			string str = "this is a test";
 			nodes.Add(ToNode(str));
-			DelimiterList list = new DelimiterList(delim, nodes, 0, "'", str);
+			DelimiterList list = new DelimiterList(delim, nodes, 0, "'", str, null);
 			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
 			IScope scope = new TestScope();
@@ -208,7 +208,7 @@ namespace loki3.core.test
 			nodes.Add(ToNode("3"));
 			nodes.Add(ToNode("7"));
 			nodes.Add(ToNode("3"));
-			DelimiterList list = new DelimiterList(delim, nodes, 0, "[", "3 7 3");
+			DelimiterList list = new DelimiterList(delim, nodes, 0, "[", "3 7 3", null);
 			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
 			IScope scope = new TestScope();
@@ -253,7 +253,7 @@ namespace loki3.core.test
 			nodes.Add(ToNode("3"));
 			nodes.Add(ToNode("6"));
 			nodes.Add(ToNode("9"));
-			DelimiterList list = new DelimiterList(delim, nodes, 0, "<", "3 6 9");
+			DelimiterList list = new DelimiterList(delim, nodes, 0, "<", "3 6 9", null);
 			DelimiterNodeList nodelist = new DelimiterNodeList(list);
 
 			IScope scope = new TestScope();

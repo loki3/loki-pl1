@@ -273,6 +273,7 @@ namespace loki3.core
 				while (requestor.HasCurrent())
 				{
 					DelimiterList dline = requestor.GetCurrentLine(scope);
+					dline.Scope = scope;	// use this scope when evaling later
 					body.Add(dline);
 					requestor.Advance();
 				}
@@ -291,6 +292,7 @@ namespace loki3.core
 					requestor.Rewind();
 					break;	// now we have the body
 				}
+				childLine.Scope = scope;	// use this scope when evaling later
 
 				// keep adding to the body
 				body.Add(childLine);
@@ -312,7 +314,7 @@ namespace loki3.core
 
 			// we've built the entire body - now pass it to function
 			Map map = new Map();
-			map[ValueFunction.keyBody] = new ValueLine(body);
+			map[ValueFunction.keyBody] = new ValueLine(body, scope);
 			ValueFunctionPre functionPre = function as ValueFunctionPre;
 			return functionPre.Eval(new ValueMap(map), new ScopeChain(scope));
 		}

@@ -24,7 +24,7 @@ namespace loki3.core
 		/// Returns a value.
 		/// </summary>
 		/// <param name="token">token representing a function or variable</param>
-		/// <param name="scope">used to request functions, variables, and delimiters</param>
+		/// <param name="scope">used to request functions, variables, and delimiters if there's no scope attached to the node</param>
 		/// <param name="nodes">used to request previous and next nodes</param>
 		internal static Value Do(DelimiterNode node, IScope scope, INodeRequestor nodes, ILineRequestor requestor)
 		{
@@ -72,6 +72,7 @@ namespace loki3.core
 			{	// delimited list of nodes
 				Value value = null;
 				DelimiterList list = node.List;
+				IScope listScope = (list.Scope != null ? list.Scope : scope);
 				DelimiterType type = list.Delimiter.DelimiterType;
 
 				// get contents as a Value
@@ -81,19 +82,19 @@ namespace loki3.core
 						value = new ValueString(list.Original);
 						break;
 					case DelimiterType.AsValue:
-						value = EvalList.Do(list.Nodes, scope);
+						value = EvalList.Do(list.Nodes, listScope);
 						break;
 					case DelimiterType.AsArray:
 						List<Value> values = new List<Value>(list.Nodes.Count);
 						foreach (DelimiterNode subnode in list.Nodes)
 						{	// note: 'nodes' is null so functions don't get evaled
-							Value subvalue = Do(subnode, scope, null, requestor);
+							Value subvalue = Do(subnode, listScope, null, requestor);
 							values.Add(subvalue);
 						}
 						value = new ValueArray(values);
 						break;
 					case DelimiterType.AsRaw:
-						value = new ValueRaw(list);
+						value = new ValueRaw(list, listScope);
 						break;
 				}
 

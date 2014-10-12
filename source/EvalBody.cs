@@ -25,7 +25,9 @@ namespace loki3.core
 				else if (v is ValueRaw)
 				{
 					ValueRaw raw = v as ValueRaw;
-					retval = EvalList.Do(raw.GetValue().Nodes, parent);
+					// use value's scope if present, otherwise use passed in scope
+					IScope rawScope = (raw.Scope != null ? raw.Scope : parent);
+					retval = EvalList.Do(raw.GetValue().Nodes, rawScope);
 				}
 				else
 				{

@@ -295,6 +295,7 @@ namespace loki3.core
 		/// <summary>
 		/// Evals a string, array of strings, or array of raw value");
 		/// </summary>
+		/// <param name="scope">if value doesn't have an attacked scope, use the passed in scope</param>
 		internal static Value EvalValue(Value value, IScope scope)
 		{
 			switch (value.Type)
@@ -304,16 +305,19 @@ namespace loki3.core
 					return EvalBody.Do(value, scope);
 				case ValueType.String:
 					DelimiterList dList = ParseLine.Do(value.AsString, scope);
+					IScope listScope = (dList.Scope != null ? dList.Scope : scope);
 					List<DelimiterList> list = new List<DelimiterList>();
 					list.Add(dList);
-					ValueLine line = new ValueLine(list);
-					return EvalBody.Do(line, scope);
+					ValueLine line = new ValueLine(list, listScope);
+					return EvalBody.Do(line, listScope);
 				case ValueType.Raw:
-					DelimiterList dList2 = (value as ValueRaw).GetValue();
+					ValueRaw rawValue = (value as ValueRaw);
+					DelimiterList dList2 = rawValue.GetValue();
 					List<DelimiterList> list2 = new List<DelimiterList>();
 					list2.Add(dList2);
-					ValueLine line2 = new ValueLine(list2);
-					return EvalBody.Do(line2, scope);
+					IScope rawScope = (rawValue.Scope != null ? rawValue.Scope : scope);
+					ValueLine line2 = new ValueLine(list2, rawScope);
+					return EvalBody.Do(line2, rawScope);
 				case ValueType.Function:
 					ValueFunction function = value as ValueFunction;
 					return function.Eval(null, null, scope, scope, null, null);

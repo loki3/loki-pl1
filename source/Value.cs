@@ -399,10 +399,15 @@ namespace loki3.core
 	/// </summary>
 	internal class ValueRaw : ValueBase<DelimiterList>
 	{
-		internal ValueRaw(DelimiterList val)
+		/// <param name="scope">use the passed in scope, or the val's scope if null</param>
+		internal ValueRaw(DelimiterList val, IScope scope)
 		{
 			m_val = val;
+			m_scope = (scope != null ? scope : val.Scope);
 		}
+
+		/// <summary>the scope to use when evaluating this value</summary>
+		internal IScope Scope { get { return m_scope; } }
 
 		#region Value
 		internal override List<DelimiterList> AsLine
@@ -428,7 +433,7 @@ namespace loki3.core
 			return m_val.Equals(other.m_val);
 		}
 
-		internal override Value ValueCopy() { return new ValueRaw(m_val); }
+		internal override Value ValueCopy() { return new ValueRaw(m_val, m_scope); }
 
 		internal override int Count { get { return GetValue().Nodes.Count; } }
 		#endregion
@@ -437,5 +442,7 @@ namespace loki3.core
 		{
 			return m_val.ToString();
 		}
+
+		private IScope m_scope;
 	}
 }

@@ -172,7 +172,9 @@ namespace loki3.builtin
 					if (i < 0 || i >= list.Count)
 						// if index is out of bounds, return default value
 						return GetDefault(obj, key, map);
-					return new ValueRaw(list[i]);
+					// prefer using the list's scope, if none then use the function's scope
+					IScope rawScope = (list[i].Scope != null ? list[i].Scope : scope);
+					return new ValueRaw(list[i], rawScope);
 				}
 
 				// todo: better error
@@ -572,7 +574,11 @@ namespace loki3.builtin
 				// make an array
 				List<Value> array = new List<Value>();
 				foreach (DelimiterList line in body)
-					array.Add(new ValueRaw(line));
+				{	// attach scope to the value, preferring the lines's scope
+					// & falling back to the function's scope if not present
+					IScope rawScope = (line.Scope != null ? line.Scope : scope);
+					array.Add(new ValueRaw(line, rawScope));
+				}
 				return new ValueArray(array);
 			}
 		}
