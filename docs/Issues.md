@@ -91,6 +91,8 @@ This would require the addition of a "left hand expression" rule that knows when
 Dynamic scoping
 ----------------
 
+Note: This issue has largely been resolved as of 10-11-14 by attaching to a raw value the scope that was active at the time it was created and using that scope when evaluating rather than the scope in effect when it's evaluated.
+
 ### What's the problem?
 
 [Dynamic scoping](http://en.wikipedia.org/wiki/Scope_%28computer_science%29#Lexical_scope_vs._dynamic_scope) means that the scope where variables live is defined at runtime.  In loki3, each function call inherits the calling scope, adding to it.  When the function returns, the additional variables added by the function are removed.
@@ -109,7 +111,7 @@ However, the following does not work:
 5 repeatsOf `:__i = __i * 2`
 ```
 
-Why?  Because the definition of `repeatsOf` uses a local variable called `__i`.  That variable is in scope during the evaluation of `:__i = __i * 2` withing the `repeatsOf` function, stomping on the value of `__i` from the outer scope.
+Why?  Because the definition of `repeatsOf` uses a local variable called `__i`.  That variable is in scope during the evaluation of `:__i = __i * 2` within the `repeatsOf` function, stomping on the value of `__i` from the outer scope.
 
 Another problem is that the current implementation uses chained maps, with an additional map added to the chain with each additional scope.  Values are then looked up by searching each map, starting with the deepest.  This means that a deep callstack can be slow, since all the built-in and bootstrapped functions exist in the outermost map.
 
