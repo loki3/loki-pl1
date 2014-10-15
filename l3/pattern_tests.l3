@@ -45,6 +45,15 @@
 	[ :a { :b ->c } ] v= [ 11 { :b 22 } ]
 	11 assert=? a
 	22 assert=? c
+	
+	// one of
+	:a = 1
+	[ ( :a o= [ 3 4 ] ) ] v= [ 4 ]
+	4 assert=? a
+	// fail
+	// todo: this shouldn't fail silently
+	[ ( :a o= [ 3 4 ] ) ] v= [ 1 ]
+	4 assert=? a
 :assignmentArray @doc --"
 	Test how assignment uses pattern matching for assignment into an array
 

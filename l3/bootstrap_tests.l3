@@ -227,6 +227,11 @@
 	a d= 2
 	2 assert=? :a .@ :l3.pattern.default
 
+:o= @unittest func0
+	:a v= 1
+	a o= [ 3 4 ]
+	[3 4] assert=? :a .@ :l3.pattern.oneOf
+
 :... @unittest func0
 	:a v= 1
 	a ...

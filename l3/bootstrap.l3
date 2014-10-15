@@ -143,6 +143,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	object @@ .[ :l3.pattern.default default
 :d= @cat :metadata @doc ." Set the default value for a parameter if not present
 
+:o= v= .( ->object 1func1 ( ->values : :array )
+	object @@ .[ :l3.pattern.oneOf values
+:o= @cat :metadata @doc ." Value of parameter must be one of the elements of an array
+
 :... v= .( ->object 1func
 	object @@ .[ :l3.pattern.rest true
 :... @cat :metadata @doc ." Associated parameter will be filled with the remainder of the parameter values

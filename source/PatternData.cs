@@ -44,6 +44,15 @@ namespace loki3.core
 			return vName;
 		}
 
+		/// <summary>Parameter that's a single named value that's one of a set of options</summary>
+		internal static Value Single(string name, ValueArray oneOf)
+		{
+			ValueString vName = new ValueString(name);
+			PatternData data = new PatternData(vName);
+			data.OneOf = oneOf;
+			return vName;
+		}
+
 		/// <summary>Parameter that's the remainder of an array</summary>
 		internal static Value ArrayEnd(string name)
 		{

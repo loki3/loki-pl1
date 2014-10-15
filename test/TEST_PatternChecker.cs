@@ -454,5 +454,36 @@ namespace loki3.core.test
 				Assert.IsTrue(PatternChecker.Do(input, pattern2, true/*bShortPat*/, out match, out leftover));
 			}
 		}
+
+		[Test]
+		public void TestArrayOneOf()
+		{
+			// passed value must be a member of this list
+			List<Value> options = new List<Value>();
+			options.Add(new ValueInt(5));
+			options.Add(new ValueInt(6));
+			ValueArray oneOf = new ValueArray(options);
+
+			List<Value> list = new List<Value>();
+			list.Add(PatternData.Single("a", oneOf));
+			ValueArray pattern = new ValueArray(list);
+			Value match = null, leftover = null;
+
+			{	// single object that's not a match
+				Value input = new ValueInt(4);
+				Assert.IsFalse(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
+			}
+
+			{	// array with one item that matches one of the options
+				List<Value> one = new List<Value>();
+				one.Add(new ValueInt(6));
+				ValueArray input = new ValueArray(one);
+
+				Assert.IsTrue(PatternChecker.Do(input, pattern, false/*bShortPat*/, out match, out leftover));
+				Assert.AreEqual(1, match.AsArray.Count);
+				Assert.AreEqual(6, match.AsArray[0].AsInt);
+				Assert.AreEqual(null, leftover);
+			}
+		}
 	}
 }

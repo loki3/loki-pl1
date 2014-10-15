@@ -110,6 +110,19 @@ namespace loki3.core
 				}
 			}
 
+			// check if it's one of a particular set of values
+			ValueArray oneOf = data.OneOf;
+			if (oneOf != null)
+			{
+				// todo: turn into set when list isn't trivially short
+				bool bFound = false;
+				foreach (Value val in oneOf.AsArray)
+					if (val.Equals(input))
+						bFound = true;
+				if (!bFound)
+					return false;
+			}
+
 			match = input;
 			return true;
 		}
