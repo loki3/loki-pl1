@@ -36,6 +36,7 @@ Pattern matching works on single values, arrays, maps, and nested structures.  M
 * : *type*, only match if value is of given type, e.g. `( ->a : :int )`
 * ..., anything left over after pattern matching is assigned to the preceding key, e.g. `( :rest ... )`
 * d=, specify a default if key isn’t found, e.g. `( ->a d= 5 )`
+* o=, specify that the value must be one of the items in an array, e.g. `( ->a o= [ 2 4 8 ] )`
 * @@hasKeys, only match if value is a map with the given keys, e.g. `( ->a @@hasKeys [ :k1 :k2 ] )`
 
 ```
@@ -56,4 +57,25 @@ Pattern matching works on single values, arrays, maps, and nested structures.  M
 // a is 2, b is { :k1 7 :k2 8 :k3 9 }
 [ :a ( :b @@hasKeys [ :k1 :k2 ] ) ] v= { :a 2 :b {:k2 8 :k3 9 } }
 // mismatch
+
+( :a o= [ 3 6 9 ] ) v= 6
+// a is 6
+( :a o= [ 3 6 9 ] ) v= 7
+// mismatch
+```
+
+How many times have you seen code like this - `drawShape(true, false)` - where you have no idea what the boolean values represent?  In loki3, you can easily create what's essentially lightweight, on-the-fly enumerated values as parameters.
+
+```
+:drawShape v= func1 [ ( ->shape o= [ :square :circle ] ) ( ->how o= [ :outline :filled ] ) ]
+	if ( shape =? :square )
+		drawSquare how
+	else
+		drawCircle how
+
+// this draws a filled square
+drawShape [ :square :filled ]
+
+// this will fail because it doesn't match the required options
+drawShape [ :circle :blue ]
 ```
