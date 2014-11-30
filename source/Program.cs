@@ -12,6 +12,7 @@ namespace loki_pl1
 			{
 				IScope scope = Bootstrap();
 				Repl.Do(scope, "loki3>");
+				scope.Exit();
 			}
 			catch (Exception error)
 			{

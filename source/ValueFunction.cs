@@ -117,7 +117,9 @@ namespace loki3.core
 			if (leftover != null)
 				// create a partial function that starts w/ match & still needs leftover
 				return new PartialFunctionPre(this, match, leftover);
-			return Eval(match, bodyScope);
+			Value retval = Eval(match, bodyScope);
+			bodyScope.Exit();
+			return retval;
 		}
 
 		internal abstract Value Eval(Value arg, IScope scope);
@@ -142,7 +144,9 @@ namespace loki3.core
 			if (leftover != null)
 				// create a partial function that starts w/ match & still needs leftover
 				return new PartialFunctionPost(this, match, leftover);
-			return Eval(match, bodyScope);
+			Value retval = Eval(match, bodyScope);
+			bodyScope.Exit();
+			return retval;
 		}
 
 		internal abstract Value Eval(Value arg, IScope scope);

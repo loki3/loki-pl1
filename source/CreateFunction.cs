@@ -213,7 +213,9 @@ namespace loki3.core
 				// eval each line using current scope
 				try
 				{
-					return EvalBody.Do(m_parsedLines, scope);
+					Value retval = EvalBody.Do(m_parsedLines, scope);
+					scope.Exit();
+					return retval;
 				}
 				catch (PopStackException pop)
 				{	// if we're supposed to pop back to here then return, else keep throwing up the stack

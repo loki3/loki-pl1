@@ -17,6 +17,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.popScope", new PopScope());
 			scope.SetValue("l3.callWithScope", new CallWithScope());
 			scope.SetValue("l3.evalWithScope", new EvalWithScope());
+			scope.SetValue("l3.onScopeExit", new OnScopeExit());
 		}
 
 		/// <summary>Get the current scope</summary>
@@ -106,6 +107,7 @@ namespace loki3.builtin
 				DelimiterNodeValue prev = (prevValue == ValueNil.Nil ? null : new DelimiterNodeValue(prevValue));
 				DelimiterNodeValue next = (nextValue == ValueNil.Nil ? null : new DelimiterNodeValue(nextValue));
 				Value value = function.Eval(prev, next, where, where, null, null);
+				where.Exit();
 				return value;
 			}
 		}
@@ -143,7 +145,70 @@ namespace loki3.builtin
 						where = new ScopeChain(mapOrScope.AsMap);
 				}
 
-				return Utility.EvalValue(value, where);
+				Value retval = Utility.EvalValue(value, where);
+				where.Exit();
+				return retval;
+			}
+		}
+
+		/// <summary>Specify a function to be called when the given scope exits</summary>
+		class OnScopeExit : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new OnScopeExit(); }
+
+			internal OnScopeExit()
+			{
+				SetDocString("Specify a function to be called when the given scope exits.");
+
+				Value value = PatternData.Single("value");
+				Map map = new Map();
+				map["line"] = PatternData.Single("line", ValueType.Raw, ValueNil.Nil);
+				map["functionKey"] = PatternData.Single("functionKey", ValueType.String, ValueNil.Nil);
+				map["map"] = PatternData.Single("map", ValueType.Map);
+				map["previous"] = PatternData.Single("previous", ValueNil.Nil);
+				map["next"] = PatternData.Single("next", ValueNil.Nil);
+				Init(new ValueMap(map));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+				ValueMap mapOrScope = map["map"] as ValueMap;
+				Value prevValue = map["previous"];
+				Value nextValue = map["next"];
+
+				Value value = null;
+				if (map["line"] is ValueRaw)
+				{
+					value = new EvalValue();
+					nextValue = map["line"];
+				}
+				else if (map["functionKey"] is ValueString)
+				{
+					string name = map["functionKey"].AsString;
+					value = scope.GetValue(new Token(name));
+				}
+				ValueFunction function = value as ValueFunction;
+
+				IScope where = mapOrScope.Scope;
+				if (where != null)
+					where.AddOnExit(function, prevValue, nextValue);
+				return ValueNil.Nil;
+			}
+
+			class EvalValue : ValueFunctionPre
+			{
+				internal override Value ValueCopy() { return new EvalValue(); }
+
+				internal EvalValue()
+				{
+					Init(PatternData.Single("value"));
+				}
+
+				internal override Value Eval(Value arg, IScope scope)
+				{
+					return Utility.EvalValue(arg, scope);
+				}
 			}
 		}
 	}

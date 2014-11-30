@@ -29,6 +29,12 @@ namespace loki3.core
 
 		/// <summary>Set the name of the child function called from this scope</summary>
 		string FunctionName { set; }
+
+		/// <summary>Called when the scope exits</summary>
+		void Exit();
+
+		/// <summary>Sets a function to call when the scope exits</summary>
+		void AddOnExit(ValueFunction function, Value prevValue, Value nextValue);
 	}
 
 	/// <summary>
@@ -144,6 +150,25 @@ namespace loki3.core
 			set { m_valueMap.WritableMetadata[keyCalledFunction] = new ValueString(value); }
 		}
 
+		public void Exit()
+		{
+			if (m_onExitFunction != null)
+			{
+				ValueFunction func = m_onExitFunction;
+				DelimiterNodeValue prev = (m_onExitPrevValue == ValueNil.Nil ? null : new DelimiterNodeValue(m_onExitPrevValue));
+				DelimiterNodeValue next = (m_onExitNextValue == ValueNil.Nil ? null : new DelimiterNodeValue(m_onExitNextValue));
+				m_onExitFunction = null;
+				func.Eval(prev, next, this, this, null, null);
+			}
+		}
+
+		public void AddOnExit(ValueFunction function, Value prevValue, Value nextValue)
+		{
+			m_onExitFunction = function;
+			m_onExitPrevValue = prevValue;
+			m_onExitNextValue = nextValue;
+		}
+
 		#endregion
 
 		/// <summary>Sets an optional function pointer for the scope</summary>
@@ -166,6 +191,10 @@ namespace loki3.core
 		private IScope m_parent;
 		private Map m_values;
 		private ValueMap m_valueMap;
+
+		private ValueFunction m_onExitFunction = null;
+		private Value m_onExitPrevValue = null;
+		private Value m_onExitNextValue = null;
 
 		Dictionary<string, ValueDelimiter> m_stringDelims = null;
 	}

@@ -51,6 +51,7 @@ namespace loki3.builtin
 				}
 
 				loki3.core.Repl.Do(scopeToUse, prompt);
+				scopeToUse.Exit();
 				return ValueNil.Nil;
 			}
 		}

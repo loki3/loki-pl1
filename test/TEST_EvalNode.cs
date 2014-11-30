@@ -92,6 +92,8 @@ namespace loki3.core.test
 			public Value AsValue { get { return null; } }
 			public Map AsMap { get { return null; } }
 			public string FunctionName { set { } }
+			public void Exit() {}
+			public void AddOnExit(ValueFunction function, Value prevValue, Value nextValue) {}
 		}
 
 		/// <summary>Returns previous and next values as ints</summary>

@@ -75,6 +75,7 @@ namespace loki3.builtin
 					// eval body
 					IScope local = new ScopeChain(parentScope);
 					result = EvalBody.Do(valueBody, local);
+					local.Exit();
 
 					// if per-loop code was passed, run it
 					if (change != null)
@@ -129,6 +130,7 @@ namespace loki3.builtin
 						IScope local = new ScopeChain(bodyScope);
 						assign.Assign(new ValueString(c.ToString()));
 						result = EvalBody.Do(valueBody, local);
+						local.Exit();
 					}
 				}
 				else if (collection is ValueArray)
@@ -139,6 +141,7 @@ namespace loki3.builtin
 						IScope local = new ScopeChain(bodyScope);
 						assign.Assign(v);
 						result = EvalBody.Do(valueBody, local);
+						local.Exit();
 					}
 				}
 				else if (collection is ValueMap)
@@ -153,6 +156,7 @@ namespace loki3.builtin
 						IScope local = new ScopeChain(bodyScope);
 						assign.Assign(new ValueArray(list));
 						result = EvalBody.Do(valueBody, local);
+						local.Exit();
 					}
 				}
 				else if (collection is ValueLine)
@@ -187,6 +191,7 @@ namespace loki3.builtin
 						Value value = EvalLines.DoOne(lines, local);
 						assign.Assign(value);
 						result = EvalBody.Do(valueBody, local);
+						local.Exit();
 					}
 				}
 				return result;
