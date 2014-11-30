@@ -247,43 +247,6 @@
 	1 assert=? copy a
 	:str assert=? copy :str
 
-:currentScope @unittest func0
-	// create accumulator outside the nested scope
-	:map v= { }
-	if true
-		// add some vars in this scope to examine
-		:a v= 1
-		:b v= 2
-		var :i forEach currentScope
-			// ignore vars that the forEach created
-			if ( ( i . 0 ) =? :a |? ( i . 0 ) =? :b )
-				:map = map \/ { ( i . 0 ) ( i . 1 ) }
-	{ :a 1 :b 2 } assert=? map
-
-:setScopeName @unittest noTestNeeded
-
-:closure @unittest func0
-	:value v= 1
-	
-	// not using a closure
-	// returns a function that adds onto 'value'
-	:nested v= func1 ->value
-		:add v= func1 ->plus
-			value + plus
-		add
-	// 2 gets lost, instead it'll add onto 1
-	:getValue v= nested 2
-	4 assert=? getValue 3
-	
-	// create a closure
-	:nested2 v= func1 ->value
-		:add v= func1 ->plus
-			value + plus
-		closure :add
-	// this time it'll add onto 2
-	:getValue v= nested2 2
-	5 assert=? getValue 3
-
 :i= @unittest func0
 	[ :a :b ] i= [ 4 5 ]
 	4 assert=? a
@@ -340,6 +303,47 @@
 :.(<	@unittest func0
 	:div v= .(< #1 / #2
 	3 assert=? 6 div 2
+
+
+//
+// scope
+
+:currentScope @unittest func0
+	// create accumulator outside the nested scope
+	:map v= { }
+	if true
+		// add some vars in this scope to examine
+		:a v= 1
+		:b v= 2
+		var :i forEach currentScope
+			// ignore vars that the forEach created
+			if ( ( i . 0 ) =? :a |? ( i . 0 ) =? :b )
+				:map = map \/ { ( i . 0 ) ( i . 1 ) }
+	{ :a 1 :b 2 } assert=? map
+
+:setScopeName @unittest noTestNeeded
+
+:closure @unittest func0
+	:value v= 1
+	
+	// not using a closure
+	// returns a function that adds onto 'value'
+	:nested v= func1 ->value
+		:add v= func1 ->plus
+			value + plus
+		add
+	// 2 gets lost, instead it'll add onto 1
+	:getValue v= nested 2
+	4 assert=? getValue 3
+	
+	// create a closure
+	:nested2 v= func1 ->value
+		:add v= func1 ->plus
+			value + plus
+		closure :add
+	// this time it'll add onto 2
+	:getValue v= nested2 2
+	5 assert=? getValue 3
 
 
 //

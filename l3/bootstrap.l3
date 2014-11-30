@@ -163,18 +163,6 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.copy .{ :value value
 :copy @cat :create @doc ." Make a copy of a value
 
-:currentScope v= func0
-	l3.getScope .{ :level 1
-:currentScope @cat :scope @doc ." Get a map representing the current scope
-
-:setScopeName v= func1 ->name
-	l3.getScope { :level 1 } @@ .[ :l3.scope.name name
-:setScopeName @cat :scope @doc ." Assign a name to the current scope.  Useful for popping back to this scope.
-
-:closure v= func1 ( ->key : :string )
-	l3.bindFunction .{ :functionKey key :map .( l3.getScope .{ :level 1
-:closure @cat :scope @doc ." Manually create a closure, binding the current scope to a function
-
 :i= v= .( ->pattern 1func1 ->value
 	l3.setValue { :key pattern :value value :level 1 :create? true :initOnly? true }
 :i= @order 5
@@ -268,6 +256,22 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :.(< v= .( l3.createDelimiter .{ :type :asRaw :function lambda2
 :.(<	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. .(< #1 + #2
+
+
+//
+// scope
+
+:currentScope v= func0
+	l3.getScope .{ :level 1
+:currentScope @cat :scope @doc ." Get a map representing the current scope
+
+:setScopeName v= func1 ->name
+	l3.getScope { :level 1 } @@ .[ :l3.scope.name name
+:setScopeName @cat :scope @doc ." Assign a name to the current scope.  Useful for popping back to this scope.
+
+:closure v= func1 ( ->key : :string )
+	l3.bindFunction .{ :functionKey key :map .( l3.getScope .{ :level 1
+:closure @cat :scope @doc ." Manually create a closure, binding the current scope to a function
 
 
 //
