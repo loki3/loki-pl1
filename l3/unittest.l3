@@ -150,3 +150,9 @@
 :runTests @cat :unittest @doc --"
 	Run every function in the scope as a test.
 	A test fails if an assert fails inside it.
+
+
+:dumpTest v= func1 .( ->function : :string
+	:test v= .( function .@ :l3.value.unittest
+	dumpBody :test
+:dumpTest @cat :unittest @doc ." Dump the body of the unittest attached to the given function
