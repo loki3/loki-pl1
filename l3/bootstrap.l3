@@ -66,7 +66,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { }
 
 // the rest of the line will be put into a function body as an array of values
-:b:: v= .( l3.createDelimiter .{ :type :asArray :function .( l3.createFunction .{ :post ->b :body .` .{ :body b
+:body= v= .( l3.createDelimiter .{ :type :asArray :function .( l3.createFunction .{ :post ->b :body .` .{ :body b
 
 
 //
@@ -207,7 +207,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :1func1	@cat :function  @doc ." Define a function that takes parameters before and after the function name
 :1func @cat :function @doc ." Define a function that takes parameters before the function name
 :func0	@cat :function  @doc ." Define a function that takes no parameters
-:b::	@cat :function	@doc ." Remainder of line is an array of values that are put in a body
+:body=	@cat :function	@doc ." Remainder of line is an array of values that are put in a body
 :.		@cat :access    @doc ." Access the member of a map by key or array by index
 :@		@cat :metadata  @doc ." Modify a value's metadata
 :.@		@cat :metadata  @doc ." Get a value's metadata

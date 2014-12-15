@@ -121,12 +121,12 @@
 		3.5
 	3.5 assert=? a
 
-:b:: @unittest func0
-	{ :body [ 1 ] }   assert=? b:: 1
-	{ :body [ 1 2 ] } assert=? b:: 1 2
+:body= @unittest func0
+	{ :body [ 1 ] }   assert=? body= 1
+	{ :body [ 1 2 ] } assert=? body= 1 2
 	
 	// use it for a function definition
-	:f v= func1 ->x b:: `x + 1`
+	:f v= func1 ->x body= `x + 1`
 	5 assert=? f 4
 
 
