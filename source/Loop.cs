@@ -118,8 +118,6 @@ namespace loki3.builtin
 						bodyScope = tempScope;
 				}
 
-				PatternAssign assign = new PatternAssign(map, bodyScope, true/*bCreate*/);
-
 				// todo: abstract iteration to avoid these ifs
 				Value result = ValueNil.Nil;
 				if (collection is ValueString)
@@ -128,6 +126,7 @@ namespace loki3.builtin
 					foreach (char c in s)
 					{
 						IScope local = new ScopeChain(bodyScope);
+						PatternAssign assign = new PatternAssign(map, local, true/*bCreate*/);
 						assign.Assign(new ValueString(c.ToString()));
 						result = EvalBody.Do(valueBody, local);
 						local.Exit();
@@ -139,6 +138,7 @@ namespace loki3.builtin
 					foreach (Value v in list)
 					{
 						IScope local = new ScopeChain(bodyScope);
+						PatternAssign assign = new PatternAssign(map, local, true/*bCreate*/);
 						assign.Assign(v);
 						result = EvalBody.Do(valueBody, local);
 						local.Exit();
@@ -154,6 +154,7 @@ namespace loki3.builtin
 						list.Add(dict[key]);
 
 						IScope local = new ScopeChain(bodyScope);
+						PatternAssign assign = new PatternAssign(map, local, true/*bCreate*/);
 						assign.Assign(new ValueArray(list));
 						result = EvalBody.Do(valueBody, local);
 						local.Exit();
@@ -189,6 +190,7 @@ namespace loki3.builtin
 					{
 						IScope local = new ScopeChain(bodyScope);
 						Value value = EvalLines.DoOne(lines, local);
+						PatternAssign assign = new PatternAssign(map, local, true/*bCreate*/);
 						assign.Assign(value);
 						result = EvalBody.Do(valueBody, local);
 						local.Exit();

@@ -93,6 +93,9 @@
 :unitsType.distance	@unittest noTestNeeded @doc ."
 :unitsType.weight	@unittest noTestNeeded @doc ."
 
+:defineUnits @unittest noTestNeeded @doc ."
+
+
 :mm @unittest func0
 	5.5 assert=? 5.5 mm =>mm
 
@@ -110,7 +113,7 @@
 	2000 assert=? 2 m =>mm
 
 :=>m  @unittest func0
-	0.6096 assert=? 2 ft =>m
+	0.0254 assert=? 1 in =>m
 
 :=>in @unittest func0
 	2 assert=? 50.8 mm =>in
