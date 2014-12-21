@@ -93,6 +93,9 @@ namespace loki3.core
 						}
 						value = new ValueArray(values);
 						break;
+					case DelimiterType.AsEvaledArray:
+						value = EvalList.DoEvaledArray(list.Nodes, listScope);
+						break;
 					case DelimiterType.AsRaw:
 						value = new ValueRaw(list, listScope);
 						break;

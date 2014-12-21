@@ -216,6 +216,20 @@ namespace loki3.core
 				return new ValueNil();
 			}
 
+			/// <summary>
+			/// Collapse all the evaluated/consolidated values into a list
+			/// </summary>
+			internal List<Value> GetValues()
+			{
+				List<Value> values = new List<Value>();
+				foreach (NodeEval node in m_nodes)
+				{
+					if (node.HasValue || node.HasFunction)
+						values.Add(node.Value);
+				}
+				return values;
+			}
+
 			#region INodeRequestor Members
 
 			public DelimiterNode GetPrevious()
@@ -334,6 +348,18 @@ namespace loki3.core
 		internal static Value Do(List<DelimiterNode> nodes, IScope scope)
 		{
 			return Do(nodes, scope, null);
+		}
+
+		/// <summary>
+		/// Evaluate/consolidate everything, then turn the results into an array
+		/// </summary>
+		internal static Value DoEvaledArray(List<DelimiterNode> nodes, IScope scope)
+		{
+			ListEval eval = new ListEval(nodes, scope);
+			while (eval.EvalNext(null))
+				;
+			List<Value> values = eval.GetValues();
+			return new ValueArray(values);
 		}
 	}
 }

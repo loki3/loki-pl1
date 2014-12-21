@@ -216,6 +216,16 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// additional delimiters
+
+:[[ v= .( l3.createDelimiter .{ :end :]] :type :asEvaledArray
+:[[ @cat :delimiter @doc ." Delimiter around values that are evaluated and turned in an array
+
+:.[[ v= .( l3.createDelimiter .{ :type :asEvaledArray
+:.[[ @cat :delimiter @doc ." Remainder of line is evaluated into values in an array
+
+
+//
 // more function definitions
 
 

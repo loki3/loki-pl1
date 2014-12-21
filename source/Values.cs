@@ -390,6 +390,8 @@ namespace loki3.builtin
 						type = DelimiterType.AsString;
 					else if (typestr == "asComment")
 						type = DelimiterType.AsComment;
+					else if (typestr == "asEvaledArray")
+						type = DelimiterType.AsEvaledArray;
 					else if (typestr == "asRaw")
 						type = DelimiterType.AsRaw;
 				}

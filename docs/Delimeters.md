@@ -9,6 +9,7 @@ Creating new delimiters
 The core function l3.createDelimiter accepts the following options for how it interprets the contents of delimiters:
 
 * asArray:  Turn the contents into an array
+* asEvaledArray:  Fully evaluate the contents and turn the results into an array
 * asString:  Turn the contents into a string
 * asComment:  Ignore the contents
 * asRaw:  Treat the contents as raw code that could be evaluated later
@@ -51,11 +52,24 @@ There are quite a few delimiters defined in bootstrap.l3.  The most basic is (),
 { :key1 3 :key2 :something }
 ```
 
+An alternate way to create an array is to use [[ ]].  Where [] will treat everything inside it separated by whitespace as separate elements, [[ ]] will try to fully evaluate everything, with the resulting list of values put into an array.  This is more easily understood through an example:
+
+```
+// evals to an array with 6 elements: [ 1 <the + function> 2 3 <the + function> 4 ]
+[ 1 + 2 3 + 4 ]
+
+// evals to an array with 2 elements: [ 3 7 ]
+[[ 1 + 2 3 + 4 ]]
+// or, since trailing commas are ignored, the same thing could be written like this
+[[ 1 + 2, 3 + 4 ]]
+```
+
+
 " or ' can be used to specify a string, making it easier to specify a string without having to escape " or '.  --" is used for multi-line chunks of text where subsequent indented lines are considered part of the same string.  (--" is a function that takes a body.)  This is often used when attaching documentation to a function.
 
 ```
-" this is a string "
-' and so is this '
+"this is a string"
+'and so is this'
 ." and this, too
 
 :a v= (| ## + 2 |)
