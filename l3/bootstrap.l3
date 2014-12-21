@@ -23,27 +23,27 @@ l3.setValue { :key :var :value ( l3.createFunction { :post ->name :order 2 :body
 l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :order 6 :body [ ` l3.setValue { :key key :value value :level 1 :create? false } ` ] } ) }
 
 // remainder of line is a value
-:.( v= ( l3.createDelimiter { :type :asValue } )
+:.( v= l3.createDelimiter { :type :asValue }
 
 // remainder of line is an array
-:.[ v= .( l3.createDelimiter { :type :asArray }
+:.[ v= l3.createDelimiter { :type :asArray }
 
 // remainder of line is a map
-:.{ v= .( l3.createDelimiter { :type :asArray :function l3.createMap }
+:.{ v= l3.createDelimiter { :type :asArray :function l3.createMap }
 
 // remainder of line is raw
-:.` v= .( l3.createDelimiter .{ :type :asRaw
+:.` v= l3.createDelimiter .{ :type :asRaw
 
 // range comment delimiter
-:/* v= .( l3.createDelimiter .{ :end :*/ :type :asComment
+:/* v= l3.createDelimiter .{ :end :*/ :type :asComment
 
 // string delimiter
-:" v= .( l3.createDelimiter .{ :end :" :type :asString
-:' v= .( l3.createDelimiter .{ :end :' :type :asString
+:" v= l3.createDelimiter .{ :end :" :type :asString
+:' v= l3.createDelimiter .{ :end :' :type :asString
 
 // remainder of line is a string
-:." v= .( l3.createDelimiter .{ :type :asString
-:.' v= .( l3.createDelimiter .{ :type :asString
+:." v= l3.createDelimiter .{ :type :asString
+:.' v= l3.createDelimiter .{ :type :asString
 
 
 //
@@ -66,7 +66,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { }
 
 // the rest of the line will be put into a function body as an array of values
-:body= v= .( l3.createDelimiter .{ :type :asArray :function .( l3.createFunction .{ :post ->b :body .` .{ :body b
+:body= v= l3.createDelimiter .{ :type :asArray :function .( l3.createFunction .{ :post ->b :body .` .{ :body b
 
 
 //
@@ -178,7 +178,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :///func @cat :delimiter @doc ." Everything on subsequent indented lines is a comment
 :///func @body? true
 
-:/// v= .( l3.createDelimiter .{ :type :asComment :function ///func
+:/// v= l3.createDelimiter .{ :type :asComment :function ///func
 :/// @cat :delimiter @doc ." Everything on this and subsequent indented lines is a comment
 
 
@@ -225,10 +225,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :post pattern :body ( [ line1 ] + more ) }
 :lambda	@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. lambda [ :x ` 2 + x ` ]
 
-:(( v= .( l3.createDelimiter .{ :end :)) :type :asArray :function lambda
+:(( v= l3.createDelimiter .{ :end :)) :type :asArray :function lambda
 :((		@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
 
-:.(( v= .( l3.createDelimiter .{ :type :asArray :function lambda
+:.(( v= l3.createDelimiter .{ :type :asArray :function lambda
 :.((	@cat :function @doc ." Remainder of line is a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
 
 
@@ -238,10 +238,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :post ->## :body [ line ] }
 :lambda1	@cat :function @doc ." Creates a single line prefix function, assuming parameter is called ##, e.g. lambda1 ` 2 + ## `
 
-:(| v= .( l3.createDelimiter .{ :end :|) :type :asRaw :function lambda1
+:(| v= l3.createDelimiter .{ :end :|) :type :asRaw :function lambda1
 :(|		@cat :function @doc ." Create a single line prefix function, assuming parameter is called ##, e.g. (| 2 + ## |)
 
-:.(| v= .( l3.createDelimiter .{ :type :asRaw :function lambda1
+:.(| v= l3.createDelimiter .{ :type :asRaw :function lambda1
 :.(|	@cat :function @doc ." Create a single line prefix function, assuming parameter is called ##, e.g. .(| 2 + ##
 
 
@@ -251,10 +251,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.createFunction { :pre ->#1 :post ->#2 :body [ line ] }
 :lambda2	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. lambda2 ` #1 + #2 `
 
-:(< v= .( l3.createDelimiter .{ :end :>) :type :asRaw :function lambda2
+:(< v= l3.createDelimiter .{ :end :>) :type :asRaw :function lambda2
 :(<		@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. (< #1 + #2 >)
 
-:.(< v= .( l3.createDelimiter .{ :type :asRaw :function lambda2
+:.(< v= l3.createDelimiter .{ :type :asRaw :function lambda2
 :.(<	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. .(< #1 + #2
 
 
@@ -682,10 +682,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	Use the indented lines following this function as a single string.
 	Useful for long strings such as @doc.
 
-:-"[ v= .( l3.createDelimiter .{ :end :] :type :asArray :function (( :a ` a fold (< $ #1 + $ #2 >) ` ))
+:-"[ v= l3.createDelimiter .{ :end :] :type :asArray :function (( :a ` a fold (< $ #1 + $ #2 >) ` ))
 :-"[ @cat :string @doc ." Each item in array is converted to a string and concatenated together
 
-:.-"[ v= .( l3.createDelimiter .{ :type :asArray :function (( :a ` a fold (< $ #1 + $ #2 >) ` ))
+:.-"[ v= l3.createDelimiter .{ :type :asArray :function (( :a ` a fold (< $ #1 + $ #2 >) ` ))
 :.-"[ @cat :string @doc ." Each item in array is converted to a string and concatenated together
 
 :+with v= .( ( ->arr : :array ) 1func1 ( ->separator : :string )
@@ -826,11 +826,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // modules
 
-:import v= .( func1 ( ->file : :string )
+:import v= func1 ( ->file : :string )
 	l3.loadModule { :file file :scope "parent" }
 :import @cat :module @doc ." Run the code from the given file.  Don't run if file has already been imported.
 
-:reimport v= .( func1 ( ->file : :string )
+:reimport v= func1 ( ->file : :string )
 	l3.loadModule { :file file :scope "parent" :force? true }
 :reimport @cat :module @doc ." Run the code from the given file.  Reload even if module has been imported before.
 
