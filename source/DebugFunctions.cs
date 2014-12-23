@@ -31,6 +31,8 @@ namespace loki3.builtin
 				Map map = new Map();
 				map["map"] = PatternData.Single("map", ValueType.Map, ValueNil.Nil);
 				map["prompt"] = PatternData.Single("prompt", ValueType.String, new ValueString("loki3>"));
+				map["fileToLoad"] = PatternData.Single("fileToLoad", ValueType.String, ValueNil.Nil);
+				map["registerBuiltins?"] = PatternData.Single("registerBuiltins?", ValueType.Bool, ValueBool.False);
 				Init(new ValueMap(map));
 			}
 
@@ -39,6 +41,7 @@ namespace loki3.builtin
 				Map map = arg.AsMap;
 				Value obj = map["map"];
 				string prompt = map["prompt"].AsString;
+				bool registerBuiltins = map["registerBuiltins?"].AsBool;
 
 				IScope scopeToUse = scope;
 				if (obj != ValueNil.Nil)
@@ -48,6 +51,15 @@ namespace loki3.builtin
 						scopeToUse = vMap.Scope;
 					else
 						scopeToUse = new ScopeChain(vMap.AsMap);
+				}
+
+				if (registerBuiltins)
+					AllBuiltins.RegisterAll(scopeToUse);
+
+				if (map["fileToLoad"].Type == ValueType.String)
+				{
+					string file = map["fileToLoad"].AsString;
+					EvalFile.Do(file, scopeToUse);
 				}
 
 				loki3.core.Repl.Do(scopeToUse, prompt);

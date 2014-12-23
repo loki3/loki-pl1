@@ -304,6 +304,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.repl .{ :prompt :debug> :map .( l3.getScope .{ :level 1
 :repl @doc ." Starts a read-eval-print loop at the current scope
 
+:fresh v= func1 .( ->file : :string
+	l3.repl .{ :prompt :fresh> :map { } :fileToLoad file :registerBuiltins? true
+:fresh @doc ." Start a read-eval-print loop with a scope that only consists of the built-in functions, then run the specified file
+
 
 //
 // logic
