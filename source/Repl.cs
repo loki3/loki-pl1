@@ -44,14 +44,21 @@ namespace loki3.core
 						if (error.Errors["l3.error.scope"].AsMap == scope.AsMap)
 							error.Errors.Raw.Remove("l3.error.scope");
 
-					scope.SetValue("lastError", new ValueMap(error.Errors));
-					Value v = loki3.builtin.test.TestSupport.ToValue("prettify lastError", scope);
-					Console.WriteLine("LOKI3 ERROR:\n" + v.AsString);
-					if (error.Errors.ContainsKey(Loki3Exception.keyScope))
+					if (scope.Exists("prettify") != null)
 					{
-						scope.SetValue("lastScope", error.Errors[Loki3Exception.keyScope]);
-						v = loki3.builtin.test.TestSupport.ToValue("dumpStack lastScope", scope);
-						Console.WriteLine("STACK:\n" + v.AsString);
+						scope.SetValue("lastError", new ValueMap(error.Errors));
+						Value v = loki3.builtin.test.TestSupport.ToValue("prettify lastError", scope);
+						Console.WriteLine("LOKI3 ERROR:\n" + v.AsString);
+						if (error.Errors.ContainsKey(Loki3Exception.keyScope))
+						{
+							scope.SetValue("lastScope", error.Errors[Loki3Exception.keyScope]);
+							v = loki3.builtin.test.TestSupport.ToValue("dumpStack lastScope", scope);
+							Console.WriteLine("STACK:\n" + v.AsString);
+						}
+					}
+					else
+					{
+						Console.WriteLine(error.ToString());
 					}
 				}
 				catch (Exception error)
