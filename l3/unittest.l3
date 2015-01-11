@@ -9,16 +9,20 @@
 //		doSomething
 //
 
-:unittest v= func1 [ ->targetFile ->testFile ]
+:unittest f= func1 [ ->targetFile ->testFile ]
 	// import files into local scope
 	import targetFile
 	import testFile
-	// stub out doc & unittest so local vars don't affect results
-	:targetFile @unittest true @doc ."
-	:testFile @unittest true @doc ."
+	// stub out doc & cat so local vars don't affect results
+	:targetFile @cat :unittest @doc ."
+	:testFile @cat :unittest @doc ."
 	// run tests on local scope
 	unittestScope currentScope
 :unittest @cat :unittest @doc ." For a given implementation file, run all the tests defined in a test file.
+
+// use a file that has its own unittests defined inside it
+:unittest f= func1 ->file
+	unittest .[ file file
 
 :runTestFile v= func1 ->testFile
 	import testFile
@@ -49,8 +53,9 @@
 
 
 :checkDocs v= func1 ->scope
-	var :failures = scope filterMap (< #1 .@doc =? nil >) mapToArray (< #1 >)
-	[ ( (failures .size) =? 0 ) (scope .size) failures ]
+	var :toCheck = scope filterMap (< #1 .@cat !=? :unittest >)
+	var :failures = toCheck filterMap (< #1 .@doc =? nil >) mapToArray (< #1 >)
+	[ ( (failures .size) =? 0 ) (toCheck .size) failures ]
 :checkDocs @cat :unittest @doc --"
 	Check if everything in scope has doc metadata.
 	Returns [ success? passedCount arrayOfFailures ]
@@ -112,18 +117,19 @@
 	( e . :actual )     if!nil .` print .-"[ '...actual: '   ( e . :actual )
 	( e . :expression ) if!nil .` print .-"[ '.expression: ' ( e . :expression )
 	( e . :message )    if!nil .` print .-"[ '....message: ' ( e . :message )
-:dumpAssert @doc ." Print details about an assert
+:dumpAssert @cat :unittest @doc ." Print details about an assert
 
 :runUnittests v= func1 ->scope
 	var :failures = [ ]
 	var :passed = 0
 	[ :testName _ ] forEach scope
 		try
-			// fail if no test
-			if testName .@unittest =? nil
-				failures += testName
-				print .-"[ "missing unittest:" ' ' testName
-			:passed ++
+			if testName .@cat !=? :unittest
+				// fail if no test
+				if testName .@unittest =? nil
+					failures += testName
+					print .-"[ "missing unittest:" ' ' testName
+				:passed ++
 		catch :e
 			failures += testName
 			dumpAssert [ testName e ]
