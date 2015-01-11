@@ -143,6 +143,8 @@ namespace loki3.builtin.test
 			{
 				Value value = TestSupport.ToValue("l3.floor 2.25", scope);
 				Assert.AreEqual(2, value.AsInt);
+				Value value2 = TestSupport.ToValue("l3.floor 1234567890123.3", scope);
+				Assert.AreEqual(1234567890123, value2.AsFloat);
 			}
 		}
 

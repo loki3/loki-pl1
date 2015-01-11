@@ -357,8 +357,10 @@ namespace loki3.builtin
 			{
 				if (arg.Type == ValueType.Int)
 					return arg;
-				double a = arg.AsFloat;
-				return new ValueInt((int)System.Math.Floor(a));
+				double result = System.Math.Floor(arg.AsFloat);
+				if (int.MinValue <= result && result <= int.MaxValue)
+					return new ValueInt((int)result);
+				return new ValueFloat(result);
 			}
 		}
 
@@ -377,8 +379,10 @@ namespace loki3.builtin
 			{
 				if (arg.Type == ValueType.Int)
 					return arg;
-				double a = arg.AsFloat;
-				return new ValueInt((int)System.Math.Ceiling(a));
+				double result = System.Math.Ceiling(arg.AsFloat);
+				if (int.MinValue <= result && result <= int.MaxValue)
+					return new ValueInt((int)result);
+				return new ValueFloat(result);
 			}
 		}
 	}
