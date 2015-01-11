@@ -23,6 +23,8 @@ namespace loki3.builtin
 			scope.SetValue("l3.sqrt", new SquareRoot());
 			scope.SetValue("l3.lt", new LessThan());
 			scope.SetValue("l3.gt", new GreaterThan());
+			scope.SetValue("l3.floor", new Floor());
+			scope.SetValue("l3.ceiling", new Ceiling());
 		}
 
 
@@ -337,6 +339,46 @@ namespace loki3.builtin
 
 				// do math as floats
 				return new ValueBool(v1.AsForcedFloat > v2.AsForcedFloat);
+			}
+		}
+
+		/// <summary>floor(number)</summary>
+		class Floor : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new Floor(); }
+
+			internal Floor()
+			{
+				SetDocString("Compute the floor of a double.");
+				Init(PatternData.Single("a", ValueType.Number));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				if (arg.Type == ValueType.Int)
+					return arg;
+				double a = arg.AsFloat;
+				return new ValueInt((int)System.Math.Floor(a));
+			}
+		}
+
+		/// <summary>ceiling(number)</summary>
+		class Ceiling : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new Ceiling(); }
+
+			internal Ceiling()
+			{
+				SetDocString("Compute the ceiling of a double.");
+				Init(PatternData.Single("a", ValueType.Number));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				if (arg.Type == ValueType.Int)
+					return arg;
+				double a = arg.AsFloat;
+				return new ValueInt((int)System.Math.Ceiling(a));
 			}
 		}
 	}

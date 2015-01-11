@@ -135,5 +135,25 @@ namespace loki3.builtin.test
 				Assert.AreEqual(4, value.AsFloat);
 			}
 		}
+
+		[Test]
+		public void TestFloor()
+		{
+			IScope scope = CreateMathScope();
+			{
+				Value value = TestSupport.ToValue("l3.floor 2.25", scope);
+				Assert.AreEqual(2, value.AsInt);
+			}
+		}
+
+		[Test]
+		public void TestCeling()
+		{
+			IScope scope = CreateMathScope();
+			{
+				Value value = TestSupport.ToValue("l3.ceiling 2.25", scope);
+				Assert.AreEqual(3, value.AsInt);
+			}
+		}
 	}
 }
