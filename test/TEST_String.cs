@@ -67,5 +67,19 @@ namespace loki3.builtin.test
 				Assert.AreEqual("1     23\n--------\n1234  4\n", value.AsString);
 			}
 		}
+
+		[Test]
+		public void TestStringToArray()
+		{
+			IScope scope = CreateStringScope();
+			{
+				Value value = TestSupport.ToValue("l3.stringToArray :abc", scope);
+				List<Value> array = value.AsArray;
+				Assert.AreEqual(3, array.Count);
+				Assert.AreEqual("a", array[0].AsString);
+				Assert.AreEqual("b", array[1].AsString);
+				Assert.AreEqual("c", array[2].AsString);
+			}
+		}
 	}
 }

@@ -19,6 +19,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.stringConcat", new StringConcat());
 			scope.SetValue("l3.formatTable", new FormatTable());
 			scope.SetValue("l3.formatTable2", new FormatTable2());
+			scope.SetValue("l3.stringToArray", new StringToArray());
 		}
 
 
@@ -272,6 +273,27 @@ namespace loki3.builtin
 				table += "\n";
 
 				return new ValueString(table);
+			}
+		}
+
+		/// <summary>:s -> convert a string to an array of single character strings</summary>
+		class StringToArray : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new StringToArray(); }
+
+			internal StringToArray()
+			{
+				SetDocString("Convert a string to an array of single character strings.");
+				Init(PatternData.Single("a", ValueType.String));
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				string s = arg.AsString;
+				List<Value> newarray = new List<Value>(s.Length);
+				foreach (char c in s)
+					newarray.Add(new ValueString(c.ToString()));
+				return new ValueArray(newarray);
 			}
 		}
 	}

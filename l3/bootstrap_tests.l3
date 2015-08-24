@@ -835,6 +835,9 @@
 	:5				assert=? :5 =>str
 	"[ 1 2 3 ]"		assert=? [ 1 2 3 ] =>str
 
+:=>array @unittest func0
+	[ :a :b :c ] assert=? :abc =>array
+
 :$ @unittest func0
 	:5 assert=? $ 5
 

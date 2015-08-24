@@ -667,6 +667,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :=>str @order 2
 :=>str @cat :string @doc ." Convert a value to a string
 
+:=>array v= .( ( ->val : :string ) 1func
+	l3.stringToArray ( val )
+:=>array @order 2
+:=>array @cat :string @doc ." Convert a string to an array of single character strings
+
 :$ v= func1 ->val
 	l3.toString ( val )
 :$ @order 2 @cat :string @doc ." Converts the next value to a string.
