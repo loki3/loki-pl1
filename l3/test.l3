@@ -2,11 +2,11 @@
 var :fizzBuzz1 = [ ]
 var :i forEach ( 1 .. 20 )
 	if ( i % 15 =? 0 )
-		fizzBuzz1 += ." fizzbuzz
+		fizzBuzz1 += "fizzbuzz"
 	elsif .( i % 3 =? 0
-		fizzBuzz1 += ." fizz
+		fizzBuzz1 += "fizz"
 	elsif .( i % 5 =? 0
-		fizzBuzz1 += ." buzz
+		fizzBuzz1 += "buzz"
 	else
 		fizzBuzz1 += i
 :fizzBuzz1 @doc ." fizzbuzz using a simple loop
@@ -54,7 +54,7 @@ var :fizzbuzz4 v= ( 1 .. 20 ) apply (| [ (## % 15 =? 0) (## % 3 =? 0) (## % 5 =?
 
 :* f= ( { :x ->x1 :y ->y1 } 1func1 { :x ->x2 :y ->y2 } )
 	{ :x ( x1 * x2 - y1 * y2 ) :y ( x1 * y2 + x2 * y1 ) }
-:* @doc ." Multiples together two complex numbers of the form { :x # :y # }
+:* @doc ." Multiplies together two complex numbers of the form { :x # :y # }
 
 
 //
@@ -71,11 +71,11 @@ var :fizzbuzz4 v= ( 1 .. 20 ) apply (| [ (## % 15 =? 0) (## % 3 =? 0) (## % 5 =?
 //
 // a mechanism for defining a function recursively but having it execute iteratively
 
-:repeat v= func1 [ ->a ->f ]
+:recurse v= func1 [ ->a ->f ]
 	while ` nil !=? f `
 		[ :a :f ] = f [ a ]
 	a
-:repeat @doc --"
+:recurse @doc --"
 	Turns a recursive function into an interative loop.
 	The passed function must take an iteration value and a result value
 	and return a new result and a partial function bound to the next
@@ -84,8 +84,8 @@ var :fizzbuzz4 v= ( 1 .. 20 ) apply (| [ (## % 15 =? 0) (## % 3 =? 0) (## % 5 =?
 
 :! v= .( ->n 1func
 	:fact v= func1 [ ->a ->b ]
-		( a >? 0 ) ? .[ [ ( a * b ) ( fact [ ( a - 1 ) ] ) ]  [ b nil ]
-	repeat [ 1 ( fact [ n ] ) ]
+		( a >? 0 ) ? .[ [ (a * b) ( fact [ (a - 1) ] ) ]  [b nil]
+	recurse [ 1 ( fact [ n ] ) ]
 :! @order 2
 :! @doc ." Factorial operator defined recursively but executed iteratively
 

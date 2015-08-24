@@ -5,9 +5,9 @@ Loki3 is an experimental programming language.  Here are some of its key feature
 
 * **Simple parse/eval rules**, with the language syntax defined entirely in the language itself
 * **Easy to build DSLs**, including prefix, postfix, and infix functions, custom delimiters, and easy declarative programming
-* **Pattern matching** used for assignment, multiple return values, function parameters with overloading, catching exceptions, etc.
+* **Pattern matching** used for assignment, multiple return values, function parameters with overloading (providing multiple dispatch), catching exceptions, etc.
 * **Metadata** can be attached to any value, useful for instructing the runtime, introspection, and extending the language
-* Support for **higher order functions**, partial functions, and functional paradigms
+* Support for **higher order functions**, partial functions, and functional style programming
 * **Dynamic and static typing**, dynamic by default with explicit typing when useful
 
 
