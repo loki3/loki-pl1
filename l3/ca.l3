@@ -19,7 +19,6 @@
 :{{ v= l3.createDelimiter .{ :end :}} :type :asArray :function (( [ ->board ->x ->y ] ` ( ( board . x ) . y ) ` ))
 :{{ @doc ." {{ board x y }} will return true if the cell is on
 
-
 :countNeighbors v= func1 [ ->board ->x ->y ]
 	:maxX v= board .size
 	:maxY v= (board . 0) .size
@@ -29,14 +28,7 @@
 		if ( (x' >=? 0) &? (y' >=? 0) &? (x' <? maxX) &? (y' <? maxY) )
 			if {{ board x' y' }}
 				:total ++
-	checkState [ -1 -1 ]
-	checkState [ -1  0 ]
-	checkState [ -1  1 ]
-	checkState [  0 -1 ]
-	checkState [  0  1 ]
-	checkState [  1 -1 ]
-	checkState [  1  0 ]
-	checkState [  1  1 ]
+	[ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ] apply checkState
 	total
 :countNeighbors @doc ." Count the 8 neighbors of the given cell
 
