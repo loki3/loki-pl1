@@ -8,16 +8,16 @@
 		list += (str =>array) apply (| ## =? "*" |)
 	list
 :lifeBoard @body? true
-:lifeBoard @doc ." Create a 2D board of on/off states
+:lifeBoard @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
 
 :=>pretty v= .( (->board : :array) 1func
 	:doLine v= func1 ->s
 		( s apply (| ## ? [ "*" "." ] |) foldLeft (< #1 + #2 >) ) + \n
 	board apply (doLine) foldLeft (+)
-:=>pretty @doc ." Turn a board created by :lifeBoard into a pretty-printed string
+:=>pretty @cat :ca @doc ." Turn a board created by :lifeBoard into a pretty-printed string
 
 :{{ v= l3.createDelimiter .{ :end :}} :type :asArray :function (( [ ->board ->x ->y ] ` ( ( board . x ) . y ) ` ))
-:{{ @doc ." {{ board x y }} will return true if the cell is on
+:{{ @cat :ca @doc ." {{ board x y }} will return true if the cell is on
 
 :countNeighbors v= func1 [ ->board ->x ->y ]
 	:maxX v= board .size
@@ -30,25 +30,25 @@
 				:total ++
 	[ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ] apply checkState
 	total
-:countNeighbors @doc ." Count the 8 neighbors of the given cell
+:countNeighbors @cat :ca @doc ." Count the 8 neighbors of the given cell
 
 :getNextState v= func1 [ ->board ->x ->y ]
 	:count v= countNeighbors [ board x y ]
 	{{ board x y }} ? [ ( (count =? 3) |? (count =? 2) ) (count =? 3) ]
-:getNextState @doc ." Return true/false based on whether cell should be on in the next generation
+:getNextState @cat :ca @doc ." Return true/false based on whether cell should be on in the next generation
 
 :getNextBoard v= func1 ->board
 	:columns v= ( 0 .. ( (board . 0) .size - 1 ) )
 	:computeRow v= func1 ->y
 		columns apply (| getNextState [ board y ] [ ## ] |)
 	( 0 .. ( board .size - 1 ) ) apply computeRow
-:getNextBoard @doc ." Compute the next state of an entire board
+:getNextBoard @cat :ca @doc ." Compute the next state of an entire board
 
 :ticks f= .( ->board 1func1 0
 	board
 :ticks f= .( ->board 1func1 ->n
 	(getNextBoard board) ticks (n - 1)
-:ticks @doc ." Compute the nth generation of a given board
+:ticks @cat :ca @doc ." Compute the nth generation of a given board
 
 :glider v= lifeBoard
 	.....
@@ -57,4 +57,4 @@
 	.***.
 	.....
 	.....
-
+:glider @cat :ca @doc ." A 'glider' life pattern

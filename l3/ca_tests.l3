@@ -68,5 +68,5 @@
 	b' assert=? ( b ticks 1 )
 	b  assert=? ( b ticks 2 )
 
-:glider @doc "" @unittest noTestNeeded
+:glider @unittest noTestNeeded
 
