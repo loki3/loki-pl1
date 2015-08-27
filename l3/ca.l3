@@ -45,10 +45,24 @@
 	{{ board x y }} ? [ ( (count =? 3) |? (count =? 2) ) (count =? 3) ]
 :getNextState @doc ." Return true/false based on whether cell should be on in the next generation
 
+:getNextBoard v= func1 ->board
+	:columns v= ( 0 .. ( (board . 0) .size - 1 ) )
+	:computeRow v= func1 ->y
+		columns apply (| getNextState [ board y ] [ ## ] |)
+	( 0 .. ( board .size - 1 ) ) apply computeRow
+:getNextBoard @doc ." Compute the next state of an entire board
+
+:ticks f= .( ->board 1func1 0
+	board
+:ticks f= .( ->board 1func1 ->n
+	(getNextBoard board) ticks (n - 1)
+:ticks @doc ." Compute the nth generation of a given board
+
 :glider v= lifeBoard
 	.....
 	..*..
 	...*.
 	.***.
+	.....
 	.....
 
