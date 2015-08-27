@@ -115,6 +115,8 @@
     <None Include="docs\Tests.md" />
     <None Include="l3\bootstrap.l3" />
     <None Include="l3\bootstrap_tests.l3" />
+    <None Include="l3\ca.l3" />
+    <None Include="l3\ca_tests.l3" />
     <None Include="l3\help.l3" />
     <None Include="l3\help_tests.l3" />
     <None Include="l3\module.l3" />
