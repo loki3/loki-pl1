@@ -520,6 +520,29 @@
 
 
 //
+// raw line
+
+:applyAs @unittest func0
+	:func v= func0
+		[body :"] applyAs (| ## + :! |)
+	:func @body? true
+	:useFunc v= func
+		abc
+		def
+	[ :abc! :def! ] assert=? useFunc
+		
+
+:foldAs @unittest func0
+	:func v= func0
+		[body :"] foldAs (< #1 + #2 >)
+	:func @body? true
+	:useFunc v= func
+		abc
+		def
+	:abcdef assert=? useFunc
+
+
+//
 // conditional
 
 :? @unittest func0

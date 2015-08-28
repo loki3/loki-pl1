@@ -440,9 +440,25 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // raw line
 
+:applyAs v= .( [ (->lines : :rawLine) (->delim : :string) ] 1func1 ( ->function : :function )
+	:a v= [ ]
+	:str forEachDelim [ lines delim ]
+		a += function str
+:applyAs @doc ." Apply function to every element of a body, where each line is interpreted using the given delimiter
+
 :foldLeft f= .( ( ->lines : :rawLine ) 1func1 ( ->function : :function )
 	:line forEach body
 		function line
+
+:foldAs v= .( [ (->lines : :rawLine) (->delim : :string) ] 1func1 ( ->function : :function )
+	:last v= nil
+	:str forEachDelim [ lines delim ]
+		if last =? nil
+			:last = str
+		else
+			:last = last function str
+	last
+:foldAs @doc ." Does a fold on a body where each line is interpreted using the given delimiter
 
 
 //
