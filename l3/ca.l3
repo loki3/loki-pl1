@@ -3,12 +3,8 @@
 //
 
 :lifeBoard v= func0
-	:list v= [ ]
-	:str forEachDelim [ body :" ]
-		list += (str =>array) apply (| ## =? "*" |)
-	list
-:lifeBoard @body? true
-:lifeBoard @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
+	[body :"] applyAs (| (## =>array) apply (| ## =? "*" |) |)
+:lifeBoard @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
 
 :=>pretty v= .( (->board : :array) 1func
 	:doLine v= func1 ->s
