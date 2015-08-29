@@ -16,14 +16,11 @@
 :{{ @cat :ca @doc ." {{ board x y }} will return true if the cell is on
 
 :countNeighbors v= func1 [ ->board ->x ->y ]
-	:maxX v= board .size
-	:maxY v= (board . 0) .size
 	:total v= 0
 	:checkState v= func1 [ ->i ->j ]
 		[ :x' :y' ] v= [ (x + i) (y + j) ]
-		if ( (x' >=? 0) &? (y' >=? 0) &? (x' <? maxX) &? (y' <? maxY) )
-			if {{ board x' y' }}
-				:total ++
+		if {{ board x' y' }}
+			:total ++
 	[ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ] apply checkState
 	total
 :countNeighbors @cat :ca @doc ." Count the 8 neighbors of the given cell
@@ -33,11 +30,19 @@
 	{{ board x y }} ? [ ( (count =? 3) |? (count =? 2) ) (count =? 3) ]
 :getNextState @cat :ca @doc ." Return true/false based on whether cell should be on in the next generation
 
+:growBoard v= func1 ->board
+	:fullRow v= ( 1 .. ( (board . 0) .size + 2 ) ) apply (| false |)
+	:wider v= board apply (| [false] + ## + [false] |)
+	[fullRow] + wider + [fullRow]
+:growBoard @cat :ca @doc ." Add a border of cells that are off so no boundary checking is needed
+
 :getNextBoard v= func1 ->board
-	:columns v= ( 0 .. ( (board . 0) .size - 1 ) )
+	// add a single cell's worth of padding around the board so we don't need to check the boundary
+	:board' v= growBoard board
+	:columns v= ( 1 .. ( (board' . 0) .size - 2 ) )
 	:computeRow v= func1 ->y
-		columns apply (| getNextState [ board y ] [ ## ] |)
-	( 0 .. ( board .size - 1 ) ) apply computeRow
+		columns apply (| getNextState [ board' y ] [ ## ] |)
+	( 1 .. ( board' .size - 2 ) ) apply computeRow
 :getNextBoard @cat :ca @doc ." Compute the next state of an entire board
 
 :ticks f= .( ->board 1func1 0
