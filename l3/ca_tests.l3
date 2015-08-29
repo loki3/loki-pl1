@@ -13,16 +13,6 @@
 	:b v= [ [ true false ] [ false true ] ]
 	( "*." + \n + ".*" + \n ) assert=? ( b =>pretty )
 
-:{{ @unittest func0
-	:b v= [ [ true false true ] [ false true true ] ]
-	true  assert=? {{ b 0 0 }}
-	false assert=? {{ b 0 1 }}
-	true  assert=? {{ b 0 2 }}
-	false assert=? {{ b 1 0 }}
-	true  assert=? {{ b 1 1 }}
-	true  assert=? {{ b 1 2 }}
-
-
 :countNeighbors @unittest func0
 	:b v= [ [false false false false] [false true false false] [false false true false] [false false false false] ]
 	1 assert=? countNeighbors [b 1 1]
