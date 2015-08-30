@@ -113,10 +113,15 @@
 
 :dumpAssert v= func1 [ ->testName ->e ]
 	print "FAILED :" + testName
+	// assertion failed
 	( e . :expected )   if!nil .` print .-"[ '.expected: '   ( e . :expected )
 	( e . :actual )     if!nil .` print .-"[ '...actual: '   ( e . :actual )
 	( e . :expression ) if!nil .` print .-"[ '.expression: ' ( e . :expression )
 	( e . :message )    if!nil .` print .-"[ '....message: ' ( e . :message )
+	// if it's standard exception, not an assert
+	:errfunc v= e . :l3.error.function
+	if ( (errfunc !=? nil) &? (errfunc !=? :l3.throw) )
+		print l3.formatTable2 { :arrayOfArrays ( e mapToArray (< [ #1 #2 ] >) ) } + \n
 :dumpAssert @cat :unittest @doc ." Print details about an assert
 
 :runUnittests v= func1 ->scope
