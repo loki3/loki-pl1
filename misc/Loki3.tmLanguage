@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>fileTypes</key>
+		<array>
+			<string>l3</string>
+		</array>
+
+		<key>name</key>
+		<string>Loki3</string>
+
+		<key>patterns</key>
+		<array>
+			<!-- l3.builtin.function -->
+			<dict>
+				<key>match</key>
+				<string>l3\.[A-Za-z0-9_]+</string>
+				<key>name</key>
+				<string>support.class.loki3</string>
+			</dict>
+			<!-- define function -->
+			<dict>
+				<key>match</key>
+				<string>(1func1|1func|func1|func0)</string>
+				<key>name</key>
+				<string>keyword.loki3</string>
+			</dict>
+			<!-- numbers -->
+			<dict>
+				<key>match</key>
+				<string>(\-?[0-9]+)</string>
+				<key>name</key>
+				<string>keyword.numeric.loki3</string>
+			</dict>
+			<!-- :string -->
+			<dict>
+				<key>match</key>
+				<string>:([A-Za-z0-9_=>'@\.:\?\\/]+)</string>
+				<key>name</key>
+				<string>string.loki3</string>
+			</dict>
+			<!-- // comment -->
+			<dict>
+				<key>match</key>
+				<string>(//\s.*|//)</string>
+				<key>name</key>
+				<string>comment.loki3</string>
+			</dict>
+			<!-- ." string to the end of the line -->
+			<dict>
+				<key>match</key>
+				<string>(\s\.\"\s).*</string>
+				<key>name</key>
+				<string>string.loki3</string>
+			</dict>
+			<!-- lambda arguments -->
+			<dict>
+				<key>match</key>
+				<string>\s(\#\#|\#1|\#2)\s</string>
+				<key>name</key>
+				<string>keyword.loki3</string>
+			</dict>
+			<!-- ->param -->
+			<dict>
+				<key>match</key>
+				<string>(->[A-Za-z0-9_]+)</string>
+				<key>name</key>
+				<string>variable.parameter.loki3</string>
+			</dict>
+			<!-- @meta -->
+			<dict>
+				<key>match</key>
+				<string>\s(@[A-Za-z0-9_=>'\?]+)</string>
+				<key>name</key>
+				<string>entity.name.tag.loki3</string>
+			</dict>
+			<!-- some infix functions -->
+			<dict>
+				<key>match</key>
+				<string>\s(apply|fold|foldLeft|foldRight|applyAs|\-|v=|i=|d=|o=|f=)\s</string>
+				<key>name</key>
+				<string>support.function.loki3</string>
+			</dict>
+		</array>
+
+		<key>scopeName</key>
+		<string>source.l3</string>
+
+		<key>uuid</key>
+		<string>33533333-3393-3330-333f-331433331c33</string>
+	</dict>
+</plist>
