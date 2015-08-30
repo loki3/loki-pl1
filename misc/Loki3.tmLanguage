@@ -15,7 +15,7 @@
 			<!-- l3.builtin.function -->
 			<dict>
 				<key>match</key>
-				<string>l3\.[A-Za-z0-9_]+</string>
+				<string>l3\.\S+</string>
 				<key>name</key>
 				<string>support.class.loki3</string>
 			</dict>
@@ -29,21 +29,21 @@
 			<!-- numbers -->
 			<dict>
 				<key>match</key>
-				<string>(\-?[0-9]+)</string>
+				<string>(\-?[0-9\.]+)</string>
 				<key>name</key>
 				<string>keyword.numeric.loki3</string>
 			</dict>
 			<!-- :string -->
 			<dict>
 				<key>match</key>
-				<string>:([A-Za-z0-9_=>'@\.:\?\\/]+)</string>
+				<string>:(\S+)</string>
 				<key>name</key>
 				<string>string.loki3</string>
 			</dict>
 			<!-- // comment -->
 			<dict>
 				<key>match</key>
-				<string>(//\s.*|//)</string>
+				<string>(//\s.*|//$)</string>
 				<key>name</key>
 				<string>comment.loki3</string>
 			</dict>
@@ -64,14 +64,14 @@
 			<!-- ->param -->
 			<dict>
 				<key>match</key>
-				<string>(->[A-Za-z0-9_]+)</string>
+				<string>(->\S+)</string>
 				<key>name</key>
 				<string>variable.parameter.loki3</string>
 			</dict>
 			<!-- @meta -->
 			<dict>
 				<key>match</key>
-				<string>\s(@[A-Za-z0-9_=>'\?]+)</string>
+				<string>\s(@\S+)</string>
 				<key>name</key>
 				<string>entity.name.tag.loki3</string>
 			</dict>
