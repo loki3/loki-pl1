@@ -2,6 +2,9 @@
 // Cellular automata and Conway's game of life
 //
 
+//
+// cellular automata board
+
 :lifeBoard v= func0
 	[body :"] applyAs (| (## =>array) apply (| ## =? "*" |) |)
 :lifeBoard @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
@@ -11,6 +14,18 @@
 		( s apply (| ## ? [ "*" "." ] |) foldLeft (< #1 + #2 >) ) + \n
 	board apply (doLine) foldLeft (+)
 :=>pretty @cat :ca @doc ." Turn a board created by :lifeBoard into a pretty-printed string
+
+:glider v= lifeBoard
+	.....
+	..*..
+	...*.
+	.***.
+	.....
+	.....
+:glider @cat :ca @doc ." A 'glider' life pattern
+
+//
+// support routines for computing new boards for a cellular automata
 
 :countNeighbors v= func1 [ ->board ->x ->y ]
 	:neighborhood v= [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
@@ -42,12 +57,3 @@
 :ticks f= .( ->board 1func1 ->n
 	(getNextBoard board) ticks (n - 1)
 :ticks @cat :ca @doc ." Compute the nth generation of a given board
-
-:glider v= lifeBoard
-	.....
-	..*..
-	...*.
-	.***.
-	.....
-	.....
-:glider @cat :ca @doc ." A 'glider' life pattern

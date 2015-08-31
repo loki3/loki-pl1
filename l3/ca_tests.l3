@@ -13,6 +13,8 @@
 	:b v= [ [ true false ] [ false true ] ]
 	( "*." + \n + ".*" + \n ) assert=? ( b =>pretty )
 
+:glider @unittest noTestNeeded
+
 :countNeighbors @unittest func0
 	:b v= [ [false false false false] [false true false false] [false false true false] [false false false false] ]
 	1 assert=? countNeighbors [b 1 1]
@@ -63,6 +65,4 @@
 	:b' v= [ [ false true false ] [ false true false ] [ false true false ] ]
 	b' assert=? ( b ticks 1 )
 	b  assert=? ( b ticks 2 )
-
-:glider @unittest noTestNeeded
 
