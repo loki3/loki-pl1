@@ -113,6 +113,18 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	cat
 :.@cat @cat :metadata @doc ." Get the category attached to a value
 
+:@example v= .( ->object 1func1 ->exampleString
+	object @ .[ :l3.value.example exampleString
+:@example @cat :metadata @doc ." Attach a string to a value showing an example of how to use it
+
+:.@example v= .( ->object 1func
+	:metadata v= l3.getMetadata { :key object }
+	:example v= nil
+	if metadata !=? nil
+		:example = l3.getValue .{ :object metadata :key :l3.value.example
+	example
+:.@example @cat :metadata @doc ." Get example code attached to a value
+
 :@order v= .( ->object 1func1 ->order
 	object @ .[ :l3.value.order order
 :@order @cat :metadata @doc ." Add evaluation order to a value

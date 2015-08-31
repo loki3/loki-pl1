@@ -100,10 +100,18 @@ namespace loki3.core
 			meta[keyDoc] = new ValueString(doc);
 		}
 
+		/// <summary>Add an example of how to use this value</summary>
+		internal void SetExampleString(string example)
+		{
+			Map meta = WritableMetadata;
+			meta[keyExample] = new ValueString(example);
+		}
+
 		#region Keys
 		internal static string keyOrder = "l3.value.order";
 		internal static string keyDoc = "l3.value.doc";
 		internal static string keyCat = "l3.value.cat";
+		internal static string keyExample = "l3.value.example";
 		internal static string keyType = "l3.value.type";
 		internal static string keyEnumKey = "l3.enum.key";
 		#endregion

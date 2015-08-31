@@ -182,6 +182,16 @@
 	:a @cat :something
 	:something assert=? :a .@cat
 
+:@example	@unittest func0
+	:a v= 1
+	:a @example :something
+	:something assert=? :a .@example
+
+:.@example	@unittest func0
+	:a v= 1.5
+	:a @example :something
+	:something assert=? :a .@example
+
 :@order @unittest func0
 	:a v= (| ## + 2 |)
 	// a should be applied after *
