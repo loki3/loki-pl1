@@ -3,6 +3,7 @@
 //
 // Provides tools for getting help on functions
 //
+// metahelp
 // helpAll
 // help :someFunction
 // dumpMeta :someFunction
@@ -10,6 +11,11 @@
 // getByCat :someCat
 //
 
+:metahelp v= func0
+	:rawlist v= [ :metahelp :help :getDocs :getAllCats :getByCat :dumpMeta ]
+	:doclist v= rawlist apply (| [ ## ( ## .@doc ) ] |)
+	l3.formatTable2 { :arrayOfArrays doclist :dashesAfterFirst? true }
+:metahelp @cat :help @doc ." Useful commands for exploring loki3 functions
 
 :helpAll v= func0
 	:map v= l3.getScope .{ :level 1

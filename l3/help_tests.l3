@@ -1,5 +1,9 @@
 // unittests for help.l3
 
+:metahelp @unittest func0
+	// simply validate that it can be called successfully
+	metahelp
+
 :helpAll @unittest testNYI
 
 :help @unittest func0
