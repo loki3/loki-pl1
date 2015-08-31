@@ -2,8 +2,8 @@
 // unit tests for ca.l3
 //
 
-:lifeBoard @unittest func0
-	:b v= lifeBoard
+:caBoard @unittest func0
+	:b v= caBoard
 		.*.
 		*..
 	[ false true false ] assert=? b . 0
@@ -66,3 +66,25 @@
 	b' assert=? ( b ticks 1 )
 	b  assert=? ( b ticks 2 )
 
+:defRule @unittest func0
+	:rule v= defRule
+		:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
+		:transition   (( [->state ->n] ` (n =? 2) |? (n =? 3) ` ))
+	:input v= caBoard
+		.*..*
+		**.*.
+	:expected v= caBoard
+		*..*.
+		.**.*
+	:actual v= rule input
+	expected assert=? actual
+
+:life @unittest func0
+	:input v= caBoard
+		**.*
+		.***
+	:expected v= caBoard
+		**.*
+		**.*
+	:actual v= life input
+	expected assert=? actual

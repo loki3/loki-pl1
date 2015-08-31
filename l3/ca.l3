@@ -5,17 +5,17 @@
 //
 // cellular automata board
 
-:lifeBoard v= func0
+:caBoard v= func0
 	[body :"] applyAs (| (## =>array) apply (| ## =? "*" |) |)
-:lifeBoard @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
+:caBoard @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
 
 :=>pretty v= .( (->board : :array) 1func
 	:doLine v= func1 ->s
 		( s apply (| ## ? [ "*" "." ] |) foldLeft (< #1 + #2 >) ) + \n
 	board apply (doLine) foldLeft (+)
-:=>pretty @cat :ca @doc ." Turn a board created by :lifeBoard into a pretty-printed string
+:=>pretty @cat :ca @doc ." Turn a board created by :caBoard into a pretty-printed string
 
-:glider v= lifeBoard
+:glider v= caBoard
 	.....
 	..*..
 	...*.
@@ -57,3 +57,49 @@
 :ticks f= .( ->board 1func1 ->n
 	(getNextBoard board) ticks (n - 1)
 :ticks @cat :ca @doc ." Compute the nth generation of a given board
+
+//
+// alternate cellular automata definition
+
+:defRule v= func0
+	// pull neighborhood & transition rule out of body
+	:neighborhood v= []
+	:transition v= (< #1 >)
+	:line forEachDelim [ body :[ ]
+		(line . 0) = (line . 1)
+	//
+	// cached state
+	[:maxX :maxY] v= [0 0]
+	//
+	// private functions
+	:getCell v= func1 [ ->board ->x ->y ]
+		:state v= false
+		if ( (x >=? 0) &? (y >=? 0) &? (x <? maxX) &? (y <? maxY) )
+			:state = board . x . y
+		state
+	:countNeighbors v= func1 [ ->board ->x ->y ]
+		neighborhood apply (( [->i ->j] ` ( getCell [ board (x + i) (y + j) ] ) ? [1 0] ` )) fold (+)
+	:getNextState v= func1 [ ->board ->x ->y ]
+		transition [ ( getCell [board x y] ) ( countNeighbors [board x y] ) ]
+	:getNextBoard v= func1 ->board
+		[:maxX :maxY] = [ (board .size) ( (board . 0) .size ) ]
+		:columns v= 0 .. ( board . 0 .size - 1 )
+		:computeRow v= func1 ->y
+			columns apply (| getNextState [ board y ] [ ## ] |)
+		( 0 .. ( board .size - 1 ) ) apply computeRow
+	//
+	// return a function that takes a board
+	closure :getNextBoard
+:defRule @body? true @cat :ca @doc --"
+	Creates a function for calculating the next generation of a cellular automat board.
+	The definition body should contain two lines,
+	:neighborhood describes the neighborhood to use for the rule,
+	which is an array of arrays of x,y offsets,
+	and :transition is the rule for calculating the next state of a cell given the current state
+	and the total number of neighbors (( [->state ->n] `` ))
+
+
+:life v= defRule
+	:neighborhood [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
+	:transition   (( [->state ->n] ` state ? [ ( (n =? 3) |? (n =? 2) ) (n =? 3) ] ` ))
+:life @cat :ca @doc ." Function that applies the 'life' rule to a board
