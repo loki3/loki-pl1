@@ -382,6 +382,9 @@
 
 :fresh @unittest noTestNeeded
 
+:timeEval @unittest func0
+	assertTrue? .( ( timeEval `1 + 1` ) <? 10
+
 
 //
 // logic

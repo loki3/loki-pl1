@@ -308,6 +308,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.repl .{ :prompt :fresh> :map { } :fileToLoad file :registerBuiltins? true
 :fresh @doc ." Start a read-eval-print loop with a scope that only consists of the built-in functions, then run the specified file
 
+:timeEval v= func1 .( ->toEval : :rawLines
+	:start v= l3.debug.getTicks
+	l3.eval toEval
+	l3.debug.getTicks - start
+:timeEval @doc ." Report how many ticks it takes to eval raw lines
+
 
 //
 // logic
