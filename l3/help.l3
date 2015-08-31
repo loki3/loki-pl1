@@ -208,8 +208,8 @@
 :listAllCats @cat :help @doc ." List all the categories in the given map
 
 :listByCat v= ( ->cat 1func1 ->map )
-	:table v= map filterMap (< ( #1 .@cat ) =? cat >) mapToArray (< #1 >)
-	l3.formatTable { :array table :columns 3 }
+	:table v= map filterMap (< ( #1 .@cat ) =? cat >) mapToArray (< [ #1 ( #1 .@doc) ] >)
+	l3.formatTable2 { :arrayOfArrays table }
 :listByCat @cat :help @doc ." List all the values in a given category and map
 
 
