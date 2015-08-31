@@ -12,7 +12,7 @@
 //
 
 :metahelp v= func0
-	:rawlist v= [ :metahelp :help :getDocs :getAllCats :getByCat :dumpMeta ]
+	:rawlist v= [ :metahelp :help :getDocs :getAllCats :getByCat :dumpMeta :.@example ]
 	:doclist v= rawlist apply (| [ ## ( ## .@doc ) ] |)
 	l3.formatTable2 { :arrayOfArrays doclist :dashesAfterFirst? true }
 :metahelp @cat :help @doc ." Useful commands for exploring loki3 functions

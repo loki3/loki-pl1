@@ -236,39 +236,48 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :lambda v= func1 [ ->pattern ->line1 ( ->more ... ) ]
 	l3.createFunction { :post pattern :body ( [ line1 ] + more ) }
-:lambda	@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. lambda [ :x ` 2 + x ` ]
+:lambda	@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body
+:lambda @example ." lambda [ ->x ` 2 + x ` ]
 
 :(( v= l3.createDelimiter .{ :end :)) :type :asArray :function lambda
-:((		@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
+:((		@cat :function @doc ." Creates a function where the first param is the pattern and the rest are lines in the function body
+:(( @example ." (( ->x ` 2 + x ` )) (( [ ->x ->y ] ` 2 * x + y ` ))
 
 :.(( v= l3.createDelimiter .{ :type :asArray :function lambda
-:.((	@cat :function @doc ." Remainder of line is a function where the first param is the pattern and the rest are lines in the function body, e.g. (( :x ` 2 + x ` ))
+:.((	@cat :function @doc ." Remainder of line is a function where the first param is the pattern and the rest are lines in the function body
+:.(( @example ." .(( [ ->x ->y ] ` 2 * x + y `
 
 
 // definitions that create a prefix function, assume parameter is called ## and takes a single line of code
 
 :lambda1 v= func1 ->line
 	l3.createFunction { :post ->## :body [ line ] }
-:lambda1	@cat :function @doc ." Creates a single line prefix function, assuming parameter is called ##, e.g. lambda1 ` 2 + ## `
+:lambda1	@cat :function @doc ." Creates a single line prefix function, assuming parameter is called ##
+:lambda1 @example ." lambda1 ` 2 + ## `
 
 :(| v= l3.createDelimiter .{ :end :|) :type :asRaw :function lambda1
-:(|		@cat :function @doc ." Create a single line prefix function, assuming parameter is called ##, e.g. (| 2 + ## |)
+:(| @cat :function @doc ." Create a single line prefix function, assuming parameter is called ##
+:(| @example ." (| 2 + ## |)
 
 :.(| v= l3.createDelimiter .{ :type :asRaw :function lambda1
-:.(|	@cat :function @doc ." Create a single line prefix function, assuming parameter is called ##, e.g. .(| 2 + ##
+:.(| @cat :function @doc ." Create a single line prefix function, assuming parameter is called ##
+:.(| @example ." .(| 2 + ##
 
 
 // definitions that create an infix function, assume parameters are called #1 and #2 and takes a single line of code
 
 :lambda2 v= func1 ->line
 	l3.createFunction { :pre ->#1 :post ->#2 :body [ line ] }
-:lambda2	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. lambda2 ` #1 + #2 `
+:lambda2	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2
+:lambda2 @example ." lambda2 ` #1 + #2 `
 
 :(< v= l3.createDelimiter .{ :end :>) :type :asRaw :function lambda2
-:(<		@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. (< #1 + #2 >)
+:(<		@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2
+:(< @example ." (< #1 + #2 >)
 
 :.(< v= l3.createDelimiter .{ :type :asRaw :function lambda2
-:.(<	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2, e.g. .(< #1 + #2
+:.(<	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2
+:.(< @example ." .(< #1 + #2
 
 
 //
