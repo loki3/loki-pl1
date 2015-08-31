@@ -95,10 +95,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :.@doc v= .( ->object 1func
 	:metadata v= l3.getMetadata { :key object }
-	:doc v= nil
-	if metadata !=? nil
-		:doc = l3.getValue .{ :object metadata :key :l3.value.doc
-	doc
+	(metadata =? nil) ? [ nil ( l3.getValue {:object metadata :key :l3.value.doc} ) ]
 :.@doc	@doc ." Get the documentation attached to a value
 
 :@cat v= .( ->object 1func1 ->catString
@@ -107,10 +104,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :.@cat v= .( ->object 1func
 	:metadata v= l3.getMetadata { :key object }
-	:cat v= nil
-	if metadata !=? nil
-		:cat = l3.getValue .{ :object metadata :key :l3.value.cat
-	cat
+	(metadata =? nil) ? [ nil ( l3.getValue {:object metadata :key :l3.value.cat} ) ]
 :.@cat @cat :metadata @doc ." Get the category attached to a value
 
 :@example v= .( ->object 1func1 ->exampleString
@@ -119,10 +113,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :.@example v= .( ->object 1func
 	:metadata v= l3.getMetadata { :key object }
-	:example v= nil
-	if metadata !=? nil
-		:example = l3.getValue .{ :object metadata :key :l3.value.example
-	example
+	(metadata =? nil) ? [ nil ( l3.getValue {:object metadata :key :l3.value.example} ) ]
 :.@example @cat :metadata @doc ." Get example code attached to a value
 
 :@order v= .( ->object 1func1 ->order
