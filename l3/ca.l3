@@ -92,11 +92,12 @@
 	closure :getNextBoard
 :defRule @body? true @cat :ca @doc --"
 	Creates a function for calculating the next generation of a cellular automat board.
-	The definition body should contain two lines,
-	:neighborhood describes the neighborhood to use for the rule,
-	which is an array of arrays of x,y offsets,
-	and :transition is the rule for calculating the next state of a cell given the current state
-	and the total number of neighbors (( [->state ->n] `` ))
+	Specify the neighborhood of offsets from a cell and a rule for computing the next state.
+	See .@example.
+:defRule @example --"+ ( \n + "  " )
+	:myRule v= defRule
+	:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
+	:transition   (( [->state ->n] ` (n =? 2) |? (n =? 3) ` ))
 
 
 :life v= defRule
