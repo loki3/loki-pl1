@@ -741,6 +741,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :.-"[ v= l3.createDelimiter .{ :type :asArray :function (( :a ` a fold (< $ #1 + $ #2 >) ` ))
 :.-"[ @cat :string @doc ." Each item in array is converted to a string and concatenated together
 
+:--"+ v= func1 ( ->separator : :string )
+	[ body :" ] applyAs (| ## |) +with separator
+:--"+ @body? true @cat :string @doc --"
+	Combine the indented lines following this function into a string
+	separated by the given string
+
 :+with v= .( ( ->arr : :array ) 1func1 ( ->separator : :string )
 	l3.stringConcat .{ :array arr :separator separator
 :+with @cat :string @doc ." Concatenate the strings in an array, with a separator between the items
