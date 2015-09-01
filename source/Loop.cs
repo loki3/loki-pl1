@@ -173,11 +173,20 @@ namespace loki3.builtin
 						foreach (DelimiterList line in list)
 						{
 							DelimiterList newLine = line;
-							if (line.Indent == indent)
+							// wrap lines & nested lines with proper delimiter, except for nested values that get evaled
+							if (line.Indent == indent || (delim.DelimiterType != DelimiterType.AsValue && line.Indent >= indent))
 							{
 								List<DelimiterNode> nodes = new List<DelimiterNode>();
-								nodes.Add(new DelimiterNodeList(new DelimiterList(delim, line.Nodes, line.Indent, "", line.Original, line.Scope)));
-								newLine = new DelimiterList(delim, nodes, indent, "", line.Original, line.Scope);
+								string original = line.Original;
+								if (delim.DelimiterType == DelimiterType.AsString && line.Indent > indent)
+								{	// put the indentation back if portions of the body were indented
+									original = "";
+									for (int i = 0; i < line.Indent - indent; i++)
+										original += "    ";
+									original += line.Original;
+								}
+								nodes.Add(new DelimiterNodeList(new DelimiterList(delim, line.Nodes, line.Indent, "", original, line.Scope)));
+								newLine = new DelimiterList(delim, nodes, indent, "", original, line.Scope);
 							}
 							delimList.Add(newLine);
 						}

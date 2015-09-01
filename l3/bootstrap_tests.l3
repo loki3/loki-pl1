@@ -895,11 +895,11 @@
 	:asdf12.34 assert=? .-"[ :asdf 1 2.34
 
 :--"+ @unittest func0
-	:expected v= :ab + \n + :cde + \n + :fg
+	:expected v= "ab" + \n + "    cde fg" + \n + "h i"
 	:actual v= --"+ \n
 		ab
-		cde
-		fg
+			cde fg
+		h i
 	expected assert=? actual
 
 :+with @unittest func0

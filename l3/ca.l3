@@ -94,10 +94,10 @@
 	Creates a function for calculating the next generation of a cellular automat board.
 	Specify the neighborhood of offsets from a cell and a rule for computing the next state.
 	See .@example.
-:defRule @example --"+ ( \n + "  " )
+:defRule @example --"+ \n
 	:myRule v= defRule
-	:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
-	:transition   (( [->state ->n] ` (n =? 2) |? (n =? 3) ` ))
+		:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
+		:transition   (( [->state ->n] ` (n =? 2) |? (n =? 3) ` ))
 
 
 :life v= defRule
