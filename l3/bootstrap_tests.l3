@@ -282,6 +282,16 @@
 :.[[ @unittest func0
 	[3 7] assert=? .[[ 1 + 2, 3 + 4
 
+:delimTypes @unittest noTestNeeded
+
+// currently delimiters have to be defined at the top level
+// because function bodies are parsed before being evaled
+:{{ v= [ :}} :asArray ] delim ->a
+	a apply (| ## + 3 |)
+:{{ @doc "" @unittest noTestNeeded
+
+:delim @unittest func0
+	[4 6] assert=? {{ 1 3 }}
 
 //
 // more function definitions

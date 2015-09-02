@@ -234,6 +234,15 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :.[[ @cat :delimiter @doc ." Remainder of line is evaluated into values in an array
 :.[[ @example ." .[[ 1 + 2, 3 + 4
 
+:delimTypes v= [ :asArray :asString :asValue :asComment :asEvaledArray :asRaw ]
+:delimTypes @cat :delimiter @doc ." A list of the different kinds of delimiters
+
+:delim v= .( [ ->end ( ->type o= delimTypes ) ] 1func1 ->pattern
+	:f v= .( l3.createFunction .{ :post pattern :body body
+	l3.createDelimiter .{ :end end :type type :function f
+:delim @body? true @cat :delimiter @doc ." Used to create new types of delimiters
+:delim @example ." :{{ v= [ :}} :asArray ] delim ->x body= .` x apply (| ## + 3 |)
+
 
 //
 // more function definitions
