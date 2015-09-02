@@ -296,10 +296,6 @@
 //
 // more function definitions
 
-:lambda	@unittest func0
-	:2+ v= .( lambda .[ :x .` 2 + x
-	3 assert=? 2+ 1
-
 :((		@unittest func0
 	:2+ v= (( :x ` 2 + x ` ))
 	3 assert=? 2+ 1
@@ -310,10 +306,6 @@
 	:2+ v= .(( :x ` 2 + x `
 	3 assert=? 2+ 1
 
-:lambda1	@unittest func0
-	:2+ v= .( lambda1 .` ## + 2
-	3 assert=? 2+ 1
-
 :(|		@unittest func0
 	:2+ v= (| ## + 2 |)
 	3 assert=? 2+ 1
@@ -321,10 +313,6 @@
 :.(|	@unittest func0
 	:2+ v= .(| ## + 2
 	3 assert=? 2+ 1
-
-:lambda2	@unittest func0
-	:div v= .( lambda2 ` #1 / #2 `
-	3 assert=? 6 div 2
 
 :(<		@unittest func0
 	:div v= (< #1 / #2 >)
