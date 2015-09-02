@@ -8,6 +8,7 @@ Creating new delimiters
 
 The core function l3.createDelimiter accepts the following options for how it interprets the contents of delimiters:
 
+* asValue:  Fully evaluate the contents and return it as a single value
 * asArray:  Turn the contents into an array
 * asEvaledArray:  Fully evaluate the contents and turn the results into an array
 * asString:  Turn the contents into a string
@@ -25,9 +26,9 @@ You can pass an optional end delimiter.  If none is specified, the remainder of 
 The final optional parameter is a function.  This allows you to process the contents however you would like.
 
 ```
-// anything spanned by (+ +) will get turned into an array and passed to
-// l3.addArray, effectively producing the sum of the contents
-:(+ v= l3.createDelimiter { :end :+) :type :asArray :function l3.addArray }
+// anything spanned by (+ +) will get turned into an array and added up
+:(+ v= [ :+) :assArray ] delim ->a
+    a fold (+)
 
 // evals to 27
 3 * (+ 2 3 4 +)
