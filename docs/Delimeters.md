@@ -27,7 +27,7 @@ The final optional parameter is a function.  This allows you to process the cont
 
 ```
 // anything spanned by (+ +) will get turned into an array and added up
-:(+ v= [ :+) :assArray ] delim ->a
+:(+ v= [ :+) :asArray ] delim ->a
     a fold (+)
 
 // evals to 27
