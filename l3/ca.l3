@@ -8,12 +8,17 @@
 :caBoard v= func0
 	[body :"] applyAs (| (## =>array) apply (| ## =? "*" |) |)
 :caBoard @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
+:caBoard @example --"+ \n
+	:mypattern v= caBoard
+		..**
+		.**.
 
 :=>pretty v= .( (->board : :array) 1func
 	:doLine v= func1 ->s
 		( s apply (| ## ? [ "*" "." ] |) foldLeft (< #1 + #2 >) ) + \n
 	board apply (doLine) foldLeft (+)
 :=>pretty @cat :ca @doc ." Turn a board created by :caBoard into a pretty-printed string
+:=>pretty @example ." glider =>pretty
 
 :glider v= caBoard
 	.....
@@ -51,12 +56,14 @@
 		columns apply (| getNextState [ board' y ] [ ## ] |)
 	( 1 .. ( board' .size - 2 ) ) apply computeRow
 :getNextBoard @cat :ca @doc ." Compute the next state of an entire board
+:getNextBoard @example ." getNextBoard glider
 
 :ticks f= .( ->board 1func1 0
 	board
 :ticks f= .( ->board 1func1 ->n
 	(getNextBoard board) ticks (n - 1)
 :ticks @cat :ca @doc ." Compute the nth generation of a given board
+:ticks @example ." glider ticks 5
 
 //
 // alternate cellular automata definition
@@ -65,8 +72,7 @@
 	// pull neighborhood & transition rule out of body
 	:neighborhood v= []
 	:transition v= (< #1 >)
-	:line forEachDelim [ body :[ ]
-		(line . 0) = (line . 1)
+	[ body :[ ] applyAs (| (## . 0) = (## . 1) |)
 	//
 	// cached state
 	[:maxX :maxY] v= [0 0]
@@ -104,3 +110,4 @@
 	:neighborhood [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
 	:transition   (( [->state ->n] ` state ? [ ( (n =? 3) |? (n =? 2) ) (n =? 3) ] ` ))
 :life @cat :ca @doc ." Function that applies the 'life' rule to a board
+:life @example ." life glider
