@@ -26,12 +26,11 @@
 :help v= func1 .( ->key : :string
 	// build up a description of pre or post parameters
 	:dumpParams v= func1 .[ ->preOrPost ->overloads
-		:table v= [ ]
 		:table v= [ :name :type :default :rest ]
 		:param =eachIn ( overloads . preOrPost )
 			[ :name :type :default :rest ] apply (| :table = table + ( param . ## ) |)
-		:s = :- + ' ' + preOrPost + " parameters -" + \n
-		:s = s + .( l3.formatTable { :array table :columns 4 :dashesAfterFirst? true }
+		:s = "- " + preOrPost + " parameters -" + \n
+		:s = s + .( l3.formatTable .{ :array table :columns 4 :dashesAfterFirst? true
 		s
 	
 	:map v= describe key
