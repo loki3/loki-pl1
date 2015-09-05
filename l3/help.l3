@@ -156,7 +156,7 @@
 
 
 :dumpBody v= func1 ( ->name : :string )
-	( l3.getFunctionBody { :key name } ) fold (< ( #1 =>str ) + ( #2 =>str ) + \n >)
+	( l3.getFunctionBody { :key name } ) fold (< ( #1 =>str ) + \n + ( #2 =>str ) >)
 :dumpBody @cat :help @doc ." Get the body of a function
 
 
