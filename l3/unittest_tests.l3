@@ -1,0 +1,63 @@
+// unittests for test.l3
+// unittestUnittests [ :unittest.l3 :unittest_tests.l3 ]
+
+:unittest @unittest testNYI
+
+:runTestFile @unittest testNYI
+
+:unittestUnittests @unittest testNYI
+
+:unittestScope @unittest testNYI
+
+:testFunction @unittest testNYI
+
+:checkDocs @unittest testNYI
+
+:@unittest @unittest testNYI
+
+:.@unittest @unittest func0
+	// value without any test
+	:noTest v= 42
+	"no test" assert=? .( :noTest .@unittest
+	// value with a stubbed out test
+	:emptyTest v= 42
+	:emptyTest @unittest noTestNeeded
+	"empty test" assert=? .( :emptyTest .@unittest
+	// value with a test
+	:withTest v= 42
+	:withTest @unittest func0
+		42
+	:rawLines assert=? l3.getType { :value ( :withTest .@unittest ) }
+
+:noTestNeeded @unittest testNYI
+
+:testNYI @unittest testNYI
+
+:assert=? @unittest testNYI
+
+:assertTrue? @unittest testNYI
+
+:assertFalse? @unittest testNYI
+
+:assertFail @unittest testNYI
+
+:dumpAssert @unittest testNYI
+
+:runUnittests @unittest func0
+	// create a few functions to test
+	:noTest v= (| ## |)
+	:fail v= (| ## |)
+	:fail @unittest func0
+		assertFail ." simply fails
+	:succeed v= (| ## |)
+	:succeed @unittest func0
+		assertTrue? true
+	// run tests
+	[ :success? :failureCount :failureList ] v= runUnittests currentScope
+	assertFalse? success?
+	2 assert=? failureCount
+	[ :noTest :fail ] assert=? failureList
+
+:runTests @unittest testNYI
+
+:dumpTest @unittest testNYI

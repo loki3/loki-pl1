@@ -30,6 +30,20 @@
 	testFunction .[ runTests :runTests scope
 :runTestFile @cat :unittest @doc ." Run all the tests defined in a test file.
 
+:unittestUnittests v= func1 [ ->targetFile ->testFile ]
+	// import files into local scope
+	import targetFile
+	import testFile
+	// @cat unittest will be skipped, so change it
+	[ :key _ ] forEach currentScope
+		key @cat :testme
+	// stub out doc & cat so local vars don't affect results
+	:targetFile @cat :unittest @doc ."
+	:testFile @cat :unittest @doc ."
+	// run tests on local scope
+	unittestScope currentScope
+:unittestUnittests @cat :unittest @doc ." Use for unittesting the unittest framework
+
 
 :unittestScope v= func1 ->scope
 	var :success? = true
@@ -67,12 +81,15 @@
 
 :.@unittest v= .( ->object 1func
 	:metadata v= l3.getMetadata { :key object }
-	:test v= false
+	:test v= nil
 	if metadata !=? nil
 		:test = l3.getValue .{ :object metadata :key :l3.value.unittest
 	:contents v= "no test"
-	if ( l3.getType { :value test } ) =? :function
+	:type v= l3.getType { :value test }
+	if type =? :function
 		:contents = ( l3.getFunctionBody { :function test } ) fold (< ( #1 =>str ) + \n + ( #2 =>str ) >)
+	elsif type =? :bool
+		:contents = "empty test"
 	contents
 :.@unittest	@cat :unittest @doc ." Get the unittest attached to a value
 
@@ -128,13 +145,19 @@
 :dumpAssert @cat :unittest @doc ." Print details about an assert
 
 :runUnittests v= func1 ->scope
+	:checkAndRun v=  func1 ->object
+		:metadata v= l3.getMetadata { :key object }
+		:test v= nil
+		if metadata !=? nil
+			:test = l3.getValue .{ :object metadata :key :l3.value.unittest
+		test
 	var :failures = [ ]
 	var :passed = 0
 	[ :testName _ ] forEach scope
 		try
 			if testName .@cat !=? :unittest
 				// fail if no test
-				if testName .@unittest =? nil
+				if checkAndRun testName =? nil
 					failures += testName
 					print .-"[ "missing unittest:" ' ' testName
 				:passed ++
