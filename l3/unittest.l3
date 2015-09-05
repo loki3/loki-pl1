@@ -67,10 +67,13 @@
 
 :.@unittest v= .( ->object 1func
 	:metadata v= l3.getMetadata { :key object }
-	:test v= nil
+	:test v= false
 	if metadata !=? nil
 		:test = l3.getValue .{ :object metadata :key :l3.value.unittest
-	( l3.getFunctionBody { :function test } ) fold (< ( #1 =>str ) + \n + ( #2 =>str ) >)
+	:contents v= "no test"
+	if ( l3.getType { :value test } ) =? :function
+		:contents = ( l3.getFunctionBody { :function test } ) fold (< ( #1 =>str ) + \n + ( #2 =>str ) >)
+	contents
 :.@unittest	@cat :unittest @doc ." Get the unittest attached to a value
 
 :noTestNeeded v= func0
