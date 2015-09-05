@@ -11,7 +11,18 @@
 
 :testFunction @unittest testNYI
 
-:checkDocs @unittest testNYI
+:checkDocs @unittest func0
+	// create values with & without docs
+	:noDocs v= 42
+	:hasDocs v= 42
+	:hasDocs @doc ." Nothing useful
+	:unittestCat v= ." Stuff in the :unittest category is ignored
+	:unittestCat @cat :unittest
+	// check for docs
+	[ :success? :checkedCount :failureList ] v= checkDocs currentScope
+	assertFalse? success?
+	2 assert=? checkedCount
+	[ :noDocs ] assert=? failureList
 
 :@unittest @unittest testNYI
 
@@ -33,13 +44,29 @@
 
 :testNYI @unittest testNYI
 
-:assert=? @unittest testNYI
+:throws? v= func1 ->rawLines
+	:threw? v= false
+	try
+		l3.eval rawLines
+	catch :e
+		:threw? = true
+	threw?
+:throws? @cat "" @doc "Returns true if the passed in code fails" @unittest noTestNeeded
+
+:assert=? @unittest func0
+	assertFalse? throws? .` 2 assert=? 2
+	assertTrue?  throws? .` 3 assert=? 2
 
 :assertTrue? @unittest testNYI
+	false assert=? throws? .` assertTrue? true
+	true  assert=? throws? .` assertTrue? false
 
 :assertFalse? @unittest testNYI
+	true  assert=? throws? .` assertFalse? true
+	false assert=? throws? .` assertFalse? false
 
 :assertFail @unittest testNYI
+	assertTrue? throws? .` assertFail :message
 
 :dumpAssert @unittest testNYI
 
@@ -53,9 +80,9 @@
 	:succeed @unittest func0
 		assertTrue? true
 	// run tests
-	[ :success? :failureCount :failureList ] v= runUnittests currentScope
+	[ :success? :passedCount :failureList ] v= runUnittests currentScope
 	assertFalse? success?
-	2 assert=? failureCount
+	1 assert=? passedCount
 	[ :noTest :fail ] assert=? failureList
 
 :runTests @unittest testNYI

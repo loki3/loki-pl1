@@ -72,7 +72,7 @@
 	[ ( (failures .size) =? 0 ) (toCheck .size) failures ]
 :checkDocs @cat :unittest @doc --"
 	Check if everything in scope has doc metadata.
-	Returns [ success? passedCount arrayOfFailures ]
+	Returns [ success? checkedCount arrayOfFailures ]
 
 
 :@unittest v= .( ->object 1func1 ->function
@@ -160,7 +160,8 @@
 				if checkAndRun testName =? nil
 					failures += testName
 					print .-"[ "missing unittest:" ' ' testName
-				:passed ++
+				else
+					:passed ++
 		catch :e
 			failures += testName
 			dumpAssert [ testName e ]
