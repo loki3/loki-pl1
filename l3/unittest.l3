@@ -84,14 +84,8 @@
 	:test v= nil
 	if metadata !=? nil
 		:test = l3.getValue .{ :object metadata :key :l3.value.unittest
-	:contents v= "no test"
-	:type v= l3.getType { :value test }
-	if type =? :function
-		:contents = ( l3.getFunctionBody { :function test } ) fold (< ( #1 =>str ) + \n + ( #2 =>str ) >)
-	elsif type =? :bool
-		:contents = "empty test"
-	contents
-:.@unittest	@cat :unittest @doc ." Get the unittest attached to a value
+	test
+:.@unittest	@cat :unittest @doc ." Get the unittest function attached to a value, or nil if none
 
 :noTestNeeded v= func0
 	true
@@ -145,19 +139,13 @@
 :dumpAssert @cat :unittest @doc ." Print details about an assert
 
 :runUnittests v= func1 ->scope
-	:checkAndRun v=  func1 ->object
-		:metadata v= l3.getMetadata { :key object }
-		:test v= nil
-		if metadata !=? nil
-			:test = l3.getValue .{ :object metadata :key :l3.value.unittest
-		test
 	var :failures = [ ]
 	var :passed = 0
 	[ :testName _ ] forEach scope
 		try
 			if testName .@cat !=? :unittest
 				// fail if no test
-				if checkAndRun testName =? nil
+				if testName .@unittest =? nil
 					failures += testName
 					print .-"[ "missing unittest:" ' ' testName
 				else
@@ -192,5 +180,10 @@
 
 :dumpTest v= func1 .( ->function : :string
 	:test v= .( function .@ :l3.value.unittest
-	dumpBody :test
+	:contents v= "no test"
+	if test =? true
+		:contents = "empty test"
+	elsif test !=? nil
+		:contents = dumpBody :test
+	contents
 :dumpTest @cat :unittest @doc ." Dump the body of the unittest attached to the given function

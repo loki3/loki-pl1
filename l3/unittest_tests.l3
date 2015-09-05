@@ -29,16 +29,16 @@
 :.@unittest @unittest func0
 	// value without any test
 	:noTest v= 42
-	"no test" assert=? .( :noTest .@unittest
+	nil assert=? .( :noTest .@unittest
 	// value with a stubbed out test
 	:emptyTest v= 42
 	:emptyTest @unittest noTestNeeded
-	"empty test" assert=? .( :emptyTest .@unittest
+	true assert=? .( :emptyTest .@unittest
 	// value with a test
 	:withTest v= 42
 	:withTest @unittest func0
 		42
-	:rawLines assert=? l3.getType { :value ( :withTest .@unittest ) }
+	42 assert=? .( :withTest .@unittest
 
 :noTestNeeded @unittest testNYI
 
@@ -87,4 +87,16 @@
 
 :runTests @unittest testNYI
 
-:dumpTest @unittest testNYI
+:dumpTest @unittest func0
+	// value without any test
+	:noTest v= 42
+	"no test" assert=? .( dumpTest :noTest
+	// value with a stubbed out test
+	:emptyTest v= 42
+	:emptyTest @unittest noTestNeeded
+	"empty test" assert=? .( dumpTest :emptyTest
+	// value with a test
+	:withTest v= 42
+	:withTest @unittest func0
+		42
+	:rawLines assert=? l3.getType { :value ( dumpTest :withTest ) }
