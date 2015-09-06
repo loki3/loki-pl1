@@ -69,41 +69,45 @@
 // alternate cellular automata definition
 
 :defRule v= func0
-	// pull neighborhood & transition rule out of body
-	:neighborhood v= []
-	:transition v= (< #1 >)
+	// pull values & rules out of body
+	:neighborhood       v= [ [-1 0] [0 -1] [0 1] [1 0] ]
+	:default            v= false
+	:transformNeighbors v= (| ## fold (+) |)
+	:transition         v= (< #1 >)
 	[ body :[ ] applyAs (| (## . 0) = (## . 1) |)
 	//
-	// cached state
-	[:maxX :maxY] v= [0 0]
-	//
 	// private functions
-	:getCell v= func1 [ ->board ->x ->y ]
-		:state v= false
-		if ( (x >=? 0) &? (y >=? 0) &? (x <? maxX) &? (y <? maxY) )
-			:state = board . x . y
-		state
-	:countNeighbors v= func1 [ ->board ->x ->y ]
-		neighborhood apply (( [->i ->j] ` ( getCell [ board (x + i) (y + j) ] ) ? [1 0] ` )) fold (+)
 	:getNextState v= func1 [ ->board ->x ->y ]
-		transition [ ( getCell [board x y] ) ( countNeighbors [board x y] ) ]
+		:neighbors v= neighborhood apply (( [->i ->j] ` ( board . (x + i) . (y + j) ) ? [1 0] ` ))
+		:transformed v= transformNeighbors neighbors
+		transition [ ( board . x . y ) transformed ]
+	:addBorder v= func1 ->board
+		:fullRow v= ( 1 .. ( board . 0 .size + 2 ) ) apply (| default |)
+		:wider v= board apply (| [default] + ## + [default] |)
+		[fullRow] + wider + [fullRow]
 	:getNextBoard v= func1 ->board
-		[:maxX :maxY] = [ (board .size) ( (board . 0) .size ) ]
-		:columns v= 0 .. ( board . 0 .size - 1 )
+		:board' v= addBorder board
+		:columns v= 1 .. ( board' . 0 .size - 2 )
 		:computeRow v= func1 ->y
-			columns apply (| getNextState [ board y ] [ ## ] |)
-		( 0 .. ( board .size - 1 ) ) apply computeRow
+			columns apply (| getNextState [ board' y ] [ ## ] |)
+		( 1 .. ( board' .size - 2 ) ) apply computeRow
 	//
 	// return a function that takes a board
 	closure :getNextBoard
 :defRule @body? true @cat :ca @doc --"
 	Creates a function for calculating the next generation of a cellular automat board.
-	Specify the neighborhood of offsets from a cell and a rule for computing the next state.
+	Specify 1. an optional neighborhood of offsets from a cell,
+	2. an optional default value to use for cells outside the board,
+	3. an optional rule for transforming the neighbor cells into a state used by the
+	transition rule, which defaults to adding them up,
+	and 4. a rule for computing the next state.
 	See .@example.
 :defRule @example --"+ \n
 	:myRule v= defRule
-		:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
-		:transition   (( [->state ->n] ` (n =? 2) |? (n =? 3) ` ))
+		:neighborhood       [ [-1 0] [0 -1] [0 1] [1 0] ]
+		:default            false
+		:transformNeighbors (| ## fold (+) |)
+		:transition         (( [->state ->n] ` (n =? 2) |? (n =? 3) ` ))
 
 
 :life v= defRule
