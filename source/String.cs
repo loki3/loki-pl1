@@ -172,7 +172,8 @@ namespace loki3.builtin
 					if (iColumn == 0 && bFirstLine && dashesAfterFirst)
 					{
 						table += "\n";
-						table += new string('-', lineWidth - spaces);
+						int n = System.Math.Min(lineWidth - spaces, 79);
+						table += new string('-', n);
 						table += "\n";
 						dashesAfterFirst = false;
 					}
@@ -266,7 +267,8 @@ namespace loki3.builtin
 					if (dashesAfterFirst)
 					{
 						table += "\n";
-						table += new string('-', totalWidth - spaces);
+						int n = System.Math.Min(totalWidth - spaces, 79);
+						table += new string('-', n);
 						dashesAfterFirst = false;
 					}
 				}
