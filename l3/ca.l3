@@ -30,6 +30,15 @@
 :glider @cat :ca @doc ." A 'glider' life pattern
 
 //
+// neighborhoods
+
+:moore v= [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
+:moore @cat :ca @doc ." Cellular automata neighborhood, all eight neighboring cells
+
+:vonNeumann v= [ [-1 0] [0 -1] [1 0] [0 1] ]
+:vonNeumann @cat :ca @doc ." Cellular automata neighborhood, the four orthogonally neighboring cells
+
+//
 // support routines for computing new boards for a cellular automata
 
 :countNeighbors v= func1 [ ->board ->x ->y ]
@@ -114,3 +123,33 @@
 	:transition   (( [->state ->n] ` [state n] =any? [ [1 2] [1 3] [0 3] ] ? [1 0] ` ))
 :life @cat :ca @doc ." Function that applies the 'life' rule to a board
 :life @example ." life glider
+
+
+//
+// general apply-like methods for defining cellular automata
+
+:apply2d f= .( (->grid : :array) 1func1 (->compute : :function)
+	grid apply2d .[ (compute) .{ :default 0 :neighborhood moore
+:apply2d f= .( ( ->grid : :array ) 1func1 .[ ( ->compute : :function ) .[ (->default d= 0) (->neighborhood d= moore)
+	// add extra padding around grid, filling with default
+	:fullRow v= ( 1 .. ( grid . 0 .size + 2 ) ) apply (| default |)
+	:grid' v= [fullRow] + ( grid apply (| [default] + ## + [default] |) ) + [fullRow]
+	// get neighbors
+	:computeNextState v= func1 [ ->x ->y ]
+		:neighbors v= neighborhood apply (( [->i ->j] ` grid' . (x + i) . (y + j) ` ))
+		( grid' . x . y ) compute neighbors
+	// apply computation everywhere except padding
+	:columns v= 1 .. ( grid' . 0 .size - 2 )
+	:computeRow v= func1 ->y
+		columns apply (| computeNextState [ y ## ] |)
+	( 1 .. ( grid' .size - 2 ) ) apply computeRow
+:apply2d @cat :ca @doc --"
+	Takes a 2d array, i.e. an array of equally sized arrays, a default value,
+	and a neighborhood, and applies a 1func1 to every element, passing it the
+	element and an array of each of its eight neighbors.  The function computes
+	the new value for the cell.  A new 2d array is returned.
+:apply2d @example ." glider apply2d (< [ #1 ( #2 fold ( + ) ) ] =any? [ [1 2] [1 3] [0 3] ] ? [1 0] >)
+
+:lifeCell v= .( ->center 1func1 (->neighbors : :array)
+	[ center ( neighbors fold ( + ) ) ] =any? [ [1 2] [1 3] [0 3] ] ? [1 0]
+:lifeCell @cat :ca @doc ." Takes a cell state and neighboring states and computes new cell state

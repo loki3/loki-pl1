@@ -14,6 +14,8 @@
 	( "*." + \n + ".*" + \n ) assert=? ( b =>pretty )
 
 :glider @unittest noTestNeeded
+:moore @unittest noTestNeeded
+:vonNeumann @unittest noTestNeeded
 
 :countNeighbors @unittest func0
 	:b v= [ [0 0 0 0] [0 1 0 0] [0 0 1 0] [0 0 0 0] ]
@@ -88,3 +90,33 @@
 		**.*
 	:actual v= life input
 	expected assert=? actual
+
+:apply2d @unittest func0
+	// basic
+	:input1 v= caBoard
+		**.*
+		.***
+	:expected1 v= caBoard
+		*..*
+		..**
+	:actual1 v= input1 apply2d (< [ #1 ( #2 fold ( + ) ) ] =any? [ [1 2] [1 4] ] ? [1 0] >)
+	expected1 assert=? actual1
+	// change default & neighborhood
+	:input2 v= caBoard
+		*..*
+		..**
+	:expected2 v= caBoard
+		*.*.
+		*.*.
+	:f v= (< [ #1 ( #2 fold ( + ) ) ] =any? [ [1 2] [0 3] ] ? [1 0] >)
+	:actual2 v= input2 apply2d [ f { :default 1 :neighborhood vonNeumann } ]
+	expected2 assert=? actual2
+
+:lifeCell @unittest func0
+	0 assert=? 0 lifeCell [0 1 1]
+	1 assert=? 0 lifeCell [1 0 1 1]
+	0 assert=? 0 lifeCell [1 0 1 1 0 1]
+	0 assert=? 1 lifeCell [0 1 0]
+	1 assert=? 1 lifeCell [0 1 1]
+	1 assert=? 1 lifeCell [0 1 1 0 1]
+	0 assert=? 1 lifeCell [0 1 1 1 0 1]
