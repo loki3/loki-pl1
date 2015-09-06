@@ -15,7 +15,7 @@
 
 :=>pretty v= .( (->board : :array) 1func
 	:doLine v= func1 ->s
-		( s apply (| ## ? [ "*" "." ] |) foldLeft (< #1 + #2 >) ) + \n
+		( s apply (| ## =? 1 ? [ '*' '.' ] |) foldLeft (< #1 + #2 >) ) + \n
 	board apply (doLine) foldLeft (+)
 :=>pretty @cat :ca @doc ." Turn a board created by :caBoard into a pretty-printed string
 :=>pretty @example ." glider =>pretty
@@ -81,12 +81,11 @@
 		:neighbors v= neighborhood apply (( [->i ->j] ` board . (x + i) . (y + j) ` ))
 		:transformed v= transformNeighbors neighbors
 		transition [ ( board . x . y ) transformed ]
-	:addBorder v= func1 ->board
-		:fullRow v= ( 1 .. ( board . 0 .size + 2 ) ) apply (| default |)
-		:wider v= board apply (| [default] + ## + [default] |)
-		[fullRow] + wider + [fullRow]
 	:getNextBoard v= func1 ->board
-		:board' v= addBorder board
+		// add extra padding around board, filling with default
+		:fullRow v= ( 1 .. ( board . 0 .size + 2 ) ) apply (| default |)
+		:board' v= [fullRow] + ( board apply (| [default] + ## + [default] |) ) + [fullRow]
+		// apply computation everywhere except padding
 		:columns v= 1 .. ( board' . 0 .size - 2 )
 		:computeRow v= func1 ->y
 			columns apply (| computeNextState [ board' y ## ] |)

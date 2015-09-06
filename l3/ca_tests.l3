@@ -10,7 +10,7 @@
 	[ 1 0 0 ] assert=? b . 1
 
 :=>pretty @unittest func0
-	:b v= [ [ true false ] [ false true ] ]
+	:b v= [ [1 0] [0 1] ]
 	( "*." + \n + ".*" + \n ) assert=? ( b =>pretty )
 
 :glider @unittest noTestNeeded
