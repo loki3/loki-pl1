@@ -6,7 +6,7 @@
 // cellular automata board
 
 :caBoard v= func0
-	[body :"] applyAs (| (## =>array) apply (| ## =? "*" |) |)
+	[body :"] applyAs (| (## =>array) apply (| ## =? :* ? [ 1 0 ] |) |)
 :caBoard @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
 :caBoard @example --"+ \n
 	:mypattern v= caBoard
@@ -34,17 +34,17 @@
 
 :countNeighbors v= func1 [ ->board ->x ->y ]
 	:neighborhood v= [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
-	neighborhood apply (( [->i ->j] ` ( board . (x + i) . (y + j) ) ? [1 0] ` )) fold (+)
+	neighborhood apply (( [->i ->j] ` board . (x + i) . (y + j) ` )) fold (+)
 :countNeighbors @cat :ca @doc ." Count the 8 neighbors of the given cell
 
 :getNextState v= func1 [ ->board ->x ->y ]
 	:count v= countNeighbors [ board x y ]
-	( board . x . y ) ? [ ( (count =? 3) |? (count =? 2) ) (count =? 3) ]
+	[ (board . x . y) count ] =any? [ [1 2] [1 3] [0 3] ] ? [1 0]
 :getNextState @cat :ca @doc ." Return true/false based on whether cell should be on in the next generation
 
 :growBoard v= func1 ->board
-	:fullRow v= ( 1 .. ( board . 0 .size + 2 ) ) apply (| false |)
-	:wider v= board apply (| [false] + ## + [false] |)
+	:fullRow v= ( 1 .. ( board . 0 .size + 2 ) ) apply (| 0 |)
+	:wider v= board apply (| [0] + ## + [0] |)
 	[fullRow] + wider + [fullRow]
 :growBoard @cat :ca @doc ." Add a border of cells that are off so no boundary checking is needed
 
@@ -71,14 +71,14 @@
 :defRule v= func0
 	// pull values & rules out of body
 	:neighborhood       v= [ [-1 0] [0 -1] [0 1] [1 0] ]
-	:default            v= false
+	:default            v= 0
 	:transformNeighbors v= (| ## fold (+) |)
 	:transition         v= (< #1 >)
 	[ body :[ ] applyAs (| (## . 0) = (## . 1) |)
 	//
 	// private functions
-	:getNextState v= func1 [ ->board ->x ->y ]
-		:neighbors v= neighborhood apply (( [->i ->j] ` ( board . (x + i) . (y + j) ) ? [1 0] ` ))
+	:computeNextState v= func1 [ ->board ->x ->y ]
+		:neighbors v= neighborhood apply (( [->i ->j] ` board . (x + i) . (y + j) ` ))
 		:transformed v= transformNeighbors neighbors
 		transition [ ( board . x . y ) transformed ]
 	:addBorder v= func1 ->board
@@ -89,7 +89,7 @@
 		:board' v= addBorder board
 		:columns v= 1 .. ( board' . 0 .size - 2 )
 		:computeRow v= func1 ->y
-			columns apply (| getNextState [ board' y ] [ ## ] |)
+			columns apply (| computeNextState [ board' y ## ] |)
 		( 1 .. ( board' .size - 2 ) ) apply computeRow
 	//
 	// return a function that takes a board
@@ -105,13 +105,13 @@
 :defRule @example --"+ \n
 	:myRule v= defRule
 		:neighborhood       [ [-1 0] [0 -1] [0 1] [1 0] ]
-		:default            false
+		:default            0
 		:transformNeighbors (| ## fold (+) |)
-		:transition         (( [->state ->n] ` (n =? 2) |? (n =? 3) ` ))
+		:transition         (( [->state ->n] ` ( (n =? 2) |? (n =? 3) ) ? [1 0] ` ))
 
 
 :life v= defRule
 	:neighborhood [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
-	:transition   (( [->state ->n] ` state ? [ ( (n =? 3) |? (n =? 2) ) (n =? 3) ] ` ))
+	:transition   (( [->state ->n] ` [state n] =any? [ [1 2] [1 3] [0 3] ] ? [1 0] ` ))
 :life @cat :ca @doc ." Function that applies the 'life' rule to a board
 :life @example ." life glider

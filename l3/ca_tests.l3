@@ -6,8 +6,8 @@
 	:b v= caBoard
 		.*.
 		*..
-	[ false true false ] assert=? b . 0
-	[ true false false ] assert=? b . 1
+	[ 0 1 0 ] assert=? b . 0
+	[ 1 0 0 ] assert=? b . 1
 
 :=>pretty @unittest func0
 	:b v= [ [ true false ] [ false true ] ]
@@ -16,7 +16,7 @@
 :glider @unittest noTestNeeded
 
 :countNeighbors @unittest func0
-	:b v= [ [false false false false] [false true false false] [false false true false] [false false false false] ]
+	:b v= [ [0 0 0 0] [0 1 0 0] [0 0 1 0] [0 0 0 0] ]
 	1 assert=? countNeighbors [b 1 1]
 	2 assert=? countNeighbors [b 1 2]
 	2 assert=? countNeighbors [b 2 1]
@@ -26,50 +26,50 @@
 :getNextState @unittest func0
 	// **.*
 	// .***
-	:padding v= [false false false false false false]
-	:main v= [ [false true true false true false] [false false true true true false] ]
+	:padding v= [0 0 0 0 0 0]
+	:main v= [ [0 1 1 0 1 0] [0 0 1 1 1 0] ]
 	:b v= [padding] + main + [padding]
 	// survives with 2 neighbors
-	true  assert=? getNextState [b 1 1]
+	1 assert=? getNextState [b 1 1]
 	// survives with 3 neighbors
-	true  assert=? getNextState [b 1 2]
+	1 assert=? getNextState [b 1 2]
 	// no birth with 5 neighbors
-	false assert=? getNextState [b 1 3]
+	0 assert=? getNextState [b 1 3]
 	// survives with 2 neighbors
-	true  assert=? getNextState [b 1 4]
+	1 assert=? getNextState [b 1 4]
 	// born from 3 neighbors
-	true  assert=? getNextState [b 2 1]
+	1 assert=? getNextState [b 2 1]
 	// survives with 3 neighbors
-	true  assert=? getNextState [b 2 2]
+	1 assert=? getNextState [b 2 2]
 	// dies from 4 neighbors
-	false assert=? getNextState [b 2 3]
+	0 assert=? getNextState [b 2 3]
 	// survives with 2 neighbors
-	true  assert=? getNextState [b 2 4]
+	1 assert=? getNextState [b 2 4]
 
 :growBoard @unittest func0
 	:a v= growBoard [ [1 2 3] [4 5 6] ]
-	[ [false false false false false] [false 1 2 3 false] [false 4 5 6 false] [false false false false false] ] assert=? a
+	[ [0 0 0 0 0] [0 1 2 3 0] [0 4 5 6 0] [0 0 0 0 0] ] assert=? a
 
 :getNextBoard @unittest func0
 	// **.*
 	// .***
-	:b' v= getNextBoard [ [ true true false true ] [ false true true true ] ]
-	[ true true false true ] assert=? b' . 0
-	[ true true false true ] assert=? b' . 1
+	:b' v= getNextBoard [ [ 1 1 0 1 ] [ 0 1 1 1 ] ]
+	[ 1 1 0 1 ] assert=? b' . 0
+	[ 1 1 0 1 ] assert=? b' . 1
 
 :ticks @unittest func0
 	// ...
 	// ***
 	// ...
-	:b v= [ [ false false false ] [ true true true ] [ false false false ] ]
-	:b' v= [ [ false true false ] [ false true false ] [ false true false ] ]
+	:b v= [ [ 0 0 0 ] [ 1 1 1 ] [ 0 0 0 ] ]
+	:b' v= [ [ 0 1 0 ] [ 0 1 0 ] [ 0 1 0 ] ]
 	b' assert=? ( b ticks 1 )
 	b  assert=? ( b ticks 2 )
 
 :defRule @unittest func0
 	:rule v= defRule
 		:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
-		:transition   (( [->state ->n] ` (n =? 2) |? (n =? 3) ` ))
+		:transition   (( [->state ->n] ` n =any? [2 3] ? [1 0] ` ))
 	:input v= caBoard
 		.*..*
 		**.*.
