@@ -32,6 +32,9 @@
 //
 // neighborhoods
 
+:adjacent1d v= [ -1 1 ]
+:adjacent1d @cat :ca @doc ." Cellular automata neighborhood, both immediate neighbors
+
 :moore2d v= [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
 :moore2d @cat :ca @doc ." Cellular automata neighborhood, all eight neighboring cells
 
@@ -41,6 +44,20 @@
 
 //
 // general apply-like methods for defining cellular automata
+
+:apply1d f= .( (->states : :array) 1func1 (->compute : :function)
+	states apply1d .[ (compute) .{ :default 0 :neighborhood adjacent
+:apply1d f= .( ( ->states : :array ) 1func1 .[ ( ->compute : :function ) .[ (->default d= 0) (->neighborhood d= adjacent)
+	states d= default
+	:computeNextState v= func1 ->x
+		:neighbors v= neighborhood apply (| states . ( ## + x ) |)
+		( states . x ) compute neighbors
+	( 0 .. ( states .size - 1 ) ) apply computeNextState
+:apply1d @cat :ca @doc --"
+	Takes an array of states, a default value, and applies a 1func1 to every
+	element, passing it the element and an array of neighbor states.  The
+	function computes the new value for the cell.  A new array is returned.
+:apply1d @example ." row apply1d (< ( #1 + #2 . 0 + #2 . 1 ) =any? [1 3] ? [1 0] >)
 
 :apply2d f= .( (->grid : :array) 1func1 (->compute : :function)
 	grid apply2d .[ (compute) .{ :default 0 :neighborhood moore2d
