@@ -17,29 +17,6 @@
 :moore2d @unittest noTestNeeded
 :vonNeumann2d @unittest noTestNeeded
 
-:defRule2d @unittest func0
-	:rule v= defRule2d
-		:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
-		:transition   (( [->state ->n] ` n =any? [2 3] ? [1 0] ` ))
-	:input v= caBoard2d
-		.*..*
-		**.*.
-	:expected v= caBoard2d
-		*..*.
-		.**.*
-	:actual v= rule input
-	expected assert=? actual
-
-:life @unittest func0
-	:input v= caBoard2d
-		**.*
-		.***
-	:expected v= caBoard2d
-		**.*
-		**.*
-	:actual v= life input
-	expected assert=? actual
-
 :apply2d @unittest func0
 	// basic
 	:input1 v= caBoard2d
@@ -69,3 +46,26 @@
 	1 assert=? 1 lifeCell [0 1 1]
 	1 assert=? 1 lifeCell [0 1 1 0 1]
 	0 assert=? 1 lifeCell [0 1 1 1 0 1]
+
+:defRule2d @unittest func0
+	:rule v= defRule2d
+		:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
+		:transition   (( [->state ->n] ` n =any? [2 3] ? [1 0] ` ))
+	:input v= caBoard2d
+		.*..*
+		**.*.
+	:expected v= caBoard2d
+		*..*.
+		.**.*
+	:actual v= rule input
+	expected assert=? actual
+
+:life @unittest func0
+	:input v= caBoard2d
+		**.*
+		.***
+	:expected v= caBoard2d
+		**.*
+		**.*
+	:actual v= life input
+	expected assert=? actual
