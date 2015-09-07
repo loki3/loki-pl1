@@ -2,12 +2,18 @@
 // unit tests for ca.l3
 //
 
+:caBoard1d @unittest func0
+	[ 1 1 0 0 1 ] assert=? caBoard1d :**..*
+
 :caBoard2d @unittest func0
 	:b v= caBoard2d
 		.*.
 		*..
 	[ 0 1 0 ] assert=? b . 0
 	[ 1 0 0 ] assert=? b . 1
+
+:=>pretty1d @unittest func0
+	:*..**. assert=? [1 0 0 1 1 0] =>pretty1d
 
 :=>pretty2d @unittest func0
 	:b v= [ [1 0] [0 1] ]

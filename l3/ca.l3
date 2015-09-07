@@ -5,6 +5,11 @@
 //
 // cellular automata board
 
+:caBoard1d v= func1 (->s : :string)
+	s =>array apply (| ## =? :* ? [1 0] |)
+:caBoard1d @cat :ca @doc ." Create a 2D board of on/off states from a string where * means on
+:caBoard1d @example ." caBoard1d :**..*
+
 :caBoard2d v= func0
 	[body :"] applyAs (| (## =>array) apply (| ## =? :* ? [ 1 0 ] |) |)
 :caBoard2d @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
@@ -12,6 +17,11 @@
 	:mypattern v= caBoard2d
 		..**
 		.**.
+
+:=>pretty1d v= .( (->board : :array) 1func
+	board apply (| ## =? 1 ? [ '*' '.' ] |) foldLeft (< #1 + #2 >)
+:=>pretty1d @cat :ca @doc ." Turn a board created by :caBoard1d into a pretty-printed string
+:=>pretty1d @example ." [1 0 0 1 1] =>pretty1d
 
 :=>pretty2d v= .( (->board : :array) 1func
 	:doLine v= func1 ->s
