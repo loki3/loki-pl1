@@ -5,22 +5,22 @@
 //
 // cellular automata board
 
-:caBoard v= func0
+:caBoard2d v= func0
 	[body :"] applyAs (| (## =>array) apply (| ## =? :* ? [ 1 0 ] |) |)
-:caBoard @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
-:caBoard @example --"+ \n
-	:mypattern v= caBoard
+:caBoard2d @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
+:caBoard2d @example --"+ \n
+	:mypattern v= caBoard2d
 		..**
 		.**.
 
-:=>pretty v= .( (->board : :array) 1func
+:=>pretty2d v= .( (->board : :array) 1func
 	:doLine v= func1 ->s
 		( s apply (| ## =? 1 ? [ '*' '.' ] |) foldLeft (< #1 + #2 >) ) + \n
 	board apply (doLine) foldLeft (+)
-:=>pretty @cat :ca @doc ." Turn a board created by :caBoard into a pretty-printed string
-:=>pretty @example ." glider =>pretty
+:=>pretty2d @cat :ca @doc ." Turn a board created by :caBoard2d into a pretty-printed string
+:=>pretty2d @example ." glider =>pretty2d
 
-:glider v= caBoard
+:glider v= caBoard2d
 	.....
 	..*..
 	...*.
@@ -32,54 +32,18 @@
 //
 // neighborhoods
 
-:moore v= [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
-:moore @cat :ca @doc ." Cellular automata neighborhood, all eight neighboring cells
+:moore2d v= [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
+:moore2d @cat :ca @doc ." Cellular automata neighborhood, all eight neighboring cells
 
-:vonNeumann v= [ [-1 0] [0 -1] [1 0] [0 1] ]
-:vonNeumann @cat :ca @doc ." Cellular automata neighborhood, the four orthogonally neighboring cells
-
-//
-// support routines for computing new boards for a cellular automata
-
-:countNeighbors v= func1 [ ->board ->x ->y ]
-	:neighborhood v= [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
-	neighborhood apply (( [->i ->j] ` board . (x + i) . (y + j) ` )) fold (+)
-:countNeighbors @cat :ca @doc ." Count the 8 neighbors of the given cell
-
-:getNextState v= func1 [ ->board ->x ->y ]
-	:count v= countNeighbors [ board x y ]
-	[ (board . x . y) count ] =any? [ [1 2] [1 3] [0 3] ] ? [1 0]
-:getNextState @cat :ca @doc ." Return true/false based on whether cell should be on in the next generation
-
-:growBoard v= func1 ->board
-	:fullRow v= ( 1 .. ( board . 0 .size + 2 ) ) apply (| 0 |)
-	:wider v= board apply (| [0] + ## + [0] |)
-	[fullRow] + wider + [fullRow]
-:growBoard @cat :ca @doc ." Add a border of cells that are off so no boundary checking is needed
-
-:getNextBoard v= func1 ->board
-	// add a single cell's worth of padding around the board so we don't need to check the boundary
-	:board' v= growBoard board
-	:columns v= 1 .. ( board' . 0 .size - 2 )
-	:computeRow v= func1 ->y
-		columns apply (| getNextState [ board' y ] [ ## ] |)
-	( 1 .. ( board' .size - 2 ) ) apply computeRow
-:getNextBoard @cat :ca @doc ." Compute the next state of an entire board
-:getNextBoard @example ." getNextBoard glider
-
-:ticks f= .( ->board 1func1 0
-	board
-:ticks f= .( ->board 1func1 ->n
-	(getNextBoard board) ticks (n - 1)
-:ticks @cat :ca @doc ." Compute the nth generation of a given board
-:ticks @example ." glider ticks 5
+:vonNeumann2d v= [ [-1 0] [0 -1] [1 0] [0 1] ]
+:vonNeumann2d @cat :ca @doc ." Cellular automata neighborhood, the four orthogonally neighboring cells
 
 //
-// alternate cellular automata definition
+// define a 2d cellular automata rule
 
-:defRule v= func0
+:defRule2d v= func0
 	// pull values & rules out of body
-	:neighborhood       v= [ [-1 0] [0 -1] [0 1] [1 0] ]
+	:neighborhood       v= vonNeumann2d
 	:default            v= 0
 	:transformNeighbors v= (| ## fold (+) |)
 	:transition         v= (< #1 >)
@@ -102,7 +66,7 @@
 	//
 	// return a function that takes a board
 	closure :getNextBoard
-:defRule @body? true @cat :ca @doc --"
+:defRule2d @body? true @cat :ca @doc --"
 	Creates a function for calculating the next generation of a cellular automat board.
 	Specify 1. an optional neighborhood of offsets from a cell,
 	2. an optional default value to use for cells outside the board,
@@ -110,16 +74,16 @@
 	transition rule, which defaults to adding them up,
 	and 4. a rule for computing the next state.
 	See .@example.
-:defRule @example --"+ \n
-	:myRule v= defRule
+:defRule2d @example --"+ \n
+	:myRule v= defRule2d
 		:neighborhood       [ [-1 0] [0 -1] [0 1] [1 0] ]
 		:default            0
 		:transformNeighbors (| ## fold (+) |)
 		:transition         (( [->state ->n] ` ( (n =? 2) |? (n =? 3) ) ? [1 0] ` ))
 
 
-:life v= defRule
-	:neighborhood [ [-1 -1] [-1 0] [-1 1] [0 -1] [0 1] [1 -1] [1 0] [1 1] ]
+:life v= defRule2d
+	:neighborhood moore2d
 	:transition   (( [->state ->n] ` [state n] =any? [ [1 2] [1 3] [0 3] ] ? [1 0] ` ))
 :life @cat :ca @doc ." Function that applies the 'life' rule to a board
 :life @example ." life glider
@@ -129,8 +93,8 @@
 // general apply-like methods for defining cellular automata
 
 :apply2d f= .( (->grid : :array) 1func1 (->compute : :function)
-	grid apply2d .[ (compute) .{ :default 0 :neighborhood moore
-:apply2d f= .( ( ->grid : :array ) 1func1 .[ ( ->compute : :function ) .[ (->default d= 0) (->neighborhood d= moore)
+	grid apply2d .[ (compute) .{ :default 0 :neighborhood moore2d
+:apply2d f= .( ( ->grid : :array ) 1func1 .[ ( ->compute : :function ) .[ (->default d= 0) (->neighborhood d= moore2d)
 	// add extra padding around grid, filling with default
 	:fullRow v= ( 1 .. ( grid . 0 .size + 2 ) ) apply (| default |)
 	:grid' v= [fullRow] + ( grid apply (| [default] + ## + [default] |) ) + [fullRow]

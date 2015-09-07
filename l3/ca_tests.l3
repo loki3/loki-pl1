@@ -2,90 +2,39 @@
 // unit tests for ca.l3
 //
 
-:caBoard @unittest func0
-	:b v= caBoard
+:caBoard2d @unittest func0
+	:b v= caBoard2d
 		.*.
 		*..
 	[ 0 1 0 ] assert=? b . 0
 	[ 1 0 0 ] assert=? b . 1
 
-:=>pretty @unittest func0
+:=>pretty2d @unittest func0
 	:b v= [ [1 0] [0 1] ]
-	( "*." + \n + ".*" + \n ) assert=? ( b =>pretty )
+	( "*." + \n + ".*" + \n ) assert=? ( b =>pretty2d )
 
 :glider @unittest noTestNeeded
-:moore @unittest noTestNeeded
-:vonNeumann @unittest noTestNeeded
+:moore2d @unittest noTestNeeded
+:vonNeumann2d @unittest noTestNeeded
 
-:countNeighbors @unittest func0
-	:b v= [ [0 0 0 0] [0 1 0 0] [0 0 1 0] [0 0 0 0] ]
-	1 assert=? countNeighbors [b 1 1]
-	2 assert=? countNeighbors [b 1 2]
-	2 assert=? countNeighbors [b 2 1]
-	1 assert=? countNeighbors [b 2 2]
-	true
-
-:getNextState @unittest func0
-	// **.*
-	// .***
-	:padding v= [0 0 0 0 0 0]
-	:main v= [ [0 1 1 0 1 0] [0 0 1 1 1 0] ]
-	:b v= [padding] + main + [padding]
-	// survives with 2 neighbors
-	1 assert=? getNextState [b 1 1]
-	// survives with 3 neighbors
-	1 assert=? getNextState [b 1 2]
-	// no birth with 5 neighbors
-	0 assert=? getNextState [b 1 3]
-	// survives with 2 neighbors
-	1 assert=? getNextState [b 1 4]
-	// born from 3 neighbors
-	1 assert=? getNextState [b 2 1]
-	// survives with 3 neighbors
-	1 assert=? getNextState [b 2 2]
-	// dies from 4 neighbors
-	0 assert=? getNextState [b 2 3]
-	// survives with 2 neighbors
-	1 assert=? getNextState [b 2 4]
-
-:growBoard @unittest func0
-	:a v= growBoard [ [1 2 3] [4 5 6] ]
-	[ [0 0 0 0 0] [0 1 2 3 0] [0 4 5 6 0] [0 0 0 0 0] ] assert=? a
-
-:getNextBoard @unittest func0
-	// **.*
-	// .***
-	:b' v= getNextBoard [ [ 1 1 0 1 ] [ 0 1 1 1 ] ]
-	[ 1 1 0 1 ] assert=? b' . 0
-	[ 1 1 0 1 ] assert=? b' . 1
-
-:ticks @unittest func0
-	// ...
-	// ***
-	// ...
-	:b v= [ [ 0 0 0 ] [ 1 1 1 ] [ 0 0 0 ] ]
-	:b' v= [ [ 0 1 0 ] [ 0 1 0 ] [ 0 1 0 ] ]
-	b' assert=? ( b ticks 1 )
-	b  assert=? ( b ticks 2 )
-
-:defRule @unittest func0
-	:rule v= defRule
+:defRule2d @unittest func0
+	:rule v= defRule2d
 		:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
 		:transition   (( [->state ->n] ` n =any? [2 3] ? [1 0] ` ))
-	:input v= caBoard
+	:input v= caBoard2d
 		.*..*
 		**.*.
-	:expected v= caBoard
+	:expected v= caBoard2d
 		*..*.
 		.**.*
 	:actual v= rule input
 	expected assert=? actual
 
 :life @unittest func0
-	:input v= caBoard
+	:input v= caBoard2d
 		**.*
 		.***
-	:expected v= caBoard
+	:expected v= caBoard2d
 		**.*
 		**.*
 	:actual v= life input
@@ -93,23 +42,23 @@
 
 :apply2d @unittest func0
 	// basic
-	:input1 v= caBoard
+	:input1 v= caBoard2d
 		**.*
 		.***
-	:expected1 v= caBoard
+	:expected1 v= caBoard2d
 		*..*
 		..**
 	:actual1 v= input1 apply2d (< [ #1 ( #2 fold ( + ) ) ] =any? [ [1 2] [1 4] ] ? [1 0] >)
 	expected1 assert=? actual1
 	// change default & neighborhood
-	:input2 v= caBoard
+	:input2 v= caBoard2d
 		*..*
 		..**
-	:expected2 v= caBoard
+	:expected2 v= caBoard2d
 		*.*.
 		*.*.
 	:f v= (< [ #1 ( #2 fold ( + ) ) ] =any? [ [1 2] [0 3] ] ? [1 0] >)
-	:actual2 v= input2 apply2d [ f { :default 1 :neighborhood vonNeumann } ]
+	:actual2 v= input2 apply2d [ f { :default 1 :neighborhood vonNeumann2d } ]
 	expected2 assert=? actual2
 
 :lifeCell @unittest func0
