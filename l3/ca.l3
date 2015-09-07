@@ -56,8 +56,8 @@
 // general apply-like methods for defining cellular automata
 
 :apply1d f= .( (->states : :array) 1func1 (->compute : :function)
-	states apply1d .[ (compute) .{ :default 0 :neighborhood adjacent
-:apply1d f= .( ( ->states : :array ) 1func1 .[ ( ->compute : :function ) .[ (->default d= 0) (->neighborhood d= adjacent)
+	states apply1d .[ (compute) .{ :default 0 :neighborhood adjacent1d
+:apply1d f= .( ( ->states : :array ) 1func1 .[ ( ->compute : :function ) .[ (->default d= 0) (->neighborhood d= adjacent1d)
 	states d= default
 	:computeNextState v= func1 ->x
 		:neighbors v= neighborhood apply (| states . ( ## + x ) |)
