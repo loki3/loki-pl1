@@ -25,6 +25,8 @@ namespace loki3.builtin
 			scope.SetValue("l3.gt", new GreaterThan());
 			scope.SetValue("l3.floor", new Floor());
 			scope.SetValue("l3.ceiling", new Ceiling());
+			scope.SetValue("l3.bitAnd", new BitAnd());
+			scope.SetValue("l3.bitOr", new BitOr());
 		}
 
 
@@ -383,6 +385,54 @@ namespace loki3.builtin
 				if (int.MinValue <= result && result <= int.MaxValue)
 					return new ValueInt((int)result);
 				return new ValueFloat(result);
+			}
+		}
+
+		/// <summary>[a1 a2] -> a1 & a2</summary>
+		class BitAnd : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new BitAnd(); }
+
+			internal BitAnd()
+			{
+				SetDocString("Return [0] & [1].");
+				List<Value> list = new List<Value>();
+				list.Add(PatternData.Single("a", ValueType.Int));
+				list.Add(PatternData.Single("b", ValueType.Int));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				List<Value> list = arg.AsArray;
+				Value v1 = list[0];
+				Value v2 = list[1];
+				return new ValueInt(v1.AsInt & v2.AsInt);
+			}
+		}
+
+		/// <summary>[a1 a2] -> a1 | a2</summary>
+		class BitOr : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new BitOr(); }
+
+			internal BitOr()
+			{
+				SetDocString("Return [0] | [1].");
+				List<Value> list = new List<Value>();
+				list.Add(PatternData.Single("a", ValueType.Int));
+				list.Add(PatternData.Single("b", ValueType.Int));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				List<Value> list = arg.AsArray;
+				Value v1 = list[0];
+				Value v2 = list[1];
+				return new ValueInt(v1.AsInt | v2.AsInt);
 			}
 		}
 	}

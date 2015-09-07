@@ -860,7 +860,11 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :max v= .(< ( #1 >? #2 ) ? [ #1 #2 ]
 :max @cat :math @doc ." Returns the largest of two values.
 
+:& v= .(< l3.bitAnd .[ #1 #2
+:& @cat :math @doc ." Bitwise and of two integers
 
+:| v= .(< l3.bitOr .[ #1 #2
+:| @cat :math @doc ." Bitwise or of two integers
 //
 // exceptions
 

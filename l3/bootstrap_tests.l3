@@ -984,6 +984,13 @@
 :max @unittest func0
 	7 assert=? 4 max 7
 
+:& @unittest func0
+	0 assert=? 8 & 3
+	3 assert=? 7 & 3
+
+:| @unittest func0
+	11 assert=? 8 | 3
+	7 assert=? 7 | 3
 
 //
 // exceptions
