@@ -92,8 +92,9 @@
 :apply2d @example ." glider apply2d (< [ #1 ( #2 fold ( + ) ) ] =any? [ [1 2] [1 3] [0 3] ] ? [1 0] >)
 
 :basic1d v= func1 ->n
-	:result v= [ (n & 1) (n & 2) (n & 4) (n & 8) (n & 16) (n & 32) (n & 64) (n & 128) ]
-	:result = result apply (| ## =? 0 ? [0 1] |)
+	// create an array of binary bits of n
+	:result v= (0 .. 7) apply (| n & (2 ^ ##) =? 0 ? [0 1] |)
+	// interpret [last current next] as binary mapping to the binary digits
 	:f v= (< result . ( 4 * (#2 . 0) + 2 * #1 + #2 . 1 ) >)
 	closure :f
 :basic1d @cat :ca @doc --"
