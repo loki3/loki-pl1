@@ -91,6 +91,9 @@
 	the new value for the cell.  A new 2d array is returned.
 :apply2d @example ." glider apply2d (< [ #1 ( #2 fold ( + ) ) ] =any? [ [1 2] [1 3] [0 3] ] ? [1 0] >)
 
+//
+// some cellular automata rule generators
+
 :basic1d v= func1 ->n
 	// create an array of binary bits of n
 	:result v= (0 .. 7) apply (| n & (2 ^ ##) =? 0 ? [0 1] |)
@@ -105,6 +108,18 @@
 :lifeCell v= .( ->center 1func1 (->neighbors : :array)
 	[ center ( neighbors fold ( + ) ) ] =any? [ [1 2] [1 3] [0 3] ] ? [1 0]
 :lifeCell @cat :ca @doc ." Takes a cell state and neighboring states and computes new cell state
+
+//
+// repeatedly run a 1d cellular automata rule
+
+:run1d v= func1 .[ (->input : :string) (->rule : :function) (->n : :int)
+	:b v= caBoard1d input
+	print b =>pretty1d
+	repeat n
+		:b = b apply1d (rule)
+		print b =>pretty1d
+:run1d @cat :ca @doc ." Take a string input, 1d ca rule, and a count, and outputs the series of results
+
 
 //
 // define a 2d cellular automata rule

@@ -77,6 +77,8 @@
 	1 assert=? 1 lifeCell [0 1 1 0 1]
 	0 assert=? 1 lifeCell [0 1 1 1 0 1]
 
+:run1d @unittest noTestNeeded
+
 :defRule2d @unittest func0
 	:rule v= defRule2d
 		:neighborhood [ [-1 0] [0 -1] [0 1] [1 0] ]
