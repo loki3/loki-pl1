@@ -946,6 +946,10 @@
 	assertTrue? ( ( sqrt 4 ) - 2 ) <? 0.00000001
 	assertTrue? ( ( sqrt 2 ) - 1.414213562 ) <? 0.00000001
 
+:^ @unittest func0
+	8 assert=? 2 ^ 3
+	4 assert=? 16 ^ 0.5
+
 :++ @unittest func0
 	:i v= 4
 	5 assert=? :i ++

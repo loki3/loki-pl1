@@ -21,6 +21,7 @@ namespace loki3.builtin
 			scope.SetValue("l3.divide", new Divide());
 			scope.SetValue("l3.modulo", new Modulo());
 			scope.SetValue("l3.sqrt", new SquareRoot());
+			scope.SetValue("l3.power", new Power());
 			scope.SetValue("l3.lt", new LessThan());
 			scope.SetValue("l3.gt", new GreaterThan());
 			scope.SetValue("l3.floor", new Floor());
@@ -279,6 +280,42 @@ namespace loki3.builtin
 			{
 				double a = arg.AsForcedFloat;
 				return new ValueFloat(System.Math.Sqrt(a));
+			}
+		}
+
+		/// <summary>[a1 a2] -> a1 ^ a2</summary>
+		class Power : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new Power(); }
+
+			internal Power()
+			{
+				SetDocString("Return [0] ^ [1].");
+
+				List<Value> list = new List<Value>();
+				list.Add(PatternData.Single("a", ValueType.Number));
+				list.Add(PatternData.Single("b", ValueType.Number));
+				ValueArray array = new ValueArray(list);
+				Init(array);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				List<Value> list = arg.AsArray;
+				Value v1 = list[0];
+				Value v2 = list[1];
+				
+
+				// keep everything as ints
+				if (v1.Type == loki3.core.ValueType.Int && v2.Type == loki3.core.ValueType.Int)
+				{
+					int iresult = (int)System.Math.Pow(v1.AsInt, v2.AsInt);
+					return new ValueInt(iresult);
+				}
+
+				// do math as floats
+				double dresult = System.Math.Pow(v1.AsForcedFloat, v2.AsForcedFloat);
+				return new ValueFloat(dresult);
 			}
 		}
 
