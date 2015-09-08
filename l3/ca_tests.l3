@@ -57,6 +57,17 @@
 	:actual2 v= input2 apply2d [ f { :default 1 :neighborhood vonNeumann2d } ]
 	expected2 assert=? actual2
 
+:basic1d @unittest func0
+	:all v= [ [ 1 [1 1] ] [ 1 [1 0] ] [ 0 [1 1] ] [ 0 [1 0] ] [ 1 [0 1] ] [ 1 [0 0] ] [ 0 [0 1] ] [ 0 [0 0] ] ]
+	// rule 91
+	:r91 v= (basic1d 91)
+	:results91 v= all apply (( [->c ->n] ` c r91 n ` ))
+	[0 1 0 1 1 0 1 1] assert=? results91
+	// rule 30
+	:r30 v= (basic1d 30)
+	:results30 v= all apply (( [->c ->n] ` c r30 n ` ))
+	[0 0 0 1 1 1 1 0] assert=? results30
+
 :lifeCell @unittest func0
 	0 assert=? 0 lifeCell [0 1 1]
 	1 assert=? 0 lifeCell [1 0 1 1]
