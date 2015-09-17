@@ -218,6 +218,26 @@ a { :y 4 }
 b { :x 4 }
 ```
 
+Data in, data out
+-----------------
+
+For functions that transform data based on some additional input, like a function, it's idiomatic to create an infix function that takes data in on the left, combines it with additional input specified on the right, and returns the transformed data.  For example:
+
+```
+:transform v= ( ->data 1func1 ->function )
+	function data
+```
+
+This makes it straight forward to chain together a series of data transformations.
+
+```
+[1 3 4 7] filter (| ## % 2 =? 1 |) apply (| ## * 2 |) fold (+)
+// [1 3 4 7] -> [1 3 7] -> [2 6 14] -> 22
+```
+
+Some languages have notation for turning standard prefix functions into infix functions (e.g. the backtick in Haskell) or for flowing data through a series of functions (e.g. the pipe operators in Clojure).  Loki3 optimizes for this pattern.  Even the functions passed to other functions often follow this pattern, e.g. *fold* takes an infix function.
+
+
 Active functions
 ----------------
 
