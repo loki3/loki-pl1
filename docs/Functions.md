@@ -146,6 +146,19 @@ step { :hasNext false :next 6 }
 step { :hasNext true }
 ```
 
+Alternatively, you could write a postfix function that checks for the presence of those specific keys and use that in the definition of the *step* function.
+
+```
+:isIterator v= ( ->input 1func )
+	input @@hasKeys [ :hasNext :next ]
+
+:step v= func1 ( ->thing isIterator )
+	:result v= 5
+	if thing . :hasNext
+		:result = thing . :next
+	result
+```
+
 Simple declarations
 -------------------
 
@@ -157,14 +170,14 @@ Since it's simple to extend the syntax of loki3, multiple ways of defining funct
 (( [ ->a ->b ->c ] ` a * b * c ` )) [ 2 3 5 ]
 ```
 
-Functions taking exactly one argument can be declared using (| |).  The implicit parameter is referenced as ##.  This is useful for passing simple functions to other functions such as apply, which take a function as a parameter.  The following example doubles every value in an array:
+Postfix functions taking exactly one argument can be declared using (| |).  The implicit parameter is referenced as ##.  This is useful for passing simple functions to other functions such as apply, which take a function as a parameter.  The following example doubles every value in an array:
 
 ```
 // evals to [ 6 10 14 ]
 [ 3 5 7 ] apply (| ## * 2 |)
 ```
 
-Functions taking exactly two arguments can be declared using (< >).  The implicit parameters are referenced as #1 and #2.  This is useful for passing simple functions to functions such as fold.  The following example multiplies together every value in an array:
+Infix functions taking one pre-argument and one post-argument can be declared using (< >).  The implicit parameters are referenced as #1 and #2.  This is useful for passing simple functions to functions such as fold.  The following example multiplies together every value in an array:
 
 ```
 // evals to 30
