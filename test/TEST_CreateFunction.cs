@@ -118,5 +118,47 @@ namespace loki3.core.test
 				Assert.AreEqual(7, value.AsInt);
 			}
 		}
+
+		[Test]
+		public void TestPartialIn()
+		{
+			ScopeChain scope = new ScopeChain();
+			scope.SetValue("+", new TestSum());
+			scope.SetValue("(", new ValueDelimiter(")", DelimiterType.AsValue));
+
+			// create infix function because we're testing that CreateFunction.UserFunction.Eval
+			// knows how to create partial functions
+			List<string> body = new List<string>();
+			body.Add("x + y");
+			CreateFunction.Do(scope, "add", new ValueString("x"), new ValueString("y"), body);
+
+			{	// test that it creates a prefix function when only the post parameter is specified
+				DelimiterList list = ParseLine.Do("(add 3)", scope);
+				Value value = EvalList.Do(list.Nodes, scope);
+				Assert.AreEqual(ValueType.Function, value.Type);
+				Map meta = value.Metadata;
+				Assert.IsTrue(meta.ContainsKey(ValueFunction.keyPreviousPattern));
+				Assert.IsFalse(meta.ContainsKey(ValueFunction.keyNextPattern));
+			}
+			{
+				DelimiterList list = ParseLine.Do("2 (add 3)", scope);
+				Value value = EvalList.Do(list.Nodes, scope);
+				Assert.AreEqual(5, value.AsInt);
+			}
+
+			{	// test that it creates a postfix function when only the pre parameter is specified
+				DelimiterList list = ParseLine.Do("(4 add)", scope);
+				Value value = EvalList.Do(list.Nodes, scope);
+				Assert.AreEqual(ValueType.Function, value.Type);
+				Map meta = value.Metadata;
+				Assert.IsFalse(meta.ContainsKey(ValueFunction.keyPreviousPattern));
+				Assert.IsTrue(meta.ContainsKey(ValueFunction.keyNextPattern));
+			}
+			{
+				DelimiterList list = ParseLine.Do("(4 add) 5", scope);
+				Value value = EvalList.Do(list.Nodes, scope);
+				Assert.AreEqual(9, value.AsInt);
+			}
+		}
 	}
 }
