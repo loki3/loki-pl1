@@ -233,9 +233,15 @@ This makes it straight forward to chain together a series of data transformation
 ```
 [1 3 4 7] filter (| ## % 2 =? 1 |) apply (| ## * 2 |) fold (+)
 // [1 3 4 7] -> [1 3 7] -> [2 6 14] -> 22
+
+// alternately...
+pipe [1 3 4 7]
+	filter (| ## % 2 =? 1 |)
+	apply (| ## * 2 |)
+	fold (+)
 ```
 
-Some languages have notation for turning standard prefix functions into infix functions (e.g. the backtick in Haskell) or for flowing data through a series of functions (e.g. the pipe operators in Clojure).  Loki3 optimizes for this pattern.  Even the functions passed to other functions often follow this pattern, e.g. *fold* takes an infix function.
+Some languages have notation for turning standard prefix functions into infix functions (e.g. the backtick in Haskell) or for flowing data through a series of functions (e.g. the pipe operators in Clojure).  Loki3 optimizes for this pattern.
 
 
 Active functions

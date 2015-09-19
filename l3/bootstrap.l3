@@ -786,6 +786,19 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 
 //
+// function operations
+
+:pipe v= func1 ->input
+	:partial forEachDelim [ body :( ]
+		:input = input partial
+	input
+:pipe @body? true @doc --"+ \n
+	pipe (1 .. 10)
+		filter (| ## % 2 =? 1 |)
+		fold (+)
+
+
+//
 // enumerated type
 
 :=enum v= .( ( ->name : :string ) 1func1 ( ->array : :array )
