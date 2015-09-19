@@ -63,11 +63,14 @@ namespace loki3.core
 				return single.Eval(prev, next, paramScope, bodyScope, nodes, requestor);
 			}
 
-			// if they didn't pass any parameters, then we eval as ourselves
-			// todo: if this is infix & one param is passed, bind it to create a partial
-			// (note: we could also try to create partials based on the contents of prev or next)
 			if ((m_bConsumesPrevious && prev == null) || (m_bConsumesNext && next == null))
+			{
+				// if this is an infix with one side specified, create a partial
+				if (m_bConsumesPrevious && m_bConsumesNext && (prev != null || next != null))
+					return new PartialFunctionIn(this, prev, next);
+				// if we just needed a pre or post & it's not there, eval as ourselves
 				return this;
+			}
 
 			// todo: avoid evaling twice (or is it cached behind the scenes?)
 			// and pattern matching twice for the successfull function

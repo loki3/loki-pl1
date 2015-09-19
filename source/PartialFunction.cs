@@ -93,7 +93,9 @@ namespace loki3.core
 
 			// our pattern is the missing parameter; use same precedence as nested func
 			Map meta = nested.Metadata;
-			if (m_prev != null)
+			if (meta.ContainsKey(ValueFunctionOverload.keyIsOverload))
+				WritableMetadata[ValueFunctionOverload.keyIsOverload] = new ValueBool(true);
+			else if (m_prev != null)
 				Init(null, meta[keyNextPattern], nested.Order);
 			else
 				Init(meta[keyPreviousPattern], null, nested.Order);
@@ -105,6 +107,12 @@ namespace loki3.core
 				return m_nested.Eval(m_prev, next, paramScope, bodyScope, nodes, requestor);
 			return m_nested.Eval(prev, m_next, paramScope, bodyScope, nodes, requestor);
 		}
+
+		#region	ValueFunction
+		internal override bool ConsumesPrevious { get { return m_prev == null; } }
+		internal override bool ConsumesNext     { get { return m_next == null; } }
+		internal override bool RequiresBody()   { return m_nested.RequiresBody(); }
+		#endregion
 
 		private ValueFunction m_nested;
 		private DelimiterNode m_prev;
