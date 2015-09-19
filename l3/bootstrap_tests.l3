@@ -918,7 +918,7 @@
 // function operations
 
 :pipe @unittest func0
-	:a v= pipe (1 .. 10)
+	:a v= (1 .. 10) pipe
 		filter (| ## % 2 =? 1 |)
 		fold (+)
 	25 assert=? a

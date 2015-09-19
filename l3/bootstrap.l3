@@ -788,12 +788,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // function operations
 
-:pipe v= func1 ->input
+:pipe v= ( ->input 1func )
 	:partial forEachDelim [ body :( ]
 		:input = input partial
 	input
 :pipe @body? true @doc --"+ \n
-	pipe (1 .. 10)
+	(1 .. 10) pipe
 		filter (| ## % 2 =? 1 |)
 		fold (+)
 

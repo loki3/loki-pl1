@@ -235,7 +235,7 @@ This makes it straight forward to chain together a series of data transformation
 // [1 3 4 7] -> [1 3 7] -> [2 6 14] -> 22
 
 // alternately...
-pipe [1 3 4 7]
+[1 3 4 7] pipe
 	filter (| ## % 2 =? 1 |)
 	apply (| ## * 2 |)
 	fold (+)
