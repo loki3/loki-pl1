@@ -485,7 +485,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	:line forEach body
 		function line
 
-:foldAs v= .( [ (->lines : :rawLine) (->delim : :string) ] 1func1 ( ->function : :function )
+:foldAs v= .( (->lines : :rawLine) 1func1 [ (->delim : :string) ( ->function : :function ) ]
 	:last v= nil
 	:str forEachDelim [ lines delim ]
 		if last =? nil

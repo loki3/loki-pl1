@@ -545,7 +545,7 @@
 
 :foldAs @unittest func0
 	:func v= func0
-		[body :"] foldAs (< #1 + #2 >)
+		body foldAs .[ :" (< #1 + #2 >)
 	:func @body? true
 	:useFunc v= func
 		abc
