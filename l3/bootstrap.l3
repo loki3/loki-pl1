@@ -475,7 +475,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // raw line
 
-:applyAs v= .( [ (->lines : :rawLine) (->delim : :string) ] 1func1 ( ->function : :function )
+:applyAs v= .( (->lines : :rawLine) 1func1 [ (->delim : :string) ( ->function : :function ) ]
 	:a v= [ ]
 	:str forEachDelim [ lines delim ]
 		a += function str
@@ -761,7 +761,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :.-"[ @cat :string @doc ." Each item in array is converted to a string and concatenated together
 
 :--"+ v= func1 ( ->separator : :string )
-	[ body :" ] applyAs (| ## |) +with separator
+	body applyAs [ :" (| ## |) ] +with separator
 :--"+ @body? true @cat :string @doc --"
 	Combine the indented lines following this function into a string
 	separated by the given string

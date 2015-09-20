@@ -11,7 +11,7 @@
 :caBoard1d @example ." caBoard1d :**..*
 
 :caBoard2d v= func0
-	[body :"] applyAs (| (## =>array) apply (| ## =? :* ? [ 1 0 ] |) |)
+	body applyAs .[ :" (| (## =>array) apply (| ## =? :* ? [ 1 0 ] |) |)
 :caBoard2d @body? true @cat :ca @doc ." Create a 2D board of on/off states from a body where * means on
 :caBoard2d @example --"+ \n
 	:mypattern v= caBoard2d
@@ -130,7 +130,7 @@
 	:default            v= 0
 	:transformNeighbors v= (| ## fold (+) |)
 	:transition         v= (< #1 >)
-	[ body :[ ] applyAs (| (## . 0) = (## . 1) |)
+	body applyAs .[ :[ (| (## . 0) = (## . 1) |)
 	//
 	// private functions
 	:computeNextState v= func1 [ ->board ->x ->y ]
