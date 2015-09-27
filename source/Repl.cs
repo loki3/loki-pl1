@@ -52,8 +52,15 @@ namespace loki3.core
 						if (error.Errors.ContainsKey(Loki3Exception.keyScope))
 						{
 							scope.SetValue("lastScope", error.Errors[Loki3Exception.keyScope]);
-							v = loki3.builtin.test.TestSupport.ToValue("dumpStack lastScope", scope);
-							Console.WriteLine("STACK:\n" + v.AsString);
+							try
+							{
+								v = loki3.builtin.test.TestSupport.ToValue("dumpStack lastScope", scope);
+								Console.WriteLine("STACK:\n" + v.AsString);
+							}
+							catch (Exception e)
+							{
+								Console.WriteLine("ERROR PRINTING STACK:\n" + e.ToString());
+							}
 						}
 					}
 					else
