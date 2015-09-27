@@ -302,9 +302,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	l3.bindFunction .{ :functionKey key :map .( l3.getScope .{ :level 1
 :closure @cat :scope @doc ." Manually create a closure, binding the current scope to a function
 
-:onExit f= func1 .( ->functionKey : :string
-	l3.onScopeExit .{ :functionKey functionKey :map .( l3.getScope .{ :level 1
-:onExit f= func1 .( ->line : :rawLines
+:onExit v= func1 .( ->line : :rawLines
 	l3.onScopeExit .{ :line line :map .( l3.getScope .{ :level 1
 :onExit @cat :scope @doc ." Have code get run when the current scope is exiting.  Can either be a function name or raw lines.
 
@@ -649,7 +647,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	// a simple way to execute common code before the loop and inside it
 	:doIterator v= .` l3.callWithScope { :function ( iterator ) :map iterScope :next input }
 	:result v= ( l3.eval doIterator )
-	while .` ( result ) !=? nil
+	while .( ( result ) !=? nil
 		pattern v= ( result )
 		l3.eval eachInBody
 		:result = ( l3.eval doIterator )

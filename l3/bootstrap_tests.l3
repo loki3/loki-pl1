@@ -366,7 +366,7 @@
 :onExit @unittest func0
 	:a v= [ 1 ]
 	if true
-		onExit `a += 3`
+		onExit (a += 3)
 		a += 2
 	a += 4
 	[ 1 2 3 4 ] assert=? a
@@ -703,7 +703,7 @@
 
 :do!nil @unittest func0
 	[ :a :final ] v= [ 0 0 ]
-	do!nil ` a `
+	do!nil a
 		:final = 1
 		:final = 2
 		:a = nil
@@ -717,7 +717,7 @@
 :while @unittest func0
 	:total v= 0
 	:i v= 0
-	while .` i !=? 5
+	while ( i !=? 5 )
 		:i = i + 1
 		:total = total + i
 	5  assert=? i
@@ -740,11 +740,15 @@
 
 :repeatsOf @unittest func0
 	:total v= 0
+	5 repeatsOf .( :total = total + 2
+	10 assert=? total
+	// should be able to pass raw
+	:total v= 0
 	5 repeatsOf .` :total = total + 2
 	10 assert=? total
 	// test scoping: should be able to use a variable local to repeatsOf
 	:__i v= 2
-	:result v= ( 5 repeatsOf `:__i = __i * 2` )
+	:result v= ( 5 repeatsOf (:__i = __i * 2) )
 	64 assert=? result
 
 :for @unittest func0
@@ -795,7 +799,7 @@
 :break @unittest func0
 	:total v= 0
 	:i v= 0
-	while .` i !=? 8
+	while .( i !=? 8
 		:i = i + 1
 		if i =? 4
 			break

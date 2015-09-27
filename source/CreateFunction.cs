@@ -131,7 +131,7 @@ namespace loki3.core
 						throw new Loki3Exception().AddMissingValue(true/*bPrevious*/);
 					}
 
-					Value value1 = EvalNode.Do(prev, paramScope, nodes, requestor);
+					Value value1 = ComputeParam(Metadata[keyPreviousPattern], prev, paramScope, nodes, requestor);
 					Value match, leftover;
 					if (!PatternChecker.Do(value1, Metadata[keyPreviousPattern], false/*bShortPat*/, out match, out leftover))
 						throw new Loki3Exception().AddWrongPattern(Metadata[keyPreviousPattern], value1);
@@ -156,7 +156,7 @@ namespace loki3.core
 						throw new Loki3Exception().AddMissingValue(false/*bPrevious*/);
 					}
 
-					Value value2 = EvalNode.Do(next, paramScope, nodes, requestor);
+					Value value2 = ComputeParam(Metadata[keyNextPattern], next, paramScope, nodes, requestor);
 					Value match, leftover;
 					if (!PatternChecker.Do(value2, Metadata[keyNextPattern], false/*bShortPat*/, out match, out leftover))
 						throw new Loki3Exception().AddWrongPattern(Metadata[keyNextPattern], value2);
@@ -269,6 +269,34 @@ namespace loki3.core
 						m_parsedLines.Add(line);
 				}
 				m_rawLines = null;
+			}
+
+			/// <summary>
+			/// If the pattern's metadata says it matches raw, return the unevaled value,
+			/// otherwise return the evaled value
+			/// </summary>
+			/// <param name="pattern">pattern (i.e. the param's pattern metadata)</param>
+			/// <param name="param">parameter node to either eval or wrap</param>
+			private Value ComputeParam(Value pattern, DelimiterNode param,
+				IScope paramScope, INodeRequestor nodes, ILineRequestor requestor)
+			{
+				Value keyType = null;
+				// does the pattern metadata ask for 'raw'?
+				if (pattern.Metadata != null && pattern.Metadata.TryGetValue(PatternData.keyType, out keyType) &&
+					keyType.Type == ValueType.String && keyType.AsString == ValueClasses.ClassOf(ValueType.Raw))
+				{
+					// is the param something that's not raw?
+					if (param.List == null || param.List.Delimiter.DelimiterType != DelimiterType.AsRaw)
+					{	// wrap unevaled value as raw
+						List<DelimiterNode> list = new List<DelimiterNode>();
+						list.Add(param);
+						ValueDelimiter delim = new ValueDelimiter("", DelimiterType.AsValue);
+						DelimiterList dlist = new DelimiterList(delim, list, 0, "", "", paramScope);
+						return new ValueRaw(dlist, paramScope);
+					}
+				}
+
+				return EvalNode.Do(param, paramScope, nodes, requestor);
 			}
 
 			private bool m_usePrevious;
