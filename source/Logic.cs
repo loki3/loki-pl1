@@ -74,7 +74,11 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>[bool bool] -> bool,  a AND b</summary>
+		/// <summary>
+		/// [bool raw] -> bool,  a AND b
+		/// Note that the second value is raw so that we can avoid computing it
+		/// if the first value is false
+		/// </summary>
 		class LogicalAnd : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new LogicalAnd(); }
@@ -85,7 +89,7 @@ namespace loki3.builtin
 
 				List<Value> list = new List<Value>();
 				list.Add(PatternData.Single("a", ValueType.Bool));
-				list.Add(PatternData.Single("b", ValueType.Bool));
+				list.Add(PatternData.Single("b", ValueType.Raw));
 				ValueArray array = new ValueArray(list);
 				Init(array);
 			}
@@ -93,11 +97,20 @@ namespace loki3.builtin
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
-				return new ValueBool(list[0].AsBool && list[1].AsBool);
+				// if the first arg is false, short circuit evaling the second
+				if (!list[0].AsBool)
+					return new ValueBool(false);
+				// now we know to eval the second value
+				Value eval = Utility.EvalValue(list[1], scope);
+				return new ValueBool(eval.AsBool);
 			}
 		}
 
-		/// <summary>[bool bool] -> bool,  a OR b</summary>
+		/// <summary>
+		/// [bool raw] -> bool,  a OR b
+		/// Note that the second value is raw so that we can avoid computing it
+		/// if the first value is true
+		/// </summary>
 		class LogicalOr : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new LogicalOr(); }
@@ -108,7 +121,7 @@ namespace loki3.builtin
 
 				List<Value> list = new List<Value>();
 				list.Add(PatternData.Single("a", ValueType.Bool));
-				list.Add(PatternData.Single("b", ValueType.Bool));
+				list.Add(PatternData.Single("b", ValueType.Raw));
 				ValueArray array = new ValueArray(list);
 				Init(array);
 			}
@@ -116,7 +129,12 @@ namespace loki3.builtin
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				List<Value> list = arg.AsArray;
-				return new ValueBool(list[0].AsBool || list[1].AsBool);
+				// if the first arg is true, short circuit evaling the second
+				if (list[0].AsBool)
+					return new ValueBool(true);
+				// now we know to eval the second value
+				Value eval = Utility.EvalValue(list[1], scope);
+				return new ValueBool(eval.AsBool);
 			}
 		}
 

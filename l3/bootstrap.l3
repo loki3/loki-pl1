@@ -336,11 +336,13 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 //
 // logic
 
-:&? v= .(< l3.and? [ #1 #2 ]
+:&? v= .( ->a 1func1 .( ->b : :rawLines
+	l3.and? [ a b ]
 :&? @order 5
 :&? @cat :logic @doc ." Return true if both values are true
 
-:|? v= .(< l3.or? [ #1 #2 ]
+:|? v= .( ->a 1func1 .( ->b : :rawLines
+	l3.or? [ a b ]
 :|? @order 5
 :|? @cat :logic @doc ." Return true if either value is true
 

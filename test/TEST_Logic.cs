@@ -14,6 +14,7 @@ namespace loki3.builtin.test
 			Logic.Register(scope);
 
 			scope.SetValue("[", new ValueDelimiter("]", DelimiterType.AsArray));
+			scope.SetValue("`", new ValueDelimiter("`", DelimiterType.AsRaw));
 
 			return scope;
 		}
@@ -48,21 +49,21 @@ namespace loki3.builtin.test
 
 			// AND
 			{
-				Value value = TestSupport.ToValue("l3.and? [ true true ]", scope);
+				Value value = TestSupport.ToValue("l3.and? [ true `true` ]", scope);
 				Assert.True(value.AsBool);
 			}
 			{
-				Value value = TestSupport.ToValue("l3.and? [ true false ]", scope);
+				Value value = TestSupport.ToValue("l3.and? [ true `false` ]", scope);
 				Assert.False(value.AsBool);
 			}
 
 			// OR
 			{
-				Value value = TestSupport.ToValue("l3.or? [ true false ]", scope);
+				Value value = TestSupport.ToValue("l3.or? [ true `false` ]", scope);
 				Assert.True(value.AsBool);
 			}
 			{
-				Value value = TestSupport.ToValue("l3.or? [ false false ]", scope);
+				Value value = TestSupport.ToValue("l3.or? [ false `false` ]", scope);
 				Assert.False(value.AsBool);
 			}
 
