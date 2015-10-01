@@ -524,7 +524,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :if @order 6
 :if @cat :if @doc ." If condition is met, do body
 
-:elsif v= func1 ( ->do? : :bool )
+:elsif v= func1 ( ->do? : :rawLines )
 	:doThis? v= .( ( !? l3.coFunction.if.done? ) &? do?
 	l3.ifBody .{ :do? doThis? :body body
 	l3.ifBody .{ :do? doThis? :body .[ .` l3.setValue .{ :key :l3.coFunction.if.done? :value true :level 1

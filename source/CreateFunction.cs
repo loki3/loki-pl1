@@ -285,7 +285,15 @@ namespace loki3.core
 				if (pattern.Metadata != null && pattern.Metadata.TryGetValue(PatternData.keyType, out keyType) &&
 					keyType.Type == ValueType.String && keyType.AsString == ValueClasses.ClassOf(ValueType.Raw))
 				{
-					// is the param something that's not raw?
+					// if the param would eval to something raw, then we should eval it rather than try to wrap it
+					if (param.Token != null)
+					{
+						Value value = paramScope.GetValue(param.Token);
+						if (value != null && value.Type == ValueType.Raw)
+							return EvalNode.Do(param, paramScope, nodes, requestor);
+					}
+
+					// otherwise, is the param something that's not raw?
 					if (param.List == null || param.List.Delimiter.DelimiterType != DelimiterType.AsRaw)
 					{	// wrap unevaled value as raw
 						List<DelimiterNode> list = new List<DelimiterNode>();
