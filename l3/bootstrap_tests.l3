@@ -610,6 +610,15 @@
 	elsif false
 		assertFail ." elsif shouldn't have been called
 	0 assert=? a
+	// verify that eval of the parameter to elsif can be skipped
+	:a v= 0
+	:func v= func0
+		:a = 1
+	if true
+		// nothing
+	elsif ( func )
+		assertFail ." elsif shouldn't have been called
+	0 assert=? a
 
 :else @unittest func0
 	// if is run, not else
