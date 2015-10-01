@@ -159,6 +159,38 @@ Alternatively, you could write a postfix function that checks for the presence o
 	result
 ```
 
+Unevaluated parameters
+----------------------
+
+Parameters are generally evaluated before they're passed to a function.  This can be necessary when the function needs to be pattern matched because types are included in the pattern.  This is especially true when the function is overloaded, since it needs to evaluate the parameters in order to have types for matching the proper overload.
+
+But when they may go unused, you don't want them evaluated, perhaps because a value takes a while to compute or because the function has side effects.  In these cases, you can mark them as 'raw' and only evaluate them when needed.  Values wrapped with back ticks aren't immediately evaluated.
+
+```
+:t v= func1 .[ ( ->a : :bool ) ( ->b : :rawLines )
+	if a
+		l3.eval b
+
+// the following prints 'hello'
+t .[ true `print :hello`
+// but this does not
+t .[ false `print :hello`
+```
+
+There is also a special case where you can declare that even if the parameter *isn't* wrapped in back ticks, it still shouldn't be evaluated immediately.  However, this only applies to the *entire* previous or next parameter, not items within.  This can help make the code a bit more natural while still benefiting from short circuiting.
+
+```
+:maybeDo v= .( ( ->a : :bool ) 1func1 ( ->b : :rawLines )
+	if a
+		l3.eval b
+
+// the following prints 'hello'
+true maybeDo (print :hello)
+// but this does not
+false maybeDo (print :hello)
+```
+
+
 Simple declarations
 -------------------
 

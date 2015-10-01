@@ -7,6 +7,8 @@ Since loki3 is an experimental language, the design flaws are just as interestin
 Eager evaluation
 ------------------
 
+Note: This issue has partially been resolved as of 9-30-15 by making it so pre and post arguments marked as :rawLines aren't immediately evaluated.  See the "Unevaluated parameters" section of Functions.md for more details.
+
 ### What's the problem?
 
 Pre and post arguments to a function are evaluated before they're passed to the function.  This has several implications for how programs can be written.
@@ -23,7 +25,7 @@ if ( false |? something )
 
 ### Why is it this way?
 
-There are several design decisions that combine to make it so eager evaluation is sometimes required:  dynamic typing, optional typing, function overloading, and a current lack of a way to annotate a function with a return type.
+There are several design decisions that combine to make it so eager evaluation is sometimes required:  dynamic typing, optional typing, function overloading, a current lack of a way to annotate a function with a return type, and no type inferencing.
 
 If you have a function that's overloaded on different types, obviously you need to know the types of the arguments before deciding which overload to call.  But you need to evaluate the expression in order to determine its type.
 
