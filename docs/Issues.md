@@ -11,7 +11,7 @@ Conflict between lazy and eager evaluation
 
 There are times when lazy evaluation is essential, but some aspects of function dispatch require arguments to be fully evaluated.  In loki3, a function must do one or the other.
 
-Lazy evaluation is useful when you want to conditionally run only one out of several paths, either for performance/memory reasons or because you want to avoid the side effects of the unused paths.  You can do this by annotating arguments as :rawLines.  (See the "Unevaluated parameters" section of Functions.md for more details.)  A simple example is a conditionl.
+Lazy evaluation is useful when you want to conditionally run only one out of several paths, either for performance/memory reasons or because you want to avoid the side effects of the unused paths.  You can do this by annotating arguments as `:rawLines`.  (See the "Unevaluated parameters" section of Functions.md for more details.)  A simple example is a conditionl.
 
 ```
 :runIf v= ( ( ->condition : bool ) 1func1 ( ->f : :rawLines ) )
@@ -30,7 +30,7 @@ But if you wanted to overload that function based on the type of the right-hand 
 :runIf f= ( ( ->condition : bool ) 1func1 ( ->f : :string ) )
     ...do something different...
 
-// doLotsOfWork will get called in order to figure out which version to call
+// doLotsOfWork will get called in order to figure out which runIf to call
 false runIf ( doLotsOfWork info )
 ```
 
