@@ -587,6 +587,20 @@
 	2 assert=? [ false true false ] ? [ 1 2 3 4 ]
 	3 assert=? [ false false true ] ? [ 1 2 3 4 ]
 	4 assert=? [ false false false ] ? [ 1 2 3 4 ]
+	// verify that it short circuits when passed raw values
+	:a v= 0
+	:f v= func1 ->n
+		:a = n
+	1 assert=? true ? r[ 1 (f 2) ]r
+	0 assert=? a
+	2 assert=? false ? r[ 1 (f 2) ]r
+	2 assert=? a
+	// and for generalized form
+	:a = 0
+	1 assert=? [true false] ? r[ 1 (f 2) (f 3) ]r
+	0 assert=? a
+	2 assert=? [false true] ? r[ 1 (f 2) (f 3) ]r
+	2 assert=? a
 
 :if @unittest func0
 	// if is run

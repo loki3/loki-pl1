@@ -520,6 +520,8 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	:i? forEach do?
 		if i?
 			:answer = doIf . idx
+			if ( l3.getType { :key :answer } ) =? :rawLines
+				:answer = l3.eval answer
 			break
 		:idx = idx + 1
 	answer
