@@ -11,6 +11,7 @@ namespace loki3.core
 		AsArray,	// eval each node, creating an array of values
 		AsEvaledArray, // eval contents into an array of values
 		AsRaw,		// don't eval yet
+		AsArrayOfRaw,  // create an array of raw values
 	}
 
 	/// <summary>

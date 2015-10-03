@@ -234,7 +234,15 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :.[[ @cat :delimiter @doc ." Remainder of line is evaluated into values in an array
 :.[[ @example ." .[[ 1 + 2, 3 + 4
 
-:delimTypes v= [ :asComment :asString :asValue :asArray :asEvaledArray :asRaw ]
+:r[ v= .( l3.createDelimiter .{ :end :]r :type :asArrayOfRaw
+:r[ @cat :delimiter @doc ." Delimiter around values that are turned into an array but not evaluated
+:r[ @example ." r[ 1 (2 + 3) ]r
+
+:.r[ v= .( l3.createDelimiter .{ :type :asArrayOfRaw
+:.r[ @cat :delimiter @doc ." Remainder of line is turned into an array but not evaluated
+:.r[ @example ." .r[ 1 (2 + 3)
+
+:delimTypes v= [ :asComment :asString :asValue :asArray :asEvaledArray :asRaw :asArrayOfRaw ]
 :delimTypes @cat :delimiter @doc ." A list of the different kinds of delimiters
 
 :delim v= .( [ ->end ( ->type o= delimTypes ) ] 1func1 ->pattern

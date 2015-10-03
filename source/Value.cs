@@ -414,6 +414,15 @@ namespace loki3.core
 			m_scope = (scope != null ? scope : val.Scope);
 		}
 
+		internal ValueRaw(DelimiterNode node, IScope scope)
+		{
+			List<DelimiterNode> list = new List<DelimiterNode>();
+			list.Add(node);
+			ValueDelimiter delim = new ValueDelimiter("", DelimiterType.AsValue);
+			m_val = new DelimiterList(delim, list, 0, "", "", scope);
+			m_scope = scope;
+		}
+
 		/// <summary>the scope to use when evaluating this value</summary>
 		internal IScope Scope { get { return m_scope; } }
 

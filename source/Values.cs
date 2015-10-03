@@ -396,6 +396,8 @@ namespace loki3.builtin
 						type = DelimiterType.AsEvaledArray;
 					else if (typestr == "asRaw")
 						type = DelimiterType.AsRaw;
+					else if (typestr == "asArrayOfRaw")
+						type = DelimiterType.AsArrayOfRaw;
 				}
 
 				return new ValueDelimiter(end, type, function);

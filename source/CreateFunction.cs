@@ -296,11 +296,7 @@ namespace loki3.core
 					// otherwise, is the param something that's not raw?
 					if (param.List == null || param.List.Delimiter.DelimiterType != DelimiterType.AsRaw)
 					{	// wrap unevaled value as raw
-						List<DelimiterNode> list = new List<DelimiterNode>();
-						list.Add(param);
-						ValueDelimiter delim = new ValueDelimiter("", DelimiterType.AsValue);
-						DelimiterList dlist = new DelimiterList(delim, list, 0, "", "", paramScope);
-						return new ValueRaw(dlist, paramScope);
+						return new ValueRaw(param, paramScope);
 					}
 				}
 

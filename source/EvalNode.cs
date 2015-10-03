@@ -99,6 +99,12 @@ namespace loki3.core
 					case DelimiterType.AsRaw:
 						value = new ValueRaw(list, listScope);
 						break;
+					case DelimiterType.AsArrayOfRaw:
+						List<Value> rawvalues = new List<Value>(list.Nodes.Count);
+						foreach (DelimiterNode subnode in list.Nodes)
+							rawvalues.Add(new ValueRaw(subnode, listScope));
+						value = new ValueArray(rawvalues);
+						break;
 				}
 
 				// run contents through a function if specified
