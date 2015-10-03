@@ -4,37 +4,52 @@ Issues
 Since loki3 is an experimental language, the design flaws are just as interesting as design that works well.  Here are several issues and how they could be fixed.
 
 
-Eager evaluation
-------------------
-
-Note: This issue has partially been resolved as of 9-30-15 by making it so pre and post arguments marked as :rawLines aren't immediately evaluated.  See the "Unevaluated parameters" section of Functions.md for more details.
+Conflict between lazy and eager evaluation
+------------------------------------------
 
 ### What's the problem?
 
-Pre and post arguments to a function are evaluated before they're passed to the function.  This has several implications for how programs can be written.
+There are times when lazy evaluation is essential, but some aspects of function dispatch require arguments to be fully evaluated.  In loki3, a function must do one or the other.
 
-One issue is that you can't do any short circuiting.  For example, you would typically expect that an expression such as the following wouldn't evaluate `something`:
+Lazy evaluation is useful when you want to conditionally run only one out of several paths, either for performance/memory reasons or because you want to avoid the side effects of the unused paths.  You can do this by annotating arguments as :rawLines.  (See the "Unevaluated parameters" section of Functions.md for more details.)  A simple example is a conditionl.
 
 ```
-if ( false |? something )
-	whatever
+:runIf v= ( ( ->condition : bool ) 1func1 ( ->f : :rawLines ) )
+    if condition
+        l3.eval f
+
+// doLotsOfWork won't get called
+false runIf ( doLotsOfWork info )
 ```
 
-`something` may take a long time to run or it may have side effects.  In either case, you don't want it to be evaluted.
+But if you wanted to overload that function based on the type of the right-hand argument, that argument will always be evaluated
 
+```
+:runIf f= ( ( ->condition : bool ) 1func1 ( ->f : :int ) )
+    ...do one thing...
+:runIf f= ( ( ->condition : bool ) 1func1 ( ->f : :string ) )
+    ...do something different...
+
+// doLotsOfWork will get called in order to figure out which version to call
+false runIf ( doLotsOfWork info )
+```
 
 ### Why is it this way?
 
-There are several design decisions that combine to make it so eager evaluation is sometimes required:  dynamic typing, optional typing, function overloading, a current lack of a way to annotate a function with a return type, and no type inferencing.
+There are several design decisions that combine to make it so eager evaluation is sometimes required:
 
-If you have a function that's overloaded on different types, obviously you need to know the types of the arguments before deciding which overload to call.  But you need to evaluate the expression in order to determine its type.
+* no type inferencing
+* dynamic/optional typing
+* function overloading that uses pattern matching based on metadata attached to a fully evaluated value
+* no way to annotate a function with a return type
 
+If you have a function that's overloaded on different types, obviously you need to know the types of the arguments before deciding which overload to call.  But you need to evaluate the expression in order to determine its type given the lack of type inferencing.  In fact, given the very dynamic nature of loki3, type inferencing probably wouldn't always be possible without restricting what the language can do.
 
 ### How do you fix this?
 
-First off, arguments should only be evaluated when needed.  Sometimes this will be when a function first uses it.  But sometimes this will be in order to figure out which function overload to call.
+Perhaps loki3 could go the route of only evaluating expressions when the values or metadata are first needed.  Sometimes this will be when a function first uses it.  But sometimes this will be in order to figure out which function overload to call, so this wouldn't fix all cases.
 
-Adding function annotations to describe the return type would help cut down on the cases where eager evaluation is required.  If you wanted to completely get rid of the need for eager evaluation, you'd need to change it so a function is only allowed a single return type that is always specified.
+Adding function annotations to describe the return type would help cut down on the cases where eager evaluation is required.  If you wanted to completely get rid of the need for eager evaluation, you'd need a richer type system than loki3 currently has.
 
 Note: Another interesting case to consider is when a node is delimited.  You could eval the node in order to figure out if its result has higher precedence than the nodes around it and hence should be evaled first.  Or you could leave it at the default precedence and eval at the normal time.  The first option would cause issues for avoiding eager evaluation.  For example, consider the following:
 
@@ -55,16 +70,16 @@ All arguments are evaluated
 Related to eager evaluation is another problem.  When any argument is used by a function, it's first evaluated.  For example, you can't do...
 
 ```
-i = i + 1
+a = b + 1
 ```
 
-...because the i on the left hand side gets evaluated before it's passed to the = function.  This is why it instead has to be written like this:
+...because `a` gets evaluated before it's passed to the `=` function.  This is why it instead has to be written like this:
 
 ```
-:i = i + 1
+:a = b + 1
 ```
 
-The = function has to take :i as a keyword to look up when it runs, since otherwise it's turned into whatever the current value of i is.
+The `=` function has to take `:a` as a keyword to look up when it runs, since otherwise it's turned into whatever the current value of `a` is.
 
 
 ### Why is it this way?
@@ -84,10 +99,7 @@ The first line is how you would currently use pattern matching to stuff 1 into `
 
 ### How do you fix this?
 
-There should be a way for a function to say how it wants its arguments treated, much the way `forEachDelim` allows you to specify the delimiter used to automatically wrap around each line it parses.  So if = doesn't want its left-hand argument fully evaluated, it could instead interpret it as a keyword.  It would still have to evaluate delimiters and some types such as numbers, however.  This might be tricky to get right in practice.
-
-This would require the addition of a "left hand expression" rule that knows when to evaluate (e.g. delimiters and numbers) versus not (e.g. keys).
-
+Perhaps loki3 needs to avoid the extra richness of being able to evaluate items within the left side of a pattern match.  Or maybe simple expressions like `a = b` could interpret `a` as keyword rather than fully evaluating first, though that would have to be rationalized with more complex pattern matching.
 
 
 Dynamic scoping
