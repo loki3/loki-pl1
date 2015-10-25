@@ -1,0 +1,123 @@
+/// Test code that looks like linq.
+	Port of some of C#'s 101 LINQ Samples.
+	Note: importing this module will run all the tests,
+	asserting if any of them fail.
+
+import :l3/unittest.l3
+
+
+//
+// support
+
+:getKeyValues v= .( ( ->arrayOfMaps : :array ) 1func1 ->key
+	arrayOfMaps apply .(| ## . key
+:getKeyValues @doc ." Extract out the values associated with a key from an array of maps
+
+:makeMaps v= func1 ->keys
+	:list v= [ ]
+	:line forEachDelim .[ body :[
+		:map v= { }
+		line apply .(< :map = map \/ .{ ( keys . #1 ) #2
+		list += map
+	list
+:makeMaps @body? true @doc --"
+	Creates an array of maps, where the keys are passed to the function.
+	Each line of the body is a single map where each value on the line
+	is the value that corresponds to the keys passed to the function.
+
+:products v= makeMaps [ :name :unitsInStock :unitPrice ]
+	"Chai"                          5  4.35
+	"Chang"                        12  7.00
+	"Chef Anton's Gumbo Mix"        0 12.50
+	"Chef Anton's Cajon Seasoning"  1  3.25
+	"Aniseed Syrup"                 7  5.42
+	"Alice Mutton"                  0 20.00
+	"Thuringer Rostbratwurst"       0  7.75
+	"Earl Gray"                     3  2.78
+:products @doc ." Sample products for tests
+
+//
+// tests
+
+:linq1 v= func0
+	// get all values less than 5
+	:results v= [5 4 1 3 9 8 6 7 2 0] filter (| ## <? 5 |)
+	results assert=? [4 1 3 2 0]
+linq1
+
+:linq2 v= func0
+	// get all products that are out of stock
+	:results v= products filter .(| (## . :unitsInStock) =? 0
+	(results getKeyValues :name) assert=? .[ "Chef Anton's Gumbo Mix" "Alice Mutton" "Thuringer Rostbratwurst"
+linq2
+
+:linq3 v= func0
+	// get all products that are in stock & cost more than 3.00
+	:results v= products filter .(| (## . :unitsInStock) >? 0 &? (## . :unitPrice) >? 3
+	(results getKeyValues :name) assert=? .[ "Chai" "Chang" "Chef Anton's Cajon Seasoning" "Aniseed Syrup"
+linq3
+
+:linq5 v= func0
+	// get all strings that are longer than the corresponding array index
+	:digits v= .[ :zero :one :two :three :four :five :six :seven :eight :nine
+	:results v= digits filter (< #2 .size <? #1 >)
+	results assert=? .[ :five :six :seven :eight :nine
+linq5
+
+:linq6 v= func0
+	// add 1 to all values
+	:results v= [5 4 1 3 9 8 6 7 2 0] apply (1 +)
+	results assert=? [6 5 2 4 10 9 7 8 3 1]
+linq6
+
+:linq7 v= func0
+	// get the names of all products
+	:results v= products getKeyValues :name
+	results assert=? .[ "Chai" "Chang" "Chef Anton's Gumbo Mix" "Chef Anton's Cajon Seasoning" "Aniseed Syrup" "Alice Mutton" "Thuringer Rostbratwurst" "Earl Gray"
+linq7
+
+:linq8 v= func0
+	// lookup the value in a second array using values in the first array as an index
+	:numbers v= [5 4 1 3 9 8 6 7 2 0]
+	:strings v= .[ :zero :one :two :three :four :five :six :seven :eight :nine
+	:results v= numbers apply .(| strings . ##
+	results assert=? .[ :five :four :one :three :nine :eight :six :seven :two :zero
+linq8
+
+:linq10 v= func0
+	// turn a list of digits into info about the name and whether the value is even
+	:numbers v= [5 4 1 3 9 8 6 7 2 0]
+	:strings v= .[ :zero :one :two :three :four :five :six :seven :eight :nine
+	:results v= numbers apply .(| .{ :digit (strings . ##) :even (## % 2 =? 0)
+	(results . 0) assert=? .{ :digit :five :even false
+	(results . 9) assert=? .{ :digit :zero :even true
+linq10
+
+:linq11 v= func0
+	// extract product name & price
+	:results v= products apply .(| .{ :name (## . :name) :price (## . :unitPrice)
+	(results . 0) assert=? .{ :name "Chai" :price 4.35
+	(results . 7) assert=? .{ :name "Earl Gray" :price 2.78
+linq11
+
+:linq12 v= func0
+	// check which numbers match the corresponding array index
+	:numbers v= [5 4 1 3 9 8 6 7 2 0]
+	:results v= numbers apply .(< .{ :num #2 :inPlace (#1 =? #2)
+	( results filter (| ## . :inPlace |) apply (| ## . :num |) ) assert=? [3 6 7]
+linq12
+
+:linq13 v= func0
+	// find all pairs where a value in num1 is < a value in num2
+	:num1 v= [0 2 4 5 6 8 9]
+	:num2 v= [1 3 5 7 8]
+	:results v= [ ]   // accumulates results
+	num1 apply .(| (:n v= ##) .( num2 filter (| n <? ## |) apply .(| results += .{ :a n :b ##
+	{ :a 0 :b 1 } assert=? (results . 0)
+	{ :a 6 :b 8 } assert=? (results . 15)
+	16 assert=? results .size
+linq13
+
+:linq v= func0
+	1
+linq
