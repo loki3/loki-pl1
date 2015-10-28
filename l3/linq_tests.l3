@@ -48,6 +48,24 @@ import :l3/unittest.l3
 	result
 :skip @doc ." Skip the first n items in an array, taking the remainder
 
+:takeWhile v= .( ( ->a : :array ) 1func1 ( ->check? : :function )
+	:result v= [ ]
+	[ :i :end ] v= [ 0 (a .size) ]
+	while .( (i <? end) &? check? (a . i)
+		result += a . i
+		:i ++
+	result
+:takeWhile @doc ." Take items from the array as long as 'check? val' returns true
+
+:takeWhile2 v= .( ( ->a : :array ) 1func1 ( ->check? : :function )
+	:result v= [ ]
+	[ :i :end ] v= [ 0 (a .size) ]
+	while .( (i <? end) &? .( i check? (a . i)
+		result += a . i
+		:i ++
+	result
+:takeWhile2 @doc ." Take items from the array as long as 'i check? val' returns true
+
 //
 // tests
 
@@ -143,3 +161,17 @@ linq20
 	:results v= numbers skip 4
 	[9 8 6 7 2 0] assert=? results
 linq22
+
+:linq24 v= func0
+	// take items as long as they're less than 6
+	:numbers v= [5 4 1 3 9 8 6 7 2 0]
+	:results v= numbers takeWhile (| ## <? 6 |)
+	[5 4 1 3] assert=? results
+linq24
+
+:linq25 v= func0
+	// take items as long as they're greater than their position
+	:numbers v= [5 4 1 3 9 8 6 7 2 0]
+	:results v= numbers takeWhile2 (< #2 >=? #1 >)
+	[5 4] assert=? results
+linq25
