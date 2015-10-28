@@ -22,7 +22,7 @@ import :l3/unittest.l3
 	list
 :makeMaps @body? true @doc --"
 	Creates an array of maps, where the keys are passed to the function.
-	Each line of the body is a single map where each value on the line
+	Each line of the body creates a single map where each value on the line
 	is the value that corresponds to the keys passed to the function.
 
 :products v= makeMaps [ :name :unitsInStock :unitPrice ]
@@ -35,6 +35,18 @@ import :l3/unittest.l3
 	"Thuringer Rostbratwurst"       0  7.75
 	"Earl Gray"                     3  2.78
 :products @doc ." Sample products for tests
+
+:take v= .( ( ->a : :array ) 1func1 ->n
+	:result v= [ ]
+	( 0 .. (n - 1) ) apply (| result += a . ## |)
+	result
+:take @doc ." Take the first n items in an array
+
+:skip v= .( ( ->a : :array ) 1func1 ->n
+	:result v= [ ]
+	( n .. (a .size - 1) ) apply (| result += a . ## |)
+	result
+:skip @doc ." Skip the first n items in an array, taking the remainder
 
 //
 // tests
@@ -107,7 +119,7 @@ linq11
 	( results filter (| ## . :inPlace |) apply (| ## . :num |) ) assert=? [3 6 7]
 linq12
 
-:linq13 v= func0
+:linq14 v= func0
 	// find all pairs where a value in num1 is < a value in num2
 	:num1 v= [0 2 4 5 6 8 9]
 	:num2 v= [1 3 5 7 8]
@@ -116,8 +128,18 @@ linq12
 	{ :a 0 :b 1 } assert=? (results . 0)
 	{ :a 6 :b 8 } assert=? (results . 15)
 	16 assert=? results .size
-linq13
+linq14
 
-:linq v= func0
-	1
-linq
+:linq20 v= func0
+	// take the first 3 elements in the array
+	:numbers v= [5 4 1 3 9 8 6 7 2 0]
+	:results v= numbers take 3
+	[5 4 1] assert=? results
+linq20
+
+:linq22 v= func0
+	// take all but the first 4 elements in the array
+	:numbers v= [5 4 1 3 9 8 6 7 2 0]
+	:results v= numbers skip 4
+	[9 8 6 7 2 0] assert=? results
+linq22
