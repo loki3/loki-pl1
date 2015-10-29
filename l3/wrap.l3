@@ -1,0 +1,86 @@
+
+/// optional values and operations on them
+	Option T = Some T | None
+	{ :some t } | { :none nil }
+
+// creating none & some values
+:none v= { :none nil }
+:none @cat :results @doc ." Used to indicate an optional item that isn't present
+
+:some v= func1 ->v
+	{ :some v }
+:some @cat :results @doc ." Used to indicate an optional item that is present
+
+// parameter checking
+:isSome v= .( @@hasKeys [ :some ]
+:isSome @cat :results @doc ." Used for checking if a parameter is Optional.Some
+
+:isNone v= .( @@hasKeys [ :none ]
+:isNone @cat :results @doc ." Used for checking if a parameter is Optional.None
+
+// operations on optional types
+:unwrap f= func1 .( ->v isSome
+	v . :some
+:unwrap f= func1 .( ->v isNone
+	l3.throw .{ :option ." An optional value was expected but wasn't found
+:unwrap @cat :results @doc ." If there's a wrapped value, it's returned, otherwise an exception is thrown
+
+:map f= .( (->v isSome) 1func1 ->func
+	some .( func .( v . :some
+:map f= .( (->v isNone) 1func1 ->func
+	none
+:map @cat :results @doc ." Apply a function to a wrapped value while keeping wrapper
+
+:unwrapOr f= .( (->v isSome) 1func1 ->default
+	v . :some
+:unwrapOr f= .( (->v isNone) 1func1 ->default
+	default
+:unwrapOr @cat :results @doc ." Return the value if wrapped or default if there isn't a valid value
+
+:andThen f= .( (->v isSome) 1func1 ->func
+	func .( v . :some
+:andThen f= .( (->v isNone) 1func1 ->func
+	none
+:andThen @cat :results @doc ." Apply a function to a wrapped value & remove wrapper, but not if there isn't a value
+
+
+/// a result that could be a value or an error, and operations on them
+	Result T E = Ok T | Error E
+	{ :ok t } | { :error e }
+
+// creating ok & error values
+:ok v= func1 ->v
+	{ :ok v }
+:ok @cat :results @doc ." Used to indicate a value that was successfully computed
+
+:error v= func1 ->v
+	{ :error v }
+:error @cat :results @doc ." Used to indicate an error
+
+// parameter checking
+:isOk v= .( @@hasKeys [ :ok ]
+:isOk @cat :results @doc ." Used for checking if a parameter is Result.Ok
+
+:isError v= .( @@hasKeys [ :error ]
+:isError @cat :results @doc ." Used for checking if a parameter is Result.Error
+
+// operations on optional types
+:unwrap f= func1 .( ->v isOk
+	v . :ok
+:unwrap f= func1 .( ->v isError
+	l3.throw .{ :result .( "Expected to unwrap a value, but an error was present: " + ( v . :error )
+
+:map f= .( (->v isOk) 1func1 ->func
+	ok .( func .( v . :ok
+:map f= .( (->v isError) 1func1 ->func
+	v
+
+:unwrapOr f= .( (->v isOk) 1func1 ->default
+	v . :ok
+:unwrapOr f= .( (->v isError) 1func1 ->default
+	default
+
+:andThen f= .( (->v isOk) 1func1 ->func
+	func .( v . :ok
+:andThen f= .( (->v isError) 1func1 ->func
+	v

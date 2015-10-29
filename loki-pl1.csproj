@@ -117,12 +117,15 @@
     <None Include="l3\ca_tests.l3" />
     <None Include="l3\help.l3" />
     <None Include="l3\help_tests.l3" />
+    <None Include="l3\linq_tests.l3" />
     <None Include="l3\module.l3" />
     <None Include="l3\pattern_tests.l3" />
     <None Include="l3\README.md" />
     <None Include="l3\test.l3" />
     <None Include="l3\test_tests.l3" />
     <None Include="l3\unittest.l3" />
+    <None Include="l3\wrap.l3" />
+    <None Include="l3\wrap_tests.l3" />
     <None Include="README.md" />
     <None Include="source\README.md" />
     <None Include="test\README.md" />
