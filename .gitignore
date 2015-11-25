@@ -2,6 +2,7 @@
 /*.bak
 /loki-pl1.csproj.user
 /loki-pl1.suo
+Backup/*
 # Build Folders
 bin
 obj
