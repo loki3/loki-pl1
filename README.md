@@ -153,4 +153,4 @@ var :a = 4 !
 Getting Started
 ---------------
 
-The current solution (.sln) file requires Visual Studio 2015.  From Solution Explorer, right click on loki-pl1, choose Properties, and put in the root path for the project, since there are a couple paths that are relative to it in the code.  Starting the project should start a REPL (read-eval-print-loop), loading bootstrap.l3 and help.l3.
+The current solution (.sln) file requires Visual Studio 2015.  From Solution Explorer, right click on loki-pl1, choose Properties, and enter the path to the l3 directory, since there are a couple paths that rely on it being the current path.  Starting the project should start a REPL (read-eval-print-loop), loading bootstrap.l3 and help.l3.

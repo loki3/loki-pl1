@@ -24,8 +24,8 @@ namespace loki_pl1
 		{
 			ScopeChain scope = new ScopeChain();
 			AllBuiltins.RegisterAll(scope);
-			EvalFile.Do("l3/bootstrap.l3", scope);
-			EvalFile.Do("l3/help.l3", scope);
+			EvalFile.Do("bootstrap.l3", scope);
+			EvalFile.Do("help.l3", scope);
 			return scope;
 		}
 	}
