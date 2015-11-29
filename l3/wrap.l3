@@ -25,23 +25,17 @@
 	l3.throw .{ :option ." An optional value was expected but wasn't found
 :unwrap @cat :results @doc ." If there's a wrapped value, it's returned, otherwise an exception is thrown
 
-:map f= .( (->v isSome) 1func1 ->func
-	some .( func .( v . :some
-:map f= .( (->v isNone) 1func1 ->func
-	none
-:map @cat :results @doc ." Apply a function to a wrapped value while keeping wrapper
-
 :unwrapOr f= .( (->v isSome) 1func1 ->default
 	v . :some
 :unwrapOr f= .( (->v isNone) 1func1 ->default
 	default
 :unwrapOr @cat :results @doc ." Return the value if wrapped or default if there isn't a valid value
 
-:andThen f= .( (->v isSome) 1func1 ->func
-	func .( v . :some
-:andThen f= .( (->v isNone) 1func1 ->func
+:andDo f= .( (->v isSome) 1func1 ->func
+	some .( func .( v . :some
+:andDo f= .( (->v isNone) 1func1 ->func
 	none
-:andThen @cat :results @doc ." Apply a function to a wrapped value & remove wrapper, but not if there isn't a value
+:andDo @cat :results @doc ." Apply a function to a wrapped value while keeping wrapper
 
 
 /// a result that could be a value or an error, and operations on them
@@ -70,17 +64,12 @@
 :unwrap f= func1 .( ->v isError
 	l3.throw .{ :result .( "Expected to unwrap a value, but an error was present: " + ( v . :error )
 
-:map f= .( (->v isOk) 1func1 ->func
-	ok .( func .( v . :ok
-:map f= .( (->v isError) 1func1 ->func
-	v
-
 :unwrapOr f= .( (->v isOk) 1func1 ->default
 	v . :ok
 :unwrapOr f= .( (->v isError) 1func1 ->default
 	default
 
-:andThen f= .( (->v isOk) 1func1 ->func
-	func .( v . :ok
-:andThen f= .( (->v isError) 1func1 ->func
+:andDo f= .( (->v isOk) 1func1 ->func
+	ok .( func .( v . :ok
+:andDo f= .( (->v isError) 1func1 ->func
 	v

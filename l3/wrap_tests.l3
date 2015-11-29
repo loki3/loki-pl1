@@ -30,14 +30,6 @@
 		:threw? = true
 	assertTrue? threw?
 
-:map @unittest func0
-	// Option
-	(some 6) assert=? .( (some 3) map (2 *)
-	none     assert=? .( none     map (2 *)
-	// Result
-	(ok 8)        assert=? .( (ok 4) map (2 *)
-	(error :oops) assert=? .( (error :oops) map (2 *)
-
 :unwrapOr @unittest func0
 	// Option
 	3  assert=? .( (some 3) unwrapOr 42
@@ -46,10 +38,10 @@
 	4  assert=? .( (ok 4)        unwrapOr 43
 	43 assert=? .( (error :oops) unwrapOr 43
 
-:andThen @unittest func0
+:andDo @unittest func0
 	// Option
-	6    assert=? .( (some 3) andThen (2 *)
-	none assert=? .( none     andThen (2 *)
+	(some 6) assert=? .( (some 3) andDo (2 *)
+	none     assert=? .( none     andDo (2 *)
 	// Result
-	8             assert=? .( (ok 4)        andThen (2 *)
-	(error :oops) assert=? .( (error :oops) andThen (2 *)
+	(ok 8)        assert=? .( (ok 4) andDo (2 *)
+	(error :oops) assert=? .( (error :oops) andDo (2 *)
