@@ -31,7 +31,7 @@ namespace loki3.builtin.test
 
 			{
 				int pre = scope.AsMap.Raw.Keys.Count;
-				Value value = TestSupport.ToValue("l3.loadModule { :file '../../l3/module.l3' }", scope);
+				Value value = TestSupport.ToValue("l3.loadModule { :file 'l3/module.l3' }", scope);
 				Assert.True(value.AsBool);
 				int post = scope.AsMap.Raw.Keys.Count;
 				Assert.AreEqual(pre + 1, post);	// module has a single new var in it

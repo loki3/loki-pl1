@@ -14,7 +14,7 @@ namespace loki3.builtin.test
 			{
 				m_scope = new ScopeChain();
 				AllBuiltins.RegisterAll(m_scope);
-				EvalFile.Do("../../l3/bootstrap.l3", m_scope);
+				EvalFile.Do("l3/bootstrap.l3", m_scope);
 			}
 			return m_scope;
 		}
@@ -51,8 +51,8 @@ namespace loki3.builtin.test
 			try
 			{
 				IScope scope = new ScopeChain(GetBootstrapScope());
-				EvalFile.Do("../../l3/unittest.l3", scope);
-				EvalFile.Do("../../l3/help.l3", scope);
+				EvalFile.Do("l3/unittest.l3", scope);
+				EvalFile.Do("l3/help.l3", scope);
 
 				// make sure all functions have @doc
 				Value a = TestSupport.ToValue("checkDocs currentScope", scope);
@@ -60,7 +60,7 @@ namespace loki3.builtin.test
 					Assert.AreEqual("[ ]", a.AsArray[2].AsArray);
 
 				// currently this runs checkDocs as well
-				Value v = TestSupport.ToValue("unittest [ :../../l3/bootstrap.l3 :../../l3/bootstrap_tests.l3 ]", scope);
+				Value v = TestSupport.ToValue("unittest [ :l3/bootstrap.l3 :l3/bootstrap_tests.l3 ]", scope);
 				// if this fails, there may be output that describes which unittest & which assert
 				Assert.True(v.AsBool);
 			}

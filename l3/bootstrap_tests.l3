@@ -1144,12 +1144,12 @@
 // modules
 
 :import @unittest func0
-	assertTrue?  import :../../l3/module.l3
-	assertFalse? import :../../l3/module.l3
+	assertTrue?  import :l3/module.l3
+	assertFalse? import :l3/module.l3
 
 :reimport @unittest func0
-	assertTrue?  reimport :../../l3/module.l3
-	assertTrue?  reimport :../../l3/module.l3
+	assertTrue?  reimport :l3/module.l3
+	assertTrue?  reimport :l3/module.l3
 
 
 //
