@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="source\ParseChars.cs" />
+    <Compile Include="test\TestHelper.cs" />
     <Compile Include="test\TEST_ArrayFunctions.cs" />
     <Compile Include="test\TEST_Bootstrap.cs" />
     <Compile Include="test\TEST_Conditional.cs" />
