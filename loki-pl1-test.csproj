@@ -51,6 +51,7 @@
     <Compile Include="test\TEST_String.cs" />
     <Compile Include="test\TEST_TestCode.cs" />
     <Compile Include="test\TEST_Values.cs" />
+    <Compile Include="test\TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

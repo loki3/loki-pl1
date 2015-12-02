@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using loki3.core;
+using loki3.test;
 using NUnit.Framework;
 
 namespace loki3.builtin.test
@@ -14,7 +14,7 @@ namespace loki3.builtin.test
 			{
 				m_scope = new ScopeChain();
 				AllBuiltins.RegisterAll(m_scope);
-				EvalFile.Do("l3/bootstrap.l3", m_scope);
+				TestHelper.EvalFile("l3/bootstrap.l3", m_scope);
 			}
 			return m_scope;
 		}
@@ -51,8 +51,8 @@ namespace loki3.builtin.test
 			try
 			{
 				IScope scope = new ScopeChain(GetBootstrapScope());
-				EvalFile.Do("l3/unittest.l3", scope);
-				EvalFile.Do("l3/help.l3", scope);
+				TestHelper.EvalFile("l3/unittest.l3", scope);
+				TestHelper.EvalFile("l3/help.l3", scope);
 
 				// make sure all functions have @doc
 				Value a = TestSupport.ToValue("checkDocs currentScope", scope);
