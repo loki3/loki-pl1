@@ -130,7 +130,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="docs\Debugging.md" />
-    <None Include="docs\Delimeters.md" />
+    <None Include="docs\Delimiters.md" />
     <None Include="docs\Functions.md" />
     <None Include="docs\Issues.md" />
     <None Include="docs\ParseEval.md" />
