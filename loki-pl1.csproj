@@ -53,11 +53,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.0.5797.27534, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL" />
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="source\AllBuiltins.cs" />
+    <Compile Include="source\AssemblyAttributes.cs" />
     <Compile Include="source\ArrayFunctions.cs" />
     <Compile Include="source\BoundFunction.cs" />
     <Compile Include="source\CreateFunction.cs" />
@@ -94,35 +94,13 @@
     <Compile Include="source\ValueArray.cs" />
     <Compile Include="source\ValueDelimiter.cs" />
     <Compile Include="source\ValueFunction.cs" />
+    <Compile Include="source\ParseChars.cs" />
     <Compile Include="source\ParseLine.cs" />
     <Compile Include="source\Program.cs" />
     <Compile Include="source\Properties\AssemblyInfo.cs" />
     <Compile Include="source\Token.cs" />
     <Compile Include="source\Value.cs" />
     <Compile Include="source\Values.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="source\ParseChars.cs" />
-    <Compile Include="test\TEST_ArrayFunctions.cs" />
-    <Compile Include="test\TEST_Bootstrap.cs" />
-    <Compile Include="test\TEST_Conditional.cs" />
-    <Compile Include="test\TEST_CreateFunction.cs" />
-    <Compile Include="test\TEST_EvalBuiltin.cs" />
-    <Compile Include="test\TEST_EvalLines.cs" />
-    <Compile Include="test\TEST_EvalList.cs" />
-    <Compile Include="test\TEST_EvalNode.cs" />
-    <Compile Include="test\TEST_ParseChars.cs" />
-    <Compile Include="test\TEST_ValueFunctionOverload.cs" />
-    <Compile Include="test\TEST_Logic.cs" />
-    <Compile Include="test\TEST_MapFunctions.cs" />
-    <Compile Include="test\TEST_Math.cs" />
-    <Compile Include="test\TEST_Module.cs" />
-    <Compile Include="test\TEST_ParseLine.cs" />
-    <Compile Include="test\TEST_PartialFunction.cs" />
-    <Compile Include="test\TEST_PatternChecker.cs" />
-    <Compile Include="test\TEST_String.cs" />
-    <Compile Include="test\TEST_TestCode.cs" />
-    <Compile Include="test\TEST_Values.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
@@ -154,7 +132,6 @@
     <None Include="l3\wrap_tests.l3" />
     <None Include="README.md" />
     <None Include="source\README.md" />
-    <None Include="test\README.md" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

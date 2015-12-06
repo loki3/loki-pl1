@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "loki-pl1", "loki-pl1.csproj", "{7142A634-0C0F-4C49-A917-95B97D3CD42F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "loki-pl1-test", "loki-pl1-test.csproj", "{93F0FC32-4A43-480B-8C8A-74610A336EB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{7142A634-0C0F-4C49-A917-95B97D3CD42F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7142A634-0C0F-4C49-A917-95B97D3CD42F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7142A634-0C0F-4C49-A917-95B97D3CD42F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93F0FC32-4A43-480B-8C8A-74610A336EB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93F0FC32-4A43-480B-8C8A-74610A336EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93F0FC32-4A43-480B-8C8A-74610A336EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93F0FC32-4A43-480B-8C8A-74610A336EB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
