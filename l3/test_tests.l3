@@ -28,6 +28,9 @@
 :* @unittest func0
 	{ :x -12 :y 0 } assert=? 4 i * 3 i
 
+:|| @unittest func0
+	5 assert=? || 3 + 4 i ||
+
 // stub out tests & docstrings for the enum & its values
 :days			@unittest noTestNeeded
 :days.sunday	@unittest noTestNeeded @doc ."

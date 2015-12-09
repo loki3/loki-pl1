@@ -56,6 +56,9 @@ var :fizzbuzz4 v= ( 1 .. 20 ) apply (| [ (## % 15 =? 0) (## % 3 =? 0) (## % 5 =?
 	{ :x ( x1 * x2 - y1 * y2 ) :y ( x1 * y2 + x2 * y1 ) }
 :* @doc ." Multiplies together two complex numbers of the form { :x # :y # }
 
+:|| v= [ :|| :asValue ] delim [ ->x ->y ]
+	sqrt (x * x + y * y)
+:|| @doc ." Computes the absolute value of a complex number { :x # :y # }
 
 //
 // an enum representing the days of the week
