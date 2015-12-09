@@ -3,7 +3,7 @@
 	Note: importing this module will run all the tests,
 	asserting if any of them fail.
 
-import :l3/unittest.l3
+import :unittest.l3
 
 
 //
