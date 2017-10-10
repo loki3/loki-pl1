@@ -690,19 +690,17 @@
 
 :match @unittest func0
 	:test v= func1 ->pattern
-		var :result
 		match pattern
 			when [ ( ->a : :int ) 1 ]
-				:result = a + 1
+				a + 1
 			when [ ( ->a : :int ) 2 ]
-				:result = a + 2
+				a + 2
 			when [ ( ->a : :int ) 3 ]
-				:result = 3
+				3
 			when { :a ( ->b : :int ) }
-				:result = b + 4
+				b + 4
 			default
-				:result = 4
-		result
+				4
 	5 assert=? test [ 4 1 ]
 	6 assert=? test [ 4 2 ]
 	3 assert=? test [ 5 3 ]

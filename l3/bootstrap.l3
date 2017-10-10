@@ -552,11 +552,13 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :match v= func1 ->l3.coFunction.match.value
 	:l3.coFunction.match.done? v= false
+	:l3.coFunction.match.retval v= nil
 	l3.eval body
 :match @body? true @order 6
 :match @cat :if @doc ." Set the seed value for picking which pattern matches a given value.  First nested 'when' that matches is run, else it runs 'default' if present.
 
 :matchAll v= func1 ->l3.coFunction.matchAll.value
+	:l3.coFunction.match.retval v= nil
 	l3.eval body
 :matchAll @body? true @order 6
 :matchAll @cat :if @doc ." Set the seed value for matching patterns against a given value.  Every nested 'when' that matches is run.
@@ -567,20 +569,22 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 		// goes with match
 		if !? l3.coFunction.match.done?
 			if l3.setValue .{ :key pattern :value l3.coFunction.match.value :returnSuccess? true
-				l3.eval whenBody
+				:l3.coFunction.match.retval = l3.eval whenBody
 				:l3.coFunction.match.done? = true
 	else
 		// goes with matchAll
 		if l3.setValue .{ :key pattern :value l3.coFunction.matchAll.value :returnSuccess? true
-			l3.eval whenBody
+			:l3.coFunction.match.retval = l3.eval whenBody
+	l3.coFunction.match.retval
 :when @body? true @order 6
 :when @cat :if @doc ." Used inside a match or matchAll statement to check if a given pattern is a match.
 
 :default v= func0
 	:defaultBody v= body
 	if !? l3.coFunction.match.done?
-		l3.eval defaultBody
+		:l3.coFunction.match.retval = l3.eval defaultBody
 		:l3.coFunction.match.done? = true
+	l3.coFunction.match.retval
 :default @body? true
 :default @cat :if @doc ." If no other patterns in a match statement matched, execute the default block.
 
