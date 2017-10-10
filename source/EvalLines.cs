@@ -22,7 +22,7 @@ namespace loki3.core
 			catch (Loki3Exception e)
 			{
 				e.AddLineNumber(lineNumber);
-				throw e;
+				throw;
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace loki3.core
 			catch (Loki3Exception e)
 			{
 				e.AddLine(list.ToString());
-				throw e;
+				throw;
 			}
 		}
 	}

@@ -56,7 +56,7 @@ namespace loki3.core
 							e.AddFunction(token.Value);
 						if (!e.Errors.ContainsKey(Loki3Exception.keyScope))
 							e.AddScope(scope);
-						throw e;
+						throw;
 					}
 				}
 				else if (value != null)

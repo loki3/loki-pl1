@@ -25,13 +25,13 @@ namespace loki3.core
 				e.AddFileName(file);
 				if (stream != null)
 					stream.Close();
-				throw e;
+				throw;
 			}
-			catch (System.Exception e)
+			catch (System.Exception)
 			{
 				if (stream != null)
 					stream.Close();
-				throw e;
+				throw;
 			}
 		}
 	}

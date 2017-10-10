@@ -61,7 +61,7 @@ namespace loki3.core
 							e.AddLine(line.Original);
 						if (requestor != null && !e.Errors.ContainsKey(Loki3Exception.keyLineNumber))
 							e.AddLineNumber(requestor.GetCurrentLineNumber());
-						throw e;
+						throw;
 					}
 				}
 			}

@@ -231,7 +231,7 @@ namespace loki3.core
 				{	// if we're supposed to pop back to here then return, else keep throwing up the stack
 					if (pop.ScopeName == scope.Name)
 						return pop.Return;
-					throw pop;
+					throw;
 				}
 				catch (Loki3Exception e)
 				{	// if this scope catches exceptions, stop here
@@ -241,7 +241,7 @@ namespace loki3.core
 							scope.Parent.SetValue(Loki3Exception.exceptionKey, new ValueMap(e.Errors));
 						return ValueNil.Nil;
 					}
-					throw e;
+					throw;
 				}
 			}
 
