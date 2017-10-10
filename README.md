@@ -153,4 +153,10 @@ var :a = 4 !
 Getting Started
 ---------------
 
-The current solution (.sln) file requires Visual Studio 2015.  From Solution Explorer, right click on loki-pl1, choose Properties, and enter the path to the l3 directory, since there are a couple paths that rely on it being the current path.  Starting the project should start a REPL (read-eval-print-loop), loading bootstrap.l3 and help.l3.
+The current solution (`.sln`) file requires Visual Studio 2013 or Visual
+Studio 2015 and includes the REPL (read-eval-print-loop) project
+`loki-pl1` and unit test project `loki-pl1-test`. For the REPL project,
+you should set the path to the `l3` directory from Solution Explorer:
+right-click on `loki-pl1`, choose Properties and enter the path to the
+`l3` directory in the Debug tab. Running this project should start a
+REPL, loading `bootstrap.l3` and `help.l3` from the `l3` directory.

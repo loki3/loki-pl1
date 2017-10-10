@@ -1,6 +1,7 @@
-using System.Collections.Generic;
 using loki3.core;
+using loki3.test;
 using NUnit.Framework;
+using SystemString = System.String;
 
 namespace loki3.builtin.test
 {
@@ -31,7 +32,8 @@ namespace loki3.builtin.test
 
 			{
 				int pre = scope.AsMap.Raw.Keys.Count;
-				Value value = TestSupport.ToValue("l3.loadModule { :file 'l3/module.l3' }", scope);
+				var sourceText = SystemString.Format("l3.loadModule {{ :file '{0}' }}", TestHelper.MakeTestSourcePath("l3/module.l3"));
+				Value value = TestSupport.ToValue(sourceText, scope);
 				Assert.True(value.AsBool);
 				int post = scope.AsMap.Raw.Keys.Count;
 				Assert.AreEqual(pre + 1, post);	// module has a single new var in it

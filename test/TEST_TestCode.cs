@@ -1,4 +1,5 @@
 using loki3.core;
+using loki3.test;
 using NUnit.Framework;
 
 namespace loki3.builtin.test
@@ -13,8 +14,8 @@ namespace loki3.builtin.test
 			{
 				ScopeChain scope = new ScopeChain();
 				AllBuiltins.RegisterAll(scope);
-				EvalFile.Do("l3/bootstrap.l3", scope);
-				EvalFile.Do("l3/unittest.l3", scope);
+				TestHelper.EvalFile("l3/bootstrap.l3", scope);
+				TestHelper.EvalFile("l3/unittest.l3", scope);
 
 				// use the loki3 unittest framework to test the code
 				{
