@@ -7,6 +7,7 @@ namespace loki3.core
 	/// Details are stored in a map, allowing each level of eval
 	/// to tack on additional context as error bubbles up.
 	/// </summary>
+    [Serializable]
 	internal class Loki3Exception : Exception
 	{
 		internal Loki3Exception() { m_map = new Map(); }
@@ -186,6 +187,7 @@ namespace loki3.core
 	/// <summary>
 	/// Used to pop the stack back to a named scope
 	/// </summary>
+    [Serializable]
 	internal class PopStackException : Exception
 	{
 		internal PopStackException(string name, Value returnValue)
