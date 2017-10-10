@@ -11,8 +11,10 @@
 
 :unittest f= func1 [ ->targetFile ->testFile ]
 	// import files into local scope
-	import targetFile
-	import testFile
+	if ( import targetFile ) =? false
+		l3.throw { :type :file-not-found :file targetFile }
+	if ( import testFile ) =? false
+		l3.throw { :type :file-not-found :file testFile }
 	// stub out doc & cat so local vars don't affect results
 	:targetFile @cat :unittest @doc ."
 	:testFile @cat :unittest @doc ."
