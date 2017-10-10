@@ -32,7 +32,7 @@ namespace loki3.builtin.test
 
 			{
 				int pre = scope.AsMap.Raw.Keys.Count;
-				var sourceText = SystemString.Format("l3.loadModule {{ :file '{0}' }}", TestHelper.MakeTestSourcePath("l3/module.l3"));
+				var sourceText = "l3.loadModule { :file 'l3/module.l3' }";
 				Value value = TestSupport.ToValue(sourceText, scope);
 				Assert.True(value.AsBool);
 				int post = scope.AsMap.Raw.Keys.Count;

@@ -12,6 +12,8 @@ namespace loki3.builtin.test
 		{
 			try
 			{
+				TestHelper.SetTestPath();
+
 				ScopeChain scope = new ScopeChain();
 				AllBuiltins.RegisterAll(scope);
 				TestHelper.EvalFile("l3/bootstrap.l3", scope);

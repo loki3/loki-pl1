@@ -1,5 +1,6 @@
 ﻿namespace loki3.test
 {
+    using System;
     using System.IO;
     using System.Reflection;
     using loki3.core;
@@ -11,14 +12,19 @@
 
         internal static void EvalFile(string fileName, IScope scope)
         {
-            CoreEvalFile.Do(
-                MakeTestSourcePath(fileName),
-                scope);
+            SetTestPath();
+            CoreEvalFile.Do(fileName, scope);
         }
 
-        internal static string MakeTestSourcePath(string fileName)
+        /// <summary>
+        /// Point the current directory to the location that allows loki3
+        /// test files to be found under 'l3'
+        /// </summary>
+        internal static void SetTestPath()
         {
-            return Path.Combine(s_assemblyDir, fileName);
+            // hardcoded assumption that tests are being run from bin\Debug
+            var path = s_assemblyDir.Substring(0, s_assemblyDir.Length - "bin\\Debug\\".Length);
+            Directory.SetCurrentDirectory(path);
         }
     }
 }
