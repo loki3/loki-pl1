@@ -142,6 +142,22 @@ Note that this requires using f= instead of v= for assigning the function defini
 3 + :text
 ```
 
+Or, if you know all overloads are defined in a single place for a prefix or postfix function, you can use *multifunc*, leveraging *when* to put all the overloads in a single function body.
+You could end the function definition with *default* to cover the remaining cases or *mustMatch* to throw an error if no overload is found.
+
+```
+:asdf v= multifunc1
+	when ( ->a : :int )
+		a + 1
+	when ( ->a : :float )
+		a + 0.5
+
+// evals to 4
+asdf 3
+// evals to 3.6
+asdf 3.1
+```
+
 You can do structural typing, where a function is only called if the parameter has the specified keys.
 This technique can be used as a dynamic, yet type-safe, way to enforce that an object exposes certain functions or values.
 
