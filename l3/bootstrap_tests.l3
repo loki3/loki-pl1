@@ -742,6 +742,24 @@
 
 :default @unittest noTestNeeded
 
+:mustMatch @unittest func0
+	:test v= func1 ->pattern
+		match pattern
+			when 1
+				:one
+			when 2
+				:two
+			mustMatch
+	:one assert=? test 1
+	:two assert=? test 2
+	// validate that an exception is thrown
+	:caught v= false
+	try
+		test 3
+	catch [ ->type ]
+		:caught = true
+	assertTrue? caught
+
 :if!nil @unittest func0
 	5   assert=? .( 1   if!nil 5
 	nil assert=? .( nil if!nil 5

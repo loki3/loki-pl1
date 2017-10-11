@@ -588,6 +588,12 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :default @body? true
 :default @cat :if @doc ." If no other patterns in a match statement matched, execute the default block.
 
+:mustMatch v= func0
+	if !? l3.coFunction.match.done?
+		l3.throw { :type "no match found" }
+	l3.coFunction.match.retval
+:mustMatch @cat :if @doc ." Inside 'match' or 'matchAll' after the 'when' blocks, this will throw if no match is found
+
 :if!nil v= .( ->val 1func1 ->doIfNotNil
 	var :result
 	if ( val ) !=? nil
