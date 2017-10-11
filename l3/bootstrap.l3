@@ -295,6 +295,28 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :.(< @example ." .(< #1 + #2
 
 
+// syntax that allows for Clojure style multi-methods as an alternative to function overloads
+
+:multiEval v= func1 ->funcBody
+	:l3.coFunction.match.value v= .( ( l3.getScope {:level 1} ) . :param
+	:l3.coFunction.match.done? v= false
+	:l3.coFunction.match.retval v= nil
+	l3.eval funcBody
+:multiEval @cat :function @doc ." Evaluate a body consisting of 'when' expressions
+
+:multifunc1 v= func0
+	:fff v= l3.createFunction { :post :param :body `multiEval body` }
+	closure :fff
+:multifunc1 @body? true
+:multifunc1 @cat :function @doc ." Create a postfix function whose body consists of 'when' expressions
+
+:1multifunc v= func0
+	:fff v= .( l3.createFunction { :pre :param :body `multiEval body` }
+	closure :fff
+:1multifunc @body? true @order 6
+:1multifunc @cat :function @doc ." Create a prefix function whose body consists of 'when' expressions
+
+
 //
 // scope
 

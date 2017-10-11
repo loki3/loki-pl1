@@ -332,6 +332,25 @@
 	:div v= .(< #1 / #2
 	3 assert=? 6 div 2
 
+:multiEval @unittest noTestNeeded
+
+:multifunc1 @unittest func0
+	:test v= multifunc1
+		when .( ->a : :int
+			1
+		when .( ->a : :string
+			:s
+	1  assert=? test 3
+	:s assert=? test :abc
+
+:1multifunc @unittest func0
+	:test v= 1multifunc
+		when .( ->a : :int
+			1
+		when .( ->a : :string
+			:s
+	1  assert=? 3 test
+	:s assert=? :abc test
 
 //
 // scope
