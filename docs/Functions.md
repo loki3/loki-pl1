@@ -1,13 +1,21 @@
 Functions
 =========
 
-Functions are values just like ints or strings, meaning that they can be assigned to variables, passed to functions, or generated based on data.  This makes it easy to apply functions to collections, for example.  Additionally, if not all parameters are passed to a function, it evaluates to a "partial function," i.e., a new function that only requires the missing parameters to be passed.  Metadata can be attached to a function to provide documentation or to change how the run-time deals with the function.  Functions can also be bound to a scope, allowing such features as closures.
-The last value in a function body is what the function evaluates to (this is no explicit return).  During the eval phase, functions can consume the token before it and/or after it in an expression.  Additionally, it can consume a function body, which can be specified by indenting the lines following the function invocation.
+Functions are values just like ints or strings, meaning that they can be assigned to variables, passed to functions, or generated based on data.
+This makes it easy to apply functions to collections, for example.
+Additionally, if not all parameters are passed to a function, it evaluates to a "partial function," i.e., a new function that only requires the missing parameters to be passed.
+Metadata can be attached to a function to provide documentation or to change how the run-time deals with the function.
+Functions can also be bound to a scope, allowing such features as closures.
+The last value in a function body is what the function evaluates to (there is no explicit return).
+During the eval phase, functions can consume the token before it and/or after it in an expression.
+Additionally, it can consume a function body, which can be specified by indenting the lines following the function invocation.
 
 Prefix, postfix, and infix
 --------------------------
 
-The function names used for defining functions contain hints as to where it the new function will find its parameters.  A 1 can appear at the front and/or end of *func* to indicate it expects a parameter before and/or after the function name.  A 0 indicates the function takes no parameters.
+The function names used for defining functions contain hints as to where it the new function will find its parameters.
+A 1 can appear at the front and/or end of *func* to indicate it expects a parameter before and/or after the function name.
+A 0 indicates the function takes no parameters.
 
 Here's an example of defining a prefix function:
 
@@ -43,12 +51,13 @@ Here's a function that takes no parameters:
 	print ." This could be a helpful explanation, but it's not.
 ```
 
-In order to indicate that a function should consume a body, metadata is attached to the function using @body?.  Here's an example of a function that accepts a body:
+In order to indicate that a function should consume a body, metadata is attached to the function using @body?.
+Here's an example of a function that accepts a body:
 
 ```
 :repeat v= func1 ->n
 	:i v= 0
-	l3.loop { :check ` i <? n ` :change ` :i = i + 1 ` :body body }
+	l3.loop { :check `i <? n` :change `:i = i + 1` :body body }
 :repeat @body? true
 
 // the following repeats a body of code
@@ -57,7 +66,8 @@ repeat 4
 	:product = product * 2
 // total is now 16
 ```
-Functions that take bodies can also accept raw values on the same line.  The repeat above could be rewritten this way:
+Functions that take bodies can also accept raw values on the same line.
+The repeat above could be rewritten this way:
 
 ```
 repeat 4 `:product = product * 2`
@@ -67,7 +77,9 @@ repeat 4 `:product = product * 2`
 Pattern matching parameters
 ---------------------------
 
-Function parameters can be specified using pattern matching.  The values before or after the function in an expression could be an array, providing a way to pass multiple parameters, or a map, providing a way to pass named parameters.  Pattern matching can be used to extract out portions of the array or map.
+Function parameters can be specified using pattern matching.
+The values before or after the function in an expression could be an array, providing a way to pass multiple parameters, or a map, providing a way to pass named parameters.
+Pattern matching can be used to extract out portions of the array or map.
 
 ```
 :sum v= func1 [ ->a ->b ]
@@ -112,7 +124,8 @@ sum [ 1.5 3.5 ]
 sum [ 2 :text ]
 ```
 
-You can do function overloading, where the system calls the function that's the most specific match.  Note that this requires using f= instead of v= for assigning the function definition into a variable to avoid simply overwriting the previous value associated with the function name.
+You can do function overloading, where the system calls the function that's the most specific match.
+Note that this requires using f= instead of v= for assigning the function definition into a variable to avoid simply overwriting the previous value associated with the function name.
 
 ```
 // if ints are passed, add them
@@ -129,7 +142,8 @@ You can do function overloading, where the system calls the function that's the 
 3 + :text
 ```
 
-You can do structural typing, where a function is only called if the parameter has the specified keys.  This technique can be used as a dynamic, yet type-safe, way to enforce that an object exposes certain functions or values.
+You can do structural typing, where a function is only called if the parameter has the specified keys.
+This technique can be used as a dynamic, yet type-safe, way to enforce that an object exposes certain functions or values.
 
 ```
 :step v= func1 ( ->thing @@hasKeys [ :hasNext :next ] )
@@ -162,9 +176,13 @@ Alternatively, you could write a postfix function that checks for the presence o
 Unevaluated parameters
 ----------------------
 
-Parameters are generally evaluated before they're passed to a function.  This can be necessary when the function needs to be pattern matched because types are included in the pattern.  This is especially true when the function is overloaded, since it needs to evaluate the parameters in order to have types for matching the proper overload.
+Parameters are generally evaluated before they're passed to a function.
+This can be necessary when the function needs to be pattern matched because types are included in the pattern.
+This is especially true when the function is overloaded, since it needs to evaluate the parameters in order to have types for matching the proper overload.
 
-But when they may go unused, you don't want them evaluated, perhaps because a value takes a while to compute or because the function has side effects.  In these cases, you can mark them as 'raw' and only evaluate them when needed.  Values wrapped with back ticks aren't immediately evaluated.
+But when they may go unused, you don't want them evaluated, perhaps because a value takes a while to compute or because the function has side effects.
+In these cases, you can mark them as 'raw' and only evaluate them when needed.
+Values wrapped with back ticks aren't immediately evaluated.
 
 ```
 :t v= func1 .[ ( ->a : :bool ) ( ->b : :rawLines )
@@ -177,7 +195,9 @@ t .[ true `print :hello`
 t .[ false `print :hello`
 ```
 
-There is also a special case where you can declare that even if the parameter *isn't* wrapped in back ticks, it still shouldn't be evaluated immediately.  However, this only applies to the *entire* previous or next parameter, not items within.  This can help make the code a bit more natural while still benefiting from short circuiting.
+There is also a special case where you can declare that even if the parameter *isn't* wrapped in back ticks, it still shouldn't be evaluated immediately.
+However, this only applies to the *entire* previous or next parameter, not items within.
+This can help make the code a bit more natural while still benefiting from short circuiting.
 
 ```
 :maybeDo v= .( ( ->a : :bool ) 1func1 ( ->b : :rawLines )
@@ -194,7 +214,8 @@ false maybeDo (print :hello)
 Simple declarations
 -------------------
 
-Since it's simple to extend the syntax of loki3, multiple ways of defining functions are provided that are convenient in different situations.  Short prefix functions with an arbitrary number of named arguments can be declared using (( )).
+Since it's simple to extend the syntax of loki3, multiple ways of defining functions are provided that are convenient in different situations.
+Short prefix functions with an arbitrary number of named arguments can be declared using (( )).
 
 ```
 // (( )) creates a prefix function.  we use it to declare a function with three arguments,
@@ -202,21 +223,28 @@ Since it's simple to extend the syntax of loki3, multiple ways of defining funct
 (( [ ->a ->b ->c ] ` a * b * c ` )) [ 2 3 5 ]
 ```
 
-Postfix functions taking exactly one argument can be declared using (| |).  The implicit parameter is referenced as ##.  This is useful for passing simple functions to other functions such as apply, which take a function as a parameter.  The following example doubles every value in an array:
+Postfix functions taking exactly one argument can be declared using (| |).
+The implicit parameter is referenced as ##.
+This is useful for passing simple functions to other functions such as apply, which take a function as a parameter.
+The following example doubles every value in an array:
 
 ```
 // evals to [ 6 10 14 ]
 [ 3 5 7 ] apply (| ## * 2 |)
 ```
 
-Infix functions taking one pre-argument and one post-argument can be declared using (< >).  The implicit parameters are referenced as #1 and #2.  This is useful for passing simple functions to functions such as fold.  The following example multiplies together every value in an array:
+Infix functions taking one pre-argument and one post-argument can be declared using (< >).
+The implicit parameters are referenced as #1 and #2.
+This is useful for passing simple functions to functions such as fold.
+The following example multiplies together every value in an array:
 
 ```
 // evals to 30
 [ 2 3 5 ] fold (< #1 * #2 >)
 ```
 
-To remember the difference between (| |) and (< >), you just need to think about the fact that | is a single line (and hence (| |) takes a single argument) and < is two lines (and hence (< >) takes two arguments).  Parentheses can be drawn with an arbitrary number of line segments, corresponding to (( )), which can take an arbitrary number of arguments.
+To remember the difference between (| |) and (< >), you just need to think about the fact that | is a single line (and hence (| |) takes a single argument) and < is two lines (and hence (< >) takes two arguments).
+Parentheses can be drawn with an arbitrary number of line segments, corresponding to (( )), which can take an arbitrary number of arguments.
 
 Partial functions
 -----------------
@@ -233,7 +261,8 @@ As is common with functional languages, passing a subset of the required argumen
 add2 [ 3 ]
 ```
 
-But, unlike most functional languages, you have more freedom than simply creating partial functions based on the order parameters are passed to the function.  If the function takes a map, it can bind to any of the named parameters.
+But, unlike most functional languages, you have more freedom than simply creating partial functions based on the order parameters are passed to the function.
+If the function takes a map, it can bind to any of the named parameters.
 
 ```
 :doStuff v= func1 { :x ->x :y ->y }
@@ -253,7 +282,8 @@ b { :x 4 }
 Data in, data out
 -----------------
 
-For functions that transform data based on some additional input, like a function, it's idiomatic to create an infix function that takes data in on the left, combines it with additional input specified on the right, and returns the transformed data.  For example:
+For functions that transform data based on some additional input, like a function, it's idiomatic to create an infix function that takes data in on the left, combines it with additional input specified on the right, and returns the transformed data.
+For example:
 
 ```
 :transform v= ( ->data 1func1 ->function )
@@ -273,13 +303,17 @@ This makes it straight forward to chain together a series of data transformation
 	fold (+)
 ```
 
-Some languages have notation for turning standard prefix functions into infix functions (e.g. the backtick in Haskell) or for flowing data through a series of functions (e.g. the pipe operators in Clojure).  Loki3 optimizes for this pattern.
+Some languages have notation for turning standard prefix functions into infix functions (e.g. the backtick in Haskell) or for flowing data through a series of functions (e.g. the pipe operators in Clojure).
+Loki3 optimizes for this pattern.
 
 
 Active functions
 ----------------
 
-One thing that can be tricky when dealing with functions is the fact that they get actively evaluated when appearing in an expression.  The following code defines a postfix function, then attempts to assign it into another variable.  But instead, the interpreter ends up trying to evaluate the function, since it has higher precedence than v=, causing an error.  You can surround the function with ( ) to keep parse/eval from eagerly evaluating the function.
+One thing that can be tricky when dealing with functions is the fact that they get actively evaluated when appearing in an expression.
+The following code defines a postfix function, then attempts to assign it into another variable.
+But instead, the interpreter ends up trying to evaluate the function, since it has higher precedence than v=, causing an error.
+You can surround the function with ( ) to keep parse/eval from eagerly evaluating the function.
 
 ```
 :! v= ( ->n 1func )
@@ -295,12 +329,15 @@ One thing that can be tricky when dealing with functions is the fact that they g
 5 factorial
 ```
 
-This works great as long as the function requires parameters so the function can't be fully evaluated.  But if the function doesn't take any parameters, it will still evaluate the function even when wrapped in ( ).
+This works great as long as the function requires parameters so the function can't be fully evaluated.
+But if the function doesn't take any parameters, it will still evaluate the function even when wrapped in ( ).
 
 Function metadata
 -----------------
 
-As with any value, additional metadata can be attached to a function.  Typically this is done by using the key (the name it's stored under) rather than the function value itself to avoid the "active functions" issue mentioned above.  Here are some of the uses for metadata attached to functions:
+As with any value, additional metadata can be attached to a function.
+Typically this is done by using the key (the name it's stored under) rather than the function value itself to avoid the "active functions" issue mentioned above.
+Here are some of the uses for metadata attached to functions:
 * @doc:  Provide documentation on how to use the function
 * @cat:  List the category it's part of
 * @order:  Set the evaluation precedence
@@ -315,7 +352,10 @@ Since each of these metadata functions return the key, they can easily be chaine
 :triple @cat :math @doc ." Triple a number
 ```
 
-When figuring out the value of an expression, it evaluates the left-most function with the highest precedence first.  The default precedence for evaluating a function is 3.  Lower numbers cause the function to be evaluated earlier.  Higher numbers make the function get evaluated later.
+When figuring out the value of an expression, it evaluates the left-most function with the highest precedence first.
+The default precedence for evaluating a function is 3.
+Lower numbers cause the function to be evaluated earlier.
+Higher numbers make the function get evaluated later.
 
 ```
 :plus v= ( ->a 1func1 ->b )
@@ -336,7 +376,9 @@ When figuring out the value of an expression, it evaluates the left-most functio
 Binding to a scope
 ------------------
 
-Currently the bootstrapped language doesn't create closures automatically.  You have to manually create them.  Creating a closure, i.e., binding a function to a scope, allows a function to operate on its own local idea of the world.
+Currently the bootstrapped language doesn't create closures automatically.
+You have to manually create them.
+Creating a closure, i.e., binding a function to a scope, allows a function to operate on its own local idea of the world.
 
 ```
 :value v= 1
