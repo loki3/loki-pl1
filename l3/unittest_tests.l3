@@ -3,6 +3,8 @@
 
 :unittest @unittest testNYI
 
+:unittestPresent @unittest testNYI
+
 :runTestFile @unittest testNYI
 
 :unittestUnittests @unittest testNYI
@@ -86,6 +88,8 @@
 	[ :noTest :fail ] assert=? failureList
 
 :runTests @unittest testNYI
+
+:runUnittestsPresent @unittest testNYI
 
 :dumpTest @unittest func0
 	// value without any test

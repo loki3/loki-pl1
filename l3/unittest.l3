@@ -22,11 +22,19 @@
 	:l3.coFunction.if.done? @doc "" @unittest noTestNeeded
 	// run tests on local scope
 	unittestScope currentScope
-:unittest @cat :unittest @doc ." For a given implementation file, run all the tests defined in a test file.
+:unittest @cat :unittest @doc ." For a given implementation file, run all the tests defined in a test file.  Requires everything to have @doc and @unittest metadata.
 
 // use a file that has its own unittests defined inside it
 :unittest f= func1 ->file
 	unittest .[ file file
+
+:unittestPresent v= func1 [ ->targetFile ->testFile ]
+	if ( import targetFile ) =? false
+		l3.throw { :type :file-not-found :file targetFile }
+	import testFile
+	:scope v= currentScope
+	testFunction .[ runUnittestsPresent :runUnittestsPresent scope
+:unittestPresent @cat :unittest @doc ." For a given implementation file, run all the tests defined in a test file.
 
 :runTestFile v= func1 ->testFile
 	import testFile
@@ -180,6 +188,22 @@
 :runTests @cat :unittest @doc --"
 	Run every function in the scope as a test.
 	A test fails if an assert fails inside it.
+
+:runUnittestsPresent v= func1 ->scope
+	var :failures = [ ]
+	var :passed = 0
+	[ :testName _ ] forEach scope
+		try
+			if testName .@unittest !=? nil
+				:passed ++
+		catch :e
+			failures += testName
+			dumpAssert [ testName e ]
+		endTry
+	[ ( (failures .size) =? 0 ) passed failures ]
+:runUnittestsPresent @cat :unittest @doc --"
+	Run .@unittest on every value in the scope that has a test.
+	A unittest fails if an assert fails inside it.
 
 
 :dumpTest v= func1 .( ->function : :string
