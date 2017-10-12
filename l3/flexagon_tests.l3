@@ -4,6 +4,18 @@
 		loki3> unittestPresent .[ :flexagon.l3 :flexagon_tests.l3
 
 
+:makeFlex @unittest func0
+	:flex v= makeFlex .[ :name :Z [ ->p1 ->p2 ] "[ p2 p1 ]"
+	[2 1] assert=? [1 2] Z
+	// one flex failed
+	:fail1 v= [1] Z
+	[ :Z ]  assert=? fail1 . 0 . :flexes
+	[1]     assert=? fail1 . 0 . :flexagon
+	// two flexes failed
+	:fail2 v= [1] Z Z
+	[:Z :Z] assert=? fail2 . 0 . :flexes
+	[1]     assert=? fail2 . 0 . :flexagon
+
 :~ @unittest func0
 	-1 assert=? ~ 1
 	[ -2 -1 ] assert=? ~ [1 2]
