@@ -30,6 +30,6 @@
 :S @unittest func0
 	[ [ [ [ 3 2 ] 4 ] [ 14 [ 1 -15 ] ] ] 5 [ [ [ 8 7 ] 9 ] 6 ] 10 [ 12 11 ] -13 ] assert=? .( penta S
 
-:allFlexes @unittest func0
-	[ :P :S :>>P :>>S :>>>>P :>>>>S :^T' :^>P :^>>T' :^>>>P :^>>>>T' :^>>>>>P ] assert=? .( allFlexes penta
+:findFlexes @unittest func0
+	[ :P :S :>>P :>>S :>>>>P :>>>>S :^>P :^>>>P :^>>>>>P ] assert=? .( findFlexes .[ penta [ defP defT defS ]
 

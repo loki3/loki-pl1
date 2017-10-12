@@ -93,10 +93,10 @@ makeFlex defS
 
 // check for possible flexes
 
-:allFlexes v= func1 ->flexagon
+:findFlexes v= func1 .[ ( ->flexagon : :array ) ( ->flexes : :array )
 	// List all the flexes possible for the given flexagon without rotating or flipping
 	:findFlexesAtVertex v= func1 ->flexagon
-		:supportedFlexes v= morphFlexes filter (| ( (## . :in) v= flexagon ) !=? nil |)
+		:supportedFlexes v= flexes filter (| ( (## . :in) v= flexagon ) !=? nil |)
 		( [ [ ] ] + supportedFlexes ) fold (< #1 + #2 . :alias >)
 	// in: a flexagon, a flex to apply, a description of flexes already applied, and a list of flex sequences
 	// out: new flexagon, a description of the flexes that have been applied so far, and the new sequences added on to the previous list of flex sequences
@@ -115,5 +115,8 @@ makeFlex defS
 	:prev = moveAndTry .[ flexagon :^ "" (prev . :sequences)
 	repeat 5 .` :prev = moveAndTry .[ (prev . :flexagon) :> (prev . :description) (prev . :sequences)
 	prev . :sequences
-:allFlexes @cat :flex @doc ." Find all the flexes that can be applied to the current flexagon
+:findFlexes @cat :flex @doc ." Find all the flexes from a list that can be applied to the current flexagon
 
+:allFlexes v= func1 ->flexagon
+	findFlexes .[ flexagon morphFlexes
+:allFlexes @cat :flex @doc ." Find all the flexes that can be applied to the current flexagon
