@@ -1,0 +1,119 @@
+// Flexagons
+//	Start from a flexagon configuration, e.g. `penta`, and apply a series of flexes
+//	to rearrange the leaves, e.g. `penta > > S P`.
+//	For background, see http://loki3.com/flex/index.html and http://loki3.com/flex/g4g10/Flex-Theory.pdf
+
+:testFlex v= func0
+	import :unittest.l3
+	unittestPresent .[ :flexagon.l3 :flexagon_tests.l3
+
+// sample flexagons
+:hexagon v= .[ 1 2 3 4 5 6
+:tri     v= .[ [2 1] 3 [5 4] 6 [8 7] 9
+:penta   v= .[ [ [ [3 2] 4 ] 1 ] 5 [ [ [8 7] 9 ] 6 ] 10 [ [ [13 12] 14 ] 11 ] 15
+// (((3,2)4)1) (5) (((8,7)9)6) (10) (((13,12)14)11) (15)
+
+
+// support routines
+
+:~ v= multifunc1
+	when [ ->a ->b ]
+		[ (~ b) (~ a) ]
+	when ->leaf
+		0 - leaf
+:~ @cat :flex @doc ." Turn over a single pat
+
+:defFlex v= func1 [ ->name ->alias ]
+	{ :name name   :alias alias   :in ( l3.eval (body . 0) )   :out ( (body . 1) =>str ) }
+:defFlex @body? true
+:defFlex @cat :flex @doc ." Define a flex, providing its name, alias, input pattern, and output pattern
+
+:makeFlex v= func1 [ ->name ->alias ->in ->out ]
+	:temp v= 1multifunc
+		when in
+			l3.eval out
+		when [ { :error ->error :flexes ->flexes :flexagon ->flexagon } ]
+			.[ .{ :error "Can't apply flexes" :flexes ( flexes + alias ) :flexagon flexagon
+		when (->flexagon : :array)
+			.[ .{ :error "Can't apply flex" :flexes [alias] :flexagon flexagon
+	:doc v= "Perform a " + name + " on a hexaflexagon"
+	:temp @cat :flex @doc doc
+	l3.setValue { :key alias :value ( closure :temp ) :level 1 }
+:makeFlex @cat :flex @doc ." Turn a flex definition into a prefix function with the given alias
+
+
+// flex definitions
+
+:def^ v= defFlex .[ :turn-over :^
+	[ ->p1 ->p2 ->p3 ->p4 ->p5 ->p6 ]
+	[ (~ p6) (~ p5) (~ p4) (~ p3) (~ p2) (~ p1) ]
+makeFlex def^
+
+:def< v= defFlex .[ :move-left :<
+	[ ->p1 ->p2 ->p3 ->p4 ->p5 ->p6 ]
+	[ p6 p1 p2 p3 p4 p5 ]
+makeFlex def<
+
+:def> v= defFlex .[ :move-right :>
+	[ ->p1 ->p2 ->p3 ->p4 ->p5 ->p6 ]
+	[ p2 p3 p4 p5 p6 p1 ]
+makeFlex def>
+
+:defP v= defFlex .[ :pinch-flex :P
+	[ [->p2 ->p1] ->p3 [->p5 ->p4] ->p6 [->p8 ->p7] ->p9 ]
+	[ (~ p2) [ p4 (~ p3) ] (~ p5) [ p7 (~ p6) ] (~ p8) [ p1 (~ p9) ] ]
+makeFlex defP
+
+:defT v= defFlex .[ :tuck-flex :T
+	[ [ [->p1 ->p2] ->p3 ] ->p4 ->p5 [->p6 ->p7] ->p8 ->p9 ]
+	[ p2 p4 p5 [p6 p7] p8 [ (~ p1) [ p9 (~ p3) ] ] ]
+makeFlex defT
+
+:defT' v= defFlex .[ :inverse-tuck-flex :T'
+	[ ->p1 ->p2 ->p3 [->p4 ->p5] ->p6 [->p7 [->p9 ->p8] ] ]
+	[ [ [ (~ p7) p1] (~ p8 ) ] p2 p3 [p4 p5] p6 p9 ]
+makeFlex defT'
+
+:defS v= defFlex .[ :pyramid-shuffle :S
+	[ [->p1 ->p2] ->p3 ->p4 ->p5 [ [ [->p6 ->p7] ->p8] ->p9] ->p10 ]
+	[ [p1 [p8 [p2 (~ p10) ] ] ] p3 p4 p5 [p7 p9] (~ p6) ]
+makeFlex defS
+
+:rotateFlexes v= [ def^ def< def> ]
+:morphFlexes  v= [ defP defT defT' defS ]
+
+:P' v= ( ->x 1func )
+	x ^ P ^
+:P' @cat :flex @doc ." Perform an inverse pinch flex on a hexaflexagon
+
+:S' v= ( ->x 1func )
+	x ^ > S ^ >
+:S' @cat :flex @doc ." Perform an inverse pyramid shuffle on a hexaflexagon
+
+
+// check for possible flexes
+
+:allFlexes v= func1 ->flexagon
+	// List all the flexes possible for the given flexagon without rotating or flipping
+	:findFlexesAtVertex v= func1 ->flexagon
+		:supportedFlexes v= morphFlexes filter (| ( (## . :in) v= flexagon ) !=? nil |)
+		( [ [ ] ] + supportedFlexes ) fold (< #1 + #2 . :alias >)
+	// in: a flexagon, a flex to apply, a description of flexes already applied, and a list of flex sequences
+	// out: new flexagon, a description of the flexes that have been applied so far, and the new sequences added on to the previous list of flex sequences
+	:moveAndTry v= func1 .[ ->flexagon ->flex ->description ->sequences
+		:newFlexagon v= .( flexagon .( l3.eval flex
+		:possibilities v= findFlexesAtVertex newFlexagon
+		:description = description + flex
+		:newSequences v= ( possibilities =? nil ) ? r[ nil ( possibilities apply (| description + ## |) ) ]r
+		{ :flexagon newFlexagon :description description :sequences (sequences + newSequences) }
+	//
+	// check for flexes at current vertex
+	:prev v= { :flexagon flexagon :description "" :sequences (findFlexesAtVertex flexagon) }
+	// rotate flexagon, searching for flexes at each vertex
+	repeat 5 .` :prev = moveAndTry .[ (prev . :flexagon) :> (prev . :description) (prev . :sequences)
+	// flip over and try again
+	:prev = moveAndTry .[ flexagon :^ "" (prev . :sequences)
+	repeat 5 .` :prev = moveAndTry .[ (prev . :flexagon) :> (prev . :description) (prev . :sequences)
+	prev . :sequences
+:allFlexes @cat :flex @doc ." Find all the flexes that can be applied to the current flexagon
+

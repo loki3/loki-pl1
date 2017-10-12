@@ -1,0 +1,35 @@
+/// unittests for flexagon.l3
+	to run tests:
+		loki3> import :unittest.l3
+		loki3> unittestPresent .[ :flexagon.l3 :flexagon_tests.l3
+
+
+:~ @unittest func0
+	-1 assert=? ~ 1
+	[ -2 -1 ] assert=? ~ [1 2]
+	[ [-3 -2] -1 ] assert=? ~ [ 1 [2 3] ]
+
+:^ @unittest func0
+	[ -15 [ -11 [ -14 [ -12 -13 ] ] ] -10 [ -6 [ -9 [ -7 -8 ] ] ] -5 [ -1 [ -4 [ -2 -3 ] ] ] ] assert=? .( penta ^
+
+:> @unittest func0
+	[ 5 [ [ [ 8 7 ] 9 ] 6 ] 10 [ [ [ 13 12 ] 14 ] 11 ] 15 [ [ [ 3 2 ] 4 ] 1 ] ] assert=? .( penta >
+
+:< @unittest func0
+	[ 15 [ [ [ 3 2 ] 4 ] 1 ] 5 [ [ [ 8 7 ] 9 ] 6 ] 10 [ [ [ 13 12 ] 14 ] 11 ] ] assert=? .( penta <
+
+:P @unittest func0
+	[ [ -4 [ -2 -3 ] ] [ 6 -5 ] [ -9 [ -7 -8 ] ] [ 11 -10 ] [ -14 [ -12 -13 ] ] [ 1 -15 ] ] assert=? .( penta P
+
+:T @unittest func0
+	[ 1 2 3 [4 5] 6 [7 [9 8] ] ] T' assert=? [ [ [-7 1] -8 ] 2 3 [4 5] 6 9 ]
+
+:T' @unittest func0
+	[ [ [-7 1] -8 ] 2 3 [4 5] 6 9 ] assert=? [ 1 2 3 [4 5] 6 [7 [9 8] ] ] T'
+
+:S @unittest func0
+	[ [ [ [ 3 2 ] 4 ] [ 14 [ 1 -15 ] ] ] 5 [ [ [ 8 7 ] 9 ] 6 ] 10 [ 12 11 ] -13 ] assert=? .( penta S
+
+:allFlexes @unittest func0
+	[ :P :S :>>P :>>S :>>>>P :>>>>S :^T' :^>P :^>>T' :^>>>P :^>>>>T' :^>>>>>P ] assert=? .( allFlexes penta
+
