@@ -301,15 +301,19 @@ namespace loki3.core
 			{
 				requestor.Advance();
 				DelimiterList childLine = requestor.GetCurrentLine(scope);
-				if (childLine == null || childLine.Indent <= parentIndent)
+				// ignore blank lines
+				if (childLine == null || (childLine.Indent <= parentIndent && childLine.Nodes.Count > 0))
 				{
 					requestor.Rewind();
 					break;	// now we have the body
 				}
-				childLine.Scope = scope;	// use this scope when evaling later
+				if (childLine.Nodes.Count > 0)
+				{
+					childLine.Scope = scope;	// use this scope when evaling later
 
-				// keep adding to the body
-				body.Add(childLine);
+					// keep adding to the body
+					body.Add(childLine);
+				}
 			}
 			return body;
 		}

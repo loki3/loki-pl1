@@ -135,11 +135,11 @@ var :fizzbuzz4 v= ( 1 .. 20 ) apply (| [ (## % 15 =? 0) (## % 3 =? 0) (## % 5 =?
 		:asUnits v= .( ( ->x : :number ) 1func
 			{ baseUnit ( x * scale ) :units type }
 		:asUnits @order 1 @doc .( "Used to specify the number of " + name
-		
+
 		:toUnits v= .( { baseUnit ->baseUnits :units type } 1func
 			baseUnits / scale
 		:toUnits @doc .( "Convert current units into " + name
-		
+
 		// inject functions at scope of defineUnits call, closed over current scope
 		l3.setValue { :key units :value ( closure :asUnits ) :level 3 }
 		l3.setValue { :key ( :=> + units ) :value ( closure :toUnits ) :level 3 }
