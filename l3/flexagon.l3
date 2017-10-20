@@ -38,7 +38,7 @@
 			.[ .{ :error "Can't apply flex" :flexes [alias] :flexagon flexagon
 	:doc v= "Perform a " + name + " on a hexaflexagon"
 	:temp @cat :flex @doc doc
-	l3.setValue { :key alias :value ( closure :temp ) :level 1 }
+	closure :temp
 :makeFlex @cat :flex @doc ." Turn a flex definition into a prefix function with the given alias
 
 
@@ -47,37 +47,37 @@
 :def^ v= defFlex .[ :turn-over :^
 	[ ->p1 ->p2 ->p3 ->p4 ->p5 ->p6 ]
 	[ (~ p6) (~ p5) (~ p4) (~ p3) (~ p2) (~ p1) ]
-makeFlex def^
+:^ v= .( makeFlex def^
 
 :def< v= defFlex .[ :move-left :<
 	[ ->p1 ->p2 ->p3 ->p4 ->p5 ->p6 ]
 	[ p6 p1 p2 p3 p4 p5 ]
-makeFlex def<
+:< v= .( makeFlex def<
 
 :def> v= defFlex .[ :move-right :>
 	[ ->p1 ->p2 ->p3 ->p4 ->p5 ->p6 ]
 	[ p2 p3 p4 p5 p6 p1 ]
-makeFlex def>
+:> v= .( makeFlex def>
 
 :defP v= defFlex .[ :pinch-flex :P
 	[ [->p2 ->p1] ->p3 [->p5 ->p4] ->p6 [->p8 ->p7] ->p9 ]
 	[ (~ p2) [ p4 (~ p3) ] (~ p5) [ p7 (~ p6) ] (~ p8) [ p1 (~ p9) ] ]
-makeFlex defP
+:P v= .( makeFlex defP
 
 :defT v= defFlex .[ :tuck-flex :T
 	[ [ [->p1 ->p2] ->p3 ] ->p4 ->p5 [->p6 ->p7] ->p8 ->p9 ]
 	[ p2 p4 p5 [p6 p7] p8 [ (~ p1) [ p9 (~ p3) ] ] ]
-makeFlex defT
+:T v= .( makeFlex defT
 
 :defT' v= defFlex .[ :inverse-tuck-flex :T'
 	[ ->p1 ->p2 ->p3 [->p4 ->p5] ->p6 [->p7 [->p9 ->p8] ] ]
 	[ [ [ (~ p7) p1] (~ p8 ) ] p2 p3 [p4 p5] p6 p9 ]
-makeFlex defT'
+:T' v= .( makeFlex defT'
 
 :defS v= defFlex .[ :pyramid-shuffle :S
 	[ [->p1 ->p2] ->p3 ->p4 ->p5 [ [ [->p6 ->p7] ->p8] ->p9] ->p10 ]
 	[ [p1 [p8 [p2 (~ p10) ] ] ] p3 p4 p5 [p7 p9] (~ p6) ]
-makeFlex defS
+:S v= .( makeFlex defS
 
 :rotateFlexes v= [ def^ def< def> ]
 :morphFlexes  v= [ defP defT defT' defS ]

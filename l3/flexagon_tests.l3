@@ -5,7 +5,7 @@
 
 
 :makeFlex @unittest func0
-	:flex v= makeFlex .[ :name :Z [ ->p1 ->p2 ] "[ p2 p1 ]"
+	:Z v= .( makeFlex .[ :name :Z [ ->p1 ->p2 ] "[ p2 p1 ]"
 	[2 1] assert=? [1 2] Z
 	// one flex failed
 	:fail1 v= [1] Z
