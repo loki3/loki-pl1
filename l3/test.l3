@@ -130,7 +130,7 @@ var :fizzbuzz4 v= ( 1 .. 20 ) apply (| [ (## % 15 =? 0) (## % 3 =? 0) (## % 5 =?
 :unitsType @doc ." A list of the different types of supported units
 
 
-:defineUnits v= func1 .[ ->baseUnit ->type
+:defineUnits v= func1 .[ ->baseUnit ->type .( ->scope d= ( l3.getScope {:level 1} )
 	[:units :name :scale] forEachDelim .[ body :[
 		:asUnits v= .( ( ->x : :number ) 1func
 			{ baseUnit ( x * scale ) :units type }
@@ -140,21 +140,21 @@ var :fizzbuzz4 v= ( 1 .. 20 ) apply (| [ (## % 15 =? 0) (## % 3 =? 0) (## % 5 =?
 			baseUnits / scale
 		:toUnits @doc .( "Convert current units into " + name
 
-		// inject functions at scope of defineUnits call, closed over current scope
-		l3.setValue { :key units :value ( closure :asUnits ) :level 3 }
-		l3.setValue { :key ( :=> + units ) :value ( closure :toUnits ) :level 3 }
+		// add functions to passed in scope, closed over current scope
+		l3.setValue { :key units :value ( closure :asUnits ) :map scope}
+		l3.setValue { :key ( :=> + units ) :value ( closure :toUnits ) :map scope }
 	
 	// define addition and subtraction within this set of units
 	:plus v= .( { baseUnit ->x :units type } 1func1 { baseUnit ->y :units type }
 		{ baseUnit ( x + y ) :units type }
 	:minus v= .( { baseUnit ->x :units type } 1func1 { baseUnit ->y :units type }
 		{ baseUnit ( x - y ) :units type }
-	// inject functions at scope of defineUnits call, closed over current scope
-	l3.setValue { :key :+ :value ( closure :plus ) :level 2 :overload? true }
-	l3.setValue { :key :- :value ( closure :minus ) :level 2 :overload? true }
+	// add functions to passed in scope, closed over current scope
+	l3.setValue { :key :+ :value ( closure :plus ) :map scope :overload? true }
+	l3.setValue { :key :- :value ( closure :minus ) :map scope :overload? true }
 :defineUnits @body? true
 :defineUnits @doc --"
-	Create functions for dealing with units.
+	Create functions for dealing with units, optionally specifying the scope to put the functions in.
 	Values passed to function define the name of the base units and the type of units.
 	Each line in the body describes a particular measurement and contains
 	the short name to use in function names, the full name to use in documentation,
