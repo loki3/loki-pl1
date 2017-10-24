@@ -118,7 +118,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :array :function } -> turn array into a single value by applying function to members as pairs</summary>
+		/// <summary>{ :array :function :initial } -> turn array into a single value by applying function to members as pairs</summary>
 		class FoldLeft : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new FoldLeft(); }
@@ -130,6 +130,7 @@ namespace loki3.builtin
 				Map map = new Map();
 				map["array"] = PatternData.Single("array", ValueType.Array);
 				map["function"] = PatternData.Single("function", ValueType.Function);
+				map["initial"] = PatternData.Single("initial", ValueNil.Nil);
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}
@@ -139,15 +140,16 @@ namespace loki3.builtin
 				Map map = arg.AsMap;
 				List<Value> array = map["array"].AsArray;
 				ValueFunction function = map["function"] as ValueFunction;
+				Value initial = map["initial"];
 
-				bool bFirst = true;
-				Value last = null;
+				bool bNoLast = initial == ValueNil.Nil;
+				Value last = initial;
 				foreach (Value val in array)
 				{
-					if (bFirst)
+					if (bNoLast)
 					{
 						last = val;
-						bFirst = false;
+						bNoLast = false;
 					}
 					else
 					{

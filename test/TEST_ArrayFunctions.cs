@@ -115,7 +115,6 @@ namespace loki3.builtin.test
 			IScope scope = CreateScope();
 			ArrayFunctions.Register(scope);
 
-			scope.SetValue("2x", new Double());
 			scope.SetValue("+", new TestSum());
 
 			{
@@ -125,6 +124,10 @@ namespace loki3.builtin.test
 			{
 				Value value = TestSupport.ToValue("l3.foldRight { :array [ 4 1 2 ] :function + }", scope);
 				Assert.AreEqual(7, value.AsInt);
+			}
+			{
+				Value value = TestSupport.ToValue("l3.foldLeft { :array [ 4 1 2 ] :initial 2 :function + }", scope);
+				Assert.AreEqual(9, value.AsInt);
 			}
 		}
 
