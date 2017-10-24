@@ -427,13 +427,17 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 :foldLeft f= .( ( ->array : :array ) 1func1 ( ->function : :function )
 	l3.foldLeft { :array array :function function }
+:foldLeft f= .( ( ->array : :array ) 1func1 [ ->initial ( ->function : :function ) ]
+	l3.foldLeft { :array array :initial initial :function function }
 :foldLeft @cat :array @doc ." ((a[0] function a[1]) function a[2]) etc.  Returns a single value.
 :foldLeft @example ." (1 .. 6) foldLeft (< #1 * 3 + #2 >)
 
 :fold v= .( foldLeft
 
-:foldRight v= .( ( ->array : :array ) 1func1 ( ->function : :function )
+:foldRight f= .( ( ->array : :array ) 1func1 ( ->function : :function )
 	l3.foldRight { :array array :function function }
+:foldRight f= .( ( ->array : :array ) 1func1 [ ->initial ( ->function : :function ) ]
+	l3.foldRight { :array array :initial initial :function function }
 :foldRight @cat :array @doc ." (a[0] function (a[1] function a[2])) etc.  Returns a single value.
 :foldRight @example ." (1 .. 6) foldRight (< #1 * 3 + #2 >)
 

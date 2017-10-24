@@ -502,9 +502,11 @@
 
 :foldLeft @unittest func0
 	1 assert=? [ 27 9 3 ] foldLeft (< #1 / #2 >)
+	10 assert=? [ 1 2 3 ] foldLeft [ 4 (< #1 + #2 >) ]
 
 :foldRight @unittest func0
 	9 assert=? [ 27 9 3 ] foldRight (< #1 / #2 >)
+	15 assert=? [ 1 2 3 4 ] foldRight [ 5 (< #1 + #2 >) ]
 
 :filter @unittest func0
 	// only take the odd values
