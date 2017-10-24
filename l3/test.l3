@@ -19,18 +19,17 @@ var :i forEach ( 1 .. 20 )
 :fizzBuzz2 @doc ." fizzbuzz using multiple return values
 
 var :fizzbuzz3 = func0
-	var :zzz = [ ]
-	var :i forEach ( 1 .. 20 )
-		if ( i % 15 =? 0 )
-			zzz += ." fizzbuzz
-		elsif .( i % 3 =? 0
-			zzz += ." fizz
-		elsif .( i % 5 =? 0
-			zzz += ." buzz
+	var :check = func1 ->i
+		if (i % 15 =? 0)
+			"fizzbuzz"
+		elsif (i % 3 =? 0)
+			"fizz"
+		elsif (i % 5 =? 0)
+			"buzz"
 		else
-			zzz += i
-	zzz
-:fizzbuzz3 @doc ." fizzbuzz using a function in a simple loop
+			i
+	(1 .. 20) apply check
+:fizzbuzz3 @doc ." fizzbuzz by applying a function
 
 var :fizzbuzz4 v= ( 1 .. 20 ) apply (| [ (## % 15 =? 0) (## % 3 =? 0) (## % 5 =? 0) ] ? [ :fizzbuzz :fizz :buzz ## ] |)
 :fizzbuzz4 @doc ." fizzbuzz in a single line
