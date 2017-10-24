@@ -162,7 +162,7 @@ namespace loki3.builtin
 			}
 		}
 
-		/// <summary>{ :array :function } -> turn array into a single value by applying function to members as pairs</summary>
+		/// <summary>{ :array :function :initial } -> turn array into a single value by applying function to members as pairs</summary>
 		class FoldRight : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new FoldRight(); }
@@ -174,6 +174,7 @@ namespace loki3.builtin
 				Map map = new Map();
 				map["array"] = PatternData.Single("array", ValueType.Array);
 				map["function"] = PatternData.Single("function", ValueType.Function);
+				map["initial"] = PatternData.Single("initial", ValueNil.Nil);
 				ValueMap vMap = new ValueMap(map);
 				Init(vMap);
 			}
@@ -183,14 +184,24 @@ namespace loki3.builtin
 				Map map = arg.AsMap;
 				List<Value> array = map["array"].AsArray;
 				ValueFunction function = map["function"] as ValueFunction;
+				Value initial = map["initial"];
 
-				Value last = array[array.Count - 1];
-				for (int i = array.Count - 2; i >= 0; i--)
+				bool bNoLast = initial == ValueNil.Nil;
+				Value last = initial;
+				for (int i = array.Count - 1; i >= 0; i--)
 				{
-					Value val = array[i];
-					DelimiterNode node1 = new DelimiterNodeValue(last);
-					DelimiterNode node2 = new DelimiterNodeValue(val);
-					last = function.Eval(node2, node1, scope, scope, null, null);
+					if (bNoLast)
+					{
+						last = array[i];
+						bNoLast = false;
+					}
+					else
+					{
+						Value val = array[i];
+						DelimiterNode node1 = new DelimiterNodeValue(last);
+						DelimiterNode node2 = new DelimiterNodeValue(val);
+						last = function.Eval(node2, node1, scope, scope, null, null);
+					}
 				}
 				return last;
 			}
