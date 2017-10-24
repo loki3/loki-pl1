@@ -630,6 +630,13 @@
 	// if is skipped
 	if false
 		assertFail ." if shouldn't have been called
+	// test return value
+	:a v= if true
+		5
+	5 assert=? a
+	:a v= if false
+		5
+	assertFalse? a
 
 :elsif @unittest func0
 	// if is run, not elsif
@@ -706,6 +713,30 @@
 	else
 		:a = 3
 	3 assert=? a
+
+	// test return value
+	if true
+		5
+	:a v= else
+		3
+	5 assert=? a
+
+	if false
+		5
+	:a v= else
+		3
+	3 assert=? a
+
+	:f v= func1 ->which
+		if which =? 1
+			2
+		elsif which =? 2
+			3
+		else
+			4
+	2 assert=? f 1
+	3 assert=? f 2
+	4 assert=? f 3
 
 :match @unittest func0
 	:test v= func1 ->pattern

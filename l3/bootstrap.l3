@@ -549,26 +549,26 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 	answer
 
 :if v= func1 ( ->do? : :bool )
-	l3.ifBody .{ :do? do? :body body
+	:retval v= l3.ifBody .{ :do? do? :body body
 	l3.setValue { :key :l3.coFunction.if.done? :value do? :level 1 }
-	do?
+	l3.setValue { :key :l3.coFunction.if.retval :value retval :level 1 }
 :if @body? true
 :if @order 6
 :if @cat :if @doc ." If condition is met, do body
 
 :elsif v= func1 ( ->do? : :rawLines )
 	:doThis? v= .( ( !? l3.coFunction.if.done? ) &? do?
-	l3.ifBody .{ :do? doThis? :body body
-	l3.ifBody .{ :do? doThis? :body .[ .` l3.setValue .{ :key :l3.coFunction.if.done? :value true :level 1
-	doThis?
+	:retval v= l3.ifBody .{ :do? doThis? :body body
+	l3.ifBody .{ :do? doThis? :body .[ ` l3.setValue { :key :l3.coFunction.if.done? :value true :level 1 } ` ` l3.setValue { :key :l3.coFunction.if.retval :value retval :level 1 } `
+	l3.coFunction.if.retval
 :elsif @body? true
 :elsif @order 6
 :elsif @cat :if @doc ." If previous if and elsifs failed and this condition is met, do body
 
 :else v= func0
 	:doThis? v= .( !? l3.coFunction.if.done?
-	l3.ifBody .{ :do? doThis? :body body
-	doThis?
+	:retval v= l3.ifBody .{ :do? doThis? :body body
+	l3.ifValue .{ :do? doThis? :ifTrue retval :ifFalse l3.coFunction.if.retval
 :else @body? true
 :else @cat :if @doc ." If previous if and elsifs failed, do body
 

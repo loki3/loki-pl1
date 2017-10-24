@@ -20,6 +20,7 @@
 	:testFile @cat :unittest @doc ."
 	// stub out internal var 'if' sets above
 	:l3.coFunction.if.done? @doc "" @unittest noTestNeeded
+	:l3.coFunction.if.retval @doc "" @unittest noTestNeeded
 	// run tests on local scope
 	unittestScope currentScope
 :unittest @cat :unittest @doc ." For a given implementation file, run all the tests defined in a test file.  Requires everything to have @doc and @unittest metadata.
