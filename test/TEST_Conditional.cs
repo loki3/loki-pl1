@@ -35,8 +35,8 @@ namespace loki3.builtin.test
 			{	// skip body
 				Value value = TestSupport.ToValue("l3.ifBody l3.createMap [ :do? false :body [ ' 5 ' ] ]", scope);
                 var array = value.AsArray;
-                Assert.IsTrue(array[0].IsNil);
-                Assert.AreEqual(false, array[1].AsBool);
+                Assert.IsFalse(array[0].AsBool);
+                Assert.IsFalse(array[1].AsBool);
             }
         }
 	}

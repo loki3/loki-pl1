@@ -18,14 +18,14 @@ namespace loki3.builtin
 		}
 
 
-		/// <summary>{ :do? :body } -> if do?, return [last value of body, true], else [nil, false]</summary>
+		/// <summary>{ :do? :body } -> if do?, return [last value of body, true], else [false, false]</summary>
 		class IfBody : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new IfBody(); }
 
 			internal IfBody()
 			{
-				SetDocString("If do?, evaluate body and return [last value in body, true].\nElse return [nil, false].");
+				SetDocString("If do?, evaluate body and return [last value in body, true].\nElse return [false, false].");
 
 				Map map = new Map();
 				map["do?"] = PatternData.Single("do?", ValueType.Bool);
@@ -48,8 +48,8 @@ namespace loki3.builtin
 				}
 				else
 				{
-					newarray.Add(new ValueNil());
-					newarray.Add(new ValueBool(false));
+					newarray.Add(ValueBool.False);
+					newarray.Add(ValueBool.False);
 				}
 				return new ValueArray(newarray);
 			}
