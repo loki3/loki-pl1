@@ -28,12 +28,16 @@ namespace loki3.builtin.test
 
 			{	// run body
 				Value value = TestSupport.ToValue("l3.ifBody l3.createMap [ :do? true :body [ ' 5 ' ] ]", scope);
-				Assert.AreEqual(5, value.AsInt);
+                var array = value.AsArray;
+				Assert.AreEqual(5, array[0].AsInt);
+				Assert.AreEqual(true, array[1].AsBool);
 			}
 			{	// skip body
 				Value value = TestSupport.ToValue("l3.ifBody l3.createMap [ :do? false :body [ ' 5 ' ] ]", scope);
-				Assert.AreEqual(false, value.AsBool);
-			}
-		}
+                var array = value.AsArray;
+                Assert.IsTrue(array[0].IsNil);
+                Assert.AreEqual(false, array[1].AsBool);
+            }
+        }
 	}
 }

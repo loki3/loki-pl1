@@ -18,14 +18,14 @@ namespace loki3.builtin
 		}
 
 
-		/// <summary>{ :do? :body } -> if do?, last value of body, else false</summary>
+		/// <summary>{ :do? :body } -> if do?, return [last value of body, true], else [nil, false]</summary>
 		class IfBody : ValueFunctionPre
 		{
 			internal override Value ValueCopy() { return new IfBody(); }
 
 			internal IfBody()
 			{
-				SetDocString("If do?, evaluate body and return the last value in body.\nElse return false.");
+				SetDocString("If do?, evaluate body and return [last value in body, true].\nElse return [nil, false].");
 
 				Map map = new Map();
 				map["do?"] = PatternData.Single("do?", ValueType.Bool);
@@ -37,15 +37,21 @@ namespace loki3.builtin
 			internal override Value Eval(Value arg, IScope scope)
 			{
 				Map map = arg.AsMap;
+				List<Value> newarray = new List<Value>(2);
 
 				// if !do?, return
-				bool shouldDo = map["do?"].AsBool;
-				if (!shouldDo)
-					return new ValueBool(false);
-
-				// if do?, eval body
-				Value valueBody = map["body"];
-				return EvalBody.Do(valueBody, scope);
+				if (map["do?"].AsBool)
+				{   // if do?, eval body
+					Value valueBody = map["body"];
+					newarray.Add(EvalBody.Do(valueBody, scope));
+					newarray.Add(new ValueBool(true));
+				}
+				else
+				{
+					newarray.Add(new ValueNil());
+					newarray.Add(new ValueBool(false));
+				}
+				return new ValueArray(newarray);
 			}
 		}
 
