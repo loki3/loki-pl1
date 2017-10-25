@@ -82,9 +82,7 @@
 					if ( :t v= ( l3.getMetadata { :value param } ) . key ) =? nil
 						:t = ""
 					t
-				:data v= { :name param }
-				:data = data \/ { :type ( getMeta :type ) :default ( getMeta :default ) :rest ( getMeta :rest ) }
-				data
+				{ :name param :type ( getMeta :type ) :default ( getMeta :default ) :rest ( getMeta :rest ) }
 			// build up list of parameter information
 			:paramsList v= [ ]
 			if params !=? nil
@@ -99,14 +97,12 @@
 					:paramsList = paramsList + .[ .( getParam params
 			paramsList
 		
-		:map v= { }
-		:map = map \/ { :fix ( getFixType ) }
 		[ :order :body? ] v= [ ( key .@ :l3.value.order ) ( key .@ :body? ) ]
 		if order =? nil
 			:order = 3
 		if body? =? nil
 			:body? = false
-		:map = map \/ .{ :order order :body? body?
+		:map v= { :fix ( getFixType ) :order order :body? body? }
 		
 		:overloads v= [ ]
 		if ( key .@ :l3.func.overload? ) !=? nil
@@ -139,16 +135,13 @@
 	
 	:getSpecific f= func1 .[ ( ->key : :string ) ( ->value : :enum )
 		.{ :values .( ( l3.getValue { :key key } ) mapToArray (< #2 >)
-	
 	:getSpecific f= func1 .[ ( ->key : :string ) ->value
 		{ :value value }
 	
-	[ :general :specific ] v= [ { } { } ]
 	// general properties
-	:general = general \/ .{ :name key :type ( l3.getType { :key key } )
-	:general = general \/ .{ :documentation ( key .@doc ) :category ( key .@cat )
+	:general v= .{ :name key  :type ( l3.getType { :key key } )  :documentation ( key .@doc )  :category ( key .@cat )
 	// specific properties based on type
-	:specific = specific \/ .( getSpecific .[ key ( l3.getValue { :key key } )
+	:specific v= .( getSpecific .[ key ( l3.getValue { :key key } )
 	// full results
 	{ :general general :specific specific }
 :describe @cat :help @doc ." Create a description of the value represented by a key, returning a map with details.
