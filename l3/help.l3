@@ -24,44 +24,44 @@
 :helpAll @cat :help @doc ." Print out information on everything defined in the given scope
 
 :help v= func1 .( ->key : :string
+	:general=>string v= .( [ ->name ->type ->category ->documentation ] 1func
+		stringify ""
+			name + \t + "type(" + type + ")"
+			(category =? nil)      ? .[ ""   `\t + "category(" + category + ")"`
+			\n
+			(documentation =? nil) ? .[ ""   `">" + documentation + \n`
+			\n
+
+	:specific=>string v= .( ->specific 1func
+		:header v= [ "properties" "-----" "-----" ]
+		:sansOverloads v= ( map . :specific ) filterMap (< #1 !=? :overloads >)
+		:table v= .( sansOverloads mapToArray (< [ "" #1 #2 ] >) fold (< #1 + #2 >)
+		l3.formatTable { :array (header + table) :columns 3 }
+
+	:overloads=>string v= .( ->overloads 1func
+		:s v= ""
+		if overloads !=? nil
+			:overload =eachIn overloads
+				if ( overload . :pre ) !=? [ ]
+					:s = s + \n + .( dumpParams .[ :pre overload
+				if ( overload . :post ) !=? [ ]
+					:s = s + \n + .( dumpParams .[ :post overload
+		s
+
 	// build up a description of pre or post parameters
 	:dumpParams v= func1 .[ ->preOrPost ->overloads
 		:table v= [ :name :type :default :rest ]
 		:param =eachIn ( overloads . preOrPost )
 			[ :name :type :default :rest ] apply (| :table = table + ( param . ## ) |)
-		:s = "- " + preOrPost + " parameters -" + \n
-		:s = s + .( l3.formatTable .{ :array table :columns 4 :dashesAfterFirst? true
-		s
+		:s v= "- " + preOrPost + " parameters -" + \n
+		s + .( l3.formatTable .{ :array table :columns 4 :dashesAfterFirst? true
 	
 	:map v= describe key
-	:s v= \n + :============ + \n
-	
-	// general
-	:general v= map . :general
-	:s = s + ( general . :name ) + \t + :type( + ( general . :type ) + :)
-	if ( general . :category ) !=? nil
-		:s = s + \t + :category( + ( general . :category ) + :)
-	:s = s + \n
-	if ( general . :documentation ) !=? nil
-		:s = s + :> + ( general . :documentation ) + \n
-	:s = s + \n
-	
-	// specific
-	:table v= [ :properties "-----" "-----" ]
-	:sansOverloads v= ( map . :specific ) filterMap (< #1 !=? :overloads >)
-	:table = table + .( sansOverloads mapToArray (< [ "" #1 #2 ] >) fold (< #1 + #2 >)
-	:s = s + .( l3.formatTable { :array table :columns 3 } 
-	
-	// overloads
-	:overloads v= map . :specific . :overloads
-	if overloads !=? nil
-		:overload =eachIn overloads
-			if ( overload . :pre ) !=? [ ]
-				:s = s + \n + .( dumpParams .[ :pre overload
-			if ( overload . :post ) !=? [ ]
-				:s = s + \n + .( dumpParams .[ :post overload
-	
-	s
+	stringify ""
+		\n + "============" + \n
+		map . :general  general=>string
+		map . :specific specific=>string
+		map . :specific . :overloads overloads=>string
 :help @cat :help @doc ." Describe the value represented by a key.
 
 
