@@ -332,6 +332,18 @@
 	:div v= .(< #1 / #2
 	3 assert=? 6 div 2
 
+:(- @unittest func0
+	:a v= (- :b = 2 -)
+	:b v= 1
+	a
+	2 assert=? b
+
+:.(- @unittest func0
+	:a v= .(- :b = 2
+	:b v= 1
+	a
+	2 assert=? b
+
 :multiEval @unittest noTestNeeded
 
 :multifunc1 @unittest func0

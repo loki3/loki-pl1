@@ -294,6 +294,16 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :.(<	@cat :function @doc ." Create a single line infix function, assuming parameters are called #1 and #2
 :.(< @example ." .(< #1 + #2
 
+:(- v= [ :-) :asRaw ] delim ->line
+	l3.createFunction { :body [ line ] }
+:(-		@cat :function @doc ." Create a single line function that takes no parameters
+:(- @example ." (- print :success -)
+
+:.(- v= [ "" :asRaw ] delim ->line
+	l3.createFunction { :body [ line ] }
+:.(-	@cat :function @doc ." Create a single line function that takes no parameters
+:.(- @example ." .(- print :success
+
 
 // syntax that allows for Clojure style multi-methods as an alternative to function overloads
 
