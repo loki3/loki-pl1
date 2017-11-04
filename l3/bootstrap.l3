@@ -76,6 +76,10 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :. v= .( ->a 1func1 ->b
 	l3.getValue .{ :object a :key b
 
+// check if member is present
+:.? v= .( ->a 1func1 ->b
+	l3.hasValue .{ :object a :key b
+
 // modify a value's metadata
 :@ v= .( ->object 1func1 [ ->key ->value ]
 	l3.setValue .{ :map ( l3.getMetadata { :key object :writable? true } ) :key key :value value
@@ -174,6 +178,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 
 // bump up precedence of .
 :. @order 2
+:.? @order 2
 
 
 :///func v= func0
@@ -212,6 +217,7 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :func0	@cat :function  @doc ." Define a function that takes no parameters
 :body=	@cat :function	@doc ." Remainder of line is an array of values that are put in a body, each item typically needs to be wrapped in ``
 :.		@cat :access    @doc ." Access the member of a map by key or array by index
+:.?		@cat :access    @doc ." Check if a key or index is present in a map, array, string, etc.
 :@		@cat :metadata  @doc ." Modify a value's metadata
 :.@		@cat :metadata  @doc ." Get a value's metadata
 :.@@	@cat :metadata  @doc ." Get all of a value's metadata

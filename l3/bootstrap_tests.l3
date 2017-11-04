@@ -147,6 +147,12 @@
 	314 assert=? b . 2
 	314 assert=? b . -1
 
+:.?		@unittest func0
+	assertTrue?  { :a 3 :b 4 :c 5 } .? :b
+	assertFalse? { :a 3 :b 4 :c 5 } .? :d
+	assertTrue?  [ 6 5 4 3 2 ] .? 3
+	assertFalse? [ 6 5 4 3 2 ] .? 7
+
 :@		@unittest func0
 	:a v= 1
 	:a @ [ :blah :something ]
