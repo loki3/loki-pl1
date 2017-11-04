@@ -15,6 +15,7 @@ namespace loki3.builtin
 		{
 			scope.SetValue("l3.setValue", new SetValue());
 			scope.SetValue("l3.getValue", new GetValue());
+			scope.SetValue("l3.hasValue", new HasValue());
 			scope.SetValue("l3.copy", new Copy());
 			scope.SetValue("l3.createMap", new CreateMap());
 			scope.SetValue("l3.createRange", new CreateRange());
@@ -190,6 +191,89 @@ namespace loki3.builtin
 					return findDefault["default"];
 				}
 				return result;
+			}
+		}
+
+		/// <summary>{ :object :key } -> bool,  either map[key.AsString] or array[key.AsInt]</summary>
+		class HasValue : ValueFunctionPre
+		{
+			internal override Value ValueCopy() { return new HasValue(); }
+
+			internal HasValue()
+			{
+				SetDocString("On a map, check if given key is present.\nOn an array, check if index is present.");
+
+				Map map = new Map();
+				// todo: better pattern definition, map|array & string|int
+				// or make this into two functions
+				map["object"] = PatternData.Single("object", ValueNil.Nil);
+				map["key"] = PatternData.Single("key");
+				ValueMap vMap = new ValueMap(map);
+				Init(vMap);
+			}
+
+			internal override Value Eval(Value arg, IScope scope)
+			{
+				Map map = arg.AsMap;
+
+				// extract parameters
+				Value obj = map["object"];
+				Value key = map["key"];
+
+				if (obj.IsNil)
+					return scope.GetValue(new Token(key.AsString));
+
+				ValueString objStr = obj as ValueString;
+				if (objStr != null)
+				{
+					string str = objStr.AsString;
+					int i = key.AsInt;
+					bool has = (i >= 0 && i < str.Length);
+					return new ValueBool(has);
+				}
+
+				ValueMap objMap = obj as ValueMap;
+				if (objMap != null)
+				{
+					string keystr = key.AsString;
+					Value result = null;
+					bool has = objMap.AsMap.TryGetValue(keystr, out result);
+					return new ValueBool(has);
+				}
+
+				ValueArray objArr = obj as ValueArray;
+				if (objArr != null)
+				{
+					List<Value> array = objArr.AsArray;
+					int i = key.AsInt;
+					bool has = (i >= 0 && i < array.Count);
+					return new ValueBool(has);
+				}
+
+				ValueFunctionOverload overload = obj as ValueFunctionOverload;
+				if (overload != null)
+				{
+					int i = key.AsInt;
+					bool has = (i >= 0 && i < overload.Count);
+					return new ValueBool(has);
+				}
+				ValueFunction function = obj as ValueFunction;
+				if (function != null)
+				{
+					int i = key.AsInt;
+					return new ValueBool(i == 0);
+				}
+				ValueLine line = obj as ValueLine;
+				if (line != null)
+				{
+					List<DelimiterList> list = line.AsLine;
+					int i = key.AsInt;
+					bool has = (i >= 0 && i < list.Count);
+					return new ValueBool(has);
+				}
+
+				// todo: better error
+				throw new Loki3Exception().AddWrongType(ValueType.Map, obj.Type);
 			}
 		}
 

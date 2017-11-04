@@ -219,6 +219,53 @@ namespace loki3.builtin.test
 		}
 
 		[Test]
+		public void TestHasValue()
+		{
+			IScope scope = CreateValueScope();
+
+			scope.SetValue("aString", new ValueString("testing"));
+
+			Map map = new Map();
+			map["one"] = new ValueInt(1);
+			map["two"] = new ValueInt(2);
+			ValueMap vMap = new ValueMap(map);
+			scope.SetValue("aMap", vMap);
+
+			List<Value> array = new List<Value>();
+			array.Add(new ValueInt(2));
+			array.Add(new ValueInt(4));
+			scope.SetValue("anArray", new ValueArray(array));
+
+			{
+				Value value = TestSupport.ToValue("l3.hasValue { :object aString :key 2 }", scope);
+				Assert.IsTrue(value.AsBool);
+			}
+
+			{
+				Value value = TestSupport.ToValue("l3.hasValue { :object aMap :key :two }", scope);
+				Assert.IsTrue(value.AsBool);
+			}
+
+			{
+				Value value = TestSupport.ToValue("l3.hasValue { :object anArray :key 1 }", scope);
+				Assert.IsTrue(value.AsBool);
+			}
+
+			// asking for a key that doesn't exist returns false...
+			{
+				Value value = TestSupport.ToValue("l3.hasValue { :object aMap :key :notThere }", scope);
+				Assert.IsFalse(value.AsBool);
+			}
+
+			// ...and a default doesn't matter
+			{
+				vMap.WritableMetadata[PatternData.keyDefault] = new ValueInt(42);
+				Value value = TestSupport.ToValue("l3.hasValue { :object aMap :key :notThere }", scope);
+				Assert.IsFalse(value.AsBool);
+			}
+		}
+
+		[Test]
 		public void TestCreateMap()
 		{
 			IScope scope = CreateValueScope();
