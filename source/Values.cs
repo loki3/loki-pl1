@@ -220,16 +220,23 @@ namespace loki3.builtin
 				Value obj = map["object"];
 				Value key = map["key"];
 
+				bool has = CheckIfPresent(scope, obj, key);
+				return has ? ValueBool.True : ValueBool.False;
+			}
+
+			private bool CheckIfPresent(IScope scope, Value obj, Value key)
+			{
 				if (obj.IsNil)
-					return scope.GetValue(new Token(key.AsString));
+				{
+					return scope.GetValue(new Token(key.AsString)) != null;
+				}
 
 				ValueString objStr = obj as ValueString;
 				if (objStr != null)
 				{
 					string str = objStr.AsString;
 					int i = key.AsInt;
-					bool has = (i >= 0 && i < str.Length);
-					return new ValueBool(has);
+					return (i >= 0 && i < str.Length);
 				}
 
 				ValueMap objMap = obj as ValueMap;
@@ -237,8 +244,7 @@ namespace loki3.builtin
 				{
 					string keystr = key.AsString;
 					Value result = null;
-					bool has = objMap.AsMap.TryGetValue(keystr, out result);
-					return new ValueBool(has);
+					return objMap.AsMap.TryGetValue(keystr, out result);
 				}
 
 				ValueArray objArr = obj as ValueArray;
@@ -246,30 +252,26 @@ namespace loki3.builtin
 				{
 					List<Value> array = objArr.AsArray;
 					int i = key.AsInt;
-					bool has = (i >= 0 && i < array.Count);
-					return new ValueBool(has);
+					return (i >= 0 && i < array.Count);
 				}
 
 				ValueFunctionOverload overload = obj as ValueFunctionOverload;
 				if (overload != null)
 				{
 					int i = key.AsInt;
-					bool has = (i >= 0 && i < overload.Count);
-					return new ValueBool(has);
+					return (i >= 0 && i < overload.Count);
 				}
 				ValueFunction function = obj as ValueFunction;
 				if (function != null)
 				{
-					int i = key.AsInt;
-					return new ValueBool(i == 0);
+					return key.AsInt == 0;
 				}
 				ValueLine line = obj as ValueLine;
 				if (line != null)
 				{
 					List<DelimiterList> list = line.AsLine;
 					int i = key.AsInt;
-					bool has = (i >= 0 && i < list.Count);
-					return new ValueBool(has);
+					return (i >= 0 && i < list.Count);
 				}
 
 				// todo: better error
