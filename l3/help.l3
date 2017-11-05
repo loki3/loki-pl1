@@ -78,10 +78,10 @@
 			// extract metadata on a single parameter
 			:getParam v= func1 ->param
 				:getMeta v= func1 ->which
-					:key v= :l3.pattern. + which
-					if ( :t v= ( l3.getMetadata { :value param } ) . key ) =? nil
-						:t = ""
-					t
+					[ :key :meta ] v= [ (:l3.pattern. + which) ( l3.getMetadata { :value param } ) ]
+					// differentiate between not having the key and the value being nil
+					:t v= (meta .? key) ? [ (meta . key) "-" ]
+					(t =? nil) ? [ "nil" t ]
 				{ :name param :type ( getMeta :type ) :default ( getMeta :default ) :rest ( getMeta :rest ) }
 			// build up list of parameter information
 			:paramsList v= [ ]
