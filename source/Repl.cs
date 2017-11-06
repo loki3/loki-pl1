@@ -34,7 +34,7 @@ namespace loki3.core
 				try
 				{
 					Value v = EvalLines.Do(consumer, scope);
-					Console.WriteLine(v.ToString());
+					Console.WriteLine(v.ToFinalString());
 				}
 				catch (Loki3Exception error)
 				{

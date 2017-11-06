@@ -65,7 +65,7 @@ namespace loki3.core
 			System.Text.StringBuilder builder = new System.Text.StringBuilder("[ ");
 			foreach (Value v in m_val)
 			{
-				builder.Append(v.ToString());
+				builder.Append(v.ToFinalString());
 				builder.Append(" ");
 			}
 			builder.Append("]");

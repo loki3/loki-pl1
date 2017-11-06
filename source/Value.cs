@@ -153,6 +153,9 @@ namespace loki3.core
 			}
 		}
 
+		/// <summary>e.g. use for REPL output, not when it might be concatenated</summary>
+		internal virtual string ToFinalString() { return ToString(); }
+
 		private Map m_metadata = null;
 	}
 
@@ -332,6 +335,7 @@ namespace loki3.core
 		#endregion
 
 		public override string ToString() { return m_val; }
+		internal override string ToFinalString() { return '"' + m_val + '"'; }
 	}
 
 	/// <summary>

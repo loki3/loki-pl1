@@ -118,7 +118,7 @@ namespace loki3.core
 					if (checkMap != null && checkMap.AsMap == this)
 						s += "<self>";	// can't print self
 					else
-						s += m_val[key].ToString();
+						s += m_val[key].ToFinalString();
 				}
 			}
 			s += " }";
