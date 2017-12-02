@@ -1,0 +1,39 @@
+// flexagon unfolding
+
+import :flexagon.l3
+
+:testFold v= func0
+	import :unittest.l3
+	unittestPresent .[ :flex_folding.l3 :flex_folding_tests.l3
+
+// types
+
+:dir =enum [ :< :> ]
+:dirs v= [ dir.< dir.> ]
+
+:foldPatType v= [ (:pat : :array) (:numbers : :array) (:dir o= dirs) (:next : :int) ]
+
+
+// manipulating fold-pats
+
+:flip v= multifunc1
+	when [ ->pat (->numbers : :array) (->dir o= dirs) ->next ]
+		{ :pat (~ pat) :numbers [ (numbers . 1) (numbers . 0) ] :dir ( (dir =? dir.< ) ? [ dir.> dir.< ] ) :next next }
+	when ( ->pats : :array )
+		pats apply (| flip ## |)
+:flip @cat :flex @doc ." flip over one or more fold-pats
+
+:unfold v= multifunc1
+	when { :pat [->p1 ->p2] :numbers [->n1 ->n2] :dir dir.< :next ->next }
+		[ { :pat p2 :numbers [next n2] :dir dir.< :next (next + 1) } { :pat (~ p1) :numbers [next n1] :dir dir.> :next (next + 1) } ]
+	when { :pat [->p1 ->p2] :numbers [->n1 ->n2] :dir dir.> :next ->next }
+		[ { :pat p1 :numbers [n1 next] :dir dir.> :next (next + 1) } { :pat (~ p2) :numbers [n2 next] :dir dir.< :next (next + 1) } ]
+:unfold @cat :flex @doc ." unfold a single fold-pat
+
+
+
+// sample fold-pats
+:f1 v= { :pat [1 2] :numbers [1 2] :dir dir.< :next 3 }
+:f2 v= { :pat [ [1 2] 3 ] :numbers [1 2] :dir dir.> :next 3 }
+:leaf v= { :pat 1 :numbers [1 2] :dir dir.< :next 3 }
+:fs v= [ f1 f2 leaf ]
