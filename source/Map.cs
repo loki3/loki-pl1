@@ -111,7 +111,7 @@ namespace loki3.core
 					if (bFirst)
 						bFirst = false;
 					else
-						s += " , ";
+						s += " ";
 					s += ":" + key + " ";
 
 					ValueMap checkMap = m_val[key] as ValueMap;

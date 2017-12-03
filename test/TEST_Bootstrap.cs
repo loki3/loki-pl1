@@ -101,22 +101,22 @@ namespace loki3.builtin.test
 
 				{
 					Value value = TestSupport.ToValue("complex [ 1 2 ]", scope);
-					Assert.AreEqual("{ :real 1 , :imaginary 2 }", value.ToString());
+					Assert.AreEqual("{ :real 1 :imaginary 2 }", value.ToString());
 				}
 
 				{
 					Value value = TestSupport.ToValue("4 i", scope);
-					Assert.AreEqual("{ :real 0 , :imaginary 4 }", value.ToString());
+					Assert.AreEqual("{ :real 0 :imaginary 4 }", value.ToString());
 				}
 
 				{
 					Value value = TestSupport.ToValue("1 +i 3 i", scope);
-					Assert.AreEqual("{ :real 1 , :imaginary 3 }", value.ToString());
+					Assert.AreEqual("{ :real 1 :imaginary 3 }", value.ToString());
 				}
 
 				{
 					Value value = TestSupport.ToValue("( 1 +i 3 i ) +c complex [ 4 6 ]", scope);
-					Assert.AreEqual("{ :real 5 , :imaginary 9 }", value.ToString());
+					Assert.AreEqual("{ :real 5 :imaginary 9 }", value.ToString());
 				}
 			}
 			catch (Loki3Exception e)
