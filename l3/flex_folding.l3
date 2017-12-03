@@ -46,6 +46,20 @@ import :flexagon.l3
 	flatten fp
 :unfoldAt @cat :flex @doc ." take a collection of foldpats and unfold a specified one
 
+:findNextHinge v= func1 (->foldpats : :array)
+	[ :i :end ] v= [ 0 (foldpats .size) ]
+	while .( (i <? end) &? .( l3.getType { :value (foldpats . i . :pat) } !=? :array
+		:i ++
+	(i =? foldpats .size) ? [ nil i ]
+:findNextHinge @cat :flex @doc ." find the next foldpat than can be unfolded, or nil if none
+
+:unfoldAll v= func1 (->foldpats : :array)
+	:hinge v= findNextHinge foldpats
+	while (hinge !=? nil)
+		:foldpats = foldpats unfoldAt hinge
+		:hinge = findNextHinge foldpats
+	foldpats
+:unfoldAll @cat :flex @doc ." completely unfold a list of foldpats
 
 
 // sample fold-pats
