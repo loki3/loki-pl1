@@ -35,7 +35,7 @@ import :flexagon.l3
 :flip @cat :flex @doc ." flip over one or more fold-pats
 
 :unfold v= func1 { :pat [->p1 ->p2] :numbers [->n1 ->n2] :dir ->dir :next ->next }
-	if dir =? dir.<
+	if dir =? dir.>
 		[ { :pat p2 :numbers [next n2] :dir dir.< :next (next + 1) } { :pat (~ p1) :numbers [next n1] :dir dir.> :next (next + 1) } ]
 	else
 		[ { :pat p1 :numbers [n1 next] :dir dir.> :next (next + 1) } { :pat (~ p2) :numbers [n2 next] :dir dir.< :next (next + 1) } ]
@@ -55,5 +55,5 @@ import :flexagon.l3
 :fs v= [ f1 f2 leaf ]
 
 :unfoldPenta v= func0
-	:fp v= penta =>foldpat unfoldAt 0 unfoldAt 0 unfoldAt 0 unfoldAt 5 unfoldAt 5 unfoldAt 5 unfoldAt 10 unfoldAt 10 unfoldAt 10
+	:fp v= penta =>foldpat unfoldAt 0 unfoldAt 1 unfoldAt 1 unfoldAt 5 unfoldAt 6 unfoldAt 6 unfoldAt 10 unfoldAt 11 unfoldAt 11
 	fp =>strip
