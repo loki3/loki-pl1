@@ -41,6 +41,11 @@ import :flexagon.l3
 		[ { :pat p1 :numbers [n1 next] :dir dir.> :next (next + 1) } { :pat (~ p2) :numbers [n2 next] :dir dir.< :next (next + 1) } ]
 :unfold @cat :flex @doc ." unfold a single fold-pat
 
+:unfoldAt v= .( (->foldpats : :array) 1func1 (->at : :int)
+	:fp v= foldpats apply .(< [ (#1 <? at) (#1 =? at) ] ? .r[ #2 (unfold #2) (flip #2)
+	flatten fp
+:unfoldAt @cat :flex @doc ." take a collection of foldpats and unfold a specified one
+
 
 
 // sample fold-pats
