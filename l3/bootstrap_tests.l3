@@ -640,6 +640,8 @@
 	0 assert=? a
 	2 assert=? [false true] ? r[ 1 (f 2) (f 3) ]r
 	2 assert=? a
+	3 assert=? [false false] ? r[ 1 (f 2) (f 3) ]r
+	3 assert=? a
 
 :if @unittest func0
 	// if is run
