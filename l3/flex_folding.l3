@@ -23,10 +23,10 @@ import :flexagon.l3
 		pats apply (| flip ## |)
 :flip @cat :flex @doc ." flip over one or more fold-pats
 
-:unfold v= multifunc1
-	when { :pat [->p1 ->p2] :numbers [->n1 ->n2] :dir dir.< :next ->next }
+:unfold v= func1 { :pat [->p1 ->p2] :numbers [->n1 ->n2] :dir ->dir :next ->next }
+	if dir =? dir.<
 		[ { :pat p2 :numbers [next n2] :dir dir.< :next (next + 1) } { :pat (~ p1) :numbers [next n1] :dir dir.> :next (next + 1) } ]
-	when { :pat [->p1 ->p2] :numbers [->n1 ->n2] :dir dir.> :next ->next }
+	else
 		[ { :pat p1 :numbers [n1 next] :dir dir.> :next (next + 1) } { :pat (~ p2) :numbers [n2 next] :dir dir.< :next (next + 1) } ]
 :unfold @cat :flex @doc ." unfold a single fold-pat
 
