@@ -475,6 +475,16 @@ l3.setValue { :key := :value ( l3.createFunction { :pre ->key :post ->value :ord
 :by @cat :array @doc ." Returns an array with every 'step' elements of an input array
 :by @example ." (1 .. 10) by 2
 
+:flatten v= func1 (->in : :array)
+	:out v= []
+	:add f= func1 (->v : :array)
+		v apply (| add ## |)
+	:add f= func1 ->v
+		out += v
+	add in
+	out
+:flatten @cat :array @doc ." Takes nested arrays and puts every item in a single array
+
 
 //
 // maps
