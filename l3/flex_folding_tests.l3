@@ -3,6 +3,16 @@
 		loki3> import :unittest.l3
 		loki3> unittestPresent .[ :flex_folding.l3 :flex_folding_tests.l3
 
+:=>foldpat @unittest func0
+	:expected v= [ { :pat [ 1 2 ] :numbers [ 1 2 ] :dir dir.> :next 3 } { :pat [ [ 3 4 ] 5 ] :numbers [ 1 2 ] :dir dir.> :next 3 } ]
+	:actual v= [ [1 2] [ [3 4] 5 ] ] =>foldpat
+	expected assert=? actual
+
+:=>strip @unittest func0
+	:expected v= [ [ 3 1 ">" ] [ 2 4 "<" ] ]
+	:actual v= [ { :pat 1 :numbers [ 3 1 ] :dir dir.> :next 4 } { :pat 2 :numbers [ 2 4 ] :dir dir.< :next 5 } ] =>strip
+	expected assert=? actual
+
 :flip @unittest func0
 	:^leaf v= flip { :pat 1 :numbers [1 2] :dir dir.< :next 3 }
 	{ :pat -1  :numbers [ 2 1 ]  :dir dir.>  :next 3 } assert=? ^leaf

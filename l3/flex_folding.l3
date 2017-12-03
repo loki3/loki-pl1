@@ -14,6 +14,17 @@ import :flexagon.l3
 :foldPatType v= [ (:pat : :array) (:numbers : :array) (:dir o= dirs) (:next : :int) ]
 
 
+// conversion
+
+:=>foldpat v= .( ( ->pats : :array ) 1func
+	pats apply (| { :pat ## :numbers [1 2] :dir dir.> :next 3 } |)
+:=>foldpat @cat :flex @doc ." convert pats to foldpat notation, which can be unfolded (assumes a triangle flexagon meeting at a common point)
+
+:=>strip v= .( ( ->foldpats : :array ) 1func
+	foldpats apply (| [ (## . :numbers . 0) (## . :numbers . 1) ( (## . :dir) =? dir.> ? [ :> :< ] ) ] |)
+:=>strip @cat :flex @doc ." convert foldpat notation to a simple description of a strip of triangles
+
+
 // manipulating fold-pats
 
 :flip v= multifunc1
