@@ -53,3 +53,7 @@ import :flexagon.l3
 :f2 v= { :pat [ [1 2] 3 ] :numbers [1 2] :dir dir.> :next 3 }
 :leaf v= { :pat 1 :numbers [1 2] :dir dir.< :next 3 }
 :fs v= [ f1 f2 leaf ]
+
+:unfoldPenta v= func0
+	:fp v= penta =>foldpat unfoldAt 0 unfoldAt 0 unfoldAt 0 unfoldAt 5 unfoldAt 5 unfoldAt 5 unfoldAt 10 unfoldAt 10 unfoldAt 10
+	fp =>strip
