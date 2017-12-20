@@ -1,10 +1,12 @@
 /// flexagon unfolding
+	`>unfold`		turn a flexagon into an unfolded strip
 	`=>foldpat`		convert from pats (nested arrays of leaf numbers) to 'foldpats',
 					which describe how the pats are folded
 	`=>strip`		convert foldpats to a format that describes an unfolded strip
 	`unfoldAll`		unfold all hinges in an array of foldpats
 
 	e.g. `unfoldAll (penta =>foldpat) =>strip`
+		`penta >unfold`
 
 import :flexagon.l3
 
@@ -66,3 +68,7 @@ import :flexagon.l3
 		:hinge = findNextHinge foldpats
 	foldpats
 :unfoldAll @cat :flex @doc ." completely unfold a list of foldpats
+
+:>unfold v= .( ->flexagon 1func
+	unfoldAll ( flexagon =>foldpat ) =>strip
+:>unfold @cat :flex @doc ." turn a flexagon into an unfolded strip
