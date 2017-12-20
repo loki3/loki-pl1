@@ -14,7 +14,7 @@
 // (((3,2)4)1) (5) (((8,7)9)6) (10) (((13,12)14)11) (15)
 
 
-// support routines
+// routines for performing a general flex
 
 :~ v= multifunc1
 	when [ ->a ->b ]
@@ -40,6 +40,41 @@
 	:temp @cat :flex @doc doc
 	closure :temp
 :makeFlex @cat :flex @doc ." Turn a flex definition into a prefix function with the given alias
+
+
+// routines for generating the structure needed for a general flex
+
+:flexgen v= .( ->flexagon 1func1 ->flex
+	// e.g. [ [:a :b] :c ]  becomes  [ [1 2] 3 ]
+	:number f= func1 [ [->pat0 ->pat1] ->getNext ]
+		[ ( number [pat0 getNext] ) ( number [pat1 getNext] ) ]
+	:number f= func1 [ ->n ->getNext ]
+		// first use `actualN` from `expandPat`, after that use `getNext`
+		:temp v= actualN
+		(actualN =? 0) ? .r[ getNext (:actualN = 0  temp)
+
+	// if pat doesn't have needed structure, create it
+	:expandPat v= func1 .[ ->actualPat ->neededPat (->getNext : :function)
+		match actualPat
+			when neededPat
+				actualPat
+			when [->pat0 ->pat1]
+				[ ( expandPat [ pat0 (neededPat . 0) getNext ] ) ( expandPat [ pat1 (neededPat . 1) getNext ] ) ]
+			when ->actualN
+				number [neededPat getNext]
+
+	// find max in nested arrays
+	:findMax f= func1 [->pat0 ->pat1]
+		(findMax pat0) max (findMax pat1)
+	:findMax f= (| ## |)
+
+	// track the next number to use when creating leaves
+	:next v= ( ( flexagon apply findMax ) fold max )
+	:getNext v= (- :next ++ -) 
+
+	flexagon apply (< expandPat [ #2 (flex . #1) getNext ] >)
+:flexgen @cat :flex @doc ." If a flexagon doesn't have the necessary structure for a flex, add it
+:flexgen @example ." [ [1 2] 3 4 5 6 7 ] flexgen [ [->a ->b] [ ->c [->d ->e] ] ->f ->g ->h [->i ->j] ]
 
 
 // flex definitions
