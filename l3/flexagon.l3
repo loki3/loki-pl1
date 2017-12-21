@@ -64,9 +64,10 @@
 				number [neededPat getNext]
 
 	// find max in nested arrays
+	:abs v= (| (## <? 0) ? [ (0 - ##) ## ] |)
 	:findMax f= func1 [->pat0 ->pat1]
 		(findMax pat0) max (findMax pat1)
-	:findMax f= (| ## |)
+	:findMax f= (| abs ## |)
 
 	// track the next number to use when creating leaves
 	:next v= ( ( flexagon apply findMax ) fold max )
