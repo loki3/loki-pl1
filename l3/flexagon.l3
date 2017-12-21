@@ -79,8 +79,8 @@
 
 :makeFlexgen v= func1 [ ->name ->alias ->in ->out ]
 	:temp v= .( ->flexagon 1func
-		flexagon flexgen in
-	:doc v= "Generate the structure needed to perform " + name + " on a hexaflexagon"
+		flexagon flexgen in (l3.eval alias)
+	:doc v= "Generate the structure needed to perform " + name + " on a hexaflexagon, and apply it"
 	:temp @cat :flex @doc doc
 	closure :temp
 :makeFlexgen @cat :flex @doc ." Turn a flex definition into a prefix function that generates the needed structure in a flexagon
