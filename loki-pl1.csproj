@@ -120,6 +120,10 @@
     <None Include="l3\bootstrap_tests.l3" />
     <None Include="l3\ca.l3" />
     <None Include="l3\ca_tests.l3" />
+    <None Include="l3\flexagon.l3" />
+    <None Include="l3\flexagon_tests.l3" />
+    <None Include="l3\flex_folding.l3" />
+    <None Include="l3\flex_folding_tests.l3" />
     <None Include="l3\help.l3" />
     <None Include="l3\help_tests.l3" />
     <None Include="l3\linq_tests.l3" />
